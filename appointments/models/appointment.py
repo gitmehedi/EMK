@@ -19,7 +19,7 @@ class Appointment(models.Model):
     def _get_required_date(self):
         return datetime.strftime(datetime.today(), DEFAULT_SERVER_DATETIME_FORMAT)
 
-    name = fields.Char(string="Name", readonly=True, copy=False, track_visibility='onchange')
+    name = fields.Char(string="Reference", readonly=True, copy=False, track_visibility='onchange')
     topic_id = fields.Many2one('appointment.topics', string="Topics", required=True, track_visibility='onchange')
     contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange')
     timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange')

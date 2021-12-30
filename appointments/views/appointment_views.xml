@@ -79,7 +79,7 @@
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                                 <field name="date_of_birth"
-                                       attrs="{'readonly':[('state','in',('reject','confirm','done'))]}"/>
+                                       attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                                  <field name="phone" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                             </group>
                             <group>
