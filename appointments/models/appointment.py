@@ -1,5 +1,5 @@
 import logging, re
-from datetime import datetime
+from datetime import datetime,time,timedelta
 import dateutil.parser
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -59,10 +59,13 @@ class Appointment(models.Model):
     def onchange_appointment_date(self):
         res = {}
         day = ''
+        current_time =''
         self.timeslot_id = 0
         if self.appointment_date:
             appdate = datetime.strptime(self.appointment_date, "%Y-%m-%d")
             day = datetime.strftime(appdate, '%A')
+            now = datetime.now()+timedelta(hours=6)
+            current_time = now.strftime("%H:%M")
         appointment_slots = self.env['appointment.appointment'].search([('contact_id', '=', self.contact_id.id),
                                                                                   ('appointment_date', '=',
                                                                                    self.appointment_date),
@@ -74,7 +77,7 @@ class Appointment(models.Model):
         contact_slots = self.env['appointment.contact'].search([('id', '=', self.contact_id.id), ('status', '=', True)])
         slots = []
         for slot in contact_slots.timeslot_ids:
-            if (slot.id not in app_slots) and (slot.day == day.lower()):
+            if (slot.id not in app_slots) and (slot.day == day.lower()) and ('{0:02.0f}:{1:02.0f}'.format(*divmod(slot.end_time * 60, 60)) >= current_time):
                 slots.append(slot.id)
         if slots:
             res['domain'] = {'timeslot_id': [('id', 'in', slots)]}

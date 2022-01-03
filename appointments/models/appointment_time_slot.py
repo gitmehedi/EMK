@@ -20,7 +20,7 @@ class AppointmentTimeSlot(models.Model):
     _order = "id desc"
     _rec_name = "name"
 
-    name = fields.Char(string="Time Slot", readonly=True, track_visibility='onchange', compute='_compute_name')
+    name = fields.Char(string="Time Slot", readonly=True, track_visibility='onchange')
     day = fields.Selection(DAYS, 'Day', required=True,  track_visibility="onchange")
     start_time = fields.Float(string="Start Time", required=True, digits=(2,2),  track_visibility="onchange")
     end_time = fields.Float(string="End Time", required=True, digits=(2,2), track_visibility="onchange")
@@ -29,13 +29,13 @@ class AppointmentTimeSlot(models.Model):
                                    string="Time Slot")
     status = fields.Boolean(string="Status", default=True, track_visibility='onchange')
 
-    @api.multi
-    def _compute_name(self):
-        for rec in self:
-            if rec.day and rec.start_time and rec.end_time:
-                start_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.start_time * 60, 60))
-                end_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.end_time * 60, 60))
-                rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
+    # @api.multi
+    # def _compute_name(self):
+    #     for rec in self:
+    #         if rec.day and rec.start_time and rec.end_time:
+    #             start_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.start_time * 60, 60))
+    #             end_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.end_time * 60, 60))
+    #             rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
 
     @api.constrains('name')
     def _check_name(self):
@@ -68,3 +68,11 @@ class AppointmentTimeSlot(models.Model):
             domain = [('day', '=ilike', name + '%')]
             names2 = self.search(domain, limit=limit).name_get()
         return list(set(names1) | set(names2))[:limit]
+
+    @api.model
+    def create(self,vals):
+        if vals['day'] and vals['start_time'] and vals['end_time']:
+            start_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(vals['start_time'] * 60, 60))
+            end_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(vals['end_time'] * 60, 60))
+            vals['name'] = '%s [%s - %s] ' % (vals['day'].title(), start_time, end_time)
+        return super(AppointmentTimeSlot, self).create(vals)
