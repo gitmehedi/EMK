@@ -33,12 +33,9 @@ class AppointmentTimeSlot(models.Model):
     def _compute_name(self):
         for rec in self:
             if rec.day and rec.start_time and rec.end_time:
-                minutes = rec.start_time * 60
-                hours, minutes = divmod(minutes, 60)
-
-                minutes1 = rec.end_time * 60
-                hours1, minutes1 = divmod(minutes1, 60)
-                rec.name = '%s [%s - %s] ' % (rec.day.title(), "%02d:%02d"%(hours,minutes), "%02d:%02d"%(hours1,minutes1), )
+                start_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.start_time * 60, 60))
+                end_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.end_time * 60, 60))
+                rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
 
     @api.constrains('name')
     def _check_name(self):
