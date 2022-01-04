@@ -1,6 +1,7 @@
 import time
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.appointments.helpers import functions
 
 DAYS=[
     ('saturday','Saturday'),
@@ -20,7 +21,7 @@ class AppointmentTimeSlot(models.Model):
     _order = "id desc"
     _rec_name = "name"
 
-    name = fields.Char(string="Time Slot", readonly=True, track_visibility='onchange')
+    name = fields.Char(string="Time Slot", readonly=True, copy=False, track_visibility='onchange', compute='_compute_name')
     day = fields.Selection(DAYS, 'Day', required=True,  track_visibility="onchange")
     start_time = fields.Float(string="Start Time", required=True, digits=(2,2),  track_visibility="onchange")
     end_time = fields.Float(string="End Time", required=True, digits=(2,2), track_visibility="onchange")
@@ -29,17 +30,17 @@ class AppointmentTimeSlot(models.Model):
                                    string="Time Slot")
     status = fields.Boolean(string="Status", default=True, track_visibility='onchange')
 
-    # @api.multi
-    # def _compute_name(self):
-    #     for rec in self:
-    #         if rec.day and rec.start_time and rec.end_time:
-    #             start_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.start_time * 60, 60))
-    #             end_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.end_time * 60, 60))
-    #             rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
+    @api.multi
+    def _compute_name(self):
+        for rec in self:
+            if rec.day and rec.start_time and rec.end_time:
+                start_time= functions.float_to_time(rec.start_time)
+                end_time = functions.float_to_time(rec.end_time)
+                rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
 
     @api.constrains('name')
     def _check_name(self):
-        name = self.search([('name', '=ilike', self.name)])
+        name = self.search([('day', '=', self.day),('start_time', '=', self.start_time),('end_time', '=', self.end_time)])
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
@@ -55,6 +56,10 @@ class AppointmentTimeSlot(models.Model):
             raise ValidationError(_("It should be valid date time"))
         if self.end_time > 23.99:
             raise ValidationError(_("It should be valid date time"))
+        if self.start_time <= 00.00:
+            raise ValidationError(_("It should be valid date time"))
+        if self.end_time <= 00.00:
+            raise ValidationError(_("It should be valid date time"))
 
     @api.model
     def _needaction_domain_get(self):
@@ -69,10 +74,3 @@ class AppointmentTimeSlot(models.Model):
             names2 = self.search(domain, limit=limit).name_get()
         return list(set(names1) | set(names2))[:limit]
 
-    @api.model
-    def create(self,vals):
-        if vals['day'] and vals['start_time'] and vals['end_time']:
-            start_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(vals['start_time'] * 60, 60))
-            end_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(vals['end_time'] * 60, 60))
-            vals['name'] = '%s [%s - %s] ' % (vals['day'].title(), start_time, end_time)
-        return super(AppointmentTimeSlot, self).create(vals)
