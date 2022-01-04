@@ -1,6 +1,7 @@
 import time
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.appointments.helpers import functions
 
 DAYS=[
     ('saturday','Saturday'),
@@ -20,7 +21,7 @@ class AppointmentTimeSlot(models.Model):
     _order = "id desc"
     _rec_name = "name"
 
-    name = fields.Char(string="Time Slot", readonly=True, track_visibility='onchange', compute='_compute_name')
+    name = fields.Char(string="Time Slot", readonly=True, copy=False, track_visibility='onchange', compute='_compute_name')
     day = fields.Selection(DAYS, 'Day', required=True,  track_visibility="onchange")
     start_time = fields.Float(string="Start Time", required=True, digits=(2,2),  track_visibility="onchange")
     end_time = fields.Float(string="End Time", required=True, digits=(2,2), track_visibility="onchange")
@@ -33,28 +34,29 @@ class AppointmentTimeSlot(models.Model):
     def _compute_name(self):
         for rec in self:
             if rec.day and rec.start_time and rec.end_time:
-                start_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.start_time * 60, 60))
-                end_time = '{0:02.0f}:{1:02.0f}'.format(*divmod(rec.end_time * 60, 60))
+                start_time= functions.float_to_time(rec.start_time)
+                end_time = functions.float_to_time(rec.end_time)
                 rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
 
-    @api.constrains('name')
+    @api.constrains('name','start_time','end_time')
     def _check_name(self):
-        name = self.search([('name', '=ilike', self.name)])
+        name = self.search([('day', '=', self.day),('start_time', '=', functions.float_to_time(self.start_time)),
+                            ('end_time', '=', functions.float_to_time(self.end_time))])
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
     @api.constrains('start_time', 'end_time')
     def _check_max_min(self):
         for rec in self:
-            if rec.end_time <= rec.start_time:
+            if functions.float_to_time(rec.end_time) <= functions.float_to_time(rec.start_time):
                 raise ValidationError(_("Start Time should not be greater than End Time."))
 
     @api.constrains('start_time', 'end_time')
     def _check_valid_time(self):
-        if self.start_time > 23.99:
-            raise ValidationError(_("It should be valid date time"))
-        if self.end_time > 23.99:
-            raise ValidationError(_("It should be valid date time"))
+        if functions.float_to_time(self.start_time) < '00:00' or functions.float_to_time(self.start_time) > '23:59':
+            raise ValidationError(_("Start Time should be valid date time"))
+        if functions.float_to_time(self.end_time) < '00:00' or functions.float_to_time(self.end_time) > '23:59':
+            raise ValidationError(_("End Time should be valid date time"))
 
     @api.model
     def _needaction_domain_get(self):
@@ -68,3 +70,4 @@ class AppointmentTimeSlot(models.Model):
             domain = [('day', '=ilike', name + '%')]
             names2 = self.search(domain, limit=limit).name_get()
         return list(set(names1) | set(names2))[:limit]
+
