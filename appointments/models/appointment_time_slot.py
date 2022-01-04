@@ -38,28 +38,25 @@ class AppointmentTimeSlot(models.Model):
                 end_time = functions.float_to_time(rec.end_time)
                 rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
 
-    @api.constrains('name')
+    @api.constrains('name','start_time','end_time')
     def _check_name(self):
-        name = self.search([('day', '=', self.day),('start_time', '=', self.start_time),('end_time', '=', self.end_time)])
+        name = self.search([('day', '=', self.day),('start_time', '=', functions.float_to_time(self.start_time)),
+                            ('end_time', '=', functions.float_to_time(self.end_time))])
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
     @api.constrains('start_time', 'end_time')
     def _check_max_min(self):
         for rec in self:
-            if rec.end_time <= rec.start_time:
+            if functions.float_to_time(rec.end_time) <= functions.float_to_time(rec.start_time):
                 raise ValidationError(_("Start Time should not be greater than End Time."))
 
     @api.constrains('start_time', 'end_time')
     def _check_valid_time(self):
-        if self.start_time > 23.99:
-            raise ValidationError(_("It should be valid date time"))
-        if self.end_time > 23.99:
-            raise ValidationError(_("It should be valid date time"))
-        if self.start_time <= 00.00:
-            raise ValidationError(_("It should be valid date time"))
-        if self.end_time <= 00.00:
-            raise ValidationError(_("It should be valid date time"))
+        if functions.float_to_time(self.start_time) < '00:00' or functions.float_to_time(self.start_time) > '23:59':
+            raise ValidationError(_("Start Time should be valid date time"))
+        if functions.float_to_time(self.end_time) < '00:00' or functions.float_to_time(self.end_time) > '23:59':
+            raise ValidationError(_("End Time should be valid date time"))
 
     @api.model
     def _needaction_domain_get(self):
