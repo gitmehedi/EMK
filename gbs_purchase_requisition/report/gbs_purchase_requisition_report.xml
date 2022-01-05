@@ -39,7 +39,8 @@
                         <style type="text/css">
                             .report-title { text-align:center; }
                             .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
-                            .signed-by { display: inline-block; border-bottom: 1px solid #333; padding: 2px; margin-bottom: 2px; }
+                            .signed-by { display: inline-block; border-top: 1px solid #333; padding: 5px; margin-top: 60px; }
+                            .approve-by { display: inline-block; border-bottom: 1px solid #333; padding: 2px; margin-bottom: 2px; }
                             .bold-name { font-weight: bold; }
                         </style>
                         <div class="clearfix">
@@ -119,22 +120,22 @@
                         <div class="col-md-12">
                             <div class="row">
                             <div class="col-xs-3 text-center">
-                                <span  class="signed-by"><b>Requisition Raised By</b></span>
+                                <span  class="approve-by"><b>Requisition Raised By</b></span>
                             </div>
                             <div class="col-xs-3 text-center">
-                                <span class="signed-by"><b>Reviewed By</b></span>
+                                <span class="approve-by"><b>Reviewed By</b></span>
                                 <br><span class="bold-name" t-esc="pr_approved_by"/></br>
                                 <br><span t-esc="pr_approval_dept"/></br>
                                 <br><span t-esc="pr_approval_time"/></br>
                             </div>
                             <div class="col-xs-3 text-center">
-                                <span class="signed-by"><b>Recommended By</b></span>
+                                <span class="approve-by"><b>Recommended By</b></span>
                                 <br><span class="bold-name" t-esc="pr_validated_by"/></br>
                                 <br><span t-esc="pr_validation_dept"/></br>
                                 <br><span t-esc="pr_validation_time"/></br>
                             </div>
                             <div class="col-xs-3 text-center">
-                                <span class="signed-by"><b>Approved By</b></span>
+                                <span class="approve-by"><b>Approved By</b></span>
                                 <br><span class="bold-name" t-esc="pr_confirm_by"/></br>
                                 <br><span t-esc="pr_confirmation_dept"/></br>
                                 <br><span t-esc="pr_confirmation_time"/></br>
