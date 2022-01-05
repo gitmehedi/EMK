@@ -33,6 +33,8 @@
         'membership',
         'account_asset',
         'account',
+        'purchase',
+        'appointment_menu',
     ],
     'data': [
         'views/main_menu_view.xml',

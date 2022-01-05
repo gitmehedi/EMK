@@ -9,6 +9,7 @@
     'depends': [
         'base',
         'mail',
+        'website',
         'gbs_gender',
         'appointment_user',
         'appointment_menu',
@@ -19,6 +20,7 @@
         'data/mail_template.xml',
         'reports/visiting_info.xml',
         'wizards/appointment_wizard_views.xml',
+        'views/menu_views.xml',
         'views/appointment_templates.xml',
         'views/appointment_type_views.xml',
         'views/appointment_topics_views.xml',
@@ -29,4 +31,3 @@
     ],
     'installable': True,
 }
-

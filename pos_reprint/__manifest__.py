@@ -15,7 +15,6 @@
     ],
     'data': [
         'security/security.xml',
-        'views/assets.xml',
         'wizards/pos_product_return_wizard_view.xml',
         'report/reprint_sale_ticket_view.xml',
         'views/inherit_pos_order_view.xml',
