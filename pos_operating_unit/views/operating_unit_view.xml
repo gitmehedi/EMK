@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_view_operating_unit_form" model="ir.ui.view">
+        <field name="name">operating.unit.form</field>
+        <field name="model">operating.unit</field>
+        <field name="inherit_id" ref="operating_unit.view_operating_unit_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="replace">
+                <form string="Operating Unit">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="receipt_title"/>
+                                <field name="name"/>
+                                <field name="code"/>
+                            </group>
+                            <group>
+                                <field name="receipt_company_title"/>
+                                <field name="partner_id"/>
+                                <field name="active"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <group string="Contact Details">
+                            <group>
+                                <label for="street" string="Address"/>
+                                <div>
+                                    <field name="street" placeholder="Street..."/>
+                                    <field name="street2"/>
+                                    <div class="address_format">
+                                        <field name="city" placeholder="City" style="width: 40%"/>
+                                        <field name="zip" placeholder="ZIP" style="width: 20%"/>
+                                    </div>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="contact_no"/>
+                                <field name="fax"/>
+                                <field name="vat"/>
+                                <field name="email" widget="email"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_operating_unit_tree" model="ir.ui.view">
+        <field name="name">operating.unit.tree</field>
+        <field name="model">operating.unit</field>
+        <field name="inherit_id" ref="operating_unit.view_operating_unit_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree string="Operating Unit">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="receipt_title"/>
+                    <field name="contact_no"/>
+                    <field name="active"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </xpath>
+
+        </field>
+    </record>
+    <record id="view_operating_unit_search" model="ir.ui.view">
+        <field name="name">operating.unit.search</field>
+        <field name="model">operating.unit</field>
+        <field name="inherit_id" ref="operating_unit.view_operating_unit_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="replace">
+                <search string="Search Operating Unit">
+                    <field name="name" string="Operating Unit"/>
+                    <field name="code" string="Code"/>
+                </search>
+            </xpath>
+        </field>
+    </record>
+</odoo>

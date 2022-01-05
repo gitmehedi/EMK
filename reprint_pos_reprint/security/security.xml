@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="group_pos_order_admin" model="res.groups">
+            <field name="name">Point of Sale Admin</field>
+            <field name="category_id" ref="base.module_category_point_of_sale"/>
+        </record>
+    </data>
+</openerp>

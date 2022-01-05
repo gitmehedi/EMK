@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_product_return_wizard" model="ir.ui.view">
+        <field name="name">PoS Product Return</field>
+        <field name="model">pos.product.return.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Pay Order">
+                <group>
+                    <field name="product_ids" nolabel="1"/>
+                </group>
+                <footer>
+                    <button name="return_products" string="Exchange Products" type="object" class="oe_highlight"/>
+                    or
+                    <button special="cancel" string="Cancel" class="oe_link"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_pos_product_return_wizard" model="ir.actions.act_window">
+        <field name="name">Request for Change</field>
+        <field name="res_model">pos.product.return.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_pos_product_return_wizard"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
+
