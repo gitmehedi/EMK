@@ -34,14 +34,14 @@ class AppointmentTimeSlot(models.Model):
     def _compute_name(self):
         for rec in self:
             if rec.day and rec.start_time and rec.end_time:
-                start_time= functions.float_to_time(rec.start_time)
+                start_time = functions.float_to_time(rec.start_time)
                 end_time = functions.float_to_time(rec.end_time)
                 rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
 
     @api.constrains('name','start_time','end_time')
     def _check_name(self):
-        name = self.search([('day', '=', self.day),('start_time', '=', functions.float_to_time(self.start_time)),
-                            ('end_time', '=', functions.float_to_time(self.end_time))])
+        name = self.search([('day', '=', self.day),('start_time', '=', self.start_time),
+                            ('end_time', '=', self.end_time)])
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 

@@ -33,11 +33,10 @@
                                 class="oe_highlight"/>
                         <button name="finish_appointment" string="Finish" states="approve" type="object"
                                 class="oe_highlight"/>
-                        <button name="reject_appointment" string="Reject" states="confirm"
+                        <button name="reject_appointment" string="Reject" states="draft,confirm"
                                 type="object"/>
                         <button name="%(action_appointment_wizard)d" string="Reschedule" states="confirm,approve"
-                                type="action"
-                                class="oe_highlight"/>
+                                type="action" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done,reject"
                                statusbar_colors='{"reject":"red"}'/>
                     </header>
