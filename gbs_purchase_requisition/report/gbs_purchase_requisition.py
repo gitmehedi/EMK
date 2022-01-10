@@ -74,7 +74,6 @@ class GbsPurchaseRequisition(models.AbstractModel):
                 # PR CONFIRM
                 pr_confirm_by = vals['employee_name']
                 pr_confirmation_time = str(vals['perform_date'])
-                print(type(vals['perform_date']))
                 pr_confirmation_dept = vals['emp_department_name']
             elif vals['code'] == 2:
                 # PR VALIDATE
