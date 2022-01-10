@@ -54,7 +54,7 @@
         "website_mail",
         "website_partner",
         'install_appointment',
-        'install_cafetoria',
+        'install_cafeteria',
         'install_event',
         'install_hr',
         'install_inventory',

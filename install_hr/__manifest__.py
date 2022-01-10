@@ -15,7 +15,6 @@
         # 'gbs_hr_payroll_top_sheet',
         'gbs_hr_attendance_report',
         'gbs_hr_leave_report',
-        'gbs_employee_roster_view',
         'hr_attendance_and_ot_summary',
         'hr_attendance_dashboard',
         'hr_manual_attendance',
@@ -117,7 +116,6 @@
         "hr_rostering",
         "l10n_generic_coa",
         "l10n_in_hr_payroll",
-        "gbs_employee_roster_view",
         "hr_attendance_settings",
         "hr_employee_operating_unit",
 
