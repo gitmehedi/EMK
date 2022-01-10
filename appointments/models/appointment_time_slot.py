@@ -1,4 +1,4 @@
-import time
+from psycopg2 import IntegrityError
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.appointments.helpers import functions
@@ -28,7 +28,10 @@ class AppointmentTimeSlot(models.Model):
     description = fields.Text(string="Description", track_visibility="onchange")
     contact_ids = fields.Many2many('appointment.contact', 'contact_timeslot_relation', 'contact_id', 'timeslot_id',
                                    string="Time Slot")
-    status = fields.Boolean(string="Status", default=True, track_visibility='onchange')
+    active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
+    pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
+                             string='Status', track_visibility='onchange', )
 
     @api.multi
     def _compute_name(self):
@@ -60,7 +63,7 @@ class AppointmentTimeSlot(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('status', '=', 'True')]
+        return [('state', 'in', ('draft', 'approve', 'reject'))]
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -70,4 +73,42 @@ class AppointmentTimeSlot(models.Model):
             domain = [('day', '=ilike', name + '%')]
             names2 = self.search(domain, limit=limit).name_get()
         return list(set(names1) | set(names2))[:limit]
+
+    @api.one
+    def act_draft(self):
+        if self.state == 'reject':
+            self.write({
+                'state': 'draft',
+                'pending': True,
+                'active': False,
+            })
+
+    @api.one
+    def act_approve(self):
+        if self.state == 'draft':
+            self.write({
+                'state': 'approve',
+                'pending': False,
+                'active': True,
+            })
+
+    @api.one
+    def act_reject(self):
+        if self.state == 'draft':
+            self.write({
+                'state': 'reject',
+                'pending': False,
+                'active': False,
+            })
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ('approve', 'reject'):
+                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+            try:
+                return super(AppointmentTimeSlot, rec).unlink()
+            except IntegrityError:
+                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
+                                        "- deletion: you may be trying to delete a record while other records still reference it"))
 

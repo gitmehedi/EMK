@@ -56,7 +56,7 @@
 								<field name="indent_date" />
 								<field name="required_date" />
 								<field name="approve_date" invisible="1"/>
-								<field name="indent_type" options="{'no_create': True,'no_open':True}"
+								<field name="indent_type" options="{'no_create': True,'no_open':True}" domain="[('state','=','approve')]"
 									   placeholder="Please Select"/>
 							</group>
 						</group>

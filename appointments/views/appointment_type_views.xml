@@ -5,11 +5,12 @@
             <field name="name">appointment.type.tree</field>
             <field name="model">appointment.type</field>
             <field name="arch" type="xml">
-                <tree string="Appointment Type"
-                      decoration-bf="status==True" decoration-muted="status==False"
-                      decoration-success="status==True">
+                <tree string="Appointment Type" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('approve',)">
                     <field name="name"/>
-                    <field name="status"/>
+                    <field name="active" invisible="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -18,12 +19,17 @@
             <field name="name">appointment.type.form</field>
             <field name="model">appointment.type</field>
             <field name="arch" type="xml">
-                <form string="Appointment Type">
+                <form string="Appointment Type"  duplicate="0">
+                    <header>
+                        <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
                     <sheet>
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="status"/>
                             </group>
                         </group>
                     </sheet>
@@ -41,21 +47,26 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
-                    <field name="status"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Status" domain="[]" context="{'group_by':'status'}"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
                     </group>
                 </search>
             </field>
         </record>
-
-
 
         <record model="ir.actions.act_window" id="action_appointment_type">
             <field name="name">Appointment Type</field>
             <field name="res_model">appointment.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
         </record>
 
         <menuitem id="menu_appointment_type" action="action_appointment_type" sequence="5"

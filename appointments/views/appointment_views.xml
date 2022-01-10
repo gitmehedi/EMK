@@ -48,23 +48,23 @@
                         </div>
                         <group>
                             <group>
-                                <field name="topic_id" domain="[('status','=','True')]"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                <field name="topic_id" domain="[('state','=','approve')]"
+                                       options="{'no_create':True,'no_open':True}"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
-                                <field name="contact_id" domain="[('status','=','True')]"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                <field name="contact_id" domain="[('state','=','approve')]"
+                                       options="{'no_create':True,'no_open':True}"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
-                                <field name="type_id" domain="[('status','=','True')]"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                <field name="type_id" domain="[('state','=','approve')]"
+                                       options="{'no_create':True,'no_open':True}"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                             </group>
                             <group>
                                 <field name="appointment_date"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
-                                <field name="timeslot_id" domain="[('status','=','True')]"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                <field name="timeslot_id" domain="[('state','=','approve')]"
+                                       options="{'no_create':True,'no_open':True}"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
-                                <field name="meeting_room_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}" domain="[('status','=','True')]"
+                                <field name="meeting_room_id" options="{'no_create':True,'no_open':True}" domain="[('state','=','approve')]"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                             </group>
                         </group>
@@ -75,7 +75,7 @@
                                 <field name="last_name"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                                 <field name="gender_id"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                       options="{'no_create':True,'no_open':True}"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                                 <field name="date_of_birth"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
@@ -184,7 +184,7 @@
 
         <menuitem id="menu_appointment_appointment" name="Appointment (Draft)" action="action_appointment_appointment"
                   sequence="30"
-                  groups="" parent="appointment_menu.sub_appoint_menu"/>
+                  groups="appointment_user.group_appoint_user" parent="appointment_menu.sub_appoint_menu"/>
 
         <menuitem id="menu_appointment_confirm" name="Appointment (Confirmed)" action="action_appointment_confirm"
                   sequence="35"

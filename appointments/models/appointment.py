@@ -77,7 +77,7 @@ class Appointment(models.Model):
 
         app_slots = [val.timeslot_id.id for val in appointment_slots]
 
-        contact_slots = self.env['appointment.contact'].search([('id', '=', self.contact_id.id), ('status', '=', True)])
+        contact_slots = self.env['appointment.contact'].search([('id', '=', self.contact_id.id), ('state', '=', 'approve')])
 
         if self.appointment_date == datetime.strftime(today,"%Y-%m-%d"):
             for slot in contact_slots.timeslot_ids:
@@ -127,7 +127,7 @@ class Appointment(models.Model):
 
             meeting_room = self.env['appointment.meeting.room'].search(
                 [('id', 'not in', appointment.meeting_room_id.ids
-                  ), ('status', '=', True)])
+                  ), ('state', '=', 'approve')])
 
             if meeting_room:
                 res['domain'] = {'meeting_room_id': [('id', 'in', meeting_room.ids)]}

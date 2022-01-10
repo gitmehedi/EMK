@@ -15,6 +15,7 @@
     ],
     'data': [
         'data/sequence.xml',
+        'security/ir.model.access.csv',
         'reports/reports.xml',
         'data/mail_template.xml',
         'reports/visiting_info.xml',

@@ -5,13 +5,14 @@
             <field name="name">appointment.meeting.room.tree</field>
             <field name="model">appointment.meeting.room</field>
             <field name="arch" type="xml">
-                <tree string="Meeting Room"
-                      decoration-bf="status==True" decoration-muted="status==False"
-                      decoration-success="status==True">
+                <tree string="Meeting Room" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('approve',)">
                     <field name="name"/>
                     <field name="max_seat"/>
                     <field name="min_seat"/>
-                    <field name="status"/>
+                     <field name="active" invisible="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -20,12 +21,17 @@
             <field name="name">appointment.meeting.room.form</field>
             <field name="model">appointment.meeting.room</field>
             <field name="arch" type="xml">
-                <form string="Meeting Room">
+                <form string="Meeting Room" duplicate="0">
+                     <header>
+                        <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
                     <sheet>
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="status"/>
                             </group>
                             <group>
                                 <field name="max_seat"/>
@@ -47,9 +53,14 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
-                    <field name="status"/>
-                    <group expand="1" string="Group By">
-                        <filter string="Status" domain="[]" context="{'group_by':'status'}"/>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
                     </group>
                 </search>
             </field>
@@ -61,6 +72,9 @@
             <field name="res_model">appointment.meeting.room</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
         </record>
 
         <menuitem id="menu_appointment_meeting_room" action="action_appointment_meeting_room" sequence="25"
