@@ -42,6 +42,9 @@
                             .signed-by { display: inline-block; border-top: 1px solid #333; padding: 5px; margin-top: 60px; }
                             .approve-by { display: inline-block; border-bottom: 1px solid #333; padding: 2px; margin-bottom: 2px; }
                             .bold-name { font-weight: bold; }
+                            .border-red { border: 1px solid #ff0000; }
+                            .indent-label { float: left; width: 100px; }
+                            .indent-text { float: left; width: calc(100% - 100px); margin-bottom: 10px; word-break: break-word; }
                         </style>
                         <div class="clearfix">
                             <h3 class="report-title mt-0">Purchase Requisition</h3>
@@ -56,13 +59,16 @@
 
                             <div class="row">
                                 <div class="col-xs-12 text-left">
-                                    <p class="mb-12"><b>Indent NO: </b>
-                                        <t t-foreach="indent_list" t-as="indent">
+                                    <p class="mb-12">
+                                        <strong class="indent-label">Indent NO: </strong>
+                                        <span class="indent-text">
+                                            <t t-foreach="indent_list" t-as="indent">
                                             <span t-esc="indent['indent_name']"/>
                                             <t t-if="indent_index &lt; len(indent_list)-1">
                                                 <b>,</b>
                                             </t>
                                         </t>
+                                        </span>
                                     </p>
                                 </div>
 
