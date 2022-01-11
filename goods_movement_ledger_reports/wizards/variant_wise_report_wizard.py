@@ -2,9 +2,9 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 
 
-class MultiVariantReportWizard(models.TransientModel):
-    _name = 'multi.variant.report.wizard'
-    _description = 'Multi Variant Report'
+class VariantWiseReportWizard(models.TransientModel):
+    _name = 'variant.wise.report.wizard'
+    _description = 'Variant Wise Report'
 
     date_from = fields.Date("Date From", required=True)
     date_to = fields.Date("Date To", required=True)
@@ -30,7 +30,10 @@ class MultiVariantReportWizard(models.TransientModel):
         else:
             raise UserError(_('Manufacturing group not set to the user!'))
 
-    product_ids = fields.Many2many('product.product', string='Product', domain=_get_products)
+    # product_ids = fields.Many2many('product.product', 'product_product_rel', string='Products', required=True,
+    #                                domain=_get_products)
+
+    product_id = fields.Many2one('product.product', string='Product', required=True, domain=_get_products)
 
     def _get_operating_unit(self):
         domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
@@ -43,25 +46,4 @@ class MultiVariantReportWizard(models.TransientModel):
     @api.multi
     def export_excel(self):
         return self.env['report'].get_action(self,
-                                             report_name='goods_movement_ledger_reports.multi_variant_report_xlsx')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                             report_name='goods_movement_ledger_reports.variant_wise_report_xlsx')
