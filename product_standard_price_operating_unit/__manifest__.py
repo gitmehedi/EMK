@@ -9,6 +9,7 @@
     'version': '10.0.0.1',
     'depends': [
         'product',
+        'stock_account',
         'stock_custom_summary_report',
         'stock_purchase_custom_report',
         'stock_transfer_report',
