@@ -43,7 +43,7 @@
                                 <group>
                                     <group>
                                         <field name="membership_category_id" string="Membership Category" required="1"
-                                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                               options="{'no_open':True,'no_create':True}" domain="[('state','=','approve')]"/>
                                         <field name="default_code"/>
                                         <field name="categ_id" invisible="True"/>
                                         <field name="membership" invisible="1"/>
@@ -54,9 +54,9 @@
                                     <group>
 
                                         <field name="property_account_income_id"
-                                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                               options="{'no_open':True,'no_create':True}"/>
                                         <field name="taxes_id" widget="many2many_tags"
-                                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                               options="{'no_open':True,'no_create':True}"
                                                string="Taxes"/>
                                     </group>
                                 </group>

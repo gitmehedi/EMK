@@ -7,7 +7,13 @@
 			<field name="type">form</field>
 			<field name="priority" eval="16"/>
 			<field name="arch" type="xml">
-				<form string="Employee Loan Types">
+				<form string="Employee Loan Types" duplicate="0">
+					<header>
+                        <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
 					<sheet>
 						<group>
 							<group>
@@ -26,17 +32,44 @@
 			<field name="model">hr.employee.loan.proof</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<form string="Employee Loan Proof">
+				<tree string="Employee Loan Proof" decoration-info="state=='draft'"
+                      decoration-success="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('approve',)">
 					<field name="name" />
 					<field name="mandatory" />
-				</form>
+					<field name="state" />
+				</tree>
 			</field>
 		</record>
+
+		<record id="view_hr_employee_loan_proof_search" model="ir.ui.view">
+            <field name="name">view.hr.employee.loan.proof.search</field>
+            <field name="model">hr.employee.loan.proof</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record  id="hr_loan_proof_action" model="ir.actions.act_window">
             <field name="name">Loan Proofs</field>
             <field name="res_model">hr.employee.loan.proof</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+			<field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
         </record>
 
         

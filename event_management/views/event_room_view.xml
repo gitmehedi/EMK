@@ -5,26 +5,32 @@
             <field name="name">event.room.form</field>
             <field name="model">event.room</field>
             <field name="arch" type="xml">
-                <form string="Event Room">
+                <form string="Event Room" duplicate="0">
+                    <header>
+                        <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
-                            <button name="toggle_status" type="object"
-                                    class="oe_stat_button" icon="fa-archive">
-                                <field name="status" widget="boolean_button"
-                                       options='{"terminology": "archive"}'/>
-                            </button>
+<!--                            <button name="toggle_status" type="object"-->
+<!--                                    class="oe_stat_button" icon="fa-archive">-->
+<!--                                <field name="status" widget="boolean_button"-->
+<!--                                       options='{"terminology": "archive"}'/>-->
+<!--                            </button>-->
                         </div>
                         <group>
                             <group>
                                 <field name="name"/>
                                 <field name="event_count"/>
                                 <field name="service_ids" widget="many2many_tags"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                       options="{'no_create':True,'no_open':True}"/>
                             </group>
                             <group>
                                 <field name="max_seat"/>
                                 <field name="min_seat"/>
-                                <field name="status"/>
+
                             </group>
                         </group>
                     </sheet>
@@ -40,15 +46,33 @@
             <field name="name">event.room.tree</field>
             <field name="model">event.room</field>
             <field name="arch" type="xml">
-                <tree string="Event Room"
-                      decoration-bf="status==True" decoration-muted="status==False"
-                      decoration-success="status==True">
+                <tree string="Event Room" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('approve',)">
                     <field name="name"/>
                     <field name="event_count"/>
                     <field name="max_seat"/>
                     <field name="min_seat"/>
-                    <field name="status"/>
+                    <field name="state"/>
                 </tree>
+            </field>
+        </record>
+        <record id="view_event_room_search" model="ir.ui.view">
+            <field name="name">view.event.room.search</field>
+            <field name="model">event.room</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -56,6 +80,9 @@
             <field name="name">Event Rooms</field>
             <field name="res_model">event.room</field>
             <field name="view_type">form</field>
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
         </record>
 
         <menuitem name="Event Room" id="menu_event_room" action="action_event_room"

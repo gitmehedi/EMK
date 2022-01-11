@@ -24,9 +24,7 @@ class Appointment(models.Model):
     contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange')
     timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange')
     type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange')
-    # meeting_room_id = fields.Many2many('appointment.meeting.room', 'appointment_meeting_room_rel', 'appointment_id',
-    #                                    'meeting_room_id', string='Room Allocation', track_visibility='onchange')
-    meeting_room_id = fields.Many2one('appointment.meeting.room', string="Meeting Room", required=True, track_visibility='onchange')
+    meeting_room_id = fields.Many2one('appointment.meeting.room', string="Meeting Room", track_visibility='onchange')
     description = fields.Text(string='Remarks', track_visibility="onchange")
     appointment_date = fields.Date('Appointment Date', required=True, track_visibility="onchange")
     first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
