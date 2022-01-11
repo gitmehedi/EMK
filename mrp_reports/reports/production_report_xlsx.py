@@ -163,6 +163,8 @@ class ProductionReportXLSX(ReportXlsx):
                    t1.product_name,
                    t1.product_uom,
                    t1.name,
+                    COALESCE(t1.amount, 0)  as t1_amount,
+				  COALESCE(t2.amount, 0)  as t2_amount,
                    t1.avg_cost,
                    COALESCE(COALESCE(t1.total_qty, 0) - COALESCE(t2.total_qty, 0), 0) as after_total_qty,
                    COALESCE(t1.total_qty, 0) as production_qty,
@@ -172,6 +174,7 @@ class ProductionReportXLSX(ReportXlsx):
                       SELECT
                          sm.product_id,
                          AVG(sm.price_unit) as avg_cost,
+                         SUM(sm.quantity_done_store * sm.price_unit) AS amount,
                          pt.name AS product_name,
                          sm.product_uom,
                          uom.name,
@@ -211,6 +214,7 @@ class ProductionReportXLSX(ReportXlsx):
                          SELECT
                             sm.product_id,
                             pt.name AS product_name,
+                            -SUM(sm.quantity_done_store * sm.price_unit) AS amount,
                             sm.product_uom,
                             uom.name,
                             SUM(sm.quantity_done_store) AS total_qty 
@@ -264,12 +268,12 @@ class ProductionReportXLSX(ReportXlsx):
             sheet.write(row_no, 3, vals['after_total_qty'], normal_format_left_comma_separator)
             sheet.write(row_no, 4, vals['name'], normal_format_left)
             if self.env.user.has_group('account.group_account_user'):
-                sheet.write(row_no, 5, vals['avg_cost'], normal_format_left_comma_separator)
-                sheet.write(row_no, 6, vals['after_total_qty'] * vals['avg_cost'],
+                sheet.write(row_no, 5, (vals['t1_amount'] + vals['t2_amount'])/vals['after_total_qty'], normal_format_left_comma_separator)
+                sheet.write(row_no, 6, vals['t1_amount'] + vals['t2_amount'],
                             normal_format_left_comma_separator)
             row_no = row_no + 1
-            if vals['after_total_qty'] and vals['avg_cost']:
-                cost_sum = cost_sum + vals['after_total_qty'] * vals['avg_cost']
+            if vals['t1_amount'] or vals['t2_amount']:
+                cost_sum = cost_sum + vals['t1_amount'] + vals['t2_amount']
 
         production_sql = '''
                 SELECT t1.product_id,t1.product_name,t1.product_uom,t1.name,t1.avg_cost,
@@ -281,6 +285,7 @@ class ProductionReportXLSX(ReportXlsx):
                       SELECT sm.product_id,AVG(sm.price_unit) as avg_cost,
                       pt.name AS product_name,sm.product_uom,uom.name,
                       SUM(sm.quantity_done_store) AS total_qty 
+                      
                       FROM
                          stock_move sm 
                          JOIN mrp_production mp ON mp.id = sm.production_id
