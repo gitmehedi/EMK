@@ -41,7 +41,6 @@
             <field name="view_type">form</field>
         </record>
 
-        <menuitem id="menu_res_gender" action="action_res_gender"
-                  groups="event_user.group_event_officer" parent="event.menu_event_configuration"/>
+        <menuitem id="menu_res_gender" action="action_res_gender" parent="base.menu_users"/>
     </data>
 </odoo>

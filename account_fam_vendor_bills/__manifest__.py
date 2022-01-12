@@ -14,8 +14,6 @@
         'account_fam_menu',
     ],
     "data": [
-        'wizard/product_product_wizard_view.xml',
-        'wizard/cost_centre_wizard_view.xml',
         'views/cost_centre_view.xml',
         'views/inherit_product_product_view.xml',
     ],

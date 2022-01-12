@@ -8,28 +8,11 @@ DATE_FORMAT = "%Y-%m-%d"
 
 
 class WebsiteAppointmentReservation(http.Controller):
-    # @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'],
-    #             website=True)
-    # def registration_new(self, event, **post):
-    #     tickets = self._process_tickets_details(post)
-    #     if not tickets:
-    #         return False
-    #     return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details",
-    #                                                      {'tickets': tickets, 'event': event})
-    #
-    # @http.route()
-    # def registration_new(self, event, **post):
-    #     super(WebsiteAppointmentReservation, self).registration_new(event)
-    #     tickets = self._process_tickets_details(post)
-    #     if not tickets:
-    #         return False
-    #
-    #     vals = {
-    #         'professions': http.request.env['attendee.profession'].sudo().search([('status', '=', True)]),
-    #         'gender_ids': http.request.env['res.gender'].sudo().search([('status', '=', True)], order='id asc'),
-    #     }
-    #     return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details",
-    #                                                      {'tickets': tickets, 'event': event, 'vals': vals})
+    @http.route(['/appointment/success'], website=True, auth="public")
+    def appointment_success(self, redirect=None, *args, **kw):
+        if not redirect:
+            return request.render('appointments.appointment_reservation_success')
+
 
     @http.route(['/appointment/reservation'], type='http', auth="public", website=True, methods=['GET', 'POST'])
     def appointment_reservation(self, **post):
@@ -53,7 +36,8 @@ class WebsiteAppointmentReservation(http.Controller):
                 auth_data = self.post_events(qctx)
                 if auth_data:
                     try:
-                        return request.render('appointments.appointment_reservation_success')
+                        redirect = '/appointment/success'
+                        return http.redirect_with_hash(redirect,auth_data)
                     except:
                         return request.render('appointments.appointment_reservation_success')
             except (WebsiteAppointmentReservation, AssertionError) as e:

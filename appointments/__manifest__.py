@@ -9,6 +9,7 @@
     'depends': [
         'base',
         'mail',
+        'hr',
         'website',
         'gbs_gender',
         'appointment_user',
