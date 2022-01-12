@@ -2,14 +2,14 @@
 <odoo>
     <data>
 
-        <record id="production_report_wizard_view" model="ir.ui.view">
-            <field name="name">production.report.wizard.view</field>
-            <field name="model">production.report.wizard</field>
+        <record id="multi_variant_report_wizard_view" model="ir.ui.view">
+            <field name="name">multi.variant.report.wizard.view</field>
+            <field name="model">multi.variant.report.wizard</field>
             <field name="arch" type="xml">
-                <form string="Production Report">
+                <form string="Multi Variant Ledger Report">
                     <group>
                         <group>
-                            <field name="product_id"  placeholder="Select Product"
+                            <field name="product_ids"  placeholder="All Products" widget="many2many_tags"
                                    options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
 
                             <field name="date_from"/>
@@ -30,26 +30,21 @@
         </record>
 
 
-        <record id="production_report_wizard_action" model="ir.actions.act_window">
-            <field name="name">Production Report</field>
+        <record id="multi_variant_report_wizard_action" model="ir.actions.act_window">
+            <field name="name">Multi Variant Ledger Report</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">production.report.wizard</field>
+            <field name="res_model">multi.variant.report.wizard</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="production_report_wizard_view"/>
+            <field name="view_id" ref="multi_variant_report_wizard_view"/>
             <field name="target">new</field>
         </record>
 
 
-        <menuitem id="menu_mrp_production_report"
-                  name="Production Report"
+        <menuitem id="multi_variant_report_wizard"
+                  name="Multi Variant Ledger Report"
                   parent="mrp.menu_mrp_reporting"
-                  action="production_report_wizard_action"
-                  sequence="8"/>
-
-        <record model="ir.ui.menu" id="mrp.menu_mrp_production_report">
-            <field name="groups_id" eval="[(6, False, (ref('base.group_system'),))]"/>
-        </record>
-
+                  action="multi_variant_report_wizard_action"
+                  sequence="11"/>
 
     </data>
 </odoo>

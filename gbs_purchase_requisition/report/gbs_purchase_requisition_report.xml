@@ -129,10 +129,10 @@
                                 <span  class="approve-by"><b>Requisition Raised By</b></span>
                             </div>
                             <div class="col-xs-3 text-center">
-                                <span class="approve-by"><b>Reviewed By</b></span>
-                                <br><span class="bold-name" t-esc="pr_approved_by"/></br>
-                                <br><span t-esc="pr_approval_dept"/></br>
-                                <br><span t-esc="pr_approval_time"/></br>
+                                <span class="approve-by"><b>Approved By</b></span>
+                                <br><span class="bold-name" t-esc="pr_confirm_by"/></br>
+                                <br><span t-esc="pr_confirmation_dept"/></br>
+                                <br><span t-esc="pr_confirmation_time"/></br>
                             </div>
                             <div class="col-xs-3 text-center">
                                 <span class="approve-by"><b>Recommended By</b></span>
@@ -141,11 +141,12 @@
                                 <br><span t-esc="pr_validation_time"/></br>
                             </div>
                             <div class="col-xs-3 text-center">
-                                <span class="approve-by"><b>Approved By</b></span>
-                                <br><span class="bold-name" t-esc="pr_confirm_by"/></br>
-                                <br><span t-esc="pr_confirmation_dept"/></br>
-                                <br><span t-esc="pr_confirmation_time"/></br>
+                                <span class="approve-by"><b>Reviewed By</b></span>
+                                <br><span class="bold-name" t-esc="pr_approved_by"/></br>
+                                <br><span t-esc="pr_approval_dept"/></br>
+                                <br><span t-esc="pr_approval_time"/></br>
                             </div>
+
                         </div>
                         </div>
                     </div>

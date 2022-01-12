@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="item_ledger_report_wizard_view" model="ir.ui.view">
+            <field name="name">item.ledger.report.wizard.view</field>
+            <field name="model">item.ledger.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Item Ledger Report">
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="operating_unit_id" placeholder="Select Operating Unit"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                        </group>
+                        <group>
+                            <field name="category_id" placeholder="Select Product Category"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                            <field name="product_id"  placeholder="Select Product"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"
+                                   domain="[('product_tmpl_id.categ_id.id', 'child_of', category_id)]"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="export_excel" string="Export Excel" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="item_ledger_report_wizard_action" model="ir.actions.act_window">
+            <field name="name">Item Ledger Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">item.ledger.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="item_ledger_report_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem id="menu_item_ledger_report"
+                  name="Item Ledger Report"
+                  groups="stock.group_stock_user"
+                  parent="stock.menu_warehouse_report"
+                  action="item_ledger_report_wizard_action"
+                  sequence="12"/>
+
+
+    </data>
+</odoo>

@@ -2,11 +2,11 @@
 <odoo>
     <data>
 
-        <record id="production_report_wizard_view" model="ir.ui.view">
-            <field name="name">production.report.wizard.view</field>
-            <field name="model">production.report.wizard</field>
+        <record id="variant_wise_report_wizard_view" model="ir.ui.view">
+            <field name="name">variant.wise.report.wizard.view</field>
+            <field name="model">variant.wise.report.wizard</field>
             <field name="arch" type="xml">
-                <form string="Production Report">
+                <form string="Variant Wise Ledger Report">
                     <group>
                         <group>
                             <field name="product_id"  placeholder="Select Product"
@@ -30,26 +30,21 @@
         </record>
 
 
-        <record id="production_report_wizard_action" model="ir.actions.act_window">
-            <field name="name">Production Report</field>
+        <record id="variant_wise_report_wizard_action" model="ir.actions.act_window">
+            <field name="name">Variant Wise Ledger Report</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">production.report.wizard</field>
+            <field name="res_model">variant.wise.report.wizard</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="production_report_wizard_view"/>
+            <field name="view_id" ref="variant_wise_report_wizard_view"/>
             <field name="target">new</field>
         </record>
 
 
-        <menuitem id="menu_mrp_production_report"
-                  name="Production Report"
+        <menuitem id="menu_variant_wise_ledger_report"
+                  name="Variant Wise Ledger Report"
                   parent="mrp.menu_mrp_reporting"
-                  action="production_report_wizard_action"
-                  sequence="8"/>
-
-        <record model="ir.ui.menu" id="mrp.menu_mrp_production_report">
-            <field name="groups_id" eval="[(6, False, (ref('base.group_system'),))]"/>
-        </record>
-
+                  action="variant_wise_report_wizard_action"
+                  sequence="11"/>
 
     </data>
 </odoo>

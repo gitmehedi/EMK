@@ -1,0 +1,4 @@
+import variant_wise_report_wizard
+import variant_wise_inventory_report_wizard
+import multi_variant_report_wizard
+import multi_variant_inventory_report_wizard
