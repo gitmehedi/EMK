@@ -46,16 +46,19 @@ class GbsPurchaseRequisition(models.AbstractModel):
 
         # PR Report Employee approval sign Automation Query
         _pr_log_sql = """
-        select ua.code as code,ua.name as action_name,pral.performer_id as performer_id, rp.name as employee_name, hd.name as emp_department_name,
-        (pral.perform_date + interval '6h') as perform_date  from purchase_requisition_action_log pral 
-        LEFT JOIN users_action ua ON ua.id=pral.action_id
-        LEFT JOIN res_users ru on pral.performer_id = ru.id
-        LEFT JOIN res_partner rp on ru.partner_id = rp.id
-        LEFT JOIN resource_resource rr ON rr.user_id = ru.id
-        LEFT JOIN hr_employee emp ON emp.resource_id = rr.id
-        LEFT JOIN hr_department hd ON emp.department_id = hd.id
-        WHERE requisition_id  = %s
-        
+            SELECT code,employee_name,action_name,performer_id,emp_department_name, max(perform_date) as perform_date FROM 
+                (SELECT ua.code as code,ua.name as action_name,pral.performer_id as performer_id,
+                rp.name as employee_name, hd.name as emp_department_name,
+                (pral.perform_date + interval '6h') as perform_date  FROM purchase_requisition_action_log pral
+                LEFT JOIN users_action ua ON ua.id=pral.action_id
+                LEFT JOIN res_users ru on pral.performer_id = ru.id
+                LEFT JOIN res_partner rp on ru.partner_id = rp.id
+                LEFT JOIN resource_resource rr ON rr.user_id = ru.id
+                LEFT JOIN hr_employee emp ON emp.resource_id = rr.id
+                LEFT JOIN hr_department hd ON emp.department_id = hd.id
+                WHERE requisition_id = %s) t1 
+                GROUP BY code,employee_name,action_name,performer_id,emp_department_name
+
         """ % pr_obj.id
 
         self.env.cr.execute(_pr_log_sql)
@@ -69,7 +72,10 @@ class GbsPurchaseRequisition(models.AbstractModel):
         pr_validated_by = ''
         pr_validation_time = ''
         pr_validation_dept = ''
+        previous_code = ''
         for vals in self.env.cr.dictfetchall():
+            if previous_code == vals['code']:
+                continue
             if vals['code'] == 1:
                 # PR CONFIRM
                 pr_confirm_by = vals['employee_name']
@@ -85,6 +91,7 @@ class GbsPurchaseRequisition(models.AbstractModel):
                 pr_approved_by = vals['employee_name']
                 pr_approval_time = str(vals['perform_date'])
                 pr_approval_dept = vals['emp_department_name']
+            previous_code = vals['code']
 
         docargs = {
             'lists': order_list,
