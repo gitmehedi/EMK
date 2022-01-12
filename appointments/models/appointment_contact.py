@@ -80,7 +80,8 @@ class AppointmentContact(models.Model):
                 return super(AppointmentContact, rec).unlink()
             except IntegrityError:
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
-                                        "- deletion: you may be trying to delete a record while other records still reference it"))
+                                        "- deletion: you may be trying to delete a record while "
+                                        "other records still reference it"))
 
 
 class AppointmentEmp(models.Model):
@@ -90,8 +91,8 @@ class AppointmentEmp(models.Model):
     def name_get(self):
         name = self.name
         if self.employee_number:
-            name = '[%s] %s' % (self.employee_number, self.name)
-        return (self.id, name)
+            name = '[%s] %s-%s-%s' % (self.employee_number, self.name, self.department_id.name, self.job_id.name)
+        return self.id, name
 
 
 
