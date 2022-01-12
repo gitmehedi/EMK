@@ -47,7 +47,7 @@
                   groups="stock.group_stock_user"
                   parent="stock.menu_warehouse_report"
                   action="item_ledger_report_wizard_action"
-                  sequence="11"/>
+                  sequence="12"/>
 
 
     </data>
