@@ -260,16 +260,15 @@ class ProductReportUtility(models.TransientModel):
 
     def get_purchase_stock(self, start_date, end_date, operating_unit_id, product_param):
         sql = '''
-                    SELECT COALESCE(SUM(sm.product_qty), 0) as purchase_qty FROM stock_move sm 
-                        LEFT JOIN  stock_picking sp ON sm.picking_type_id = sp.id
-                        LEFT JOIN purchase_order po ON po.origin = sp.origin
-                        LEFT JOIN stock_picking_type spt ON sm.picking_type_id = spt.id
-                        LEFT JOIN stock_location sl ON sl.id = sm.location_dest_id
-                        WHERE sm.date BETWEEN DATE('%s')+TIME '00:00:01' AND DATE('%s')+TIME '23:59:59'
-                        AND sl.operating_unit_id =%s
-                        AND sm.state ='done'
-                        AND spt.code = 'incoming'
-                        AND sm.product_id IN (%s)
+            SELECT COALESCE(SUM(sm.product_qty), 0) as purchase_qty 
+                FROM stock_move sm  LEFT JOIN  stock_picking sp ON sm.picking_type_id = sp.id
+                                    LEFT JOIN stock_picking_type spt ON sm.picking_type_id = spt.id
+                                    WHERE sm.date BETWEEN DATE('%s')+TIME '00:00:01' AND DATE('%s')+TIME '23:59:59'
+						            AND spt.default_location_dest_id IN (SELECT id FROM stock_location WHERE operating_unit_id = %s)
+                                    AND spt.default_location_src_id IS NULL
+                                    AND sm.state ='done'
+                                    AND spt.code = 'incoming'
+                                    AND sm.product_id IN (%s)
                     ''' % (start_date, end_date, operating_unit_id, product_param)
 
         self.env.cr.execute(sql)
