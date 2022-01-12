@@ -9,8 +9,7 @@ import datetime
 class ItemLedgerReportXLSX(ReportXlsx):
 
     def generate_xlsx_report(self, workbook, data, obj):
-        # data structure
-
+        reportUtility = self.env['report.utility']
         location = self.env['stock.location'].search(
             [('operating_unit_id', '=', obj.operating_unit_id.id), ('name', '=', 'Stock')])
 
@@ -42,7 +41,12 @@ class ItemLedgerReportXLSX(ReportXlsx):
             {'align': 'left', 'border': 1, 'bg_color': '#d7ecfa', 'bold': True, 'size': 8})
         footer_format_left = workbook.add_format(
             {'align': 'left', 'border': 1, 'bold': True, 'size': 8})
+
+        footer_format_left_comma_separator = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'bold': True, 'size': 8})
         normal_format_left = workbook.add_format({'align': 'left', 'size': 8})
+        normal_format_left_comma_separator = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'left', 'size': 8})
         merged_format_center = workbook.add_format({'align': 'center', 'size': 8})
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 7})
 
@@ -63,7 +67,9 @@ class ItemLedgerReportXLSX(ReportXlsx):
         sheet.write(6, 0, "Product Variant", name_format_left)
         sheet.merge_range('B7:E7', product_name, normal_format_left)
         sheet.write(6, 5, "Date", name_format_left)
-        sheet.merge_range('G7:J7', obj.date_from + ' to ' + obj.date_to, normal_format_left)
+        sheet.merge_range('G7:J7', reportUtility.get_date_from_string(
+            obj.date_from) + ' to ' + reportUtility.get_date_from_string(
+            obj.date_to), normal_format_left)
         sheet.write(7, 0, "Operating Unit", name_format_left)
         sheet.merge_range('B8:E8', obj.operating_unit_id.name, normal_format_left)
 
@@ -71,14 +77,13 @@ class ItemLedgerReportXLSX(ReportXlsx):
 
         sheet.write(8, 0, "Date", header_format_left)
         sheet.write(8, 1, "Reference", header_format_left)
-        sheet.write(8, 2, "Narration", header_format_left)
-        sheet.write(8, 3, "UoM", header_format_left)
-        sheet.write(8, 4, "In Qty", header_format_left)
-        sheet.write(8, 5, "Out Qty", header_format_left)
-        sheet.write(8, 6, "Rate", header_format_left)
-        sheet.write(8, 7, "Type", header_format_left)
-        sheet.write(8, 8, "Amount In", header_format_left)
-        sheet.write(8, 9, "Amount Out", header_format_left)
+        sheet.write(8, 2, "UoM", header_format_left)
+        sheet.write(8, 3, "In Qty", header_format_left)
+        sheet.write(8, 4, "Out Qty", header_format_left)
+        sheet.write(8, 5, "Rate", header_format_left)
+        sheet.write(8, 6, "Type", header_format_left)
+        sheet.write(8, 7, "Amount In", header_format_left)
+        sheet.write(8, 8, "Amount Out", header_format_left)
         #
 
         if category_id:
@@ -281,55 +286,54 @@ class ItemLedgerReportXLSX(ReportXlsx):
         total_amount_in = 0
         total_amount_out = 0
         for vals in sorted_item_ledger_vals_list:
-            sheet.write(row_no, 0, vals['move_date'], normal_format_left)
+            sheet.write(row_no, 0, reportUtility.get_date_from_string(vals['move_date']), normal_format_left)
             sheet.write(row_no, 1, vals['origin'], normal_format_left)
-            sheet.write(row_no, 2, 'For Now', normal_format_left)
-            sheet.write(row_no, 3, vals['uom_name'], normal_format_left)
+            sheet.write(row_no, 2, vals['uom_name'], normal_format_left)
             # in qty
             if vals['type'] == 'IN':
-                sheet.write(row_no, 4, vals['qty_in_tk'], normal_format_left)
+                sheet.write(row_no, 3, vals['qty_in_tk'], normal_format_left_comma_separator)
                 total_in_qty = total_in_qty + vals['qty_in_tk']
             else:
                 total_in_qty = total_in_qty + 0
-                sheet.write(row_no, 4, '0', normal_format_left)
+                sheet.write(row_no, 3, '0', normal_format_left_comma_separator)
             # out qty
             if vals['type'] == 'OUT':
-                sheet.write(row_no, 5, vals['qty_out_tk'], normal_format_left)
+                sheet.write(row_no, 4, vals['qty_out_tk'], normal_format_left_comma_separator)
                 total_out_qty = total_out_qty + vals['qty_out_tk']
             else:
-                sheet.write(row_no, 5, '0', normal_format_left)
+                sheet.write(row_no, 4, '0', normal_format_left_comma_separator)
                 total_out_qty = total_out_qty + 0
             # rate
-            sheet.write(row_no, 6, vals['rate'], normal_format_left)
+            sheet.write(row_no, 5, vals['rate'], normal_format_left_comma_separator)
             total_rate = total_rate + vals['rate']
             # type
-            sheet.write(row_no, 7, vals['type'], normal_format_left)
+            sheet.write(row_no, 6, vals['type'], normal_format_left)
             # amount in
             if vals['type'] == 'IN':
-                sheet.write(row_no, 8, vals['value_amount'], normal_format_left)
+                sheet.write(row_no, 7, vals['value_amount'], normal_format_left_comma_separator)
                 total_amount_in = total_amount_in + vals['value_amount']
             else:
-                sheet.write(row_no, 8, '0', normal_format_left)
+                sheet.write(row_no, 7, '0', normal_format_left_comma_separator)
                 total_amount_in = total_amount_in + 0
 
             # amount out
             if vals['type'] == 'OUT':
                 total_amount_out = total_amount_out + vals['value_amount']
-                sheet.write(row_no, 9, vals['value_amount'], normal_format_left)
+                sheet.write(row_no, 8, vals['value_amount'], normal_format_left_comma_separator)
             else:
                 total_amount_out = total_amount_out + 0
-                sheet.write(row_no, 9, '0', normal_format_left)
+                sheet.write(row_no, 8, '0', normal_format_left_comma_separator)
             row_no = row_no + 1
+
         sheet.write(row_no, 0, 'Closing Information', footer_format_left)
         sheet.write(row_no, 1, '', footer_format_left)
         sheet.write(row_no, 2, '', footer_format_left)
-        sheet.write(row_no, 3, '', footer_format_left)
-        sheet.write(row_no, 4, total_in_qty, footer_format_left)
-        sheet.write(row_no, 5, total_out_qty, footer_format_left)
-        sheet.write(row_no, 6, total_rate, footer_format_left)
-        sheet.write(row_no, 7, '', footer_format_left)
-        sheet.write(row_no, 8, total_amount_in, footer_format_left)
-        sheet.write(row_no, 9, total_amount_out, footer_format_left)
+        sheet.write(row_no, 3, total_in_qty, footer_format_left_comma_separator)
+        sheet.write(row_no, 4, total_out_qty, footer_format_left_comma_separator)
+        sheet.write(row_no, 5, total_rate, footer_format_left_comma_separator)
+        sheet.write(row_no, 6, '', footer_format_left)
+        sheet.write(row_no, 7, total_amount_in, footer_format_left_comma_separator)
+        sheet.write(row_no, 8, total_amount_out, footer_format_left_comma_separator)
         data['name'] = 'Item Ledger Report'
 
 
