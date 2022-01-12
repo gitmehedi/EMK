@@ -4,21 +4,19 @@ from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 
 class AnalyticAccountXLSX(ReportXlsx):
 
-    def _get_accounts(self, aml_obj, used_context):
-        tables, where_clause, where_params = aml_obj.with_context(used_context)._query_get()
-        wheres = [""]
-        if where_clause.strip():
-            wheres.append(where_clause.strip())
-        filters = "".join(wheres)
-        filters = filters.replace('account_move_line__move_id', 'm').replace('account_move_line', 'l')
-        sql = ('''SELECT DISTINCT l.account_id\
-                    FROM account_move_line l\
-                    JOIN account_move m ON (l.move_id=m.id)\
-                    JOIN account_journal j ON (l.journal_id=j.id)\
-                    JOIN account_account acc ON (l.account_id = acc.id) \
-                    WHERE ''' + filters)
-        params = tuple(where_params)
-        self.env.cr.execute(sql, params)
+    def _get_accounts(self, date_start, date_end, analytic_account_ids):
+        sql_str = """SELECT
+                        DISTINCT aml.account_id
+                    FROM
+                        account_move_line aml
+                        JOIN account_move am ON (aml.move_id=am.id)
+                        JOIN account_account aa ON (aml.account_id = aa.id)
+                    WHERE
+                        aml.date BETWEEN %s AND %s
+                        AND aml.analytic_account_id IN (%s)
+        """
+        params = (date_start, date_end, tuple(analytic_account_ids))
+        self.env.cr.execute(sql_str, params)
 
         account_ids = [row['account_id'] for row in self.env.cr.dictfetchall()]
         accounts = self.env['account.account'].search([('id', 'in', account_ids)])
@@ -46,58 +44,64 @@ class AnalyticAccountXLSX(ReportXlsx):
     def _get_account_move_entry(self, obj, used_context):
         cr = self.env.cr
         aml_obj = self.env['account.move.line']
-        accounts = self._get_accounts(aml_obj, used_context)
+        fy_date_start, fy_date_end = self._get_fiscal_year_date_range(used_context['date_from'])
+        accounts = self._get_accounts(fy_date_start, fy_date_end, used_context['analytic_account_ids'].ids)
         if not accounts:
             return list()
 
+        accounts_res = list(map(lambda x: {'account_id': x.id, 'account_name': x.name, 'opening_balance': 0.0, 'debit': 0.0, 'credit': 0.0, 'closing_balance': 0.0}, accounts))
+
         # OPENING BALANCE
-        move_lines = dict(map(lambda x: (x, 0.0), accounts.ids))
         filters = " AND m.state='posted'" if used_context['state'] == 'posted' else ""
         filters += " AND l.analytic_account_id=%s" % used_context['analytic_account_ids'].id
-        fy_date_start, fy_date_end = self._get_fiscal_year_date_range(used_context['date_from'])
         opening_journal_ids = self.env['account.journal'].search([('type', '=', 'situation')])
         sql_of_opening_balance = """
                 SELECT 
                     sub.account_id AS account_id, 
-                    COALESCE(SUM(sub.debit),0) AS debit, 
-                    COALESCE(SUM(sub.credit),0) AS credit, 
-                    COALESCE(SUM(sub.debit),0) - COALESCE(SUM(sub.credit), 0) as balance
+                    sub.account_name,
+                    0 AS debit, 
+                    0 AS credit, 
+                    COALESCE(SUM(sub.debit),0) - COALESCE(SUM(sub.credit), 0) AS balance
                 FROM
                     ((SELECT
                         l.account_id AS account_id, 
+                        acc.name AS account_name,
                         COALESCE(SUM(l.debit),0) AS debit, 
-                        COALESCE(SUM(l.credit),0) AS credit, 
-                        COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance 
+                        COALESCE(SUM(l.credit),0) AS credit 
                     FROM account_move_line l
                         LEFT JOIN account_move m ON (l.move_id=m.id)
                         LEFT JOIN res_currency c ON (l.currency_id=c.id)
                         LEFT JOIN res_partner p ON (l.partner_id=p.id)
                         LEFT JOIN account_invoice i ON (m.id =i.move_id)
                         JOIN account_journal j ON (l.journal_id=j.id)
+                        JOIN account_account acc ON (l.account_id = acc.id)
                     WHERE l.account_id IN %s AND l.date BETWEEN %s AND %s 
-                        AND l.journal_id IN %s""" + filters + """ GROUP BY l.account_id)
+                        AND l.journal_id IN %s""" + filters + """ GROUP BY l.account_id,acc.name)
                     UNION
                     (SELECT
                         l.account_id AS account_id, 
+                        acc.name AS account_name,
                         COALESCE(SUM(l.debit),0) AS debit, 
-                        COALESCE(SUM(l.credit),0) AS credit, 
-                        COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance
+                        COALESCE(SUM(l.credit),0) AS credit
                     FROM account_move_line l 
                         LEFT JOIN account_move m ON (l.move_id=m.id)
                         LEFT JOIN res_currency c ON (l.currency_id=c.id)
                         LEFT JOIN res_partner p ON (l.partner_id=p.id)
                         LEFT JOIN account_invoice i ON (m.id =i.move_id)
                         JOIN account_journal j ON (l.journal_id=j.id)
+                        JOIN account_account acc ON (l.account_id = acc.id)
                     WHERE l.account_id IN %s AND l.date < %s AND l.date >= %s AND l.journal_id IN %s
-                            """ + filters + """ GROUP BY l.account_id)) AS sub
-                GROUP BY sub.account_id"""
+                            """ + filters + """ GROUP BY l.account_id,acc.name)) AS sub
+                GROUP BY sub.account_id,sub.account_name ORDER BY sub.account_id"""
 
         params = (tuple(accounts.ids), fy_date_start, fy_date_end, tuple(opening_journal_ids.ids),
                   tuple(accounts.ids), used_context['date_from'], fy_date_start, tuple(used_context['journal_ids']))
         cr.execute(sql_of_opening_balance, params)
 
         for row in cr.dictfetchall():
-            move_lines[row['account_id']] = row['balance']
+            line = filter(lambda l: l['account_id'] == row['account_id'], accounts_res)[0]
+            line['opening_balance'] = row['balance']
+            line['closing_balance'] = row['balance']
 
         # Prepare sql query base on selected parameters from wizard
         tables, where_clause, where_params = aml_obj.with_context(used_context)._query_get()
@@ -120,15 +124,13 @@ class AnalyticAccountXLSX(ReportXlsx):
         params = (tuple(accounts.ids),) + tuple(where_params)
         cr.execute(sql, params)
 
-        account_res = []
         for row in cr.dictfetchall():
-            opening_balance = float(move_lines.get(row['account_id'], 0.0))
-            closing_balance = opening_balance + float(row['balance'])
-            row['opening_balance'] = opening_balance
-            row['closing_balance'] = closing_balance
-            account_res.append(row)
+            line = filter(lambda l: l['account_id'] == row['account_id'], accounts_res)[0]
+            line['debit'] = row['debit']
+            line['credit'] = row['credit']
+            line['closing_balance'] = line['closing_balance'] + row['balance']
 
-        return account_res
+        return accounts_res
 
     def generate_xlsx_report(self, workbook, data, obj):
         model = self.env.context.get('active_model')
