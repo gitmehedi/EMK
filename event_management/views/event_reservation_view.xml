@@ -33,7 +33,7 @@
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="contact_number"/>
                                 <field name="work_email"/>
-                                <field name="poc_type_id"
+                                <field name="poc_type_id" domain="[('state','=','approve')]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="facilities_ids" widget="many2many_tags"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
@@ -42,11 +42,11 @@
                             <group>
                                 <field name="org_id" readonly="1"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                <field name="event_type_id"
+                                <field name="event_type_id" domain="[('state','=','approve')]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                <field name="pillar_id"
+                                <field name="pillar_id" domain="[('state','=','approve')]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                <field name="theme_id"
+                                <field name="theme_id" domain="[('state','=','approve')]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="space_id" widget="radio"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True,'horizontal': true}"/>

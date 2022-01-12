@@ -5,12 +5,18 @@
         <field name="model">member.occupation</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Occupation">
+            <form string="Occupation" duplicate="0">
+                <header>
+                    <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                    <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                    <button name="act_reject" string="Reject" states="draft" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="status"/>
+
                         </group>
                     </group>
                 </sheet>
@@ -26,13 +32,32 @@
         <field name="model">member.occupation</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Occupation" decoration-bf="status == True" decoration-success="status == True" decoration-muted="status == False" >
+            <tree string="Occupation" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                  decoration-danger="state=='reject'"
+                  decoration-bf="state in ('approve',)">
                 <field name="name"/>
-                <field name="status"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
-
+    <record id="view_member_occupation_search" model="ir.ui.view">
+        <field name="name">view.member.occupation.search</field>
+        <field name="model">member.occupation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="state"/>
+                <group string="Group By">
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                    <filter string="Rejected" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    <filter string="In-Active" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                </group>
+            </search>
+        </field>
+    </record>
     <record model="ir.actions.act_window" id="action_membership_occupation">
         <field name="name">Occupations</field>
         <field name="res_model">member.occupation</field>
@@ -40,6 +65,9 @@
             <p class="oe_view_nocontent_create">
                 Click to add a new Member's Occupation
             </p>
+        </field>
+        <field name="context">
+            {"search_default_active":'False',"search_default_pending":'True'}
         </field>
     </record>
 
@@ -53,12 +81,17 @@
         <field name="model">member.subject.interest</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Subject of Interest">
+            <form string="Subject of Interest" duplicate="0">
+                <header>
+                    <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                    <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                    <button name="act_reject" string="Reject" states="draft" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="status"/>
                         </group>
                     </group>
                 </sheet>
@@ -75,10 +108,30 @@
         <field name="model">member.subject.interest</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Subject of Interest" decoration-bf="status == True" decoration-success="status == True" decoration-muted="status == False">
+            <tree string="Subject of Interest" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                  decoration-danger="state=='reject'"
+                  decoration-bf="state in ('approve',)">
                 <field name="name"/>
-                <field name="status"/>
+                <field name="state"/>
             </tree>
+        </field>
+    </record>
+    <record id="view_member_subject_interest_search" model="ir.ui.view">
+        <field name="name">view.member.subject.interest.search</field>
+        <field name="model">member.subject.interest</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="state"/>
+                <group string="Group By">
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                    <filter string="Rejected" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    <filter string="In-Active" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -89,6 +142,9 @@
             <p class="oe_view_nocontent_create">
                 Click to add a new Member's Subject of Interest
             </p>
+        </field>
+        <field name="context">
+            {"search_default_active":'False',"search_default_pending":'True'}
         </field>
     </record>
 
@@ -103,12 +159,17 @@
         <field name="model">member.certification</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Certification" >
+            <form string="Certification" duplicate="0">
+                <header>
+                    <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                    <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                    <button name="act_reject" string="Reject" states="draft" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="status"/>
                         </group>
                     </group>
                 </sheet>
@@ -124,10 +185,30 @@
         <field name="model">member.certification</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Certification" decoration-bf="status == True" decoration-success="status == True" decoration-muted="status == False">
+            <tree string="Certification" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                  decoration-danger="state=='reject'"
+                  decoration-bf="state in ('approve',)">
                 <field name="name"/>
-                <field name="status"/>
+                <field name="state"/>
             </tree>
+        </field>
+    </record>
+    <record id="view_member_certification_search" model="ir.ui.view">
+        <field name="name">view.member.certification.search</field>
+        <field name="model">member.certification</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="state"/>
+                <group string="Group By">
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                    <filter string="Rejected" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    <filter string="In-Active" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -138,6 +219,9 @@
             <p class="oe_view_nocontent_create">
                 Click to add a new Member's Certification
             </p>
+        </field>
+        <field name="context">
+            {"search_default_active":'False',"search_default_pending":'True'}
         </field>
     </record>
 

@@ -6,20 +6,26 @@
             <field name="inherit_id" ref="event.view_event_type_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="replace">
-                    <form delete="0">
+                    <form String="Event Type" delete="0" duplicate="0">
+                        <header>
+                        <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
                         <sheet>
                             <field name="image" widget='image' class="oe_avatar"/>
                             <div class="oe_title">
                                 <label class="oe_edit_only" for="organizer_id" string="Event Type"/>
                                 <h1>
                                     <field name="name" placeholder="Name" default_focus="1" tabindex="1"
-                                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                           options="{'no_open':True,'no_create':True}"/>
                                 </h1>
                             </div>
                             <group>
                                 <group>
                                     <field name="event_count"/>
-                                    <field name="status"/>
+
                                 </group>
                             </group>
                         </sheet>
@@ -37,14 +43,32 @@
             <field name="inherit_id" ref="event.view_event_type_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="attributes">
-                    <attribute name="decoration-bf">status == True</attribute>
-                    <attribute name="decoration-success">status == True</attribute>
-                    <attribute name="decoration-muted">status == False</attribute>
+                    <attribute name="decoration-bf">state == 'approve'</attribute>
+                    <attribute name="decoration-success">state == 'approve'</attribute>
+                    <attribute name="decoration-muted">state == 'reject'</attribute>
                 </xpath>
                 <xpath expr="//tree" position="inside">
                     <field name="event_count"/>
-                    <field name="status"/>
+                    <field name="state"/>
                 </xpath>
+            </field>
+        </record>
+        <record id="view_event_type_search" model="ir.ui.view">
+            <field name="name">view.event.type.search</field>
+            <field name="model">event.type</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -53,6 +77,7 @@
             <field name="sequence">10</field>
             <field name="groups_id"
                    eval="[(4, ref('event_user.group_event_officer'))]"/>
+
         </record>
     </data>
 </odoo>

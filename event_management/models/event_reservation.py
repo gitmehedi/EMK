@@ -195,7 +195,7 @@ class EventReservation(models.Model):
     def _check_participating_amount(self):
         if self.paid_attendee == 'yes':
             if not self.participating_amount:
-                raise ValidationError(_('Participation Amount should have value when event type is [Yes]'))
+                raise ValidationError(_('Participation Amount should have value when participation charge is [Yes]'))
         else:
             self.participating_amount = 0
 

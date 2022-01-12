@@ -29,7 +29,7 @@ class EventTaskList(models.Model):
     assign_emp_id = fields.Many2one('res.partner', string='Assign To', required=True, track_visibility='onchange',
                                     readonly=True, states={'draft': [('readonly', False)]})
     task_id = fields.Many2one('event.task.type', string='Event Task Type', required=True, track_visibility='onchange',
-                              domain=[('status', '=', True)], readonly=True, states={'draft': [('readonly', False)]})
+                              domain=[('state', '=', 'approve')], readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('assign', 'Assigned'), ('start', 'Start'), ('finish', 'Finish')],
                              default='draft', track_visibility='onchange')
 

@@ -16,3 +16,4 @@ def valid_email(email):
     if not re.match('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email.rstrip()):
         return False
     return True
+

@@ -7,15 +7,18 @@
 			<field name="model">hr.exit.checklist.item</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Checklist Item Form">
+				<form string="Checklist Item Form" duplicate="0">
 					<header>
+                        <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
 						<field name="id" invisible="1" />
-					</header>
+                    </header>
 					<sheet>
 						<group>
 							<field name="checklist_type" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}' />
 							<field name="name" />
-							<field name="is_active" />
 							<field name="description" />
 						</group>
 					</sheet>
@@ -33,11 +36,14 @@
 			<field name="model">hr.exit.checklist.item</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<tree string="Checklist Item Tree" decoration-bf="is_active == True" decoration-success="is_active == True" decoration-muted="is_active == False">
+				<tree string="Checklist Item Tree" decoration-info="state=='draft'"
+                      decoration-success="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('approve',)">
 					<field name="checklist_type" />
 					<field name="name" />
 					<field name="description" />
-					<field name="is_active" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
@@ -49,8 +55,14 @@
 			<field name="arch" type="xml">
 				<search string="Search">
 					<field name="name" string="Name" filter_domain="[('name','ilike','self')]" />
-					<group expand="0" string="Group By">
-                        <filter string="Type" icon="terp-personal" domain="[]" context="{'group_by':'checklist_type'}"/>
+					<group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+						<filter string="Type" icon="terp-personal" domain="[]" context="{'group_by':'checklist_type'}"/>
                     </group>
 				</search>
 			</field>
@@ -65,6 +77,9 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="checklist_item_tree_view" />
+			<field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
 		</record>
 
 		<!-- Checklist Item Menu -->

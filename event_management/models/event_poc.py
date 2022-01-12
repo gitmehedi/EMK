@@ -2,6 +2,7 @@ import logging
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from psycopg2 import IntegrityError
 
 _logger = logging.getLogger(__name__)
 

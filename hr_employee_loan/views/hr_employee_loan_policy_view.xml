@@ -2,58 +2,96 @@
 <odoo>
     <data>
         <record id="hr_employee_loan_policy_form" model="ir.ui.view">
-			<field name="name">hr.employee.loan.policy.form</field>
-			<field name="model">hr.employee.loan.policy</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Employee Loan policy">
-					<sheet>
-					Name<h2><field name="name" /></h2>
-					Code<h2><field name="code" /></h2>
-					<group>
-						<group>
-							<field name="policy_type_id" />
-							<field name="basis_id" />
-							<field name="value" />
-						</group>
-						<group>
-							<field name="company_id" readonly="1" groups="base.group_multi_company"/>	
-						</group>
-					</group>
-					<notebook position="inside" invisible="1">
-						<page string="Employee Categories">
-							<field name="employee_tag_ids" />	
-						</page>
-						<page string="Employee's">
-							<field name="employee_ids" />		
-						</page>
-					</notebook>
-					</sheet>
-				</form>
-			</field>
-		</record>
-		<record id="hr_employee_loan_policy_tree" model="ir.ui.view">
-			<field name="name">hr.employee.loan.policy.tree</field>
-			<field name="model">hr.employee.loan.policy</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Employee Loan policy">
-					<field name="name" />
-					<field name="code" />
-					<field name="policy_type_id" />
-					<field name="value" />
-					<field name="company_id" groups="base.group_multi_company" />
-				</tree>
-			</field>
-		</record>
-		
+            <field name="name">hr.employee.loan.policy.form</field>
+            <field name="model">hr.employee.loan.policy</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Loan policy" duplicate="0">
+                    <header>
+                        <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
+                    <sheet>
+                        Name
+                        <h2>
+                            <field name="name"/>
+                        </h2>
+                        Code
+                        <h2>
+                            <field name="code"/>
+                        </h2>
+                        <group>
+                            <group>
+                                <field name="policy_type_id"/>
+                                <field name="basis_id"/>
+                                <field name="value"/>
+                            </group>
+                            <group>
+                                <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <notebook position="inside" invisible="1">
+                            <page string="Employee Categories">
+                                <field name="employee_tag_ids"/>
+                            </page>
+                            <page string="Employee's">
+                                <field name="employee_ids"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="hr_employee_loan_policy_tree" model="ir.ui.view">
+            <field name="name">hr.employee.loan.policy.tree</field>
+            <field name="model">hr.employee.loan.policy</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Loan policy" decoration-info="state=='draft'"
+                      decoration-success="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('approve',)">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="policy_type_id"/>
+                    <field name="value"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_employee_loan_policy_search" model="ir.ui.view">
+            <field name="name">view.hr.employee.loan.policy.search</field>
+            <field name="model">hr.employee.loan.policy</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="hr_loan_policy_action">
             <field name="name">Loan Policies</field>
             <field name="res_model">hr.employee.loan.policy</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
         </record>
 
         <menuitem id="loan_policy_menu" name="Loan Policies" parent="configuration_menu" sequence="10"
-                  action="hr_loan_policy_action" groups="base.group_user" />   
+                  action="hr_loan_policy_action" groups="base.group_user"/>
     </data>
 </odoo>

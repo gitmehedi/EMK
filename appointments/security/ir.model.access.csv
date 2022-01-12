@@ -27,9 +27,3 @@ app_app_mr_mang,app_app_mr_mang,model_appointment_meeting_room,appointment_user.
 app_gender_user,app_gender_user,gbs_gender.model_res_gender,appointment_user.group_appoint_user,1,1,0,0
 app_gender_off,app_gender_off,gbs_gender.model_res_gender,appointment_user.group_appoint_officer,1,1,1,0
 app_gender_mang,app_gender_mang,gbs_gender.model_res_gender,appointment_user.group_appoint_manager,1,1,1,1
-
-
-
-
-
-

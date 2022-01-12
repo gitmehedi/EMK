@@ -5,13 +5,18 @@
             <field name="name">event.pillar.form</field>
             <field name="model">event.pillar</field>
             <field name="arch" type="xml">
-                <form string="Event Pillar">
+                <form string="Event Pillar" duplicate="0">
+                    <header>
+                        <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
                     <sheet>
                         <group>
                             <group>
                                 <field name="name"/>
                                 <field name="event_pillar"/>
-                                <field name="status"/>
                             </group>
                         </group>
                     </sheet>
@@ -27,13 +32,32 @@
             <field name="name">event.pillar.tree</field>
             <field name="model">event.pillar</field>
             <field name="arch" type="xml">
-                <tree string="event Pillar"
-                      decoration-bf="status==True" decoration-muted="status==False"
-                      decoration-success="status==True">
+                <tree string="Event Pillar" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('approve',)">
                     <field name="name"/>
                     <field name="event_pillar"/>
-                    <field name="status"/>
+                    <field name="active" invisible="1"/>
+                    <field name="state"/>
                 </tree>
+            </field>
+        </record>
+        <record id="view_event_pillar_search" model="ir.ui.view">
+            <field name="name">view.event.pillar.search</field>
+            <field name="model">event.pillar</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -41,7 +65,11 @@
             <field name="name">Event Pillar</field>
             <field name="res_model">event.pillar</field>
             <field name="view_type">form</field>
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
         </record>
+
 
         <menuitem id="menu_event_pillar" action="action_event_pillar"
                   groups="event_user.group_event_officer" parent="event.menu_event_configuration"/>
