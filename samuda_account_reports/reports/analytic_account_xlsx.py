@@ -137,6 +137,9 @@ class AnalyticAccountXLSX(ReportXlsx):
         docs = self.env[model].browse(self.env.context.get('active_id', []))
         journal_ids = self.env['account.journal'].search([('type', '!=', 'situation')])
 
+        # Report Utility
+        ReportUtility = self.env['report.utility']
+
         # create context dictionary
         used_context = dict()
         used_context['journal_ids'] = journal_ids.ids or False
@@ -187,7 +190,7 @@ class AnalyticAccountXLSX(ReportXlsx):
         sheet.merge_range(3, 0, 3, 4, docs.company_id.city + '-' + docs.company_id.zip, address_format)
         sheet.merge_range(4, 0, 4, 4, "Analytic Report", name_format)
         sheet.merge_range(6, 0, 6, 1, "Analytic Account: " + docs.name, bold)
-        sheet.merge_range(6, 3, 6, 4, "Date: " + obj.date_from + " To " + obj.date_to, bold)
+        sheet.merge_range(6, 3, 6, 4, "Date: " + ReportUtility.get_date_from_string(obj.date_from) + " To " + ReportUtility.get_date_from_string(obj.date_to), bold)
 
         # TABLE HEADER
         row, col = 8, 0
