@@ -35,20 +35,20 @@ class ItemLedgerReportXLSX(ReportXlsx):
         sheet.set_column(2, 2, 16)
         # FORMAT
         bold = workbook.add_format({'bold': True, 'size': 10})
-        name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 8})
-        name_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 8})
+        name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
+        name_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 10})
         header_format_left = workbook.add_format(
-            {'align': 'left', 'border': 1, 'bg_color': '#d7ecfa', 'bold': True, 'size': 8})
+            {'align': 'left', 'border': 1, 'bg_color': '#d7ecfa', 'bold': True, 'size': 10})
         footer_format_left = workbook.add_format(
-            {'align': 'left', 'border': 1, 'bold': True, 'size': 8})
+            {'align': 'left', 'border': 1, 'bold': True, 'size': 10})
 
         footer_format_left_comma_separator = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'bold': True, 'size': 8})
-        normal_format_left = workbook.add_format({'align': 'left', 'size': 8})
+            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'bold': True, 'size': 10})
+        normal_format_left = workbook.add_format({'align': 'left', 'size': 10})
         normal_format_left_comma_separator = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'size': 8})
-        merged_format_center = workbook.add_format({'align': 'center', 'size': 8})
-        address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 7})
+            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'size': 10})
+        merged_format_center = workbook.add_format({'align': 'center', 'border' :1, 'size': 10})
+        address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
 
         # SHEET HEADER
         sheet.merge_range(0, 0, 0, 9, self.env.user.company_id.name, name_format)
@@ -287,7 +287,10 @@ class ItemLedgerReportXLSX(ReportXlsx):
         total_amount_out = 0
         for vals in sorted_item_ledger_vals_list:
             sheet.write(row_no, 0, reportUtility.get_date_from_string(vals['move_date']), normal_format_left)
-            sheet.write(row_no, 1, vals['origin'], normal_format_left)
+            if vals['origin']:
+                sheet.write(row_no, 1, vals['origin'], normal_format_left)
+            else:
+                sheet.write(row_no, 1, 'ADJUSTMENT', normal_format_left)
             sheet.write(row_no, 2, vals['uom_name'], normal_format_left)
             # in qty
             if vals['type'] == 'IN':
