@@ -311,7 +311,7 @@ class ItemLedgerReportXLSX(ReportXlsx):
             sheet.write(row_no, 5, vals['rate'], normal_format_left_comma_separator)
             total_rate = total_rate + vals['rate']
             # type
-            sheet.write(row_no, 6, vals['type'], normal_format_left)
+            sheet.write(row_no, 6, vals['type'], normal_format_left_comma_separator)
             # amount in
             if vals['type'] == 'IN':
                 sheet.write(row_no, 7, vals['value_amount'], normal_format_left_comma_separator)
