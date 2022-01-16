@@ -45,6 +45,7 @@ class ItemLedgerReportXLSX(ReportXlsx):
         footer_format_left_comma_separator = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'bold': True, 'size': 10})
         normal_format_left = workbook.add_format({'align': 'left', 'size': 10})
+        date_format_left = workbook.add_format({'align': 'left', 'size' :10, 'border': 1})
         normal_format_left_comma_separator = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'size': 10})
         merged_format_center = workbook.add_format({'align': 'center', 'border' :1, 'size': 10})
@@ -286,12 +287,12 @@ class ItemLedgerReportXLSX(ReportXlsx):
         total_amount_in = 0
         total_amount_out = 0
         for vals in sorted_item_ledger_vals_list:
-            sheet.write(row_no, 0, reportUtility.get_date_from_string(vals['move_date']), normal_format_left)
+            sheet.write(row_no, 0, reportUtility.get_date_from_string(vals['move_date']), date_format_left)
             if vals['origin']:
-                sheet.write(row_no, 1, vals['origin'], normal_format_left)
+                sheet.write(row_no, 1, vals['origin'], date_format_left)
             else:
-                sheet.write(row_no, 1, 'ADJUSTMENT', normal_format_left)
-            sheet.write(row_no, 2, vals['uom_name'], normal_format_left)
+                sheet.write(row_no, 1, 'ADJUSTMENT', date_format_left)
+            sheet.write(row_no, 2, vals['uom_name'], date_format_left)
             # in qty
             if vals['type'] == 'IN':
                 sheet.write(row_no, 3, vals['qty_in_tk'], normal_format_left_comma_separator)
