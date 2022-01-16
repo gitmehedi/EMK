@@ -103,18 +103,19 @@ class ProductionReportXLSX(ReportXlsx):
         sheet.set_column(2, 2, 46)
         sheet.set_column(5, 6, 24)
         sheet.set_column(3, 4, 14)
+
         # FORMAT
         bold = workbook.add_format({'bold': True, 'size': 10})
-        name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 8})
-        name_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 8})
-        header_format_left = workbook.add_format({'align': 'left', 'bg_color': '#d7ecfa', 'bold': True, 'size': 8})
-        normal_format_left = workbook.add_format({'align': 'left', 'size': 8})
+        name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
+        name_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 10})
+        header_format_left = workbook.add_format({'align': 'left', 'bg_color': '#d7ecfa', 'bold': True, 'size': 10, 'border': 1})
+        normal_format_left = workbook.add_format({'align': 'left', 'size': 10, 'border': 1})
         normal_format_left_comma_separator = workbook.add_format(
-            {'num_format': '#,###0.0000', 'align': 'left', 'size': 8})
+            {'num_format': '#,###0.0000', 'align': 'left', 'size': 10, 'border': 1})
 
         merged_format_center = workbook.add_format(
-            {'num_format': '#,###0.0000', 'align': 'center', 'valign': 'vcenter', 'size': 8})
-        address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 7})
+            {'num_format': '#,###0.0000', 'align': 'center', 'valign': 'vcenter', 'size': 10, 'border': 1})
+        address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
 
         # SHEET HEADER
         if self.env.user.has_group('account.group_account_user'):
@@ -264,6 +265,7 @@ class ProductionReportXLSX(ReportXlsx):
             if vals['product_id']:
                 product_product_obj = self.env['product.product'].browse(vals['product_id'])
                 product_name = product_product_obj.name_get()[0][1]
+
             sheet.write(row_no, 2, product_name, normal_format_left)
             sheet.write(row_no, 3, vals['after_total_qty'], normal_format_left_comma_separator)
             sheet.write(row_no, 4, vals['name'], normal_format_left)
