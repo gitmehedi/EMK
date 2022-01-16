@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="account_fy_closing.menu_wizard_fy_close"
+                  name="Generate Opening Entries"
+                  parent="account_fiscal_year.menu_date_range_accounting"
+                  groups="gbs_application_group.group_account_closing"/>
+    </data>
+</odoo>
