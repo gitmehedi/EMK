@@ -3,8 +3,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 from psycopg2 import IntegrityError
-from odoo.exceptions import UserError, ValidationError
 
 
 class InheritedMembershipCategory(models.Model):
@@ -96,6 +96,22 @@ class InheritedProductTemplate(models.Model):
         if len(name) > 1:
             raise Exception(_('Name should not be duplicate.'))
 
+    @api.one
+    def act_inactive(self):
+        if self.state == 'approve':
+            self.write({
+                'active': False,
+                'state': 'reject'
+            })
+
+    @api.one
+    def act_active(self):
+        if self.state == 'reject':
+            self.write({
+                'active': True,
+                'state': 'approve'
+            })
+
 
 class MembershipWithdrawalReason(models.Model):
     _name = 'membership.withdrawal_reason'
@@ -159,6 +175,3 @@ class MembershipWithdrawalReason(models.Model):
             except IntegrityError:
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
-
-
-

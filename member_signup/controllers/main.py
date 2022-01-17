@@ -271,7 +271,7 @@ class MemberApplicationContoller(Home):
 
     def generateDropdown(self, model, status=False):
         data = []
-        status = [('status', '=', True)] if status else []
+        status = [('active', '=', True),('pending', '=', False)] if status else []
         record = request.env[model].sudo().search(status, order='id ASC')
         for rec in record:
             if status:
