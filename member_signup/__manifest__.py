@@ -20,6 +20,7 @@
         'member_user',
         'membership_withdrawal',
         'partner_fullname',
+        'create_users',
     ],
     'data': [
         'security/ir_rule.xml',
