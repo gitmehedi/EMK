@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="multi_variant_report_wizard_view" model="ir.ui.view">
+            <field name="name">multi.variant.report.wizard.view</field>
+            <field name="model">multi.variant.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Multi Variant Ledger Report">
+                    <group>
+                        <group>
+                            <field name="product_ids"  placeholder="All Products" widget="many2many_tags"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+
+                            <field name="date_from"/>
+                        </group>
+                        <group>
+                            <field name="operating_unit_id" placeholder="Select Operating Unit"
+                                   options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="export_excel" string="Export Excel" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="multi_variant_report_wizard_action" model="ir.actions.act_window">
+            <field name="name">Multi Variant Ledger Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">multi.variant.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="multi_variant_report_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem id="multi_variant_report_wizard"
+                  name="Multi Variant Ledger Report"
+                  parent="mrp.menu_mrp_reporting"
+                  action="multi_variant_report_wizard_action"
+                  sequence="11"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_variant_wise_inventory_report_xlsx" model="ir.actions.report.xml">
+            <field name="name">Variant Wise Report</field>
+            <field name="model">variant.wise.inventory.report.wizard</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="report_name">goods_movement_ledger_reports.variant_wise_inventory_report_xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="auto" eval="False"/>
+        </record>
+    </data>
+</odoo>

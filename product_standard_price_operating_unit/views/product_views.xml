@@ -36,6 +36,7 @@
                         <field name="product_standard_price_history_ids" readonly="1">
                             <tree string="Cost Price History">
                                 <field name="operating_unit_id"/>
+                                <field name="create_date" groups="base.group_system"/>
                                 <field name="datetime" string="Modified Date"/>
                                 <field name="write_uid" string="Modified By"/>
                                 <field name="cost" string="Cost Per Unit"/>

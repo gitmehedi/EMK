@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_multi_variant_report_xlsx" model="ir.actions.report.xml">
+            <field name="name">Multi Variant Report</field>
+            <field name="model">multi.variant.report.wizard</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="report_name">goods_movement_ledger_reports.multi_variant_report_xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="auto" eval="False"/>
+        </record>
+    </data>
+</odoo>

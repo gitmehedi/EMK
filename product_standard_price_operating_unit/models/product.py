@@ -22,7 +22,8 @@ class ProductProduct(models.Model):
                     'product_id': product.id,
                     'cost': value,
                     'company_id': self._context.get('force_company', self.env.user.company_id.id),
-                    'operating_unit_id': operating_unit_id
+                    'operating_unit_id': operating_unit_id,
+                    'datetime': self.env.context.get('datetime_of_price_history') or fields.Datetime.now
                 })
         else:
             _logger.info("SAMUDA-CUSTOM-ERROR: [VALIDATION] operating unit not found in the context")

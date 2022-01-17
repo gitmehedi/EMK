@@ -17,6 +17,7 @@
     
     'depends': [
         'gbs_accounting_installer',
+        'account_fy_closing'
     ],
 
 
@@ -24,6 +25,7 @@
         'security/ir.model.access.csv',
         'views/inherited_account_view.xml',
         'views/inherited_account.xml',
+        'views/account_fiscalyear_close_view.xml',
         'security/ir_rule.xml',
     ],
 }
