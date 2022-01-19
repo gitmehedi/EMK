@@ -160,10 +160,12 @@ class ProductionReportXLSX(ReportXlsx):
 
         consumed_sql = '''
                 SELECT
-                   t1.product_id,
+                   t1.product_id as t1_product_id,
+                   t2.product_id as t2_product_id,
                    t1.product_name,
                    t1.product_uom,
-                   t1.name,
+                   t1.name as t1_uom_name,
+				   t2.name as t2_uom_name,
                     COALESCE(t1.amount, 0)  as t1_amount,
 				  COALESCE(t2.amount, 0)  as t2_amount,
                    t1.avg_cost,
@@ -262,15 +264,28 @@ class ProductionReportXLSX(ReportXlsx):
         for vals in self.env.cr.dictfetchall():
             # if not vals['production_type'] == 'produce':
             product_name = ''
-            if vals['product_id']:
-                product_product_obj = self.env['product.product'].browse(vals['product_id'])
+            product_uom_name = ''
+            if vals['t1_product_id']:
+                product_product_obj = self.env['product.product'].browse(vals['t1_product_id'])
                 product_name = product_product_obj.name_get()[0][1]
-
+            else:
+                if vals['t2_product_id']:
+                    product_product_obj = self.env['product.product'].browse(vals['t2_product_id'])
+                    product_name = product_product_obj.name_get()[0][1]
             sheet.write(row_no, 2, product_name, normal_format_left)
             sheet.write(row_no, 3, vals['after_total_qty'], normal_format_left_comma_separator)
-            sheet.write(row_no, 4, vals['name'], normal_format_left)
+            if vals['t1_uom_name']:
+                product_uom_name = vals['t1_uom_name']
+            else:
+                if vals['t2_uom_name']:
+                    product_uom_name = vals['t2_uom_name']
+            sheet.write(row_no, 4, product_uom_name, normal_format_left)
             if self.env.user.has_group('account.group_account_user'):
-                sheet.write(row_no, 5, (vals['t1_amount'] + vals['t2_amount'])/vals['after_total_qty'], normal_format_left_comma_separator)
+                if vals['after_total_qty'] == 0:
+                    sheet.write(row_no, 5, 0,
+                                normal_format_left_comma_separator)
+                else:
+                    sheet.write(row_no, 5, (vals['t1_amount'] + vals['t2_amount'])/vals['after_total_qty'], normal_format_left_comma_separator)
                 sheet.write(row_no, 6, vals['t1_amount'] + vals['t2_amount'],
                             normal_format_left_comma_separator)
             row_no = row_no + 1
