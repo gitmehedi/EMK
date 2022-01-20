@@ -30,7 +30,6 @@ class Appointment(models.Model):
     first_name = fields.Char(string="First Name", required=True, track_visibility='onchange')
     last_name = fields.Char(string="Last Name", required=True, track_visibility='onchange')
     gender_id = fields.Many2one('res.gender', string='Gender', required=True, track_visibility='onchange')
-    date_of_birth = fields.Date(string="Date of Birth", required=True, track_visibility='onchange')
     phone = fields.Char(string="Phone", required=True, track_visibility='onchange')
     street = fields.Text(string="Street", required=True, track_visibility='onchange')
     street2 = fields.Text(string="Street", track_visibility='onchange')
@@ -143,15 +142,6 @@ class Appointment(models.Model):
                 raise ValidationError(_("Appointment date cannot be past date from current date"))
 
     @api.one
-    @api.constrains('date_of_birth')
-    def validate_birth_date(self):
-        if self.date_of_birth:
-            birth_date = datetime.strptime(self.date_of_birth, '%Y-%m-%d')
-            curr_date = dateutil.parser.parse(fields.Date.today())
-            if birth_date >= curr_date:
-                raise ValidationError(_("Birth date cannot be future date and current date"))
-
-    @api.one
     @api.constrains('email')
     def validate_mail(self):
         if self.email:
@@ -217,6 +207,6 @@ class Appointment(models.Model):
     @api.model
     def post_appointments(self, vals, token=None):
         self.create(vals)
-        return True
+        return vals
 
 

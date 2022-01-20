@@ -12,7 +12,7 @@ class ResUsers(models.Model):
     def create_temp_user(self, login, groups):
         res_id = self.env['res.users'].search([('email', '=', login)])
         res_id.write({'is_temporary': True})
-        groups = self.env['res.groups'].search(
+        group_ids = self.env['res.groups'].search(
             [('name', '=', groups['grp_name']), ('category_id.name', '=', groups['cat_name'])])
-        groups.write({'users': [(6, 0, [res_id.id])]})
+        group_ids.write({'users': [(6, 0, [res_id.id])]})
         return res_id

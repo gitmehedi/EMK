@@ -6,27 +6,32 @@
             <field name="model_id" ref="appointments.model_appointment_appointment"/>
             <field name="report_template" ref="appointments.report_appoint_visiting_card_done"/>
             <field name="report_name">Visiting Card (Ref ${object.name})</field>
-            <field name="email_from"><![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_from">
+                <![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.email}</field>
             <field name="subject">Approved Appointment Request (Ref ${object.name})</field>
             <field name="body_html" type="html">
-              <div style="margin: 0px; padding: 0px;">
+                <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 0px;">
                         <p>
                             Dear ${object.first_name +' '+ object.last_name},
-                            <br/><br/>
+                            <br/>
+                            <br/>
                             I have received your request to appointment of EMK Center.
                             This is a notification that serves as confirmation that request has been approved.
-                            <br/><br/>
+                            <br/>
+                            <br/>
                             Appointment Date: ${object.appointment_date}
                             Web Link:
                         </p>
-                        If you have queries feel free to ask.<br/><br/>
+                        If you have queries feel free to ask.
+                        <br/>
+                        <br/>
                         Additionally, I thank you for being a part of ${user.company_id.name}.
                     </p>
                     <p style="font-size: 11px; margin-top: 10px;">
-                    <strong>Sent by ${user.company_id.name}</strong>
-                </p>
+                        <strong>Sent by ${user.company_id.name}</strong>
+                    </p>
                 </div>
             </field>
         </record>
@@ -34,27 +39,32 @@
         <record id="mail_template_appointment_app_emk" model="mail.template">
             <field name="name">Approved Appointment Request: Send by Email</field>
             <field name="model_id" ref="appointments.model_appointment_appointment"/>
-            <field name="email_from"><![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_from">
+                <![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.contact_id.appointee_id.work_email}</field>
             <field name="subject">Approved Appointment Request (Ref ${object.name})</field>
             <field name="body_html" type="html">
-              <div style="margin: 0px; padding: 0px;">
+                <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 0px;">
                         <p>
                             Dear ${object.contact_id.appointee_id.name_related},
-                            <br/><br/>
+                            <br/>
+                            <br/>
                             EMK received a request to appointment of EMK Center.
                             This is a notification that serves as confirmation that request has been approved.
-                            <br/><br/>
+                            <br/>
+                            <br/>
                             Appointment Date: ${object.appointment_date}
                             Web Link:
                         </p>
-                        If you have queries feel free to ask.<br/><br/>
+                        If you have queries feel free to ask.
+                        <br/>
+                        <br/>
                         Additionally, I thank you for being a part of ${user.company_id.name}.
                     </p>
                     <p style="font-size: 11px; margin-top: 10px;">
-                    <strong>Sent by ${user.company_id.name}</strong>
-                </p>
+                        <strong>Sent by ${user.company_id.name}</strong>
+                    </p>
                 </div>
             </field>
         </record>
@@ -62,26 +72,31 @@
         <record id="mail_template_appointment_rej" model="mail.template">
             <field name="name">Rejected Appointment Request: Send by Email</field>
             <field name="model_id" ref="appointments.model_appointment_appointment"/>
-            <field name="email_from"><![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_from">
+                <![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.email}</field>
             <field name="subject">Rejected Appointment Request (Ref ${object.name})</field>
             <field name="body_html" type="html">
-              <div style="margin: 0px; padding: 0px;">
+                <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 0px;">
 
                         <p>
                             Dear ${object.first_name +' '+ object.last_name},
-                            <br/><br/>
+                            <br/>
+                            <br/>
                             I have received your request to appointment of EMK Center.
                             This is a notification that serves as confirmation that request has been rejected.
-                            <br/><br/>
+                            <br/>
+                            <br/>
                         </p>
-                        If you have queries feel free to ask.<br/><br/>
+                        If you have queries feel free to ask.
+                        <br/>
+                        <br/>
                         Additionally, I thank you for being a part of ${user.company_id.name}.
                     </p>
                     <p style="font-size: 11px; margin-top: 10px;">
-                    <strong>Sent by ${user.company_id.name}</strong>
-                </p>
+                        <strong>Sent by ${user.company_id.name}</strong>
+                    </p>
                 </div>
             </field>
         </record>
@@ -89,25 +104,30 @@
         <record id="mail_template_appointment_rej_emk" model="mail.template">
             <field name="name">Rejected Appointment Request: Send by Email</field>
             <field name="model_id" ref="appointments.model_appointment_appointment"/>
-            <field name="email_from"><![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_from">
+                <![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.contact_id.appointee_id.work_email}</field>
             <field name="subject">Rejected Appointment Request (Ref ${object.name})</field>
             <field name="body_html" type="html">
-              <div style="margin: 0px; padding: 0px;">
+                <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 0px;">
                         <p>
                             Dear ${object.first_name +' '+ object.last_name},
-                            <br/><br/>
+                            <br/>
+                            <br/>
                             I have received your request to appointment of EMK Center.
                             This is a notification that serves as confirmation that request has been rejected.
-                            <br/><br/>
+                            <br/>
+                            <br/>
                         </p>
-                        If you have queries feel free to ask.<br/><br/>
+                        If you have queries feel free to ask.
+                        <br/>
+                        <br/>
                         Additionally, I thank you for being a part of ${user.company_id.name}.
                     </p>
                     <p style="font-size: 11px; margin-top: 10px;">
-                    <strong>Sent by ${user.company_id.name}</strong>
-                </p>
+                        <strong>Sent by ${user.company_id.name}</strong>
+                    </p>
                 </div>
             </field>
         </record>
@@ -115,27 +135,108 @@
         <record id="mail_template_appointment_reschedule_emk" model="mail.template">
             <field name="name">Rescheduled Appointment Request: Send by Email</field>
             <field name="model_id" ref="appointments.model_appointment_appointment"/>
-            <field name="email_from"><![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_from">
+                <![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.contact_id.appointee_id.work_email}</field>
             <field name="subject">Rescheduled Appointment Request (Ref ${object.name})</field>
             <field name="body_html" type="html">
-              <div style="margin: 0px; padding: 0px;">
+                <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 0px;">
                         <p>
                             Dear ${object.contact_id.appointee_id.name_related},
-                            <br/><br/>
+                            <br/>
+                            <br/>
                             EMK received a request to appointment reschedule of EMK Center.
                             This is a notification that serves as confirmation that request has been approved.
-                            <br/><br/>
+                            <br/>
+                            <br/>
                         </p>
-                        If you have queries feel free to ask.<br/><br/>
+                        If you have queries feel free to ask.
+                        <br/>
+                        <br/>
                         Additionally, I thank you for being a part of ${user.company_id.name}.
                     </p>
                     <p style="font-size: 11px; margin-top: 10px;">
-                    <strong>Sent by ${user.company_id.name}</strong>
-                </p>
+                        <strong>Sent by ${user.company_id.name}</strong>
+                    </p>
                 </div>
             </field>
+        </record>
+
+        <record id="appointment_application_email_tmpl" model="mail.template">
+            <field name="name">Appointment Schedule Application</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">Appointment Schedule Application Confirmation</field>
+            <field name="email_from">
+                <![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
+            <field name="body_html"><![CDATA[
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+                <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+                    <tbody><tr>
+                        <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
+                            <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                        </td>
+                    </tr></tbody>
+                </table>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+            <p>Dear ${ctx['name']},</p>
+                <p>
+                    You have been invited to connect to "${object.company_id.name}" in order to get access to your documents.
+                </p>
+                <h2>Sign in Credential:</h2>
+                <p>
+                    <strong>Login Email:</strong> ${ctx['email']|safe}<br/>
+                    <strong>Temporary Password:</strong> ${ctx['password']|safe}<br/>
+                </p>
+                <p>
+                    To view your application, click on the following link:
+                </p>
+                <div style="text-align: center; margin-top: 16px;">
+                     <a href="${ctx['base_url']}/web/login" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">View Application</a>
+                </div>
+                <p>Best regards,</p>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
+                ${user.signature | safe}
+                <p style="font-size: 11px; margin-top: 10px;">
+                    <strong>Sent by ${user.company_id.name}</strong>
+                </p>
+            </div>]]></field>
+            <field name="user_signature" eval="False"/>
+        </record>
+
+        <record id="appointment_application_officer_email_tmpl" model="mail.template">
+            <field name="name">Appointment Application Verification</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="subject">Appointment Application Verification</field>
+            <field name="email_to">${object.email_to|safe}</field>
+            <field name="email_from">
+                <![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
+            <field name="body_html"><![CDATA[
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+                <table cellspacing="0" cellpadding="0" style="width:600px;border-collapse:collapse;background:inherit;color:inherit">
+                    <tbody><tr>
+                        <td valign="center" width="200" style="padding:10px 10px 10px 5px;font-size: 12px">
+                            <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+                        </td>
+                    </tr></tbody>
+                </table>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
+            <p>Dear Officer,</p>
+                <p>
+                    You are request to verify application <strong> ${ctx['first_name']} ${ctx['last_name']} </strong>.
+                </p>
+                <p>Best regards,</p>
+            </div>
+            <div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
+                ${user.signature | safe}
+                <p style="font-size: 11px; margin-top: 10px;">
+                    <strong>Sent by ${user.company_id.name}</strong>
+                </p>
+            </div>]]></field>
+            <field name="user_signature" eval="False"/>
         </record>
     </data>
 </odoo>

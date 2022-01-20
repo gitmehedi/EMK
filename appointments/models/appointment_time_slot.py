@@ -1,16 +1,16 @@
-from psycopg2 import IntegrityError
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
 from odoo.addons.appointments.helpers import functions
+from odoo.exceptions import ValidationError
+from psycopg2 import IntegrityError
 
-DAYS=[
-    ('saturday','Saturday'),
-    ('sunday','Sunday'),
-    ('monday','Monday'),
-    ('tuesday','Tuesday'),
-    ('wednesday','Wednesday'),
-    ('thursday','Thursday'),
-    ('friday','Friday'),
+DAYS = [
+    ('saturday', 'Saturday'),
+    ('sunday', 'Sunday'),
+    ('monday', 'Monday'),
+    ('tuesday', 'Tuesday'),
+    ('wednesday', 'Wednesday'),
+    ('thursday', 'Thursday'),
+    ('friday', 'Friday'),
 ]
 
 
@@ -21,10 +21,11 @@ class AppointmentTimeSlot(models.Model):
     _order = "id desc"
     _rec_name = "name"
 
-    name = fields.Char(string="Time Slot", readonly=True, copy=False, track_visibility='onchange', compute='_compute_name')
-    day = fields.Selection(DAYS, 'Day', required=True,  track_visibility="onchange")
-    start_time = fields.Float(string="Start Time", required=True, digits=(2,2),  track_visibility="onchange")
-    end_time = fields.Float(string="End Time", required=True, digits=(2,2), track_visibility="onchange")
+    name = fields.Char(string="Time Slot", readonly=True, copy=False, track_visibility='onchange',
+                       compute='_compute_name')
+    day = fields.Selection(DAYS, 'Day', required=True, track_visibility="onchange")
+    start_time = fields.Float(string="Start Time", required=True, digits=(2, 2), track_visibility="onchange")
+    end_time = fields.Float(string="End Time", required=True, digits=(2, 2), track_visibility="onchange")
     description = fields.Text(string="Description", track_visibility="onchange")
     contact_ids = fields.Many2many('appointment.contact', 'contact_timeslot_relation', 'contact_id', 'timeslot_id',
                                    string="Time Slot")
@@ -34,6 +35,7 @@ class AppointmentTimeSlot(models.Model):
                              string='Status', track_visibility='onchange', )
 
     @api.multi
+    @api.depends('day', 'start_time', 'end_time')
     def _compute_name(self):
         for rec in self:
             if rec.day and rec.start_time and rec.end_time:
@@ -41,9 +43,9 @@ class AppointmentTimeSlot(models.Model):
                 end_time = functions.float_to_time(rec.end_time)
                 rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
 
-    @api.constrains('name','start_time','end_time')
+    @api.constrains('name', 'start_time', 'end_time')
     def _check_name(self):
-        name = self.search([('day', '=', self.day),('start_time', '=', self.start_time),
+        name = self.search([('day', '=', self.day), ('start_time', '=', self.start_time),
                             ('end_time', '=', self.end_time)])
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
@@ -111,4 +113,3 @@ class AppointmentTimeSlot(models.Model):
             except IntegrityError:
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
-

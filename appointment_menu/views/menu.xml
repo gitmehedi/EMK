@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="main_appoint_menu" name="Appointments" sequence="20"
-              web_icon="account_fam,static/description/icon.png" groups="appointment_user.group_appoint_user"/>
+              web_icon="account_fam,static/description/icon.png"
+              groups="appointment_user.group_appoint_user,appointment_user.group_appoint_temp_user"/>
 
     <menuitem id="sub_appoint_menu" name="Appointments" sequence="10"
-              parent="main_appoint_menu" groups="appointment_user.group_appoint_user"/>
-
-<!--    <menuitem id="sub_appoint_menu" name="Appointments" sequence="10"-->
-<!--              parent="main_appoint_menu" groups=""/>-->
+              parent="main_appoint_menu"
+              groups="appointment_user.group_appoint_user"/>
 
     <menuitem id="sub_configuration_menu" name="Configurations" sequence="50"
               parent="main_appoint_menu" groups="appointment_user.group_appoint_user"/>

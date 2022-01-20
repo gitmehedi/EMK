@@ -68,7 +68,7 @@
 
 
         <record model="ir.actions.act_window" id="action_appointment_meeting_room">
-            <field name="name">Appointment Meeting Room</field>
+            <field name="name">Meeting Room</field>
             <field name="res_model">appointment.meeting.room</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
