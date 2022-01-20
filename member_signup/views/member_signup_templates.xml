@@ -83,7 +83,7 @@
                         <div class="form-group form-field">
                             <label for="phone" class="control-label">Phone</label>
                             <input type="text" name="phone" t-att-value="phone" id="phone"
-                                   placeholder="01900000000"
+                                   placeholder="01900000000"  minlength="11" maxlength="13"
                                    class="form-control input-sm reqfield number"
                                    data-minlength="6" data-maxlength="14" required="required"/>
                         </div>
@@ -92,7 +92,7 @@
                         <div class="form-group form-field">
                             <label for="mobile" class="control-label">Mobile</label>
                             <input type="text" name="mobile" t-att-value="mobile" id="mobile"
-                                   placeholder="01900000000"
+                                   placeholder="8801900000000" minlength="11" maxlength="13"
                                    class="form-control input-sm number reqfield" data-minlength="11"
                                    data-maxlength="14" required="required"/>
                         </div>
