@@ -10,17 +10,20 @@
             <field name="arch" type="xml">
                 <form string="Employee Exit Interview">
                     <header>
-                        <button name="action_submit" states="draft" type="object" string="Apply" groups ="hr.group_hr_manager" class="oe_highlight"/>
+                        <button name="action_submit" states="draft" type="object" string="Apply"
+                                groups="hr.group_hr_manager" class="oe_highlight"/>
                         <button string="Submit" name="action_validate"
                                 attrs="{'invisible': [('state', 'not in', ['submit'])]}"
                                 type="object" class="oe_highlight"/>
-                        <button string="Validate" name="action_approved" groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
+                        <button string="Validate" name="action_approved"
+                                groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
                                 attrs="{'invisible': [('state','not in',['validate'])]}"
                                 type="object" class="oe_highlight"/>
                         <button string="Approved" name="action_done"
-                                attrs="{'invisible': [('state','not in',['approved'])]}" groups ="hr.group_hr_manager"
+                                attrs="{'invisible': [('state','not in',['approved'])]}" groups="hr.group_hr_manager"
                                 type="object" class="oe_highlight"/>
-                        <button string="Reset to Draft" name="action_reset" groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
+                        <button string="Reset to Draft" name="action_reset"
+                                groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
                                 attrs="{'invisible': [('state', 'in', ['draft','submit','done'])]}"
                                 type="object"/>
                         <field name="state" widget="statusbar"
@@ -47,13 +50,25 @@
                                 <field name="supervisor_designation"/>
                             </group>
                         </group>
-                        <p><b>The Information you give here would be helpful to us to create a better working environment</b></p>
-                        <p><b>SECTION A: </b></p>
+                        <p>
+                            <b>The Information you give here would be helpful to us to create a better working
+                                environment
+                            </b>
+                        </p>
+                        <p>
+                            <b>SECTION A:</b>
+                        </p>
                         <p>a) Please Indicate below the reasons for your decision by distributing 100 points over the
-                        factors given below indicating % contribution to your decision.</p>
+                            factors given below indicating % contribution to your decision.
+                        </p>
                         <p>b) Also cite critical incidents/example to support your rating.</p>
-                        <p><b>For example,</b> if only one major factor lead to your decision wright 100 against that factor,if two equally important factors give
-                        50 each, if one major factor and one minor factor give 70 or 80 depending on their importance.</p>
+                        <p>
+                            <b>For example,</b>
+                            if only one major factor lead to your decision wright 100 against that factor,if two equally
+                            important factors give
+                            50 each, if one major factor and one minor factor give 70 or 80 depending on their
+                            importance.
+                        </p>
                         <field name="line_ids" nolabel="1" attrs="{'readonly':[('state','=','done')]}">
                             <tree editable="bottom">
                                 <field name="factor" options='{"no_open": True,"no_create": 1, "no_create_edit": 1}'/>
@@ -61,39 +76,59 @@
                                 <field name="point"/>
                             </tree>
                         </field>
-                        <p><b>SECTION B: </b></p>
-                        <p>In your opinion: </p>
+                        <p>
+                            <b>SECTION B:</b>
+                        </p>
+                        <p>In your opinion:</p>
                         <field name="question_set_ids" nolabel="1" attrs="{'readonly':[('state','=','done')]}">
                             <tree editable="bottom">
                                 <field name="question"/>
                                 <field name="answer"/>
                             </tree>
                         </field>
-                        <p><b>Would you recommend the company to a friend as a good
-                            organization to work for? </b></p>
+                        <p>
+                            <b>Would you recommend the company to a friend as a good
+                                organization to work for?
+                            </b>
+                        </p>
                         <group>
-                            <field name="recommend" widget="radio" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="recommend" widget="radio" nolabel="1"
+                                   attrs="{'readonly':[('state','=','done')]}"/>
                         </group>
-                        <p><b>Your contract address for all further correspondence is: </b></p>
+                        <p>
+                            <b>Your contract address for all further correspondence is:</b>
+                        </p>
                         <field name="contract_add" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
                         <!--<separator string="Comment By Supervisor"/>-->
                         <!--<field name="comment_supervisor" nolabel="1"/>-->
                         <!--<separator string="Comment By HR"/>-->
                         <!--<field name="comment_hr" nolabel="1"/>-->
-                        <p><b>SECTION C: </b></p>
-                        <p>To be filled by the Administration Department 7 days before the last working day.: </p>
+                        <p>
+                            <b>SECTION C:</b>
+                        </p>
+                        <p>To be filled by the Administration Department 7 days before the last working day.:</p>
                         <p>(With input from the immediate supervisor of the employee)</p>
-                        <p><b>Details of any mentionable incident during the notice period of the person.</b></p>
+                        <p>
+                            <b>Details of any mentionable incident during the notice period of the person.</b>
+                        </p>
                         <field name="comment_supervisor" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
-                        <p><b>Can a good character be issued to the person?</b></p>
+                        <p>
+                            <b>Can a good character be issued to the person?</b>
+                        </p>
                         <group>
-                            <field name="permission" widget="radio" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="permission" widget="radio" nolabel="1"
+                                   attrs="{'readonly':[('state','=','done')]}"/>
                         </group>
-                        <p><b>Can the person be reconsidered for re-employment?</b></p>
+                        <p>
+                            <b>Can the person be reconsidered for re-employment?</b>
+                        </p>
                         <group>
-                            <field name="permission" widget="radio" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
+                            <field name="permission" widget="radio" nolabel="1"
+                                   attrs="{'readonly':[('state','=','done')]}"/>
                         </group>
-                        <p><b>Any other comments?</b></p>
+                        <p>
+                            <b>Any other comments?</b>
+                        </p>
                         <field name="comment_hr" nolabel="1" attrs="{'readonly':[('state','=','done')]}"/>
                     </sheet>
                     <div class="oe_chatter">
@@ -128,12 +163,12 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-		<!-- Exit Interview Menu -->
+        <!-- Exit Interview Menu -->
         <menuitem
-				name="Exit Interview"
-				id="exit_interview_menu"
+                name="Exit Interview"
+                id="exit_interview_menu"
                 parent="menu_exit_management"
-				sequence="20"
+                sequence="20"
                 action="action_exit_interview"
         />
 
@@ -141,43 +176,49 @@
 
 
         <!-- Factors Set Form Views -->
-        <record id="factor_form" model="ir.ui.view" >
-			<field name="name">factor.form</field>
-			<field name="model">factors.set</field>
-			<field name="type">form</field>
-			<field name="priority" eval="16"/>
-			<field name="arch" type="xml">
-				<form string="Factors" duplicate="0">
+        <record id="factor_form" model="ir.ui.view">
+            <field name="name">factor.form</field>
+            <field name="model">factors.set</field>
+            <field name="type">form</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Factors" duplicate="0">
                     <header>
                         <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
                         <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
                         <button name="act_reject" string="Reject" states="draft" type="object"/>
                         <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
                     </header>
-                    <group>
+                    <sheet>
                         <group>
-                            <field name="name" />
+                            <group>
+                                <field name="name"/>
+                            </group>
                         </group>
-                    </group>
-				</form>
-			</field>
-		</record>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
 
         <!-- Factors Set Tree Views -->
-		<record id="factor_tree_view" model="ir.ui.view">
-			<field name="name">factor.tree</field>
-			<field name="model">factors.set</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Factors" decoration-info="state=='draft'"
+        <record id="factor_tree_view" model="ir.ui.view">
+            <field name="name">factor.tree</field>
+            <field name="model">factors.set</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Factors" decoration-info="state=='draft'"
                       decoration-success="state=='approve'"
                       decoration-danger="state=='reject'"
                       decoration-bf="state in ('approve',)">
-					<field name="name" />
-					<field name="state" />
-				</tree>
-			</field>
-		</record>
+                    <field name="name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
 
         <record id="view_factors_set_search" model="ir.ui.view">
             <field name="name">view.factors.set.search</field>
@@ -199,23 +240,23 @@
         </record>
 
         <!-- Factors Set Action Views -->
-		<record id="action_factor_action_view" model="ir.actions.act_window">
-			<field name="name">Factors</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">factors.set</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="factor_tree_view" />
+        <record id="action_factor_action_view" model="ir.actions.act_window">
+            <field name="name">Factors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">factors.set</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="factor_tree_view"/>
             <field name="context">
                 {"search_default_active":'False',"search_default_pending":'True'}
             </field>
 
-		</record>
+        </record>
 
-		<!-- Factors Set Menu -->
-		<menuitem id="factor_menu" name="Factors"
-			parent="exit_checklist_menu" sequence="10"
-			action="action_factor_action_view" />
+        <!-- Factors Set Menu -->
+        <menuitem id="factor_menu" name="Factors"
+                  parent="exit_checklist_menu" sequence="10"
+                  action="action_factor_action_view"/>
 
     </data>
 </odoo>

@@ -2,9 +2,10 @@ from odoo import models, fields, api, exceptions,_
 from psycopg2 import IntegrityError
 from odoo.exceptions import UserError, ValidationError
 
+
 class ConfigureChecklists(models.Model):
-    _name='hr.exit.configure.checklists'
-    _inherit = ['mail.thread','ir.needaction_mixin']
+    _name = 'hr.exit.configure.checklists'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     
     #Model Fields

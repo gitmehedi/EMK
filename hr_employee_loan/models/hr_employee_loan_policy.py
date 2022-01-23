@@ -4,7 +4,9 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class HrEmployeeLoanPolicy(models.Model):
-    _name = 'hr.employee.loan.policy'    
+    _name = 'hr.employee.loan.policy'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Employee loan policy'
 
     name = fields.Char(size=100, string='Name', required='True')
     code = fields.Char(size=100, string='Code', required='True')
@@ -37,8 +39,9 @@ class HrEmployeeLoanPolicy(models.Model):
     @api.constrains('name')
     def _check_unique_constraint(self):
         if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 

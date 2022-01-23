@@ -4,7 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class EmployeeEixtInterview(models.Model):
     _name = 'employee.exit.interview'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'employee_id'
     _description = 'Employee Exit Interview'
 
@@ -130,6 +130,8 @@ class EmployeeOpinion(models.Model):
 
 class FactorsSet(models.Model):
     _name = 'factors.set'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Factor Set'
 
     name = fields.Char('Name')
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')

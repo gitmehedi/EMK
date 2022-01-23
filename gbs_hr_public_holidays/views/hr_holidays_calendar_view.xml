@@ -1,87 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-	<data>
-		<!-- Holiday Type Form Views -->
-		<record id="calendar_holiday_form_view" model="ir.ui.view">
-			<field name="name">calendar_holiday_form</field>
-			<field name="model">calendar.holiday</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Holiday">
+    <data>
+        <!-- Holiday Type Form Views -->
+        <record id="calendar_holiday_form_view" model="ir.ui.view">
+            <field name="name">calendar_holiday_form</field>
+            <field name="model">calendar.holiday</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Holiday" duplicate="0">
+                    <header>
+                        <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
 
-					<sheet>
-						<group>
-							<field name="name" />
-							<field name="type" />
-							<field name="date" />
-							<field name="color" />
-							<field name="status" />
-						</group>
-					</sheet>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="type"/>
+                            <field name="date"/>
+                            <field name="color"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
 
-				</form>
-			</field>
-		</record>
+        <!-- Holiday Type Tree Views -->
+        <record id="calendar_holiday_tree_view" model="ir.ui.view">
+            <field name="name">calendar_holiday_tree</field>
+            <field name="model">calendar.holiday</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Holiday Tree" decoration-info="state=='draft'"
+                      decoration-success="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('approve',)">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
 
-		<!-- Holiday Type Tree Views -->
-		<record id="calendar_holiday_tree_view" model="ir.ui.view">
-			<field name="name">calendar_holiday_tree</field>
-			<field name="model">calendar.holiday</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Holiday Tree">
-					<field name="name" />
-					<field name="type" />
-					<field name="date" />
-					<field name="status" />
-				</tree>
-			</field>
-		</record>
 
+        <record id="calender_holiday_calendar_view" model="ir.ui.view">
+            <field name="name">view.name</field>
+            <field name="model">calendar.holiday</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <calendar string="Ideas" date_start="date" color="color"
+                          mode="month" all_day="date">
+                    <field name="name" style="background-color:red;"/>
+                </calendar>
+            </field>
+        </record>
 
-		<record id="calender_holiday_calendar_view" model="ir.ui.view">
-			<field name="name">view.name</field>
-			<field name="model">calendar.holiday</field>
-			<field name="priority" eval="16" />
-			<field name="arch" type="xml">
-				<calendar string="Ideas" date_start="date" color="color"
-					mode="month" all_day="date">
-					<field name="name" style="background-color:red;" />
-				</calendar>
-			</field>
-		</record>
+        <!-- Calendar Holiday Search Views -->
 
-		<!-- Calendar Holiday Search Views -->
+        <record id="holiday_type_search_view" model="ir.ui.view">
+            <field name="name">calendar_holiday_search</field>
+            <field name="model">calendar.holiday</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="type" string="Type" filter_domain="[('type','ilike','self')]"/>
+                    <field name="name" string="Name" filter_domain="[('name','ilike','self')]"/>
+                    <group expand="0" string="Group By">
+                         <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                        <filter string="Type" icon="terp-personal" domain="[]"
+                                context="{'group_by':'type'}"/>
+                        <filter string="Name" icon="terp-personal" domain="[]"
+                                context="{'group_by':'name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
-		<record id="holiday_type_search_view" model="ir.ui.view">
-			<field name="name">calendar_holiday_search</field>
-			<field name="model">calendar.holiday</field>
-			<field name="arch" type="xml">
-				<search string="Search">
-					<field name="type" string="Type" filter_domain="[('type','ilike','self')]" />
-					<field name="name" string="Name" filter_domain="[('name','ilike','self')]" />
-					<group expand="0" string="Group By">
-						<filter string="Type" icon="terp-personal" domain="[]"
-							context="{'group_by':'type'}" />
-						<filter string="Name" icon="terp-personal" domain="[]"
-							context="{'group_by':'name'}" />
-					</group>
-				</search>
-			</field>
-		</record>
+        <!-- Calendar Holiday Action Views -->
+        <record id="action_calendar_holiday_view" model="ir.actions.act_window">
+            <field name="name">Calendar Holiday Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">calendar.holiday</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="view_id" ref="calender_holiday_calendar_view"/>
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
+        </record>
 
-		<!-- Calendar Holiday Action Views -->
-		<record id="action_calendar_holiday_view" model="ir.actions.act_window">
-			<field name="name">Calendar Holiday Type</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">calendar.holiday</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">calendar,tree,form</field>
-			<field name="view_id" ref="calender_holiday_calendar_view" />
-		</record>
-
-		<!-- Calendar Holiday Menu -->
-		<menuitem parent="hr_holidays.menu_hr_holidays_configuration" id="calendar_holiday_menu"
-			name="Holiday Calendar" sequence="15" action="action_calendar_holiday_view" />
-	</data>
+        <!-- Calendar Holiday Menu -->
+        <menuitem parent="hr_holidays.menu_hr_holidays_configuration" id="calendar_holiday_menu"
+                  name="Holiday Calendar" sequence="15" action="action_calendar_holiday_view"/>
+    </data>
 </odoo>

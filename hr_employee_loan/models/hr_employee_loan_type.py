@@ -5,11 +5,13 @@ from odoo.exceptions import UserError, ValidationError
 
 class HrEmployeeLoanType(models.Model):
     _name = 'hr.employee.loan.type'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Employee Loan Type'
 
-    name = fields.Char(size=100, string='Name', required='True')
-    code = fields.Char(size=100, string='Name', required='True')
-    is_interest_payable = fields.Boolean(string='Is Interest Payable', required='True')
-    rate = fields.Float(size=100, string='Rate')
+    name = fields.Char(size=100, string='Name', required='True', track_visibility='onchange')
+    code = fields.Char(size=100, string='Name', required='True', track_visibility='onchange')
+    is_interest_payable = fields.Boolean(string='Is Interest Payable', required='True', track_visibility='onchange')
+    rate = fields.Float(size=100, string='Rate', track_visibility='onchange')
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',

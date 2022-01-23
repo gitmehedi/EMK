@@ -4,11 +4,12 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class HrEmployeeLoanProof(models.Model):
-    _name = 'hr.employee.loan.proof' 
+    _name = 'hr.employee.loan.proof'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'hr employee loan proof'   
 
-    name = fields.Char(size=100, string='Name', required='True')
-    mandatory = fields.Boolean(string='Mandatory', default=True)
+    name = fields.Char(size=100, string='Name', required='True', track_visibility='onchange')
+    mandatory = fields.Boolean(string='Mandatory', default=True, track_visibility='onchange')
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
