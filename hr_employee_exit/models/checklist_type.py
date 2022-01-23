@@ -8,8 +8,8 @@ class ChecklistType(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     # Model Fields
-    name = fields.Char(string='Name', size=100, required=True, help='Please enter name.')
-    description = fields.Text(string='Description', size=500, help='Please enter description')
+    name = fields.Char(string='Name', size=100, required=True, help='Please enter name.', track_visibility='onchange',)
+    description = fields.Text(string='Description', size=500, help='Please enter description', track_visibility='onchange',)
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
@@ -70,6 +70,4 @@ class ChecklistType(models.Model):
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
 
-    # _sql_constraints = [
-    #     ('_check_name_uniq', 'unique(name)', "Checklist type name already exists!"),
-    # ]
+
