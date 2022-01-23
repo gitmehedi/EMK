@@ -46,8 +46,10 @@ class HrEmployeeLoanType(models.Model):
     @api.constrains('name')
     def _check_unique_constraint(self):
         if self.name:
-            filters = [['name', '=ilike', self.name]]
-            name = self.search(filters)
+            name = self.search(
+                [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+                 ('active', '=', False)])
+            # name = self.search(filters)
             if len(name) > 1:
                 raise Warning('[Unique Error] Name must be unique!')
 

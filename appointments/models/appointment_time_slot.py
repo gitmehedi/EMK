@@ -3,14 +3,14 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.appointments.helpers import functions
 
-DAYS=[
-    ('saturday','Saturday'),
-    ('sunday','Sunday'),
-    ('monday','Monday'),
-    ('tuesday','Tuesday'),
-    ('wednesday','Wednesday'),
-    ('thursday','Thursday'),
-    ('friday','Friday'),
+DAYS = [
+    ('saturday', 'Saturday'),
+    ('sunday', 'Sunday'),
+    ('monday', 'Monday'),
+    ('tuesday', 'Tuesday'),
+    ('wednesday', 'Wednesday'),
+    ('thursday', 'Thursday'),
+    ('friday', 'Friday'),
 ]
 
 
@@ -21,10 +21,11 @@ class AppointmentTimeSlot(models.Model):
     _order = "id desc"
     _rec_name = "name"
 
-    name = fields.Char(string="Time Slot", readonly=True, copy=False, track_visibility='onchange', compute='_compute_name')
-    day = fields.Selection(DAYS, 'Day', required=True,  track_visibility="onchange")
-    start_time = fields.Float(string="Start Time", required=True, digits=(2,2),  track_visibility="onchange")
-    end_time = fields.Float(string="End Time", required=True, digits=(2,2), track_visibility="onchange")
+    name = fields.Char(string="Time Slot", readonly=True, copy=False, track_visibility='onchange',
+                       compute='_compute_name')
+    day = fields.Selection(DAYS, 'Day', required=True, track_visibility="onchange")
+    start_time = fields.Float(string="Start Time", required=True, digits=(2, 2), track_visibility="onchange")
+    end_time = fields.Float(string="End Time", required=True, digits=(2, 2), track_visibility="onchange")
     description = fields.Text(string="Description", track_visibility="onchange")
     contact_ids = fields.Many2many('appointment.contact', 'contact_timeslot_relation', 'contact_id', 'timeslot_id',
                                    string="Time Slot")
@@ -41,9 +42,9 @@ class AppointmentTimeSlot(models.Model):
                 end_time = functions.float_to_time(rec.end_time)
                 rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
 
-    @api.constrains('name','start_time','end_time')
+    @api.constrains('name', 'start_time', 'end_time')
     def _check_name(self):
-        name = self.search([('day', '=', self.day),('start_time', '=', self.start_time),
+        name = self.search([('day', '=', self.day), ('start_time', '=', self.start_time),
                             ('end_time', '=', self.end_time)])
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
@@ -60,6 +61,22 @@ class AppointmentTimeSlot(models.Model):
             raise ValidationError(_("Start Time should be valid date time"))
         if functions.float_to_time(self.end_time) < '00:00' or functions.float_to_time(self.end_time) > '23:59':
             raise ValidationError(_("End Time should be valid date time"))
+
+    @api.constrains('start_time', 'end_time', 'day')
+    def check_time_intersect(self):
+        query = """select id,day,start_time,end_time from appointment_timeslot 
+        WHERE (start_time <= %s and %s <= end_time) and active=True
+        and day = '%s' """ % (self.end_time, self.start_time, self.day)
+        print(query)
+        # self._cr.execute(query, tuple([self.end_time, self.start_time, self.day]))
+        self.env.cr.execute(query)
+        for val in self.env.cr.fetchall():
+            print "{0}:{1}-{2}:{3}".format(val[0], val[1], val[2], val[3])
+        # if rec:
+        #     raise ValidationError(_('[Warning] Time should not be overlap at same day.'))
+        # for val in rec:
+            if val[0]:
+                raise ValidationError(_('[Warning] Time should not be overlap at same day.'))
 
     @api.model
     def _needaction_domain_get(self):
@@ -111,4 +128,3 @@ class AppointmentTimeSlot(models.Model):
             except IntegrityError:
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
-

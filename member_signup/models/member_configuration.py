@@ -20,7 +20,9 @@ class MemberOccupation(models.Model):
 
     @api.constrains('name')
     def _check_name(self):
-        name = self.search([('name', '=ilike', self.name)])
+        name = self.search(
+            [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+             ('active', '=', False)])
         if len(name) > 1:
             raise Exception(_('Name should not be duplicate.'))
 
@@ -86,7 +88,9 @@ class MemberSubjectOfInterest(models.Model):
 
     @api.constrains('name')
     def _check_name(self):
-        name = self.search([('name', '=ilike', self.name)])
+        name = self.search(
+            [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+             ('active', '=', False)])
         if len(name) > 1:
             raise Exception(_('Name should not be duplicate.'))
 
@@ -152,7 +156,9 @@ class MemberCertification(models.Model):
 
     @api.constrains('name')
     def _check_name(self):
-        name = self.search([('name', '=ilike', self.name)])
+        name = self.search(
+            [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+             ('active', '=', False)])
         if len(name) > 1:
             raise Exception(_('Name should not be duplicate.'))
 

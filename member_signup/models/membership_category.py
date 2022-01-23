@@ -20,7 +20,9 @@ class InheritedMembershipCategory(models.Model):
 
     @api.constrains('name')
     def _check_name(self):
-        name = self.search([('name', '=ilike', self.name)])
+        name = self.search(
+            [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+             ('active', '=', False)])
         if len(name) > 1:
             raise Exception(_('Name should not be duplicate.'))
 
@@ -109,7 +111,9 @@ class MembershipWithdrawalReason(models.Model):
 
     @api.constrains('name')
     def _check_name(self):
-        name = self.search([('name', '=ilike', self.name)])
+        name = self.search(
+            [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+             ('active', '=', False)])
         if len(name) > 1:
             raise Exception(_('Name should not be duplicate.'))
 

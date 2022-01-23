@@ -18,7 +18,9 @@ class EventTaskType(models.Model):
 
     @api.constrains('name')
     def _check_name(self):
-        name = self.search([('name', '=ilike', self.name)])
+        name = self.search(
+            [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+             ('active', '=', False)])
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
@@ -89,7 +91,9 @@ class EventServiceType(models.Model):
 
     @api.constrains('name')
     def _check_name(self):
-        name = self.search([('name', '=ilike', self.name)])
+        name = self.search(
+            [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+             ('active', '=', False)])
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 

@@ -16,7 +16,9 @@ class IndentType(models.Model):
 
     @api.constrains('name')
     def _check_unique_name(self):
-        name = self.env['indent.type'].search([('name', '=', self.name)])
+        name = self.search(
+            [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+             ('active', '=', False)])
         if len(name) > 1:
             raise ValidationError('[UNIQUE] Name must be unique!')
 
