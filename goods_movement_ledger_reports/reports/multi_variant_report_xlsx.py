@@ -24,8 +24,7 @@ class MultiVariantReportXLSX(ReportXlsx):
         date_end = date_to + ' 23:59:59'
 
         location_outsource = tuple(location.ids)
-        location_input = self.env['stock.location'].search([('operating_unit_id', '=', obj.operating_unit_id.id),
-                                                            ('name', '=', 'Input')], limit=1).id
+
         operating_unit_id = obj.operating_unit_id.id
 
         if obj.product_ids:
@@ -158,7 +157,6 @@ class MultiVariantReportXLSX(ReportXlsx):
             datewise_purchase_stocklist = product_report_utility.get_purchase_stock(start_date, end_date,
                                                                                     obj.operating_unit_id.id,
                                                                                     product_param)
-
             if datewise_purchase_stocklist:
                 for purchase_stock in datewise_purchase_stocklist:
                     if purchase_stock['purchase_qty']:

@@ -235,10 +235,14 @@ class PurchaseRequisitionLine(models.Model):
     @api.multi
     def _get_product_quantity(self):
         for product in self:
-            location = self.env['stock.location'].search(
-                [('operating_unit_id', '=', product.requisition_id.operating_unit_id.id), ('name', '=', 'Stock')])
+            stock_utility = self.env['stock.utility']
+            location = stock_utility.get_location_id(product.requisition_id.operating_unit_id.id)
+            if not location:
+                location = self.env['stock.location'].search(
+                    [('operating_unit_id', '=', product.requisition_id.operating_unit_id.id), ('name', '=', 'Stock')],
+                    limit=1).id
             product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),
-                                                        ('location_id', '=', location.id)])
+                                                        ('location_id', '=', location)])
             quantity = sum([val.qty for val in product_quant])
             product.product_qty = quantity
 
