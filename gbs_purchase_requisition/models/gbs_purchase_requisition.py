@@ -212,6 +212,12 @@ class PurchaseRequisitionLine(models.Model):
 
     receive_qty = fields.Float(string='PO Qty')
     due_qty = fields.Float(string='Due Qty',compute='_compute_due_qty')
+    last_requisition_no = fields.Char('Last PR NO')
+    last_requisition_date = fields.Date(string='Last PR Date')
+    last_requisition_qty = fields.Float(string='Last PR Qty')
+
+
+
 
     @api.depends('product_id')
     def _compute_price_unit(self):
@@ -258,3 +264,16 @@ class PurchaseRequisitionLine(models.Model):
             self.last_product_uom_id = lines[:1].product_uom.id
 
             self._get_product_quantity()
+
+    @api.onchange('product_id')
+    def _get_last_purchase_requisition(self):
+        """ Get last purchase price, last purchase date and last supplier """
+        if self.product_id:
+            lines = self.env['purchase.requisition.line'].search(
+                [('requisition_id.operating_unit_id', '=', self.requisition_id.operating_unit_id.id),
+                 ('product_id', '=', self.product_id.id)]).sorted(
+                key=lambda l:l.requisition_id.create_date, reverse=True)
+            if lines:
+                self.last_requisition_date = lines[:1].requisition_id.requisition_date
+                self.last_requisition_no = lines[:1].requisition_id.name
+                self.last_requisition_qty = lines[:1].product_ordered_qty
