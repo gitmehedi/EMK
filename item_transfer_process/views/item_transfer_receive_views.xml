@@ -127,6 +127,10 @@
                 </p>
             </field>
         </record>
+        <menuitem name="Receive Items"
+                  parent="main_menu_item_transfer" id="receive_items_menu" sequence="2"
+                  groups="stock.group_stock_user"/>
+
 
 
          <menuitem action="action_item_transfer_receive" name="All Records"
@@ -134,9 +138,6 @@
                   groups="stock.group_stock_user"/>
 
 
-        <menuitem name="Receive Items"
-                  parent="main_menu_item_transfer" id="receive_items_menu" sequence="2"
-                  groups="stock.group_stock_user"/>
 
 
     </data>

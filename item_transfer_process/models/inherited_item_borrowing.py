@@ -14,6 +14,10 @@ class InheritedItemBorrowing(models.Model):
 
     @api.multi
     def button_confirm_receive(self):
+        # if send stock picking not done state show Validation Error
+        if not self.item_transfer_send_id.picking_id.state == 'done':
+            raise UserError(_('You cannot confirm this because item sender has not completed stock picking operation.'))
+
         for loan in self:
             if not loan.item_lines:
                 raise UserError(_('You cannot confirm this without product.'))
@@ -31,6 +35,7 @@ class InheritedItemBorrowing(models.Model):
 
     @api.multi
     def button_approve_receive(self):
+
         picking_id = False
         if self.item_lines:
             picking_id = self._create_pickings_and_moves_receive()
@@ -102,6 +107,3 @@ class InheritedItemBorrowing(models.Model):
                 move_obj.create(moves)
 
         return picking_id
-
-
-

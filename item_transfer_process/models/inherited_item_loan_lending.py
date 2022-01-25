@@ -64,7 +64,8 @@ class InheritedItemLoanLending(models.Model):
         receiving_picking_type = self.env['stock.picking.type'].search(
             [('default_location_src_id', '=', self.item_loan_location_id.id),
              ('code', '=', 'operating_unit_transfer'),
-             ('default_location_dest_id', '=', destination_loc_id)])
+             ('default_location_dest_id', '=', destination_loc_id),
+             ('operating_unit_id', '=', self.receiving_operating_unit_id.id)])
         if not receiving_picking_type:
             raise UserError(_('Please create "Incoming" picking type for Item Receiving.'))
 
@@ -90,13 +91,15 @@ class InheritedItemLoanLending(models.Model):
             date_planned = datetime.strptime(self.request_date, DEFAULT_SERVER_DATETIME_FORMAT)
             if line.product_id:
                 if not picking_id:
+
                     picking_type = self.env['stock.picking.type'].search(
                         [('default_location_src_id', '=', self.location_id.id),
                          ('code', '=', 'operating_unit_transfer'),
-                         ('default_location_dest_id', '=', self.item_loan_location_id.id)])
+                         ('default_location_dest_id', '=', self.item_loan_location_id.id),
+                         ('operating_unit_id', '=', self.operating_unit_id.id)])
                     if not picking_type:
                         raise UserError(_('Please create "Outgoing" picking type for Item Sending.'))
-                    # pick_name = self.env['ir.sequence'].next_by_code('stock.picking')
+
                     res = {
                         'picking_type_id': picking_type.id,
                         'priority': '1',
@@ -152,26 +155,7 @@ class InheritedItemLoanLending(models.Model):
                         'state': 'draft'
                     })
 
-        # borrow_picking_id = borrow_picking.id
-        # print('borrow_picking_id', borrow_picking_id)
-        # date_planned = datetime.strptime(borrow_picking.request_date, DEFAULT_SERVER_DATETIME_FORMAT)
-        # moves_ = {
-        #     'name': borrow_picking.name,
-        #     'origin': borrow_picking.name or borrow_picking_id.name,
-        #     'location_id': borrow_picking.location_id,
-        #     'location_dest_id': borrow_picking.item_loan_borrow_location_id.id,
-        #     'picking_id': borrow_picking_id or False,
-        #     'product_id': line.product_id.id,
-        #     'product_uom_qty': line.product_uom_qty,
-        #     'product_uom': line.product_uom.id,
-        #     'date': date_planned,
-        #     'date_expected': date_planned,
-        #     # 'picking_type_id': borrow_picking.picking_type.id,
-        #     'state': 'draft'
-        #
-        # }
-        # move = self.env['stock.move'].create(moves_)
-        # print('move', move)
+
 
         return picking_id
 
@@ -196,8 +180,18 @@ class InheritedItemLoanLending(models.Model):
         for loan in self:
             if not loan.item_lines:
                 raise UserError(_('You cannot confirm this without product.'))
+
+            picking_type = self.env['stock.picking.type'].search(
+                [('default_location_src_id', '=', self.location_id.id),
+                 ('code', '=', 'operating_unit_transfer'),
+                 ('default_location_dest_id', '=', self.item_loan_location_id.id),
+                 ('operating_unit_id', '=', self.operating_unit_id.id)])
+            if not picking_type:
+                raise UserError(_('Please create "Outgoing" picking type for Item Sending.'))
+
             res = {
                 'state': 'waiting_approval',
+                'picking_type_id': picking_type.id
             }
             requested_date = datetime.strptime(self.request_date, "%Y-%m-%d %H:%M:%S").date()
             new_seq = self.env['ir.sequence'].next_by_code_new('item.loan.lending.send', requested_date)
