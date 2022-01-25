@@ -19,9 +19,7 @@ class AppointmentType(models.Model):
 
     @api.constrains('name')
     def _check_name(self):
-        name = self.search(
-            [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
-             ('active', '=', False)])
+        name = self.search([('name', '=ilike', self.name)])
         if len(name) > 1:
             raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
@@ -65,7 +63,7 @@ class AppointmentType(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approved and Rejected record cannot be deleted.'))
+                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
             try:
                 return super(AppointmentType, rec).unlink()
             except IntegrityError:

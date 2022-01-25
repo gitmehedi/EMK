@@ -63,22 +63,6 @@ class AppointmentTimeSlot(models.Model):
         if functions.float_to_time(self.end_time) < '00:00' or functions.float_to_time(self.end_time) > '23:59':
             raise ValidationError(_("End Time should be valid date time"))
 
-    @api.constrains('start_time', 'end_time', 'day')
-    def check_time_intersect(self):
-        query = """select id,day,start_time,end_time from appointment_timeslot 
-        WHERE (start_time <= %s and %s <= end_time) and active=True
-        and day = '%s' """ % (self.end_time, self.start_time, self.day)
-        print(query)
-        # self._cr.execute(query, tuple([self.end_time, self.start_time, self.day]))
-        self.env.cr.execute(query)
-        for val in self.env.cr.fetchall():
-            print "{0}:{1}-{2}:{3}".format(val[0], val[1], val[2], val[3])
-        # if rec:
-        #     raise ValidationError(_('[Warning] Time should not be overlap at same day.'))
-        # for val in rec:
-            if val[0]:
-                raise ValidationError(_('[Warning] Time should not be overlap at same day.'))
-
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ('draft', 'approve', 'reject'))]
