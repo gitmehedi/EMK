@@ -12,16 +12,6 @@
                                 groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"/>
                         <button name="act_reject" string="Reject" type="object" states="draft"
                                 groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"/>
-                        <button name="%(action_account_analytic_account_wizard)d" string="Edit" type="action"
-                                class="oe_highlight"
-                                groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"
-                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
-                        <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
-                                groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"
-                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
-                        <button name="act_reject_pending" string="Reject" type="object"
-                                groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"
-                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
                         <button name="act_draft" string="Set to Draft" type="object" states="reject"
                                 groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"/>
                         <field name="state" widget="statusbar" invisible="True"/>
@@ -61,17 +51,6 @@
                                        invisible="True"/>
                             </group>
                         </group>
-                        <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
-                            <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
-                                  decoration-bf="state in ('pending',)"
-                                  decoration-danger="state=='reject'">
-                                <field name="change_name"/>
-                                <field name="request_date"/>
-                                <field name="change_date"/>
-                                <field name="status"/>
-                                <field name="state"/>
-                            </tree>
-                        </field>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -164,7 +143,7 @@
     </record>
 
     <menuitem id="fixed_asset_vendors" name="Vendors" sequence="10" action="base.action_partner_supplier_form"
-              parent="account_fam_menu.sub_configuration_menu" groups=""/>
+              parent="account_fam_menu.sub_configuration_menu" groups="account.group_account_manager"/>
 
     <record id="account.menu_action_analytic_lines_tree" model="ir.ui.menu">
         <field name="name">Cost Centres Entries</field>

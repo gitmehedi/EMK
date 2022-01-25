@@ -1,7 +1,7 @@
-from psycopg2 import IntegrityError
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
 from odoo.addons.appointments.helpers import functions
+from odoo.exceptions import ValidationError
+from psycopg2 import IntegrityError
 
 DAYS = [
     ('saturday', 'Saturday'),
@@ -35,6 +35,7 @@ class AppointmentTimeSlot(models.Model):
                              string='Status', track_visibility='onchange', )
 
     @api.multi
+    @api.depends('day', 'start_time', 'end_time')
     def _compute_name(self):
         for rec in self:
             if rec.day and rec.start_time and rec.end_time:

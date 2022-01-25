@@ -13,6 +13,7 @@ odoo.define('appointments.main', function (require) {
         },
         start: function () {
             var self = this;
+            $('#appointment-reservation').validator();
             $("#date_of_birth").datepicker({
                 minDate: new Date(1900,1-1,1),
                 maxDate: '-16Y',
@@ -38,7 +39,12 @@ odoo.define('appointments.main', function (require) {
                     self._update_contacts(data);
                 }
             });
-
+            $("#phone").on('change', function() {
+                var phone =  $(this).val();
+                if (phone){
+                    self._valid_phone_number(phone);
+                }
+            });
             $("#contact_id,#appointment_date").on("change",function(){
                 var contact_id =  $("#contact_id").find(":selected").val();
                 var appointment_date =  $("#appointment_date").val();
@@ -89,6 +95,16 @@ odoo.define('appointments.main', function (require) {
                 }
                 $('#timeslot_id').html(options.join(''));
             });
+        },
+        _valid_phone_number: function (phone){
+          var phonePattern = /^\+?([0-9]{1,3})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{6})$/;
+
+          if (phone.match(phonePattern))
+          {
+              return true;
+          } else {
+              return false;
+          }
         },
         _update_timeslot: function () {
             var self = this;

@@ -28,15 +28,15 @@
                 <form string="Appointment">
                     <header>
                         <button name="confirm_appointment" string="Confirm" states="draft"
-                                class="oe_highlight" type="object"/>
+                                class="oe_highlight" type="object"  groups="appointment_user.group_appoint_user"/>
                         <button name="approve_appointment" string="Approve" states="confirm" type="object"
-                                class="oe_highlight"/>
+                                 groups="appointment_user.group_appoint_user" class="oe_highlight"/>
                         <button name="finish_appointment" string="Finish" states="approve" type="object"
-                                class="oe_highlight"/>
-                        <button name="reject_appointment" string="Reject" states="draft,confirm,approve"
-                                type="object"/>
+                                 groups="appointment_user.group_appoint_user" class="oe_highlight"/>
+                        <button name="reject_appointment" string="Reject" states="draft,confirm"
+                                 groups="appointment_user.group_appoint_user" type="object"/>
                         <button name="%(action_appointment_wizard)d" string="Reschedule" states="confirm,approve"
-                                type="action" />
+                                 groups="appointment_user.group_appoint_user" type="action"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done,reject"
                                statusbar_colors='{"reject":"red"}'/>
                     </header>
@@ -64,7 +64,9 @@
                                 <field name="timeslot_id" domain="[('state','=','approve')]"
                                        options="{'no_create':True,'no_open':True}"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
-                                <field name="meeting_room_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}" domain="[('state','=','approve')]" required="True"
+                                <field name="meeting_room_id"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                       domain="[('state','=','approve')]" required="True"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                             </group>
                         </group>
@@ -77,25 +79,31 @@
                                 <field name="gender_id"
                                        options="{'no_create':True,'no_open':True}"
                                        attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
-<!--                                <field name="date_of_birth"-->
-<!--                                       attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>-->
-                                 <field name="phone" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                                <field name="phone"
+                                       attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                             </group>
                             <group>
-                                <field name="email" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                                <field name="email"
+                                       attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                                 <label for="street" string="Address"/>
                                 <div class="o_address_format">
-                                    <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
-                                    <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
-                                    <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
-                                    <field name="zipcode" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                                    <field name="street" placeholder="Street..." class="o_address_street"
+                                           attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                           attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                                    <field name="city" placeholder="City" class="o_address_city"
+                                           attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                                    <field name="zipcode" placeholder="ZIP" class="o_address_zip"
+                                           attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                                     <field name="country_id" placeholder="Country" class="o_address_country"
-                                           options='{"no_open": True, "no_create": True}' attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                                           options='{"no_open": True, "no_create": True}'
+                                           attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                                 </div>
                             </group>
                         </group>
 
-                        <field name="description" placeholder="Describe about this appointment" attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                        <field name="description" placeholder="Describe about this appointment"
+                               attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -183,8 +191,12 @@
 
 
         <menuitem id="menu_appointment_appointment" name="Appointment (Draft)" action="action_appointment_appointment"
-                  sequence="30"
-                  groups="appointment_user.group_appoint_user" parent="appointment_menu.sub_appoint_menu"/>
+                  groups="appointment_user.group_appoint_user" parent="appointment_menu.sub_appoint_menu"
+                  sequence="30"/>
+
+        <menuitem id="menu_appointment_appointment" name="Appointments Schedule" action="action_appointment_appointment"
+                  groups="appointment_user.group_appoint_temp_user"
+                  parent="appointment_menu.main_appoint_menu" sequence="30"/>
 
         <menuitem id="menu_appointment_confirm" name="Appointment (Confirmed)" action="action_appointment_confirm"
                   sequence="35"

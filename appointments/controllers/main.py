@@ -2,34 +2,17 @@
 from datetime import datetime
 
 from odoo import http, _
+from odoo.addons.opa_utility.models.utility import Utility as utility
 from odoo.http import request
 
 DATE_FORMAT = "%Y-%m-%d"
 
 
 class WebsiteAppointmentReservation(http.Controller):
-    # @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'],
-    #             website=True)
-    # def registration_new(self, event, **post):
-    #     tickets = self._process_tickets_details(post)
-    #     if not tickets:
-    #         return False
-    #     return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details",
-    #                                                      {'tickets': tickets, 'event': event})
-    #
-    # @http.route()
-    # def registration_new(self, event, **post):
-    #     super(WebsiteAppointmentReservation, self).registration_new(event)
-    #     tickets = self._process_tickets_details(post)
-    #     if not tickets:
-    #         return False
-    #
-    #     vals = {
-    #         'professions': http.request.env['attendee.profession'].sudo().search([('status', '=', True)]),
-    #         'gender_ids': http.request.env['res.gender'].sudo().search([('status', '=', True)], order='id asc'),
-    #     }
-    #     return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details",
-    #                                                      {'tickets': tickets, 'event': event, 'vals': vals})
+    @http.route(['/appointment/success'], website=True, auth="public")
+    def appointment_success(self, redirect=None, *args, **kw):
+        if not redirect:
+            return request.render('appointments.appointment_reservation_success')
 
     @http.route(['/appointment/reservation'], type='http', auth="public", website=True, methods=['GET', 'POST'])
     def appointment_reservation(self, **post):
@@ -49,11 +32,20 @@ class WebsiteAppointmentReservation(http.Controller):
         #     return request.render('event_registration.event_reservation_expire')
 
         if request.httprequest.method == 'POST' and ('error' not in qctx):
+            qctx['error'] = ""
             try:
                 auth_data = self.post_events(qctx)
                 if auth_data:
                     try:
-                        return request.render('appointments.appointment_reservation_success')
+                        mail_ins = request.env['res.partner'].sudo()
+                        mail_applicant = {
+                            'template': 'appointments.appointment_application_email_tmpl',
+                            'email_to': auth_data['email'],
+                            'context': auth_data,
+                        }
+
+                        mail_ins.mailsend(mail_applicant)
+                        return http.redirect_with_hash('/appointment/success')
                     except:
                         return request.render('appointments.appointment_reservation_success')
             except (WebsiteAppointmentReservation, AssertionError) as e:
@@ -71,8 +63,6 @@ class WebsiteAppointmentReservation(http.Controller):
         qctx['first_name'] = None if 'first_name' not in qctx else qctx['first_name']
         qctx['last_name'] = None if 'last_name' not in qctx else qctx['last_name']
         qctx['gender_id'] = None if 'gender_id' not in qctx else int(qctx['gender_id'])
-        qctx['date_of_birth'] = None if 'date_of_birth' not in qctx else datetime.strptime(qctx.get('date_of_birth'),
-                                                                                           '%Y-%m-%d')
         qctx['phone'] = None if 'phone' not in qctx else int(qctx['phone'])
         qctx['street'] = None if 'street' not in qctx else qctx['street']
         qctx['street2'] = None if 'street2' not in qctx else qctx['street2']
@@ -136,12 +126,30 @@ class WebsiteAppointmentReservation(http.Controller):
                 except ValueError:
                     error_fields.append(field_name)
 
-        if len(data) > 0:
-            data['state'] = 'draft'
-
         assert values.values(), "The form was not properly filled in."
+        appointment = request.env['appointment.appointment'].sudo().post_appointments(data, values.get('token'))
 
-        return request.env['appointment.appointment'].sudo().post_appointments(data, values.get('token'))
+        if len(data) > 0:
+            data['name'] = "{0} {1}".format(data['first_name'], data['last_name'])
+            data['firstname'] = data['first_name']
+            data['lastname'] = data['last_name']
+            data['login'] = data['email']
+            data['password'] = utility.token(length=8)
+
+        db, login, password = request.env['res.users'].sudo().signup(data, values.get('token'))
+        if login:
+            groups = {
+                'grp_name': 'Appointment: Appointment User',
+                'cat_name': 'Appointment',
+            }
+            res_id = request.env['res.users'].sudo().create_temp_user(login, groups)
+            data['state'] = 'draft'
+            # files = request.httprequest.files.getlist('attachment')
+            # self.upload_attachment(files, res_id.partner_id.id)
+
+        request.env.cr.commit()
+
+        return appointment
 
     def authorized_fields(self):
         return (
@@ -159,7 +167,6 @@ class WebsiteAppointmentReservation(http.Controller):
             'last_name',
             'gender_id',
             'appointment_date',
-            'date_of_birth',
             'phone',
             'street',
             'street2',
