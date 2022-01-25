@@ -28,15 +28,15 @@
                 <form string="Appointment">
                     <header>
                         <button name="confirm_appointment" string="Confirm" states="draft"
-                                class="oe_highlight" type="object"  groups="appointment_user.group_appoint_user"/>
+                                class="oe_highlight" type="object" groups="appointment_user.group_appoint_user"/>
                         <button name="approve_appointment" string="Approve" states="confirm" type="object"
-                                 groups="appointment_user.group_appoint_user" class="oe_highlight"/>
+                                groups="appointment_user.group_appoint_user" class="oe_highlight"/>
                         <button name="finish_appointment" string="Finish" states="approve" type="object"
-                                 groups="appointment_user.group_appoint_user" class="oe_highlight"/>
+                                groups="appointment_user.group_appoint_user" class="oe_highlight"/>
                         <button name="reject_appointment" string="Reject" states="draft,confirm"
-                                 groups="appointment_user.group_appoint_user" type="object"/>
+                                groups="appointment_user.group_appoint_user" type="object"/>
                         <button name="%(action_appointment_wizard)d" string="Reschedule" states="confirm,approve"
-                                 groups="appointment_user.group_appoint_user" type="action"/>
+                                groups="appointment_user.group_appoint_user" type="action"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done,reject"
                                statusbar_colors='{"reject":"red"}'/>
                     </header>
@@ -194,23 +194,23 @@
                   groups="appointment_user.group_appoint_user" parent="appointment_menu.sub_appoint_menu"
                   sequence="30"/>
 
-        <menuitem id="menu_appointment_appointment" name="Appointments Schedule" action="action_appointment_appointment"
+        <menuitem id="menu_appointment_temporary" name="Appointments Schedule" action="action_appointment_appointment"
                   groups="appointment_user.group_appoint_temp_user"
                   parent="appointment_menu.main_appoint_menu" sequence="30"/>
 
         <menuitem id="menu_appointment_confirm" name="Appointment (Confirmed)" action="action_appointment_confirm"
                   sequence="35"
-                  groups="" parent="appointment_menu.sub_appoint_menu"/>
+                  groups="appointment_user.group_appoint_user" parent="appointment_menu.sub_appoint_menu"/>
 
         <menuitem id="menu_appointment_approve" name="Appointment (Approved)" action="action_appointment_approve"
-                  sequence="40"
-                  groups="" parent="appointment_menu.sub_appoint_menu"/>
+                  sequence="40" groups="appointment_user.group_appoint_user"
+                  parent="appointment_menu.sub_appoint_menu"/>
         <menuitem id="menu_appointment_done" name="Appointment (Finished)" action="action_appointment_finish"
-                  sequence="45"
-                  groups="" parent="appointment_menu.sub_appoint_menu"/>
+                  sequence="45" groups="appointment_user.group_appoint_user"
+                  parent="appointment_menu.sub_appoint_menu"/>
 
         <menuitem id="menu_appointment_reject" name="Appointment (Rejected)" action="action_appointment_reject"
                   sequence="50"
-                  groups="" parent="appointment_menu.sub_appoint_menu"/>
+                  groups="appointment_user.group_appoint_user"  parent="appointment_menu.sub_appoint_menu"/>
     </data>
 </odoo>

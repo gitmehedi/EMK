@@ -13,6 +13,14 @@
         <field name="comment">Officer will have an access event form which shows only readonly mode.</field>
     </record>
 
+    <record id="group_appoint_temp_user" model="res.groups">
+        <field name="name">Appointment: Temporary User</field>
+        <field name="sequence">1</field>
+        <field name="implied_ids" eval="[(4,ref('base.group_portal'))]"/>
+        <field name="category_id" ref="module_category_appointment"/>
+        <field name="comment">Officer will have an access event form which shows only readonly mode.</field>
+    </record>
+
     <record id="group_appoint_officer" model="res.groups">
         <field name="name">Appointment: Officer</field>
         <field name="sequence">1</field>
@@ -29,11 +37,4 @@
         <field name="comment">Organizer will have an access event form which shows only readonly mode.</field>
     </record>
 
-    <record id="group_appoint_temp_user" model="res.groups">
-        <field name="name">Appointment: Appointment User</field>
-        <field name="sequence">1</field>
-        <field name="implied_ids" eval="[(4,ref('base.group_portal'))]"/>
-        <field name="category_id" ref="module_category_appointment"/>
-        <field name="comment">Officer will have an access event form which shows only readonly mode.</field>
-    </record>
 </odoo>
