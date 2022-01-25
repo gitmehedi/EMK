@@ -1,6 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+
 class LoanLending(models.Model):
     _inherit = 'item.loan.lending'
 
@@ -19,17 +20,17 @@ class LoanLending(models.Model):
         if not product_list:
             raise UserError('No Due so no need any adjustment!!!')
 
-        stock_picking_objs = self.env['stock.picking'].search([('loan_id','=',self.id)])
+        stock_picking_objs = self.env['stock.picking'].search([('loan_id', '=', self.id)])
         if stock_picking_objs:
             result = self.env.ref('stock.action_picking_tree_all').read()[0]
-            result['domain'] = [('id','in', stock_picking_objs.ids)]
+            result['domain'] = [('id', 'in', stock_picking_objs.ids)]
         else:
             location_id = self.env['stock.location'].search(
-                [('operating_unit_id', '=', self.operating_unit_id.id), ('name', '=', 'Input')],limit=1).id
+                [('operating_unit_id', '=', self.operating_unit_id.id), ('name', '=', 'Input')], limit=1).id
             picking_type_objs = self.env['stock.picking.type'].search([
                 ('default_location_src_id', '=', self.item_loan_location_id.id),
                 ('default_location_dest_id', '=', location_id),
-                ('code', '=', 'incoming')],limit=1)
+                ('code', '=', 'incoming')], limit=1)
             if not picking_type_objs:
                 raise UserError(_('Please create "Incoming" picking type for Adjustment.'))
 
@@ -45,10 +46,11 @@ class LoanLending(models.Model):
                 'nodestroy': True,
                 'target': 'current',
                 'context': {'default_picking_type_id': picking_type_objs[0].id,
-                            'default_location_id' : location_id,
+                            'default_location_id': location_id,
                             'default_transfer_type': 'receive',
                             'default_receive_type': 'loan',
                             'default_loan_id': self.id,
+                            'default_origin': 'RETURN/' + self.name,
                             'operating_unit_id': self.operating_unit_id.id
                             },
             }

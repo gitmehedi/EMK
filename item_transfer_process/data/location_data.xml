@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!--        <record id="stock_location_senders" model="stock.location">-->
+<!--            <field name="name">Senders</field>-->
+<!--            <field name="location_id" ref="stock.stock_location_locations"/>-->
+<!--            <field name="usage">transit</field>-->
+<!--            <field name="company_id"></field>-->
+<!--            <field name="can_operating_unit_transfer">1</field>-->
+<!--        </record>-->
+
+<!--        <record id="stock_location_receivers" model="stock.location">-->
+<!--            <field name="name">Receivers</field>-->
+<!--            <field name="location_id" ref="stock.stock_location_locations"/>-->
+<!--            <field name="usage">transit</field>-->
+<!--            <field name="company_id"></field>-->
+<!--            <field name="can_operating_unit_transfer">1</field>-->
+<!--        </record>-->
+
+
+    </data>
+</odoo>

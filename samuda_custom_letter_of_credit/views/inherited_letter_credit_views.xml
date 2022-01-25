@@ -8,7 +8,8 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='shipment_date']" position="after">
-                    <field name="can_edit"/>
+                    <field name="can_edit" invisible="1"/>
+                    <field name="is_amendment" invisible="1"/>
                 </xpath>
 
                 <xpath expr="//field[@name='expiry_date']" position="attributes">
@@ -29,7 +30,8 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='shipment_date']" position="after">
-                    <field name="can_edit"/>
+                    <field name="can_edit" invisible="1"/>
+                    <field name="is_amendment" invisible="1"/>
                 </xpath>
 
                 <xpath expr="//field[@name='expiry_date']" position="attributes">

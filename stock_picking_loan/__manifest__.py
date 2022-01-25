@@ -18,7 +18,8 @@
 
     'depends': ['stock_picking_extend',
                 'gbs_samuda_stock',
-                'item_loan_process'],
+                'item_loan_process',
+                'stock_utility'],
     'data': [
         'views/stock_picking_views.xml',
         'views/item_loan_borrowing_views.xml',

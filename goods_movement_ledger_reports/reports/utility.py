@@ -259,17 +259,37 @@ class ProductReportUtility(models.TransientModel):
         return production_total_qty
 
     def get_purchase_stock(self, start_date, end_date, operating_unit_id, product_param):
+        stock_warehouse = self.env['stock.warehouse'].search([('operating_unit_id', '=', operating_unit_id)],
+                                                             limit=1)
+        if stock_warehouse.wh_input_stock_loc_id:
+            location_input = stock_warehouse.wh_input_stock_loc_id.id
+
+        if stock_warehouse.wh_qc_stock_loc_id:
+            location_quality_control = stock_warehouse.wh_qc_stock_loc_id.id
+
+        # location_main_stock = self.env['stock.location'].search(
+        #     [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
+        #     limit=1)
+
+        stock_utility = self.env['stock.utility']
+        location_id = stock_utility.get_location_id(operating_unit_id)
+        if not location_id:
+            location_id = self.env['stock.location'].search(
+                [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
+                limit=1).id
+        location_main_stock =  self.env['stock.location'].browse(location_id)
         sql = '''
-            SELECT COALESCE(SUM(sm.product_qty), 0) as purchase_qty 
-                FROM stock_move sm  LEFT JOIN  stock_picking sp ON sm.picking_type_id = sp.id
-                                    LEFT JOIN stock_picking_type spt ON sm.picking_type_id = spt.id
-                                    WHERE sm.date BETWEEN DATE('%s')+TIME '00:00:01' AND DATE('%s')+TIME '23:59:59'
-						            AND spt.default_location_dest_id IN (SELECT id FROM stock_location WHERE operating_unit_id = %s)
-                                    AND spt.default_location_src_id IS NULL
-                                    AND sm.state ='done'
-                                    AND spt.code = 'incoming'
-                                    AND sm.product_id IN (%s)
-                    ''' % (start_date, end_date, operating_unit_id, product_param)
+                SELECT COALESCE(SUM(sm.product_qty), 0) as purchase_qty 
+                FROM stock_move sm  
+                LEFT JOIN  stock_picking sp ON sm.picking_id = sp.id
+                LEFT JOIN stock_picking_type spt ON sp.picking_type_id = spt.id
+                    WHERE sm.date BETWEEN DATE('%s')+TIME '00:00:01' AND DATE('%s')+TIME '23:59:59'
+                    AND sm.location_id = %s
+                    AND sm.location_dest_id = %s
+                    AND sm.state ='done'
+                    AND spt.code = 'incoming'
+                    AND sm.product_id IN %s
+                    ''' % (start_date, end_date, location_quality_control, location_main_stock.id, product_param)
 
         self.env.cr.execute(sql)
         datewise_purchase_stocklist = []
@@ -373,27 +393,27 @@ class ProductReportUtility(models.TransientModel):
         sql = '''
                 SELECT 
                      COALESCE(COALESCE(total_consumed_for_production, 0)-COALESCE(total_consumed_for_unbuild, 0), 0) AS consumed_qty
-                FROM (
-                (
-                    SELECT sm.product_id,COALESCE(SUM(sm.product_qty), 0) AS total_consumed_for_production FROM stock_move sm
-                    LEFT JOIN mrp_production mp ON mp.id = sm.raw_material_production_id
-                    WHERE sm.product_id IN %s
-                    AND sm.state = 'done' 
-                    AND mp.date_planned_start + interval'6h' BETWEEN '%s' AND '%s'
-                    AND mp.operating_unit_id = %s
-                    GROUP BY sm.product_id
-                ) t1
-                FULL JOIN
-                (
-                    SELECT sm.product_id, COALESCE(SUM(sm.product_qty), 0)  AS total_consumed_for_unbuild FROM stock_move sm
-                    LEFT JOIN mrp_unbuild mu ON mu.id = sm.unbuild_id
-                    WHERE sm.product_id IN %s
-                    AND sm.state = 'done' 
-                    AND mu.date_unbuild + interval'6h' BETWEEN '%s' AND '%s'
-                    AND mu.operating_unit_id = %s
-                    GROUP BY sm.product_id
-                ) t2 ON (t1.product_id = t2.product_id)
-                ) t3
+                        FROM (
+                        (
+                            SELECT sm.product_id,COALESCE(SUM(sm.product_qty), 0) AS total_consumed_for_production FROM stock_move sm
+                            LEFT JOIN mrp_production mp ON mp.id = sm.raw_material_production_id
+                            WHERE sm.product_id IN %s
+                            AND sm.state = 'done' 
+                            AND mp.date_planned_start + interval'6h' BETWEEN '%s' AND '%s'
+                            AND mp.operating_unit_id = %s
+                            GROUP BY sm.product_id
+                        ) t1
+                        FULL JOIN
+                        (
+                            SELECT sm.product_id, COALESCE(SUM(sm.product_qty), 0)  AS total_consumed_for_unbuild FROM stock_move sm
+                            LEFT JOIN mrp_unbuild mu ON mu.id = sm.unbuild_id
+                            WHERE sm.product_id IN %s
+                            AND sm.state = 'done' 
+                            AND mu.date_unbuild + interval'6h' BETWEEN '%s' AND '%s'
+                            AND mu.operating_unit_id = %s
+                            GROUP BY sm.product_id
+                        ) t2 ON (t1.product_id = t2.product_id)
+                        ) t3
             ''' % (
             product_param, start_date, end_date, operating_unit_id, product_param, start_date, end_date,
             operating_unit_id)
@@ -447,32 +467,47 @@ class ProductReportUtility(models.TransientModel):
         return datewise_loss_adjustment_issued
 
     def get_loan_lending_stock(self, start_date, end_date, operating_unit_id, product_param):
+        customer_location_for_loan_lending = self.env['stock.location'].search(
+            [('can_loan_request', '=', True), ('usage', '=', 'customer'), ])
+        loan_lending_picking_type = self.env['stock.picking.type'].search(
+            [('operating_unit_id', '=', operating_unit_id), ('code', '=', 'loan_outgoing'),
+             ('default_location_dest_id', '=', customer_location_for_loan_lending.id)])
+
+        # location_main_stock = self.env['stock.location'].search(
+        #     [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')])
+
+        stock_utility = self.env['stock.utility']
+        location_id = stock_utility.get_location_id(operating_unit_id)
+        if not location_id:
+            location_id = self.env['stock.location'].search(
+                [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
+                limit=1).id
+        location_main_stock = self.env['stock.location'].browse(location_id)
+        destination_stock = customer_location_for_loan_lending
+
         sql = '''
-            SELECT COALESCE(SUM(product_qty), 0) as loan_lending_qty  FROM stock_move as sm 
-            WHERE sm.picking_id IN 
-            (
-                SELECT id FROM stock_picking
-                WHERE picking_type_id IN 
-                (SELECT id FROM stock_picking_type WHERE code = 'loan_outgoing'))
-
-                   AND sm.date BETWEEN DATE('%s')+TIME '00:00:01' AND DATE('%s')+TIME '23:59:59'
-                                AND sm.location_id IN (
-                                    SELECT id FROM stock_location WHERE operating_unit_id = %s
-                                )
-                                AND sm.location_dest_id IN (
-                                    SELECT id FROM stock_location  WHERE usage = 'customer'  AND  can_loan_request = True 
-                                    )
-                                    AND sm.state = 'done'
-                                AND sm.product_id IN (%s) 
-
-            ''' % (start_date, end_date, operating_unit_id, product_param)
+            SELECT COALESCE(SUM(sm.product_qty), 0) as loan_lending_issued_qty 
+				FROM stock_move sm
+				LEFT JOIN stock_picking sp ON sm.picking_id = sp.id
+				WHERE sm.date BETWEEN DATE('%s')+TIME '00:00:01' 
+							AND DATE('%s')+TIME '23:59:59'
+							AND	sm.picking_type_id = %s
+							AND sm.location_id = %s
+							AND sm.location_dest_id = %s
+							AND sm.state ='done'
+							AND sm.product_id IN %s
+            ''' % (
+            start_date, end_date, loan_lending_picking_type.id, location_main_stock.id, destination_stock.id,
+            product_param)
 
         self.env.cr.execute(sql)
         datewise_loan_lending = []
         for vals in self.env.cr.dictfetchall():
-            item = {'loan_lending_qty': vals['loan_lending_qty']}
+            item = {'loan_lending_qty': vals['loan_lending_issued_qty']}
             datewise_loan_lending.append(item)
         return datewise_loan_lending
+
+    # def get_loan_lending_return_stock(self, start_date, end_date, operating_unit_id, product_param):
 
     def get_loan_borrowing_stock(self, start_date, end_date, operating_unit_id, product_param):
         sql = '''

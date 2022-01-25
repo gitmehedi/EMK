@@ -24,8 +24,6 @@ class VariantWiseInventoryReportXLSX(ReportXlsx):
         date_end = date_to + ' 23:59:59'
 
         location_outsource = tuple(location.ids)
-        location_input = self.env['stock.location'].search([('operating_unit_id', '=', obj.operating_unit_id.id),
-                                                            ('name', '=', 'Input')], limit=1).id
         operating_unit_id = obj.operating_unit_id.id
         product_id = obj.product_id.id
         product_pool = self.env['product.product']
@@ -145,8 +143,9 @@ class VariantWiseInventoryReportXLSX(ReportXlsx):
                 available_stock = available_stock + 0
                 sheet.write(row_no, 3, 0, normal_format_left)
             # datewise_purchase
-            datewise_purchase_stocklist = product_report_utility.get_purchase_stock(start_date, end_date, obj.operating_unit_id.id,
-                                                                  product_param)
+            datewise_purchase_stocklist = product_report_utility.get_purchase_stock(start_date, end_date,
+                                                                                    obj.operating_unit_id.id,
+                                                                                    product_param)
 
             if datewise_purchase_stocklist:
                 for purchase_stock in datewise_purchase_stocklist:

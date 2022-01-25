@@ -10,12 +10,19 @@ class ItemLedgerReportXLSX(ReportXlsx):
 
     def generate_xlsx_report(self, workbook, data, obj):
         reportUtility = self.env['report.utility']
-        location = self.env['stock.location'].search(
-            [('operating_unit_id', '=', obj.operating_unit_id.id), ('name', '=', 'Stock')])
+        # location = self.env['stock.location'].search(
+        #     [('operating_unit_id', '=', obj.operating_unit_id.id), ('name', '=', 'Stock')])
+        stock_utility = self.env['stock.utility']
+        location_id = stock_utility.get_location_id(obj.operating_unit_id.id)
+        if not location_id:
+            location_id = self.env['stock.location'].search(
+                [('operating_unit_id', '=', obj.operating_unit_id.id), ('name', '=', 'Stock')],
+                limit=1).id
 
-        if not location:
+        if not location_id:
             raise UserError(_("There are no stock location for this unit. "
                               "\nPlease create stock location for this unit."))
+        location = self.env['stock.location'].browse(location_id)
 
         date_from = obj.date_from
         date_start = date_from + ' 00:00:00'

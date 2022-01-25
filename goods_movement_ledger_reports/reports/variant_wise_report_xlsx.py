@@ -24,8 +24,7 @@ class VariantWiseReportXLSX(ReportXlsx):
         date_end = date_to + ' 23:59:59'
 
         location_outsource = tuple(location.ids)
-        location_input = self.env['stock.location'].search([('operating_unit_id', '=', obj.operating_unit_id.id),
-                                                            ('name', '=', 'Input')], limit=1).id
+
         operating_unit_id = obj.operating_unit_id.id
         product_id = obj.product_id.id
         product_pool = self.env['product.product']
