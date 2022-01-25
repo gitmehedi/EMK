@@ -69,6 +69,35 @@ class VendorAdvance(models.Model):
             else:
                 rec.outstanding_amount = 0.0
 
+    @api.constrains('date')
+    def _check_date(self):
+        if self.date > fields.Date.today():
+            raise ValidationError("Date cannot be greater than Current Date!")
+
+    @api.constrains('advance_amount')
+    def _check_advance_amount(self):
+        if self.advance_amount <= 0:
+            raise ValidationError("Please Check Your Advance Amount!! \n Amount Never Take Negative or Zero Value!")
+
+    @api.constrains('security_deposit')
+    def _check_security_deposit(self):
+        if self.security_deposit < 0:
+            raise ValidationError(_("[Validation Error] Security Deposit can not be negative value!"))
+
+    @api.constrains('vat_amount')
+    def _check_vat_amount(self):
+        if self.vat_amount < 0:
+            raise ValidationError(_("[Validation Error] VAT Amount can not be negative value!"))
+        if self.vat_amount > 0 and not self.vat_account_id:
+            raise ValidationError(_("Please give VAT Account!"))
+
+    @api.constrains('tds_amount')
+    def _check_tds_amount(self):
+        if self.tds_amount < 0:
+            raise ValidationError(_("[Validation Error] TDS Amount can not be negative value!"))
+        if self.tds_amount > 0 and not self.tds_account_id:
+            raise ValidationError(_("Please give TDS Account!"))
+
     @api.one
     def action_confirm(self):
         if self.state == 'draft':

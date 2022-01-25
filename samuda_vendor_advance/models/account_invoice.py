@@ -15,12 +15,11 @@ class AccountInvoice(models.Model):
         credit_aml = self.env['account.move.line'].browse(credit_aml_id)
         vendor_advance = self.env['vendor.advance'].search([('move_id', '=', credit_aml.move_id.id)])
         if credit_aml.user_type_id.type == 'payable' and credit_aml.debit > 0 and vendor_advance:
-
-            if credit_aml.amount_residual <= 0:
-                vendor_advance.write({'adjusted_amount': credit_aml.debit, 'state': 'done'})
-            else:
+            if credit_aml.amount_residual > 0:
                 adjusted_amount = credit_aml.debit - credit_aml.amount_residual
                 total_adjusted_amount = vendor_advance.adjusted_amount + adjusted_amount
                 vendor_advance.write({'adjusted_amount': total_adjusted_amount})
+            else:
+                vendor_advance.write({'adjusted_amount': credit_aml.debit, 'state': 'done'})
 
         return res
