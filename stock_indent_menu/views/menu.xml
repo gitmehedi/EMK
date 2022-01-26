@@ -3,6 +3,10 @@
     <menuitem id="menu_stock_indent" name='Indent'
                parent="stock.menu_stock_root" sequence="10"/>
 
-    <menuitem id="menu_stock_scrap" name="Scraps" sequence="15"
+    <menuitem id="menu_stock_purchase" name="Purchase" sequence="15"
               parent="stock.menu_stock_root" groups=""/>
+
+    <menuitem id="menu_stock_scrap" name="Scraps" sequence="20"
+              parent="stock.menu_stock_root" groups=""/>
+
 </odoo>

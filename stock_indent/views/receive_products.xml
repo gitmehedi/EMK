@@ -27,7 +27,7 @@
 		</record>
 
 
-        <menuitem id="purchase_orders_receive" name="Purchase Orders (Receive)" parent="purchase.menu_procurement_management" sequence="5" action="action_view_picking100"/>
-        <menuitem id="menu_purchase_orders_done" name="Purchase Orders (Done)" parent="purchase.menu_procurement_management" sequence="10" action="action_purchase_order_done"/>
+        <menuitem id="purchase_orders_receive" name="Purchase Orders (Receive)" parent="stock_indent_menu.menu_stock_purchase" sequence="5" action="action_view_picking100"/>
+        <menuitem id="menu_purchase_orders_done" name="Purchase Orders (Done)" parent="stock_indent_menu.menu_stock_purchase" sequence="10" action="action_purchase_order_done"/>
     </data>
 </odoo>
