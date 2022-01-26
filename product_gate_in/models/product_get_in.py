@@ -111,6 +111,7 @@ class ProductGateIn(models.Model):
                     if picking:
                         picking_id = picking.id
 
+                price_unit = line._get_stock_move_price_unit()
                 moves = {
                     # 'name': self.name,
                     # 'origin': self.name or self.picking_id.name,
@@ -122,13 +123,12 @@ class ProductGateIn(models.Model):
                     'product_id': line.product_id.id,
                     'product_uom_qty': line.product_qty,
                     'product_uom': line.product_uom.id,
-                    'price_unit': line.price_unit,
+                    'price_unit': price_unit,
                     'date': date_planned,
                     'date_expected': date_planned,
                     'picking_type_id': picking_type.id,
                     'warehouse_id': picking_type.warehouse_id.id,
-                    'state': 'draft',
-
+                    'state': 'draft'
                 }
                 move_obj.create(moves)
 
@@ -215,7 +215,6 @@ class ProductGateIn(models.Model):
         return super(ProductGateIn, self).unlink()
 
 
-
 class ShipmentProductLine(models.Model):
     _name = 'product.gate.line'
     _description = 'Product'
@@ -245,3 +244,15 @@ class ShipmentProductLine(models.Model):
     def _check_product_qty(self):
         if self.product_qty < 0:
             raise UserError('You can\'t give negative value!!!')
+
+    @api.multi
+    def _get_stock_move_price_unit(self):
+        self.ensure_one()
+        line = self[0]
+        gate_in = line.parent_id
+        price_unit = line.price_unit
+        if line.product_uom.id != line.product_id.uom_id.id:
+            price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
+        if gate_in.ship_id.lc_id.currency_id != gate_in.company_id.currency_id:
+            price_unit = gate_in.ship_id.lc_id.currency_id.compute(price_unit, gate_in.company_id.currency_id, round=False)
+        return price_unit
