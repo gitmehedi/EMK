@@ -8,6 +8,9 @@
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+             <xpath expr="//field[@name='wh_qc_stock_loc_id']" position="after">
+                 <field name="wh_main_stock_loc_id"/>
+            </xpath>
         </field>
     </record>
 

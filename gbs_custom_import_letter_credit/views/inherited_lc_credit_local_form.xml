@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="local_credit_form_inherit" model="ir.ui.view">
+            <field name="name">inherit.letter.credit.form</field>
+            <field name="model">letter.credit</field>
+            <field name="inherit_id" ref="letter_of_credit.view_local_credit_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='title']" position="attributes">
+                    <attribute name="required">True</attribute>
+                    <attribute name="size">16</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

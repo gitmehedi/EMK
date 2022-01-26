@@ -13,7 +13,8 @@
         'gbs_application_group',
         'report_layout',
         'base_suspend_security',
-        'stock_indent'
+        'stock_indent',
+        'stock_utility',
     ],
     'data': [
         'data/pr_sequence.xml',
