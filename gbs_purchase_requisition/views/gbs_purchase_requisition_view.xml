@@ -173,7 +173,7 @@
                         <attribute name="invisible">1</attribute>
                     </xpath>
                     <xpath expr="//field[@name='price_unit']" position="after" type="object">
-                        <field name="last_requisition_no" readonly="1"/>
+                        <field name="last_requisition_no" readonly="1" />
                         <field name="last_requisition_date" readonly="1"/>
                         <field name="last_requisition_qty" readonly="1"/>
                         <field name="last_purchase_date" readonly="1"/>
@@ -457,5 +457,25 @@
                 src_model="purchase.requisition"
                 groups="base.group_system"/>
 
+
+        <template id="assets_backend" name="gbs_purchase_requisition assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link href="/gbs_purchase_requisition/static/src/css/gbs_pr.css" rel="stylesheet"/>
+            </xpath>
+        </template>
+
+        <record id="view_inherit_gbs_purchase_requisition_form_1" model="ir.ui.view">
+            <field name="name">inherit.gbs.purchase.requisition.form</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="gbs_purchase_requisition.inherit_pr_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="class">gbs_pr</attribute>
+                </xpath>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="class">gbs_pr_tree</attribute>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
