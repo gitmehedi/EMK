@@ -67,7 +67,7 @@
 								<field name="product_lines">
 									<tree string="Products" editable="bottom" decoration-success="received_qty==product_uom_qty and state=='inprogress'" decoration-bf="received_qty==product_uom_qty and state=='inprogress'" decoration-danger="received_qty!=product_uom_qty and state=='inprogress'">
 										<field name="sequence" widget="handle"/>
-										<field name="product_id" domain="[('type','!=','service')]" options="{'no_open': True,'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
+										<field name="product_id" domain="[('type','=','product')]" options="{'no_open': True,'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
 										<field name="remarks" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
 										<field name="state" invisible="1"/>
 										<field name="qty_available" readonly="1" groups=""  />
