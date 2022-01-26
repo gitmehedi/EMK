@@ -22,6 +22,7 @@
         "emk_purchase_order_menu",
         "stock",
         "stock_account",
+        "account_fam_install",
     ],
     'installable': True,
     'application': True,

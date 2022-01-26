@@ -240,10 +240,11 @@ class MemberApplicationContoller(Home):
 
         db, login, password = request.env['res.users'].sudo().signup(data, values.get('token'))
         if login:
-            res_id = request.env['res.users'].sudo().search([('email', '=', login)])
-            groups = request.env['res.groups'].sudo().search(
-                [('name', '=', 'Applicants'), ('category_id.name', '=', 'Membership')])
-            groups.write({'users': [(6, 0, [res_id.id])]})
+            groups = {
+                'grp_name': 'Applicants',
+                'cat_name': 'Membership',
+            }
+            res_id = request.env['res.users'].sudo().create_temp_user(login, groups)
             files = request.httprequest.files.getlist('attachment')
             self.upload_attachment(files, res_id.partner_id.id)
 
@@ -271,7 +272,7 @@ class MemberApplicationContoller(Home):
 
     def generateDropdown(self, model, status=False):
         data = []
-        status = [('status', '=', True)] if status else []
+        status = [('active', '=', True),('pending', '=', False)] if status else []
         record = request.env[model].sudo().search(status, order='id ASC')
         for rec in record:
             if status:

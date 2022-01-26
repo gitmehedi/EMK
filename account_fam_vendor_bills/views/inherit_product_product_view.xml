@@ -12,10 +12,6 @@
                 <xpath expr="//field[@name='barcode']" position="attributes">
                     <attribute name="groups">base.group_system</attribute>
                 </xpath>
-                <xpath expr="//field[@name='barcode']" position="after">
-                    <field name="maker_id" invisible="1"/>
-                    <field name="approver_id" invisible="1"/>
-                </xpath>
             </field>
         </record>
 
@@ -33,7 +29,6 @@
                     <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
                 </xpath>
                 <xpath expr="//form" position="attributes">
-                    <attribute name="edit">0</attribute>
                     <attribute name="duplicate">0</attribute>
                 </xpath>
                 <xpath expr="//field[@name='name']" position="after">
@@ -46,12 +41,6 @@
                                 groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"/>
                         <button name="act_reject" string="Reject" type="object" states="draft"
                                 groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"/>
-                        <button name="%(action_product_product_wizard)d" string="Edit" type="action"
-                                class="oe_highlight" groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"
-                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
-                        <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
-                                groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"
-                                attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
                         <button name="act_reject_pending" string="Reject" type="object"
                                 groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"
                                 attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
@@ -59,43 +48,6 @@
                                 groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"/>
                         <field name="state" widget="statusbar" invisible="True"/>
                     </header>
-                </xpath>
-                <xpath expr="//sheet/notebook" position="after">
-                    <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
-                        <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
-                              decoration-bf="state in ('pending',)"
-                              decoration-danger="state=='reject'">
-                            <field name="change_name"/>
-                            <field name="type"/>
-                            <field name="property_account_expense_id"/>
-                            <field name="asset_category_id"/>
-                            <field name="asset_type_id"/>
-                            <field name="account_tds_id"/>
-                            <field name="supplier_taxes_id"/>
-                            <field name="request_date"/>
-                            <field name="change_date"/>
-                            <field name="status"/>
-                            <field name="state"/>
-                        </tree>
-                        <form>
-                            <group>
-                                <group>
-                                    <field name="change_name"/>
-                                    <field name="type"/>
-                                    <field name="asset_category_id"/>
-                                    <field name="asset_type_id"/>
-                                    </group>
-                                <group>
-                                    <field name="account_tds_id"/>
-                                    <field name="supplier_taxes_id" widget="many2many_tags"/>
-                                    <field name="request_date"/>
-                                    <field name="change_date"/>
-                                    <field name="status"/>
-                                    <field name="state"/>
-                                </group>
-                            </group>
-                        </form>
-                    </field>
                 </xpath>
                 <xpath expr="//field[@name='property_account_income_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
@@ -111,9 +63,6 @@
                     <attribute name="groups">base.group_system</attribute>
                     <attribute name="readonly">1</attribute>
                     <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='list_price']" position="attributes">
-                    <attribute name="invisible">True</attribute>
                 </xpath>
                 <xpath expr="//field[@name='property_account_income_id']" position="attributes">
                     <attribute name="invisible">True</attribute>

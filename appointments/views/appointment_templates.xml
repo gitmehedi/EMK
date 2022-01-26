@@ -3,6 +3,7 @@
     <template id="web_appointments_reserv" name="web_appointments_reserv" inherit_id="website.assets_frontend">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/appointments/static/src/js/main.js"></script>
+            <script type="text/javascript" src="/appointments/static/src/js/bootstrap.validator.js"></script>
             <link rel="stylesheet" href="/appointments/static/src/css/style.css"/>
         </xpath>
     </template>
@@ -12,7 +13,7 @@
             <div class="container">
                 <div class="row" id="appointment_reservation">
                     <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form"
-                          method="post" t-if="not message" data-toggle="validator2" id="event-reservation">
+                          method="post" t-if="not message" data-toggle="validator2" id="appointment-reservation">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <script type="text/javascript">
                             var config = {
@@ -62,46 +63,17 @@
                                                     email
                                                     <strong id="exits_email"></strong>
                                                     already exists in the system. Either request a forgotten password or
-                                                    select another
-                                                    email address.
+                                                    select another email address.
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group form-field">
-                                                <label for="date_of_birth" class="control-label">Date of Birth</label>
-                                                <input type="text" name="date_of_birth" t-att-value="date_of_birth"
-                                                       maxlength="10"
-                                                       placeholder="1960-12-31"
-                                                       minlength="10" class="form-control input-sm reqfield"
-                                                       id="date_of_birth" required="required"/>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-6">
-                                            <div class="form-group form-field">
                                                 <label for="phone" class="control-label">Phone</label>
                                                 <input type="text" name="phone" t-att-value="phone" id="phone"
-                                                       placeholder="01900000000"
+                                                       placeholder="8801900000000" maxlength="13"
                                                        class="form-control input-sm reqfield number"
-                                                       data-minlength="6" data-maxlength="14" required="required"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group form-field">
-                                                <label for="gender_id" class="control-label">Gender</label>
-                                                <select class="form-control input-sm reqfield" name="gender_id"
-                                                        id="gender_id" required="required">
-                                                    <option value="">--Please Select--</option>
-                                                    <t t-foreach="gender_ids" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if gender_id==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
+                                                       data-minlength="11" data-maxlength="13" required="required"/>
                                             </div>
                                         </div>
                                     </div>
@@ -130,8 +102,8 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group form-field">
                                                         <input type="text" name="zipcode" t-att-value="zipcode"
-                                                               id="zipcode" minlength="2"
-                                                               maxlength="30" placeholder="Zip"
+                                                               id="zipcode" minlength="4"
+                                                               maxlength="10" placeholder="Zip"
                                                                class="form-control input-sm reqfield"
                                                                required="required"/>
                                                     </div>
@@ -150,6 +122,21 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group form-field">
+                                                <label for="gender_id" class="control-label">Gender</label>
+                                                <select class="form-control input-sm reqfield" name="gender_id"
+                                                        id="gender_id" required="required">
+                                                    <option value="">--Please Select--</option>
+                                                    <t t-foreach="gender_ids" t-as='label'>
+                                                        <option t-att-value="label_value[0]"
+                                                                t-att-selected="'selected' if gender_id==label_value[0] else None">
+                                                            <t t-esc="label_value[1]"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>

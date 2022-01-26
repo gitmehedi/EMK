@@ -23,11 +23,7 @@ class AccountAnalyticAccount(models.Model):
                                           readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
                              string='Status', track_visibility='onchange', )
-
-    line_ids = fields.One2many('history.account.analytic.account', 'line_id', string='Lines', readonly=True,
-                               states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
-    approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
 
     @api.constrains('name', 'code')
     def _check_unique_constrain(self):
@@ -82,14 +78,11 @@ class AccountAnalyticAccount(models.Model):
 
     @api.one
     def act_approve(self):
-        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
-            raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
         if self.state == 'draft':
             self.write({
                 'state': 'approve',
                 'pending': False,
-                'active': True,
-                'approver_id': self.env.user.id,
+                'active': True
             })
 
     @api.one
@@ -100,39 +93,6 @@ class AccountAnalyticAccount(models.Model):
                 'pending': False,
                 'active': False,
             })
-
-    @api.one
-    def act_approve_pending(self):
-        if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
-            raise ValidationError(_("[Validation Error] Editor and Approver can't be same person!"))
-        if self.pending == True:
-            requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
-                                             limit=1)
-            if requested:
-                self.write({
-                    'name': self.name if not requested.change_name else requested.change_name,
-                    'pending': False,
-                    'active': requested.status,
-                    'approver_id': self.env.user.id,
-                })
-                requested.write({
-                    'state': 'approve',
-                    'change_date': fields.Datetime.now()
-                })
-
-    @api.one
-    def act_reject_pending(self):
-        if self.pending == True:
-            requested = self.line_ids.search([('state', '=', 'pending'), ('line_id', '=', self.id)], order='id desc',
-                                             limit=1)
-            if requested:
-                self.write({
-                    'pending': False
-                })
-                requested.write({
-                    'state': 'reject',
-                    'change_date': fields.Datetime.now()
-                })
 
     @api.multi
     def unlink(self):
@@ -145,20 +105,6 @@ class AccountAnalyticAccount(models.Model):
             except IntegrityError:
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
-
-
-class HistoryAccountAnalyticAccount(models.Model):
-    _name = 'history.account.analytic.account'
-    _description = 'History Cost Centre'
-    _order = 'id desc'
-
-    change_name = fields.Char('Proposed Name', size=200, readonly=True, states={'draft': [('readonly', False)]})
-    status = fields.Boolean('Active', default=True, track_visibility='onchange')
-    request_date = fields.Datetime(string='Requested Date')
-    change_date = fields.Datetime(string='Approved Date')
-    line_id = fields.Many2one('account.analytic.account', ondelete='restrict')
-    state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
-                             default='pending', string='Status')
 
 
 class AccountAnalyticLine(models.Model):
