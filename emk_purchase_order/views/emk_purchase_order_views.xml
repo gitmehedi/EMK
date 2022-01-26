@@ -42,8 +42,14 @@
                         <button name="button_approve" string="Approve Order" type="object" class="oe_highlight"
                                 states='to approve' groups="purchase.group_purchase_manager"/>
                     </xpath>
+                    <xpath expr="//field[@name='product_id']" position="attributes">
+                        <attribute name="domain">[('type', '!=', 'service')]</attribute>
+                        <attribute name="options">{'no_create':True,'no_open':True}</attribute>
+                    </xpath>
+
                 </data>
             </field>
+
         </record>
 
 
@@ -52,7 +58,7 @@
 			<field name="res_model">purchase.order</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-            <field name="domain">[("product_id.type","!=",'service')]</field>
+<!--            <field name="domain">[("product_id.type","!=",'service')]</field>-->
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create a new Purchase Order.

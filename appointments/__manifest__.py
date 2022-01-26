@@ -19,7 +19,6 @@
     'data': [
         'security/ir.model.access.csv',
         'data/sequence.xml',
-        'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'reports/reports.xml',
         'data/mail_template.xml',
