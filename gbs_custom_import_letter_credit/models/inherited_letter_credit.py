@@ -11,6 +11,24 @@ class InheritedLetterCredit(models.Model):
         if len(self.title) > 16:
             raise ValidationError('Description must not exceed 16 characters!')
 
+    @api.multi
+    def action_update_lc_number_import(self):
+        vals = {
+            'lc_id': self.id,
+        }
+        message_id = self.env['update.import.lc.number.confirmation'].create({
+            'current_lc_number': self.name
+        })
+        return {
+            'name': _('Confirmation : Are you sure to update this LC Number?'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'update.import.lc.number.confirmation',
+            'context': vals,
+            'res_id': message_id.id,
+            'target': 'new'
+        }
+
 
 class InheritedLcNumberWizard(models.TransientModel):
     _inherit = "lc.number.wizard"

@@ -10,7 +10,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='title']" position="attributes">
                     <attribute name="required">True</attribute>
-                    <attribute name="size">16</attribute>
                 </xpath>
             </field>
         </record>
