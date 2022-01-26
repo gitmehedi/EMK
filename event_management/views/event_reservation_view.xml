@@ -15,7 +15,7 @@
                                 states="reservation"/>
                         <button name="act_confirm" string="Confirm" type="object" class="oe_highlight"
                                 states="on_process"/>
-                        <button name="act_draft" string="Reset to Draft" type="object" states="on_process"/>
+                        <button name="act_draft" string="Reset to Draft" type="object" states="reservation"/>
                         <button name="act_cancel" string="Cancel" type="object" states="draft"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,reservation,on_process,confirm"/>
                     </header>

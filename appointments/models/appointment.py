@@ -143,6 +143,19 @@ class Appointment(models.Model):
                 raise ValidationError(_("Appointment date cannot be past date from current date"))
 
     @api.one
+    @api.constrains('meeting_room_id')
+    def validate_meeting_room_id(self):
+        if self.meeting_room_id:
+            appointment = self.env['appointment.appointment'].search_count([('timeslot_id', '=', self.timeslot_id.id),
+                                                                            ('meeting_room_id', '=', self.meeting_room_id.id),
+                                                                      ('appointment_date', '=',
+                                                                       self.appointment_date),
+                                                                      ('state', 'in', ['draft',
+                                                                                       'confirm', 'approve'])])
+            if appointment > 1:
+                raise ValidationError(_("This meeting room already booked.please select another room"))
+
+    @api.one
     @api.constrains('date_of_birth')
     def validate_birth_date(self):
         if self.date_of_birth:
@@ -189,7 +202,7 @@ class Appointment(models.Model):
 
     @api.multi
     def reject_appointment(self):
-        if self.state in ('confirm', 'draft'):
+        if self.state in ('confirm', 'draft', 'approve'):
 
             reject = {'template': 'appointments.mail_template_appointment_rej'}
             self.env['mail.mail'].mail_send(self.id, reject)

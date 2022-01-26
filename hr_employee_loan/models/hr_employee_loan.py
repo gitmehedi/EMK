@@ -10,8 +10,8 @@ class HrEmployeeLoanRequest(models.Model):
     _inherit = ['mail.thread']
     _order = 'name desc'
 
-    name = fields.Char(size=100, string='Loan Name', default="/")
-    emp_code_id = fields.Char(string='Code')
+    name = fields.Char(size=100, string='Loan Name', default="/", track_visibility='onchange')
+    emp_code_id = fields.Char(string='Code', track_visibility='onchange')
     installment_amount = fields.Integer(size=100, string='Installment Amount',required=True,
                 states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     principal_amount = fields.Float(string='Principal Amount',required=True,

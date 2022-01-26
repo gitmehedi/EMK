@@ -8,9 +8,9 @@ class HrEmployeeLoanPolicy(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Employee loan policy'
 
-    name = fields.Char(size=100, string='Name', required='True')
-    code = fields.Char(size=100, string='Code', required='True')
-    value = fields.Float(size=100, string='Value')
+    name = fields.Char(size=100, string='Name', required='True', track_visibility='onchange')
+    code = fields.Char(size=100, string='Code', required='True', track_visibility='onchange')
+    value = fields.Float(size=100, string='Value', track_visibility='onchange')
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',

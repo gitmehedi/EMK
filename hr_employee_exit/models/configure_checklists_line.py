@@ -1,8 +1,8 @@
 from odoo import models, fields, api, exceptions
 
+
 class ConfigureChecklistsLine(models.Model):
     _name = "hr.exit.configure.checklists.line"
-
 
     # Relational fields
     status_line_id = fields.Many2one('hr.checklist.status')

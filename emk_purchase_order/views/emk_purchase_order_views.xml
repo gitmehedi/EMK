@@ -52,6 +52,7 @@
 			<field name="res_model">purchase.order</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
+            <field name="domain">[("product_id.type","!=",'service')]</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create a new Purchase Order.

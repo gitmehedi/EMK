@@ -9,7 +9,7 @@ class HrEmployeeLoanType(models.Model):
     _description = 'Employee Loan Type'
 
     name = fields.Char(size=100, string='Name', required='True', track_visibility='onchange')
-    code = fields.Char(size=100, string='Name', required='True', track_visibility='onchange')
+    code = fields.Char(size=100, string='Code', required='True', track_visibility='onchange')
     is_interest_payable = fields.Boolean(string='Is Interest Payable', required='True', track_visibility='onchange')
     rate = fields.Float(size=100, string='Rate', track_visibility='onchange')
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')

@@ -24,7 +24,7 @@ class MemberOccupation(models.Model):
             [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
              ('active', '=', False)])
         if len(name) > 1:
-            raise Exception(_('Name should not be duplicate.'))
+            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
 
     @api.onchange("name")
     def onchange_strips(self):
