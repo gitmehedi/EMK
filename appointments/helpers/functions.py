@@ -18,7 +18,7 @@ def valid_email(email):
     return True
 
 def valid_mobile(phone):
-    pattern = re.compile(r'^\+?(0|880)?[0-9]{9,13}$')
+    pattern = re.compile(r'^(880)([0-9]{10})$')
     if not pattern.match(phone):
         return False
     return True

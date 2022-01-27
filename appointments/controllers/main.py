@@ -139,7 +139,7 @@ class WebsiteAppointmentReservation(http.Controller):
         db, login, password = request.env['res.users'].sudo().signup(data, values.get('token'))
         if login:
             groups = {
-                'grp_name': 'Appointment: Appointment User',
+                'grp_name': 'Appointment: Temporary User',
                 'cat_name': 'Appointment',
             }
             res_id = request.env['res.users'].sudo().create_temp_user(login, groups)

@@ -97,7 +97,7 @@ odoo.define('appointments.main', function (require) {
             });
         },
         _valid_phone_number: function (phone){
-          var phonePattern = /^\+?([0-9]{1,3})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{6})$/;
+          var phonePattern = /^(880)([0-9]{10})$/;
 
           if (phone.match(phonePattern))
           {

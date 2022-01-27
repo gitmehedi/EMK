@@ -71,9 +71,9 @@
                                             <div class="form-group form-field">
                                                 <label for="phone" class="control-label">Phone</label>
                                                 <input type="text" name="phone" t-att-value="phone" id="phone"
-                                                       placeholder="8801900000000" maxlength="13"
-                                                       class="form-control input-sm reqfield number"
-                                                       data-minlength="11" data-maxlength="13" required="required"/>
+                                                       placeholder="8801900000000" maxlength="13" minlength="13"
+                                                       class="form-control input-sm reqfield number" pattern="(880)([0-9]{10})"
+                                                       data-minlength="13" data-maxlength="13" required="required"/>
                                             </div>
                                         </div>
                                     </div>
