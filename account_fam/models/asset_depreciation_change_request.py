@@ -1,9 +1,6 @@
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models, _, SUPERUSER_ID
-from odoo.exceptions import Warning, ValidationError
-from odoo.tools import float_compare, float_is_zero
+from odoo.exceptions import ValidationError
+from odoo.tools import float_compare
 
 DATE_FORMAT = "%Y-%m-%d"
 
@@ -56,6 +53,89 @@ class AssetDepreciationChangeRequest(models.Model):
         ('approve', "Approved"),
         ('cancel', "Canceled")], default='draft', string="Status",
         track_visibility='onchange')
+
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""
+                CREATE OR REPLACE FUNCTION ASSET_DEPRECIATION_METHOD_CHANGE(CATEGORY_ID INTEGER,DM_DATE DATE,ASSET_LIFE INTEGER,DEPR_METHOD TEXT,NARRATION TEXT, SYS_DATE DATE,USER_ID INTEGER,COMPANY_ID INTEGER,OPU_ID INTEGER,JOURNAL_ID INTEGER,ACC_DEPR INTEGER,ACC_DEPR_SEQ INTEGER,ACC_DEPR_EXP INTEGER,ACC_DEPR_EXP_SEQ INTEGER) RETURNS INTEGER AS $$
+                    DECLARE
+					assets TEXT;
+                    asset RECORD;
+                    mrec RECORD;
+					usage_date DATE;
+					move INTEGER;
+					depreciated_amount FLOAT;
+					remaining_value FLOAT;
+					no_days INTEGER;
+					duration TEXT;
+                    BEGIN
+                  
+                    assets = 'SELECT *
+								FROM ACCOUNT_ASSET_ASSET
+								WHERE ASSET_TYPE_ID = '|| CATEGORY_ID;
+
+                    INSERT INTO account_move (name,ref,journal_id,company_id,date,operating_unit_id,user_id,state,is_cbs,is_sync,is_cr,create_uid,write_uid,create_date,write_date)
+                        VALUES ('/',NARRATION ,JOURNAL_ID,COMPANY_ID,DM_DATE,OPU_ID,USER_ID,'draft',False,False,False,USER_ID,USER_ID,SYS_DATE,SYS_DATE)
+                        RETURNING account_move.id INTO move;
+
+                    FOR asset IN EXECUTE assets
+                    LOOP
+					
+					IF asset.asset_usage_date IS NOT NULL THEN
+         				usage_date = asset.asset_usage_date + ASSET_LIFE * INTERVAL '1 year';
+						IF DM_DATE > usage_date THEN
+							IF asset.state = 'open' AND asset.depreciation_flag = False THEN
+								IF asset.value_residual > 0 and asset.allocation_status = True THEN
+									depreciated_amount = asset.accumulated_value + asset.value_residual;
+                					remaining_value = abs(asset.value - depreciated_amount);
+									no_days = 0;
+									
+									INSERT INTO account_asset_depreciation_line (move_id,asset_id,name,sequence,move_check,move_posted_check,line_type,depreciation_date,days,amount,depreciated_value,remaining_value,create_uid,write_uid,create_date,write_date)
+										VALUES (move,asset.id,'Depreciation',1,True,True,'depreciation',DM_DATE,no_days,asset.value_residual,depreciated_amount,remaining_value,USER_ID,USER_ID,NOW(),NOW());
+
+									-- insert credit amount in account.move.line
+									INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date,is_bgl,company_id)
+									VALUES (NARRATION,ACC_DEPR,JOURNAL_ID,move,ACC_DEPR_EXP,asset.current_branch_id,ACC_DEPR_EXP_SEQ,asset.cost_centre_id,DM_DATE,DM_DATE,asset.value_residual,0,USER_ID,USER_ID,NOW(),NOW(),'not_check',COMPANY_ID);
+									-- insert debit amount in account.move.line
+									INSERT INTO account_move_line (name,ref,journal_id,move_id,account_id,operating_unit_id,sub_operating_unit_id,analytic_account_id,date_maturity,date,debit,credit,create_uid,write_uid,create_date,write_date,is_bgl,company_id)
+									VALUES (NARRATION,ACC_DEPR,JOURNAL_ID,move,ACC_DEPR,asset.current_branch_id,ACC_DEPR_SEQ,asset.cost_centre_id,DM_DATE,DM_DATE,0,asset.value_residual,USER_ID,USER_ID,NOW(),NOW(),'not_check',COMPANY_ID);
+
+									UPDATE account_asset_asset
+									SET method = DEPR_METHOD,
+										depreciation_year = ASSET_LIFE,
+										method_progress_factor=0.0,
+										dmc_date = DM_DATE,
+										lst_depr_date = DM_DATE,
+										lst_depr_amount = asset.value_residual,
+										accumulated_value = asset.accumulated_value + asset.value_residual,
+										value_residual = 0.0,
+										state='open'
+									WHERE id = asset.id;
+								END IF;
+							END IF;
+						ELSE
+							UPDATE account_asset_asset
+							SET method = DEPR_METHOD,
+								depreciation_year = ASSET_LIFE,
+								method_progress_factor=0.0,
+								dmc_date = DM_DATE,
+								lst_depr_date = DM_DATE,
+								end_of_date = usage_date,
+								depr_base_value = asset.value_residual
+							WHERE id = asset.id;
+						END IF;
+					ELSE
+						UPDATE account_asset_asset
+						SET method = DEPR_METHOD,
+							depreciation_year = ASSET_LIFE,
+							method_progress_factor=0.0
+						WHERE id = asset.id;
+					END IF;
+				END LOOP;
+				RETURN move;
+                END;
+            $$ LANGUAGE PLPGSQL;
+            """)
 
     @api.onchange('asset_type_id')
     def onchange_asset_type_id(self):
@@ -127,141 +207,48 @@ class AssetDepreciationChangeRequest(models.Model):
                 category.write({'pending': True, 'maker_id': self.maker_id.id})
                 category.act_approve_pending()
 
-            assets = self.env['account.asset.asset'].search([('asset_type_id', '=', self.asset_cat_id.id)])
-            move = None
-            lines = []
+            journal_id = self.env.user.company_id.fa_journal_id
+            if not journal_id:
+                raise ValidationError(_('Configure Fixed Asset Journal from Settings.'))
 
-            for asset in assets:
-                if asset.asset_usage_date:
-                    usage_date = datetime.strptime(asset.asset_usage_date, DATE_FORMAT) + relativedelta(
-                        years=self.asset_life)
-                    dmc_date = datetime.strptime(self.request_date, DATE_FORMAT)
-                    if dmc_date > usage_date:
-                        if not move:
-                            move = self.env['account.move'].create({
-                                'ref': self.narration,
-                                'date': dmc_date,
-                                'journal_id': asset.category_id.journal_id.id,
-                                'operating_unit_id': asset.current_branch_id.id
-                            })
-                        vals = self.modify(move, asset, dmc_date)
-                        if vals:
-                            lines.append((0, 0, vals[0]))
-                            lines.append((0, 0, vals[1]))
-                    else:
-                        asset.write({'method': self.method,
-                                     'depreciation_year': self.asset_life,
-                                     'method_progress_factor': 0.0,
-                                     'dmc_date': dmc_date,
-                                     'lst_depr_date': dmc_date,
-                                     'end_of_date': usage_date,
-                                     'depr_base_value': asset.value_residual,
-                                     })
-                else:
-                    asset.write({'method': self.method,
-                                 'depreciation_year': self.asset_life,
-                                 'method_progress_factor': 0.0
-                                 })
+            company_id = self.env.user.company_id.id
+            opu_id = self.env.user.default_operating_unit_id.id
+            system_date = self.env.user.company_id.batch_date
+            acc_depr = category.account_depreciation_id.id
+            acc_depr_seq = category.account_depreciation_seq_id.id
+            acc_depr_exp = category.account_depreciation_expense_id.id
+            acc_depr_exp_seq = category.account_depreciation_expense_seq_id.id
 
-            if move:
-                if len(lines) > 1:
-                    move.write({
-                        'line_ids': lines,
-                        'maker_id': self.maker_id.id,
-                        'approver_id': self.env.user.id,
-                    })
+            self.env.cr.execute(
+                """SELECT * FROM ASSET_DEPRECIATION_METHOD_CHANGE(%s,'%s',%s,'%s','%s','%s',%s,%s,%s,%s,%s,%s,%s,%s)""" % (
+                    self.asset_cat_id.id, self.request_date, self.asset_life, self.method, self.narration, system_date,
+                    self.env.uid, company_id, opu_id, journal_id.id, acc_depr, acc_depr_seq, acc_depr_exp,
+                    acc_depr_exp_seq));
+
+            debit, credit = 0, 0
+            for val in self.env.cr.fetchall():
+                move = self.env['account.move'].search([('id', '=', val[0])])
+                for rec in move.line_ids:
+                    debit = debit + rec.debit
+                    credit = credit + rec.credit
+                if debit == credit and debit > 0 and credit > 0:
+                    move.write({'amount': debit})
                     if move.state == 'draft':
                         move.sudo().post()
+                        self.write({'move_id': move.id if move else []})
                 else:
                     move.unlink()
 
-            self.write({
-                'state': 'approve',
-                'name': name,
-                'approver_id': self.env.user.id,
-                'move_id': move.id if move else [],
-                'approve_date': self.env.user.company_id.batch_date
-            })
+                self.write({
+                    'state': 'approve',
+                    'name': name,
+                    'approver_id': self.env.user.id,
+                    'approve_date': self.env.user.company_id.batch_date
+                })
 
     @api.model
     def _needaction_domain_get(self):
         return [('state', '=', 'confirm')]
-
-    @api.multi
-    def modify(self, move, asset, dmc_date):
-        if asset.state == 'open' and not asset.depreciation_flag:
-            if asset.value_residual > 0 and asset.allocation_status == True:
-                depr_value = asset.value_residual
-                depreciated_amount = asset.accumulated_value + depr_value
-                remaining_value = asset.value - depreciated_amount
-                vals = {
-                    'amount': depr_value,
-                    'asset_id': asset.id,
-                    'sequence': 1,
-                    'name': asset.code or '/',
-                    'remaining_value': abs(remaining_value),
-                    'depreciated_value': depreciated_amount,
-                    'depreciation_date': dmc_date,
-                    'days': 0,
-                    'asset_id': asset.id,
-                    'move_id': move.id,
-                    'move_check': True,
-                }
-
-                line = asset.depreciation_line_ids.create(vals)
-                record = self.create_depr(move, asset, depr_value, dmc_date)
-                asset.write({'method': self.method,
-                             'depreciation_year': self.asset_life,
-                             'method_progress_factor': 0.0,
-                             'dmc_date': dmc_date,
-                             'lst_depr_date': dmc_date,
-                             'lst_depr_amount': depr_value,
-                             'state': 'open',
-                             })
-                return record
-            else:
-                asset.write({'method': self.method,
-                             'depreciation_year': self.asset_life,
-                             'method_progress_factor': 0.0,
-                             'dmc_date': dmc_date,
-                             'lst_depr_date': dmc_date,
-                             'state': 'open',
-                             })
-
-    def create_depr(self, move, asset, depr_value, dmc_date):
-        prec = self.env['decimal.precision'].precision_get('Account')
-        company_currency = asset.company_id.currency_id
-        current_currency = asset.currency_id
-        category = asset.asset_type_id
-        credit = {
-            'name': self.narration,
-            'debit': 0.0,
-            'date': dmc_date,
-            'credit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
-            'journal_id': category.journal_id.id,
-            'operating_unit_id': asset.current_branch_id.id,
-            'account_id': category.account_depreciation_id.id,
-            'sub_operating_unit_id': category.account_depreciation_seq_id.id,
-            'analytic_account_id': asset.cost_centre_id.id if asset.cost_centre_id else False,
-            'currency_id': company_currency != current_currency and current_currency.id or False,
-            'company_id': self.env.user.company_id.id,
-            'move_id': move.id
-        }
-        debit = {
-            'name': self.narration,
-            'date': dmc_date,
-            'debit': depr_value if float_compare(depr_value, 0.0, precision_digits=prec) > 0 else 0.0,
-            'credit': 0.0,
-            'journal_id': asset.category_id.journal_id.id,
-            'operating_unit_id': asset.current_branch_id.id,
-            'account_id': category.account_depreciation_expense_id.id,
-            'sub_operating_unit_id': category.account_depreciation_expense_seq_id.id,
-            'analytic_account_id': asset.cost_centre_id.id,
-            'currency_id': company_currency != current_currency and current_currency.id or False,
-            'company_id': self.env.user.company_id.id,
-            'move_id': move.id
-        }
-        return debit, credit
 
     @api.multi
     def open_entries(self):
