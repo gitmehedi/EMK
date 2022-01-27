@@ -56,15 +56,9 @@
                                         <div class="col-md-6">
                                             <div class="form-group form-field">
                                                 <label for="email" class="control-label">E-mail</label>
-                                                <input type="email" name="email" t-att-value="email" id="email"
+                                                <input type="email" name="email" t-att-value="email" id="app-email"
                                                        placeholder="info@info.com"
                                                        class="form-control input-sm reqfield" required="required"/>
-                                                <div style="display: none; color:red; font-size: 12px;">A user with
-                                                    email
-                                                    <strong id="exits_email"></strong>
-                                                    already exists in the system. Either request a forgotten password or
-                                                    select another email address.
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
