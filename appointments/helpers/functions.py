@@ -17,15 +17,9 @@ def valid_email(email):
         return False
     return True
 
-
 def valid_mobile(phone):
-    # if not re.findall(r"\+?\b[\d]{5}-[\d]{3}-[\d]{3}\b", phone.rstrip()):if not re.compile("(0|88)?[7-9][0-9]{9}",phone.strip()):
-    # 1) Begins with 0 or 880
-    # 2) Then contains 1 or 8 or 9.
-    # 3) Then contains 9 digits
-    # Pattern = re.compile("(0|880)?[1|2][0-9]{9}")
-    Pattern = re.compile(r'^\+?(0|880)?[1-2]\d{9,13}$')
-    if not Pattern.match(phone):
+    pattern = re.compile(r'^\+?(0|880)?[0-9]{9,13}$')
+    if not pattern.match(phone):
         return False
     return True
 
