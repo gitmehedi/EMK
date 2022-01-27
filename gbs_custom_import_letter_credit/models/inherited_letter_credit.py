@@ -41,12 +41,13 @@ class InheritedLcNumberWizard(models.TransientModel):
         lc_form_obj = self.env['letter.credit'].search([('id', '=', form_id)])
         if lc_form_obj.pi_ids_temp:
             company_id = lc_form_obj.pi_ids_temp[0].suspend_security().operating_unit_id.company_id.id
-            analytic_account_name = 'LC : ' + self.name + '-' + lc_form_obj.title + '-' + lc_form_obj.pi_ids_temp[
-                0].suspend_security().operating_unit_id.name
+            analytic_account_name = self.generate_analytic_account_name(self.name, lc_form_obj.title,
+                                                                        lc_form_obj.pi_ids_temp[0].suspend_security().operating_unit_id.name)
+
             analytic_account = analytic_account_obj.suspend_security().create(
                 {'name': analytic_account_name, 'type': 'cost', 'company_id': company_id})
         else:
-            analytic_account_name = 'LC : ' + self.name + '-' + lc_form_obj.title + '-' + lc_form_obj.operating_unit_id.name
+            analytic_account_name = self.generate_analytic_account_name(self.name,lc_form_obj.title,lc_form_obj.operating_unit_id.name)
             analytic_account = analytic_account_obj.suspend_security().create(
                 {'name': analytic_account_name, 'type': 'cost',
                  'company_id': lc_form_obj.operating_unit_id.company_id.id})
@@ -55,3 +56,7 @@ class InheritedLcNumberWizard(models.TransientModel):
             {'analytic_account_id': analytic_account.id})
 
         return super(InheritedLcNumberWizard, self).save_number()
+
+    def generate_analytic_account_name(self, name, title, operating_unit_name):
+        analytic_account_name = 'LC:' + name + '-' + title + '-' + operating_unit_name
+        return analytic_account_name
