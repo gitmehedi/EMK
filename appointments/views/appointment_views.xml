@@ -194,9 +194,9 @@
                   groups="appointment_user.group_appoint_user" parent="appointment_menu.sub_appoint_menu"
                   sequence="30"/>
 
-        <menuitem id="menu_appointment_appointment" name="Appointments Schedule" action="action_appointment_appointment"
+        <menuitem id="menu_appointment_appointment_schedule" name="Appointments Schedule" action="action_appointment_appointment"
                   groups="appointment_user.group_appoint_temp_user"
-                  parent="appointment_menu.main_appoint_menu" sequence="30"/>
+                  parent="appointment_menu.main_appoint_menu" sequence="55"/>
 
         <menuitem id="menu_appointment_confirm" name="Appointment (Confirmed)" action="action_appointment_confirm"
                   sequence="35"
