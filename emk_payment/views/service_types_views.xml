@@ -28,14 +28,12 @@
         <field name="model">product.template</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Service Fee" decoration-info="state=='draft'" decoration-success="state=='approve'"
-                      decoration-danger="state=='reject'"
-                      decoration-bf="state in ('approve',)">
+            <tree string="Service Fee">
                 <field name="name"/>
                 <field name="type" invisible="True"/>
                 <field name="categ_id" invisible="True"/>
                 <field name="list_price" string="Price"/>
-                <field name="state" string="State"/>
+
             </tree>
         </field>
     </record>
