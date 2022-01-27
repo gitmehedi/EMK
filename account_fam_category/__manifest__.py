@@ -14,7 +14,7 @@
         'data/sequence.xml',
         'views/account_asset_category_view.xml',
         'views/account_asset_views.xml',
-        'views/inherit_product_template_views.xml',
+        'views/product_template_views.xml',
         'views/account_invoice_line_view.xml',
     ],
     'installable': True,
