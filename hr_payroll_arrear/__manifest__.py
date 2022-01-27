@@ -13,6 +13,9 @@
         'security/ir.model.access.csv',
         #'security/ir_rule.xml',
         'views/hr_payroll_arrear.xml',
+        'wizards/hr_payroll_arrear_import_wizard_views.xml',
+        'wizards/success_wizard.xml'
+
     ],
 
     'summary': 'Calculates HR Payroll Arrear Information',
