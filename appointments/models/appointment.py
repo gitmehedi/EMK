@@ -21,7 +21,7 @@ class Appointment(models.Model):
 
     name = fields.Char(string="Reference", readonly=True, copy=False, track_visibility='onchange')
     topic_id = fields.Many2one('appointment.topics', string="Topics", required=True, track_visibility='onchange')
-    contact_id = fields.Many2one('appointment.contact', string="Appointee", required=True, track_visibility='onchange')
+    contact_id = fields.Many2one('appointment.contact', string="Appointer", required=True, track_visibility='onchange')
     timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange')
     type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange')
     meeting_room_id = fields.Many2one('appointment.meeting.room', string="Meeting Room", track_visibility='onchange')
@@ -169,6 +169,24 @@ class Appointment(models.Model):
         if self.email:
             if not functions.valid_email(self.email):
                 raise ValidationError('Email should be input a valid')
+
+    @api.one
+    @api.constrains('phone')
+    def valid_mobile(self):
+        if self.phone:
+            if not functions.valid_mobile(self.phone):
+                raise ValidationError('Phone should be input a valid')
+
+    @api.one
+    @api.constrains('appointment_date', 'timeslot_id')
+    def validate_appointment_day(self):
+        if self.appointment_date:
+            appdate = datetime.strptime(self.appointment_date, "%Y-%m-%d")
+            day = datetime.strftime(appdate, '%A')
+            if day.lower() != self.timeslot_id.day:
+                raise ValidationError(_("Appointment day and time selection day should be "
+                                        "same. Please change appointment date or time"))
+
 
 
     @api.multi

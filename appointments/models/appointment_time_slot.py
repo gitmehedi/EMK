@@ -67,12 +67,12 @@ class AppointmentTimeSlot(models.Model):
     def check_time_intersect(self):
         query = """select id,day,start_time,end_time from appointment_timeslot 
         WHERE (start_time <= %s and %s <= end_time) and active=True
-        and day = %s""" % (self.end_time, self.start_time, self.day)
+        and day = '%s'""" % (self.end_time, self.start_time, self.day)
 
         # self._cr.execute(query, tuple([self.end_time, self.start_time, self.day]))
         self.env.cr.execute(query)
         for val in self.env.cr.fetchall():
-            print "{0}:{1}-{2}:{3}".format(val[0], val[1], val[2], val[3])
+            "{0}:{1}-{2}:{3}".format(val[0], val[1], val[2], val[3])
         # if rec:
         #     raise ValidationError(_('[Warning] Time should not be overlap at same day.'))
         # for val in rec:

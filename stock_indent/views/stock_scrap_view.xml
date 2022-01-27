@@ -53,7 +53,7 @@
 								<field name="product_lines">
 									<tree string="Products" editable="bottom" >
 										<field name="sequence" widget="handle"/>
-										<field name="product_id" domain="[('type','=','product')]" options="{'no_open': True,'no_create_edit': true}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
+										<field name="product_id" domain="[('type','=','product')]" options="{'no_create':True,'no_open': True,'no_create_edit': True}" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
 										<field name="remarks" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}" />
 										<field name="state" invisible="1"/>
 										<field name="qty_available" readonly="1" groups="" attrs="{'readonly':[('state','not in',('draft','waiting_approval'))]}"  />
