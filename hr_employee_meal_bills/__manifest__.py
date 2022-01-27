@@ -14,6 +14,8 @@
         'views/hr_meal_bill_view.xml',
         'report/gbs_hr_meal_report.xml',
         'report/gbs_hr_meal_report_templates.xml',
+        'wizards/hr_employee_meal_bills_import_wizard_views.xml',
+        'wizards/success_wizard.xml'
     ],
     
     'summary': 'Calculates Employees Meal Information',
