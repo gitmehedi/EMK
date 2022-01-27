@@ -187,7 +187,7 @@ class IndentIndent(models.Model):
     @api.multi
     def action_close_indent(self):
         res = {
-            'state': 'received',
+            'state': 'reject',
             'closer_id': self.env.user.id,
         }
         self.write(res)
@@ -382,6 +382,8 @@ class IndentIndent(models.Model):
         for product in self.product_lines:
             if product.qty_available <= 0:
                 raise UserError('Stock not available!!!')
+            if product.qty_available < product.product_uom_qty:
+                raise UserError('Stock not available for issue!!!')
             elif product.qty_available < product.product_uom_qty:
                 product.issue_qty = product.qty_available
             else:
@@ -392,7 +394,7 @@ class IndentIndent(models.Model):
                 raise UserError('Issue Quantity can not 0')
         for product in self.product_lines:
             if product.received_qty != product.product_uom_qty:
-                raise UserError('Issue Quantity and Indent Quantity Must Be Same')
+                raise UserError('Issue Quantity and Indent Quantity must be same')
 
     @api.multi
     def action_view_picking(self):

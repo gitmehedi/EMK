@@ -26,7 +26,9 @@
         'views/stock_indent_view.xml',
         'views/stock_picking_type.xml',
         'views/receive_products.xml',
-        'views/stock_scrap_view.xml'
+        'views/stock_scrap_view.xml',
+        'views/inherit_product_template_views.xml',
+
     ],
     'installable': True,
     'application': False,

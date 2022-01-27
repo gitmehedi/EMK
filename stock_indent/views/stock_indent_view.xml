@@ -35,10 +35,11 @@
 						<button name="action_view_picking" string="Issue Product(s)" type="object" invisible="1"
 								states="inprogress" class="oe_highlight" groups="inventory_user.grp_inv_department_executive" />
 						<!--groups="inventory_user.grp_inv_department_executive"-->
-						<button name="action_close_indent" string="Close" type="object"
-								states="inprogress" groups="stock.group_stock_user"/>
+
 						<button name="action_issue_product" string="Issue Products" type="object" class="oe_highlight"
 								states="inprogress"/>
+						<button name="action_close_indent" string="Close" type="object"
+								states="inprogress" groups="stock.group_stock_user"/>
 
 						<field name="state" widget="statusbar"
 							   statusbar_visible="draft,waiting_approval,inprogress,received"
