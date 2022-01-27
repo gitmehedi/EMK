@@ -190,13 +190,9 @@
         </record>
 
 
-<!--        <menuitem id="menu_appointment_appointment" name="Appointment (Draft)" action="action_appointment_appointment"-->
-<!--                  groups="appointment_user.group_appoint_user" parent="appointment_menu.sub_appoint_menu"-->
-<!--                  sequence="30"/>-->
-
-        <menuitem id="menu_appointment_temporary" name="Appointments Schedule" action="action_appointment_appointment"
-                  groups="appointment_user.group_appoint_temp_user"
-                  parent="appointment_menu.main_appoint_menu" sequence="30"/>
+        <menuitem id="menu_appointment_appointment" name="Appointment (Draft)" action="action_appointment_appointment"
+                  groups="appointment_user.group_appoint_user" parent="appointment_menu.sub_appoint_menu"
+                  sequence="30"/>
 
         <menuitem id="menu_appointment_confirm" name="Appointment (Confirmed)" action="action_appointment_confirm"
                   sequence="35"
@@ -212,5 +208,9 @@
         <menuitem id="menu_appointment_reject" name="Appointment (Rejected)" action="action_appointment_reject"
                   sequence="50"
                   groups="appointment_user.group_appoint_user"  parent="appointment_menu.sub_appoint_menu"/>
+
+        <menuitem id="menu_appointment_temporary" name="Appointments Schedule" action="action_appointment_appointment"
+                  groups="appointment_user.group_appoint_temp_user"
+                  parent="appointment_menu.main_appoint_menu" sequence="55"/>
     </data>
 </odoo>
