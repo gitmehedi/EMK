@@ -99,12 +99,12 @@ class ResPartner(models.Model):
     @api.onchange('email')
     def validate_email(self):
         if self.email:
-            utility.check_email(self.email)
+            utility.valid_email(self.email)
 
     @api.constrains('email')
     def check_email(self):
         if self.email:
-            utility.check_email(self.email)
+            utility.valid_email(self.email)
 
     @api.model
     def create(self, vals):
