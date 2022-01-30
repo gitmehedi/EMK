@@ -60,7 +60,7 @@
                         <div class="form-group form-field">
                             <label for="email" class="control-label">E-mail</label>
                             <input type="email" name="email" t-att-value="email" id="email"
-                                   placeholder="info@info.com"
+                                   placeholder="info@info.com" pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
                                    class="form-control input-sm reqfield" required="required"/>
                             <div style="display: none; color:red; font-size: 12px;">A user with email
                                 <strong id="exits_email"></strong>
