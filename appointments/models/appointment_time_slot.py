@@ -1,5 +1,5 @@
 from odoo import api, fields, models, _
-from odoo.addons.appointments.helpers import functions
+from odoo.addons.opa_utility.models.utility import Utility
 from odoo.exceptions import ValidationError
 from psycopg2 import IntegrityError
 
@@ -39,8 +39,8 @@ class AppointmentTimeSlot(models.Model):
     def _compute_name(self):
         for rec in self:
             if rec.day and rec.start_time and rec.end_time:
-                start_time = functions.float_to_time(rec.start_time)
-                end_time = functions.float_to_time(rec.end_time)
+                start_time = Utility.float_to_time(rec.start_time)
+                end_time = Utility.float_to_time(rec.end_time)
                 rec.name = '%s [%s - %s] ' % (rec.day.title(), start_time, end_time)
 
     @api.constrains('name', 'start_time', 'end_time')
@@ -53,14 +53,14 @@ class AppointmentTimeSlot(models.Model):
     @api.constrains('start_time', 'end_time')
     def _check_max_min(self):
         for rec in self:
-            if functions.float_to_time(rec.end_time) <= functions.float_to_time(rec.start_time):
+            if functions.float_to_time(rec.end_time) <= Utility.float_to_time(rec.start_time):
                 raise ValidationError(_("Start Time should not be greater than End Time."))
 
     @api.constrains('start_time', 'end_time')
     def _check_valid_time(self):
-        if functions.float_to_time(self.start_time) < '00:00' or functions.float_to_time(self.start_time) > '23:59':
+        if functions.float_to_time(self.start_time) < '00:00' or Utility.float_to_time(self.start_time) > '23:59':
             raise ValidationError(_("Start Time should be valid date time"))
-        if functions.float_to_time(self.end_time) < '00:00' or functions.float_to_time(self.end_time) > '23:59':
+        if functions.float_to_time(self.end_time) < '00:00' or Utility.float_to_time(self.end_time) > '23:59':
             raise ValidationError(_("End Time should be valid date time"))
 
     @api.constrains('start_time', 'end_time', 'day')

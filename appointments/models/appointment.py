@@ -4,7 +4,7 @@ import dateutil.parser
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.addons.appointments.helpers import functions
+from odoo.addons.opa_utility.models.utility import Utility
 
 _logger = logging.getLogger(__name__)
 
@@ -167,14 +167,14 @@ class Appointment(models.Model):
     @api.constrains('email')
     def validate_mail(self):
         if self.email:
-            if not functions.valid_email(self.email):
+            if not Utility.valid_email(self.email):
                 raise ValidationError('Email should be input a valid')
 
     @api.one
     @api.constrains('phone')
     def valid_mobile(self):
         if self.phone:
-            if not functions.valid_mobile(self.phone):
+            if not Utility.valid_mobile(self.phone):
                 raise ValidationError('Phone should be input a valid')
 
     @api.one
