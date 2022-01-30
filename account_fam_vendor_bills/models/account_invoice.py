@@ -5,7 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice', 'ir.needaction_mixin']
-    amount_payable = fields.Float('Vendor Payable', readonly=True, copy=False, compute='_compute_amount_payable')
+    amount_payable = fields.Float('Vendor Payable', readonly=True, copy=False)
 
     def _get_date_invoice(self):
         return self.env.user.company_id.batch_date

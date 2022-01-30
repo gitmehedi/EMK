@@ -75,9 +75,8 @@ class MemberPayment(models.Model):
             raise ValidationError(
                 _("This user does not have any access credentials. Please create it first."))
 
-        invoice = self.env['account.invoice'].search(
-            [('partner_id', '=', self.membership_id.id), ('state', '=', 'open')],
-            order='create_date desc')
+        invoice = self.env['account.invoice'].search([('partner_id', '=', self.membership_id.id),
+                                                      ('state', '=', 'open')], order='create_date desc')
         pay_text = 'Payment for Membership'
         rem_amount = self.paid_amount
         payment_method_id = self.env['account.payment.method'].search(

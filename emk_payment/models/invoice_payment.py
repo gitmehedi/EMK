@@ -141,7 +141,7 @@ class MemberPayment(models.Model):
                     else:
                         self.payment_ref = str(rec.display_name)
 
-                    if rec.state == 'paid' and member.state == 'invoice':
+                    if rec.state == 'open' and member.state == 'invoice':
                         membership_state = 'paid' if inv_amount > 0 else 'free'
                         member.write({'state': 'member',
                                       'member_sequence': '',
