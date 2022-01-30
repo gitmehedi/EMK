@@ -7,7 +7,8 @@
     'depends': ['hr',
         'hr_payroll',
         'l10n_in_hr_payroll',
-        'gbs_hr_security'
+        'gbs_hr_security',
+        'gbs_read_excel_utility'
         ],
     'data': [
         'security/ir.model.access.csv',
