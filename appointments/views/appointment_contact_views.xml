@@ -31,15 +31,17 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="name"/>
                                 <field name="appointee_id" domain="[('state','=','employment')]"
                                        options="{'no_create': True,'no_open': True}"/>
-                                <field name="description"></field>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="description"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Time Slot">
-                                <field name="timeslot_ids"></field>
+                                <field name="timeslot_ids"/>
                             </page>
                         </notebook>
                     </sheet>

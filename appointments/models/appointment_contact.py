@@ -10,7 +10,7 @@ class AppointmentContact(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = "id desc"
 
-    name = fields.Char(string="Title", required=True, translate=True, track_visibility='onchange')
+    name = fields.Char(string="Appointment Title", required=True, translate=True, track_visibility='onchange')
     appointee_id = fields.Many2one('hr.employee', string="Employee", required=True, track_visibility='onchange')
     description = fields.Text('Remarks', track_visibility="onchange")
     status = fields.Boolean(default=True, track_visibility='onchange')
