@@ -24,6 +24,7 @@
         'views/menu_view.xml',
         'views/inherit_hr_employee_view.xml',
         'views/inherit_hr_contract_view.xml',
+        'views/inherit_hr_experience_view.xml',
     ],
     'installable': True,
     'application': True,
