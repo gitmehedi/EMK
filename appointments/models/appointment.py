@@ -4,7 +4,7 @@ import dateutil.parser
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.addons.opa_utility.models.utility import Utility
+from odoo.addons.opa_utility.helper.utility import Utility
 
 _logger = logging.getLogger(__name__)
 
@@ -153,15 +153,6 @@ class Appointment(models.Model):
                                                                                        'confirm', 'approve'])])
             if appointment > 1:
                 raise ValidationError(_("This meeting room already booked.please select another room"))
-
-    # @api.one
-    # @api.constrains('date_of_birth')
-    # def validate_birth_date(self):
-    #     if self.date_of_birth:
-    #         birth_date = datetime.strptime(self.date_of_birth, '%Y-%m-%d')
-    #         curr_date = dateutil.parser.parse(fields.Date.today())
-    #         if birth_date >= curr_date:
-    #             raise ValidationError(_("Birth date cannot be future date and current date"))
 
     @api.one
     @api.constrains('email')

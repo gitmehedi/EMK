@@ -9,7 +9,7 @@ from odoo.exceptions import UserError, ValidationError, Warning
 from odoo import api, fields, models, _
 from smtplib import SMTP, SMTPException, SMTPAuthenticationError
 
-from odoo.addons.opa_utility.models.utility import Utility as utility
+from odoo.addons.opa_utility.helper.utility import Utility as utility
 
 _logger = logging.getLogger(__name__)
 

@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from odoo import http, _
-from odoo.addons.opa_utility.models.utility import Utility as utility
+from odoo.addons.opa_utility.helper.utility import Utility as utility
 from odoo.http import request
 
 DATE_FORMAT = "%Y-%m-%d"

@@ -10,7 +10,7 @@ from odoo import fields, http, _
 from odoo.addons.website.models.website import slug
 from odoo.http import request
 from odoo.addons.website_event.controllers.main import WebsiteEventController
-from odoo.addons.opa_utility.models.utility import Utility as utility
+from odoo.addons.opa_utility.helper.utility import Utility as utility
 
 
 class WebsiteRegistration(WebsiteEventController):

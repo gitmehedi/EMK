@@ -13,7 +13,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 from odoo.exceptions import ValidationError, Warning
-from odoo.addons.opa_utility.models.utility import Utility as utility
+from odoo.addons.opa_utility.helper.utility import Utility as utility
 
 
 class EMKMemberDataImportWizard(models.TransientModel):
