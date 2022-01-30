@@ -5,6 +5,8 @@ odoo.define('appointments.main', function (require) {
     var ajax = require('web.ajax');
     var publicWidget = require('web_editor.snippets.animation');
     var _t = core._t;
+    var active_day=[];
+    var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
     publicWidget.registry.Appointments = publicWidget.Class.extend({
         selector: '#appointment_reservation',
@@ -14,21 +16,22 @@ odoo.define('appointments.main', function (require) {
         start: function () {
             var self = this;
             $('#appointment-reservation').validator();
-            $("#date_of_birth").datepicker({
-                minDate: new Date(1900,1-1,1),
-                maxDate: '-16Y',
-                changeMonth: true,
-                changeYear: true,
-                yearRange: "-100:-15",
-                dateFormat: 'yy-mm-dd',
-            });
             $("#appointment_date").datepicker({
                 minDate: '+1D',
                 maxDate: new Date(2050,12,31),
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: 'yy-mm-dd',
+                beforeShowDay: _nonScheduleDate
             });
+
+            function _nonScheduleDate(date){
+                var day_of_week = date.getDay();
+                if ( active_day.indexOf(day_of_week) !== -1){
+                    return [true];
+                }
+                return [false];
+            }
 
             $("#topic_id").on('change', function() {
                 var topic_id =  $(this).find(":selected").val();
@@ -45,7 +48,18 @@ odoo.define('appointments.main', function (require) {
                     self._valid_phone_number(phone);
                 }
             });
-            $("#contact_id,#appointment_date").on("change",function(){
+            $("#contact_id").on("change",function(){
+                var contact_id =  $("#contact_id").find(":selected").val();
+                if ( contact_id !=''){
+                    var data = {
+                        "contact_id": contact_id,
+                    }
+                    self._update_date(data);
+                }
+                $("#appointment_date").val('');
+                $("#timeslot_id").val('');
+            });
+            $("#appointment_date").on("change",function(){
                 var contact_id =  $("#contact_id").find(":selected").val();
                 var appointment_date =  $("#appointment_date").val();
                 if ( contact_id !='' &&  appointment_date !=''){
@@ -55,7 +69,9 @@ odoo.define('appointments.main', function (require) {
                     }
                     self._update_time_slot(data);
                 }
+                $("#timeslot_id").val('');
             });
+
         },
         _format_date: function (date) {
             var self = this;
@@ -94,6 +110,27 @@ odoo.define('appointments.main', function (require) {
                     options.push('<option value="' + slots[i].id +'">' + slots[i].name + '</option>');
                 }
                 $('#timeslot_id').html(options.join(''));
+
+            });
+        },
+        _update_date: function(data){
+            var self = this;
+            ajax.jsonRpc('/appointment/available-date','call', data).always(function(res){
+                var days = res.days;
+                var tags=[];
+                active_day=[];
+                for(var i=0;i<days.length;i++){
+                    var r=Math.floor(Math.random()*255)
+                    var g=Math.floor(Math.random()*255)
+                    var b=Math.floor(Math.random()*255)
+                    var color = 'rgb('+r+','+g+','+b+')';
+                    var index = weekday.indexOf(days[i]);
+                    if ( index !== -1){
+                        active_day.push(index);
+                        tags.push('<span style="background-color:'+ color +'">' + days[i] + '</span>');
+                    }
+                }
+                $('#weekday_days').html(tags.join(''));
             });
         },
         _valid_phone_number: function (phone){
@@ -139,7 +176,6 @@ odoo.define('appointments.main', function (require) {
                 $("#appointee_id").html(options.join(''));
             });
         },
-
         _update_days_with_free_slots: function (year, month) {
             var self = this;
 
@@ -156,12 +192,10 @@ odoo.define('appointments.main', function (require) {
                 $(".datepicker" ).datepicker("refresh");
             });
         },
-
         _get_yearmonth_key: function() {
             var key = this.focus_year.toString() + ',' + this.focus_month.toString();
             return key
         },
-
     }),
 
     publicWidget.registry.AppointmentPortal = publicWidget.Class.extend({

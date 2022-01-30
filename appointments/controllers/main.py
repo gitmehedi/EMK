@@ -185,24 +185,41 @@ class WebsiteAppointmentReservation(http.Controller):
             'contacts': contacts
         }
 
+    @http.route(['/appointment/available-date'], type='json', website=True, auth='public', method=['POST'])
+    def get_available_dates(self, **post):
+        contact_id = int(post['contact_id'])
+        contact_slots = request.env['appointment.contact'].sudo().search([('id', '=', contact_id),
+                                                                          ('status', '=', True)])
+        days = list({slot.day.capitalize() for slot in contact_slots.timeslot_ids})
+
+        return {
+            'days': days
+        }
+
     @http.route(['/appointment/available-slot'], type='json', website=True, auth='public', method=['POST'])
     def get_available_slots(self, **post):
-        appointment_date = post['appointment_date']
+        app_obj = request.env['appointment.appointment'].sudo()
         contact_id = int(post['contact_id'])
-        day_name = datetime.strptime(appointment_date, DATE_FORMAT).strftime('%A')
+        appointment_date = post['appointment_date']
 
-        appointment_slots = request.env['appointment.appointment'].sudo().search([('contact_id', '=', contact_id),
-                                                                                  ('appointment_date', '=',
-                                                                                   appointment_date),
-                                                                                  ('state', 'in',
-                                                                                   ['draft', 'confirm', 'done'])])
-        app_slots = [val.timeslot_id.id for val in appointment_slots]
-        contact_slots = request.env['appointment.contact'].sudo().search(
-            [('id', '=', contact_id), ('status', '=', True)])
+        contact_slots = request.env['appointment.contact'].sudo().search([('id', '=', contact_id),
+                                                                          ('status', '=', True)])
+        days = list({slot.day.capitalize() for slot in contact_slots.timeslot_ids})
+
         slots = []
-        for slot in contact_slots.timeslot_ids:
-            if (slot.id not in app_slots) and (day_name.lower() == slot.day):
-                slots.append({'id': slot.id, 'name': slot.name})
+        if appointment_date:
+            day_name = datetime.strptime(appointment_date, DATE_FORMAT).strftime('%A')
+            appointment_slots = app_obj.search([('contact_id', '=', contact_id),
+                                                ('appointment_date', '=', appointment_date),
+                                                ('state', 'in', ['draft', 'confirm', 'done'])])
+
+            app_slots = [val.timeslot_id.id for val in appointment_slots]
+
+            for slot in contact_slots.timeslot_ids:
+                if (slot.id not in app_slots) and (day_name.lower() == slot.day):
+                    slots.append({'id': slot.id, 'name': slot.name})
+
         return {
-            'slots': slots
+            'slots': slots,
+            'days': days
         }

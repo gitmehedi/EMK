@@ -5,7 +5,8 @@
             <field name="name">appointment.contact.tree</field>
             <field name="model">appointment.contact</field>
             <field name="arch" type="xml">
-                <tree string="Appointment Contact" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                <tree string="Appointment Contact" decoration-info="state=='draft'"
+                      decoration-success="state=='approve'"
                       decoration-danger="state=='reject'"
                       decoration-bf="state in ('approve',)">
                     <field name="name"/>
@@ -20,8 +21,8 @@
             <field name="name">appointment.contact.form</field>
             <field name="model">appointment.contact</field>
             <field name="arch" type="xml">
-                <form string="Appointment Contact"  duplicate="0">
-                     <header>
+                <form string="Appointment Contact" duplicate="0">
+                    <header>
                         <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
                         <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
                         <button name="act_reject" string="Reject" states="draft" type="object"/>
@@ -34,7 +35,6 @@
                                 <field name="appointee_id" domain="[('state','=','employment')]"
                                        options="{'no_create': True,'no_open': True}"/>
                                 <field name="description"></field>
-
                             </group>
                         </group>
                         <notebook>

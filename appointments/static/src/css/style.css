@@ -128,3 +128,42 @@ input.reqfield,select.reqfield,textarea.reqfield{
 .margin-left-15 { margin-left: 20px; }
 
 .mar-btm{ margin-bottom: 24px;}
+
+.ui-datepicker .ui-state-default {
+    color: #2B2B2B;
+    background: yellowgreen;
+}
+.ui-datepicker .ui-state-active {
+    background: green;
+    color: white;
+    font-white: bold;
+}
+
+#weekday_days span {
+  border: none;
+  color: black;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+#weekday span {
+  border: none;
+  color: white;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.ui-datepicker td.ui-state-disabled>span {
+    color: #454545;
+    background: #F6F6F6;
+}

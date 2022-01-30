@@ -1,7 +1,7 @@
-from psycopg2 import IntegrityError
-
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from psycopg2 import IntegrityError
+
 
 
 class AppointmentContact(models.Model):
@@ -36,6 +36,11 @@ class AppointmentContact(models.Model):
         if self.name:
             self.name = self.name.strip()
 
+    @api.onchange("appointee_id")
+    def onchange_appointee(self):
+        if self.appointee_id:
+            self.name = '[%s] %s ' % (self.appointee_id.department_id.name, self.appointee_id.name)
+
     @api.constrains('appointee_id')
     def _check_appointee(self):
         appointee = self.search_count([('appointee_id', '=', self.appointee_id.id)])
@@ -44,7 +49,7 @@ class AppointmentContact(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ('draft','approve','reject'))]
+        return [('state', 'in', ('draft', 'approve', 'reject'))]
 
     @api.one
     def act_draft(self):
@@ -93,8 +98,5 @@ class AppointmentEmp(models.Model):
     def name_get(self):
         name = self.name
         if self.employee_number:
-            name = '[%s] %s-%s-%s' % (self.employee_number, self.name, self.department_id.name, self.job_id.name)
+            name = '[%s] %s (%s)' % (self.employee_number, self.name, self.department_id.name)
         return self.id, name
-
-
-
