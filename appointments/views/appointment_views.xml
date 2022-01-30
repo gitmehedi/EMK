@@ -5,9 +5,9 @@
             <field name="name">appointment.appointment.tree</field>
             <field name="model">appointment.appointment</field>
             <field name="arch" type="xml">
-                <tree string="Appointment" decoration-info="state == 'draft'"
+                <tree string="Appointment" decoration-info="state == 'draft'" decoration-danger="state=='reject'"
                       decoration-bf="state in ('draft','confirm')"
-                      colors="gray:state=='done';green:state=='confirm';red:state=='reject';">
+                      colors="gray:state=='done';green:state=='confirm';">
                     <field name="name"/>
                     <field name="first_name"/>
                     <field name="last_name"/>
@@ -180,6 +180,14 @@
             <field name="domain">[('state','=','reject')]</field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_appointment_temp">
+            <field name="name">Appointment</field>
+            <field name="res_model">appointment.appointment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+
+        </record>
+
         <record id="action_appointment_appointment_calender" model="ir.actions.act_window">
             <field name="name">Appointment Calendar</field>
             <field name="type">ir.actions.act_window</field>
@@ -209,7 +217,7 @@
                   sequence="50"
                   groups="appointment_user.group_appoint_user"  parent="appointment_menu.sub_appoint_menu"/>
 
-        <menuitem id="menu_appointment_temporary" name="Appointments Schedule" action="action_appointment_appointment"
+        <menuitem id="menu_appointment_temporary" name="Appointments Schedule" action="action_appointment_temp"
                   groups="appointment_user.group_appoint_temp_user"
                   parent="appointment_menu.main_appoint_menu" sequence="55"/>
     </data>
