@@ -58,7 +58,7 @@ class Utility:
 
     @staticmethod
     def valid_email(email):
-        if not re.match('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email.rstrip()):
+        if not re.match('^[^\s@]+@[^\s@]+\.[^\s@]+$', email.rstrip()):
             return False
         return True
 
