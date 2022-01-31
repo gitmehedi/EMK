@@ -12,6 +12,8 @@
         'purchase_landed_cost'
     ],
     'data': [
+        'data/landed_cost_sequence.xml',
+        'views/purchase_cost_distribution_view.xml',
         'views/purchase_expense_type_view.xml'
     ],
     'installable': True,
