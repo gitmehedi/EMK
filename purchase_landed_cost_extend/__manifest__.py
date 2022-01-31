@@ -12,6 +12,7 @@
         'purchase_landed_cost'
     ],
     'data': [
+        'views/purchase_expense_type_view.xml'
     ],
     'installable': True,
     'application': False
