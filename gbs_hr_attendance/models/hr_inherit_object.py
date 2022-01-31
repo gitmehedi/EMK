@@ -3,6 +3,8 @@ from openerp import api
 from odoo import exceptions, _
 from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.exceptions import UserError, ValidationError
+from odoo.addons.opa_utility.helper.utility import Utility
 
 
 class HrAttendance(models.Model):
@@ -64,11 +66,34 @@ class HrEmployee(models.Model):
     _inherit = ['hr.employee']
 
     device_employee_acc = fields.Integer(string='AC No.', required=True)
-    is_monitor_attendance=fields.Boolean(string='Monitor Attendance',default=True)
+    is_monitor_attendance = fields.Boolean(string='Monitor Attendance',default=True)
     is_executive = fields.Boolean(string='Executive',default=False)
 
     _sql_constraints = [
         ('device_employee_acc_uniq', 'unique(device_employee_acc, operating_unit_id)',
          'The Account Number must be unique per Unit!'),
     ]
+    # print(isinstance(my_variable, int)) if not Utility.valid_number(self.device_employee_acc):
+
+    @api.onchange('device_employee_acc')
+    def _check_number(self):
+        if self.device_employee_acc:
+            print(self.device_employee_acc)
+            if not isinstance(self.device_employee_acc, int):
+                raise ValidationError('AC no should be input a valid')
+
+    @api.one
+    @api.constrains('device_employee_acc')
+    def _valid_device_ac(self):
+        if self.device_employee_acc:
+            if len(str(abs(self.device_employee_acc))) > 4:
+                raise ValidationError(_('AC no of digits must not exceed 4'))
+
+
+    @api.one
+    @api.constrains('device_employee_acc')
+    def _check_duplicate_device_acc(self):
+        device_acc = self.search_count([('device_employee_acc', '=', self.device_employee_acc)])
+        if device_acc > 1:
+            raise ValidationError(_('[DUPLICATE] AC no already exist, choose another.'))
 

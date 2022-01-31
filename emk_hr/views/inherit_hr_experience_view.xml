@@ -11,9 +11,8 @@
                 <xpath expr="//field[@name='start_date']" position="before">
                     <field name="passed_date"></field>
                 </xpath>
-                <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="string">Institution</attribute>
-                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="passed_institute"></field>
                 </xpath>
             </field>
         </record>
@@ -26,9 +25,9 @@
                 <xpath expr="//field[@name='start_date']" position="before">
                     <field name="passed_date"></field>
                 </xpath>
-                <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="string">Employer</attribute>
-                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="employer_name"></field>
+<!--                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>-->
                 </xpath>
             </field>
         </record>
@@ -41,8 +40,8 @@
                 <xpath expr="//field[@name='start_date']" position="before">
                     <field name="passed_date"></field>
                 </xpath>
-                <xpath expr="//field[@name='partner_id']" position="attributes">
-                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="issued_by"></field>
                 </xpath>
             </field>
         </record>

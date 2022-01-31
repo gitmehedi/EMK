@@ -68,3 +68,10 @@ class Utility:
         if not pattern.match(phone):
             return False
         return True
+
+    @staticmethod
+    def valid_number(number):
+        pattern = re.compile('^[0-9]$')
+        if not pattern.match(number):
+            return False
+        return True
