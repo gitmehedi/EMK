@@ -1,0 +1,2 @@
+import hr_other_allowance_import_wizard
+import success_wizard

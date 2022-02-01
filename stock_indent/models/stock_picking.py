@@ -28,3 +28,17 @@ class StockPicking(models.Model):
                     indent_ids.write({'state': 'received'})
 
         return res
+
+    @api.multi
+    def _create_backorder(self, backorder_moves=[]):
+        res = super(StockPicking, self)._create_backorder(backorder_moves)
+
+        # res: list of backorder pickings
+        # unreserved the reserve qty of backorder pickings
+        for backorder_picking in res.filtered(
+                lambda x: x.picking_type_id.code == 'internal' and x.origin.find('Indent-') != -1):
+            if backorder_picking.quant_reserved_exist and (
+                    backorder_picking.state in ['draft', 'partially_available', 'assigned']):
+                backorder_picking.do_unreserve()
+
+        return res

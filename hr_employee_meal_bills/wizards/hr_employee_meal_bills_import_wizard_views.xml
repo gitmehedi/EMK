@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+        <record id="hr_employee_meal_bills_import_view_form" model="ir.ui.view">
+            <field name="name">hr.employee.meal.bills.import.wizard.form</field>
+            <field name="model">hr.employee.meal.bills.import.wizard</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Import File">
+                    <group>
+                        <group>
+                            <field name="file" filename="fname"/>
+                            <field name="fname" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                            <field name="operating_unit_id"/>
+                            <field name="company_id"/>
+                            <field name="meal_bill_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="meal_bills_import" string="Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <div style="float:right;">
+                            <strong>Download Sample:</strong>
+                            <a role="button" href="/hr_employee_meal_bills/static/download/meal-bill-template.xls"
+                               class="btn-primary"
+                               style="font-size: 12px;line-height: 1.5;border-radius: 3px;padding: 8px 10px;color: #FFFFFF;">
+                                <i class="fa fa-download"/>
+                                Excel file
+                            </a>
+                        </div>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_employee_meal_bills_import_wizard_action_view" model="ir.actions.act_window">
+            <field name="name">Meal Bills Import</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.employee.meal.bills.import.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

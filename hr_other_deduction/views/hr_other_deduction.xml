@@ -17,6 +17,10 @@
                         <button name="action_draft" type="object"
                                 string="Reset to Draft" groups="hr.group_hr_manager"
                                 states="applied,approved"/>
+                        <button name="hr_other_deduction.hr_other_deduction_import_wizard_action_view"
+                                type="action" string="Upload Excel"
+                                attrs="{'invisible': [('state','!=','draft')]}"
+                                class="btn-info"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

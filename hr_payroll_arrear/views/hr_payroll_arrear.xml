@@ -17,6 +17,12 @@
                         <button name="action_draft" type="object"
                                 string="Reset to Draft" groups="hr.group_hr_manager"
                                 states="applied,approved"/>
+
+	                    <button name="hr_payroll_arrear.hr_payroll_arrear_import_wizard_action_view"
+                                type="action" string="Upload Excel"
+                                attrs="{'invisible': [('state','!=','draft')]}"
+                                class="btn-info"/>
+
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

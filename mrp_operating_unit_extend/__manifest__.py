@@ -12,6 +12,7 @@
     ],
     "data": [
         "data/mrp_data.xml",
+        "views/inherited_mrp_production_views.xml",
         "views/inherited_mrp_unbuild_views.xml"
     ],
     "summary": "Generate Manufacturing Orders name with operating unit",

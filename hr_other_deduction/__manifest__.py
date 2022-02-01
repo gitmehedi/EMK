@@ -7,10 +7,13 @@
     'depends': ['hr',
                 'hr_payroll',
                 'l10n_in_hr_payroll',
-                'gbs_hr_security'],
+                'gbs_hr_security',
+                'gbs_read_excel_utility'],
     'data': [
         'security/ir.model.access.csv',
         'views/hr_other_deduction.xml',
+        'wizards/hr_other_deduction_import_wizard_views.xml',
+        'wizards/success_wizard.xml'
     ],
 
     'summary': 'Calculates HR Other Deduction Information',

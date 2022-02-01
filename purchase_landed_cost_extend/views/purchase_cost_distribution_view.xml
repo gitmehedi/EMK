@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="purchase_cost_distribution_form" model="ir.ui.view">
+            <field name="name">purchase.cost.distribution.form.inherit.extend</field>
+            <field name="model">purchase.cost.distribution</field>
+            <field name="inherit_id" ref="purchase_landed_cost.purchase_cost_distribution_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="duplicate">0</attribute>
+                </xpath>
+                <xpath expr="//div[@class='oe_title']" position="replace">
+                    <h1>
+                        <field name="name" class="oe_inline" readonly="1"/>
+                    </h1>
+                </xpath>
+                <xpath expr="//button[@name='action_calculate'][2]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='cost_update_type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='cost_update_type']" position="after">
+                    <field name="operating_unit_id" options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                </xpath>
+                <xpath expr="//field[@name='cost_lines']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='expense_lines']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='%(purchase_landed_cost.action_import_invoice_line_wizard)d']" position="attributes">
+                    <attribute name="class">oe_highlight</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="purchase_landed_cost.action_purchase_cost_distribution" model="ir.actions.act_window">
+            <field name="name">Landed Costs</field>
+        </record>
+
+        <menuitem id="purchase_landed_cost.menu_purchase_cost_control"
+              name="Landed Costs"
+              parent="purchase.menu_purchase_root"/>
+
+        <menuitem id="purchase_landed_cost.menu_purchase_cost_distribution"
+                name="Landed Costs"
+                parent="purchase_landed_cost.menu_purchase_cost_control"
+        />
+
+    </data>
+</odoo>

@@ -20,6 +20,11 @@
                         <button name="action_draft" type="object"
                                 string="Reset to draft" states="applied,approved" groups="hr.group_hr_manager"
                         />
+
+	                    <button name="hr_employee_meal_bills.hr_employee_meal_bills_import_wizard_action_view"
+                                type="action" string="Upload Excel"
+                                attrs="{'invisible': [('state','!=','draft')]}"
+                                class="btn-info"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
