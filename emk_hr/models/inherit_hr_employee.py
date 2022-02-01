@@ -1,8 +1,10 @@
+import datetime
+
 from odoo import api, fields, models, _
 from odoo.addons.opa_utility.helper.utility import Utility
 from odoo.exceptions import UserError, ValidationError
 from psycopg2 import IntegrityError
-
+import dateutil.parser
 
 class Employee(models.Model):
 
@@ -15,7 +17,7 @@ class Employee(models.Model):
 
     @api.one
     @api.constrains('work_phone')
-    def valid_mobile(self):
+    def valid_work_phone(self):
         if self.work_phone:
             if not Utility.valid_mobile(self.work_phone):
                 raise ValidationError('Personal mobile no should be input a valid')
@@ -23,8 +25,8 @@ class Employee(models.Model):
     @api.one
     @api.constrains('mobile_phone')
     def valid_mobile(self):
-        if self.work_phone:
-            if not Utility.valid_mobile(self.work_phone):
+        if self.mobile_phone:
+            if not Utility.valid_mobile(self.mobile_phone):
                 raise ValidationError('Work mobile no should be input a valid')
 
     @api.one
@@ -33,6 +35,14 @@ class Employee(models.Model):
         if self.bank_account_number:
             if len(self.bank_account_number) > 17:
                 raise ValidationError('Bank account no should be input a valid')
+
+    @api.one
+    @api.constrains('birthday')
+    def valid_birthdate(self):
+        if self.birthday:
+            birthdate = dateutil.parser.parse(self.birthday).date()
+            if birthdate > datetime.datetime.now().date():
+                raise ValidationError('Birth date should be past date')
 
 
 class HrEmployeeContractType(models.Model):

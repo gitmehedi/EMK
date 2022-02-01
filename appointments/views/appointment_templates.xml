@@ -171,7 +171,7 @@
                                             </div>
 
                                             <div class="form-group form-field">
-                                                <label for="contact_id" class="control-label">Appointee Contacts</label>
+                                                <label for="contact_id" class="control-label">Appointer Contacts</label>
                                                 <select class="form-control input-sm reqfield" name="contact_id"
                                                         id="contact_id" required="required">
                                                     <option value="">--Please Select--</option>
