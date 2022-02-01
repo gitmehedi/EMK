@@ -64,7 +64,7 @@ class WebsiteRegistration(WebsiteEventController):
                         return request.render('event_registration.event_reservation_success')
                     except:
                         return request.render('event_registration.event_reservation_success')
-            except (WebsiteRegistration, AssertionError), e:
+            except (WebsiteRegistration, AssertionError) as e:
                 qctx['error'] = _("Could not create a new account.")
 
         qctx['event_name'] = None if 'event_name' not in qctx else qctx['event_name']

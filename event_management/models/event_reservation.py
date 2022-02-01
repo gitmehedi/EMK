@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import base64, random
+import base64
+import random
 from datetime import datetime, timedelta
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 
 def random_token():
@@ -20,7 +21,7 @@ class EventReservation(models.Model):
     _description = 'Event Reservation'
 
     def get_employee(self):
-        employee = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)])
+        employee = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], order="id desc", limit=1)
         return employee
 
     name = fields.Char(string='ID', readonly=True, states={'draft': [('readonly', False)]})
@@ -399,7 +400,7 @@ class EventReservation(models.Model):
         reserv = self.search([('id', '=', vals['id']), ('reserv_token', '=', vals['token'])])
         if reserv:
             reserv.write(vals)
-            return True
+            return vals
 
         # if token:
         #     # signup with a token: find the corresponding partner id
