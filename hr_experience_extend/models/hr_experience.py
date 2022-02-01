@@ -8,3 +8,4 @@ class HrAcademic(models.Model):
     _inherit = 'hr.academic'
 
     passing_yr = fields.Char('Passing Year')
+

@@ -6,9 +6,15 @@
             <field name="model">hr.payslip</field>
             <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/header/button" position="replace">
-                    <button string="Confirm" name="action_payslip_done_with_loan" type="object" states="draft" class="oe_highlight"/>
+<!--                <xpath expr="/form/header/button" position="replace">-->
+<!--                    <button string="Confirm" name="action_payslip_done_with_loan" type="object" states="draft" class="oe_highlight"/>-->
+<!--                </xpath>-->
+                <xpath expr="//field[@name='payslip_run_id']" position="attributes">
+                        <attribute name="required">True</attribute>
+                        <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
+
+
             </field>
         </record>
     </data>

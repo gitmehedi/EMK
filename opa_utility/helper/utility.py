@@ -79,3 +79,10 @@ class Utility:
             rel_date = datetime.strptime(date, format) + relativedelta(days=duration)
         next_date = rel_date.strftime(format)
         return next_date
+
+    @staticmethod
+    def valid_number(number):
+        pattern = re.compile('^[0-9]$')
+        if not pattern.match(number):
+            return False
+        return True

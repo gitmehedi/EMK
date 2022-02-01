@@ -92,7 +92,7 @@ class EmployeeExitReq(models.Model):
     def exit_confirm(self):
         self.checklists_ids = []
         vals = []
-        confg_checklist_pool = self.env['hr.exit.configure.checklists'].search([('is_active', '=', True)])
+        confg_checklist_pool = self.env['hr.exit.configure.checklists'].search([('active', '=', True)])
         for record in confg_checklist_pool:
             if record.applicable_empname_id or record.applicable_department_id or record.applicable_jobtitle_id:
                 if self.job_id or self.employee_id or self.department_id:
