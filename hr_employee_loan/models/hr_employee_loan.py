@@ -48,7 +48,7 @@ class HrEmployeeLoanRequest(models.Model):
                                states={'draft': [('invisible', False)], 'applied': [('readonly', True)],
                                        'approved': [('readonly', True)], 'disbursed': [('readonly', True)]})
 
-    employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee,
+    employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, domain=[('state', '!=', 'relieved')],
                                   required=True, ondelete='cascade', index=True,
                                   states={'draft': [('invisible', False)], 'applied': [('readonly', True)], 'approved':[('readonly', True)],'disbursed':[('readonly', True)]})
     department_id = fields.Many2one('hr.department', string="Department",ondelete='cascade', related="employee_id.department_id")
