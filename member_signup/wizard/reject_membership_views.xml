@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_reject_membership_wizard_form" model="ir.ui.view">
+        <field name="name">reject.membership.wizard.form</field>
+        <field name="model">reject.membership.wizard</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Expiration Lists">
+                <group>
+                    <label id="reason" string="Rejection Reason"/>
+                    <div>
+                        <field name="reason"/>
+                    </div>
+                </group>
+                <footer>
+                    <button string='Confirm' name="reject_membership" type='object' class="oe_highlight"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_reject_membership" model="ir.actions.act_window">
+        <field name="name">Reject Membership</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">reject.membership.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

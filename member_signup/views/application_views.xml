@@ -29,7 +29,7 @@
                 <header>
                     <button string="Approve" type="object" name="member_invoiced" class="btn btn-sm oe_highlight"
                             states="application" groups="member_user.group_mem_user_officer"/>
-                    <button string="Reject" type="object" name="member_reject" class="btn btn-sm"
+                    <button string="Reject" type="action" name="%(action_reject_membership)d" class="btn btn-sm"
                             states="application" groups="member_user.group_mem_user_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="application,invoice,member"/>
                 </header>

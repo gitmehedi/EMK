@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
@@ -22,7 +20,7 @@ class SetMembershipWizard(models.TransientModel):
                 vals = {
                     'template': 'member_signup.member_approval_email_template',
                     'email_to': seq.email,
-                    'context': {'name': seq.name},
+                    'context': {'name': seq.name, 'membership_id': self.membership_seq},
                 }
                 seq.mailsend(vals)
 

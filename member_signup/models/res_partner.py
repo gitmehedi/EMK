@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import random, werkzeug, logging, re
+import logging
+import random
+import werkzeug
 from datetime import datetime, timedelta
-from urlparse import urljoin
 
-from odoo.exceptions import UserError, ValidationError, Warning
 from odoo import api, fields, models, _
-from smtplib import SMTP, SMTPException, SMTPAuthenticationError
-
 from odoo.addons.opa_utility.helper.utility import Utility as utility
+from odoo.exceptions import UserError
+from urlparse import urljoin
 
 _logger = logging.getLogger(__name__)
 
@@ -74,6 +74,7 @@ class ResPartner(models.Model):
                                             track_visibility="onchange")
     highest_certification_other = fields.Char(string='Highest Certification Achieved Others',
                                               track_visibility="onchange")
+    rejection_reason = fields.Text(string="Rejection Reason", track_visibility="onchange")
 
     membership_status = fields.Selection(
         [('active', 'Active'), ('inactive', 'In-Active'), ('restricted', 'Restricted')], string='Membership Status')
