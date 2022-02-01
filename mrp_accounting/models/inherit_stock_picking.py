@@ -44,6 +44,7 @@ class Picking(models.Model):
         raw_cogs_account_missing_product_names = set()
         packing_cogs_account_missing_product_names = set()
         cost_center_missing_product_names = set()
+        standard_price_missing_product_names = set()
 
         for pack_operation_product in self.pack_operation_product_ids:
             if pack_operation_product.product_id.product_tmpl_id.categ_id.property_cost_method != 'average':
@@ -66,6 +67,10 @@ class Picking(models.Model):
                 is_valid = False
                 cost_center_missing_product_names.add(str(pack_operation_product.product_id.product_tmpl_id.name))
 
+            if pack_operation_product.product_id.standard_price <= 0:
+                is_valid = False
+                standard_price_missing_product_names.add(str(pack_operation_product.product_id.product_tmpl_id.name))
+
         if costing_method_missing_categ_names:
             message += _('- Costing Method must be "Average Price" for the mentioned Product category(s). '
                          'Which are %s.\n') % str(tuple(costing_method_missing_categ_names))
@@ -81,6 +86,9 @@ class Picking(models.Model):
         if cost_center_missing_product_names:
             message += _('- Cost Center is missing for the mentioned Product(s). '
                          'Which are %s.\n') % str(tuple(cost_center_missing_product_names))
+        if standard_price_missing_product_names:
+            message += _('- Cost Per Unit for %s is missing for the mentioned Product(s). '
+                         'Which are %s.\n') % (self.operating_unit_id.name, str(tuple(standard_price_missing_product_names)))
 
         if not is_valid:
             raise ValidationError(message)
