@@ -96,15 +96,24 @@ class HrEmployeeLoanRequest(models.Model):
     @api.multi
     def action_draft(self):
         for loan in self:
-            loan.state = 'applied'
-            loan.applied_date = datetime.datetime.now()
-            loan.name = self.env['ir.sequence'].get('emp_code_id')
+            for loan in self:
+                policy_total = 0.0
+                for policy_line in self.employee_loan_policy_ids:
+                    policy_total += policy_line.value
+
+            if loan.principal_amount > policy_total:
+                raise ValidationError(_('[Warning] Principal amount can not exceed than policy amount'))
+            else:
+                loan.state = 'applied'
+                loan.applied_date = datetime.datetime.now()
+                loan.name = self.env['ir.sequence'].get('emp_code_id')
 
     @api.multi
     def action_done(self):
         for loan in self:
             loan.state = 'approved'
             loan.approved_date = datetime.datetime.now()
+
 
     @api.multi
     def generate_schedules(self):
