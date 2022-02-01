@@ -6,8 +6,8 @@ from odoo.exceptions import UserError, ValidationError
 from psycopg2 import IntegrityError
 import dateutil.parser
 
-class Employee(models.Model):
 
+class Employee(models.Model):
     _inherit = "hr.employee"
 
     tax_zone = fields.Char('Tax Zone')
@@ -43,6 +43,12 @@ class Employee(models.Model):
             birthdate = dateutil.parser.parse(self.birthday).date()
             if birthdate > datetime.datetime.now().date():
                 raise ValidationError('Birth date should be past date')
+
+    @api.onchange('user_id')
+    def _onchange_user(self):
+        self.work_email = self.work_email
+        self.name = self.name
+        self.image = self.image
 
 
 class HrEmployeeContractType(models.Model):
@@ -107,4 +113,3 @@ class HrEmployeeContractType(models.Model):
             except IntegrityError:
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
-
