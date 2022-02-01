@@ -42,7 +42,23 @@ class Employee(models.Model):
         if self.birthday:
             birthdate = dateutil.parser.parse(self.birthday).date()
             if birthdate > datetime.datetime.now().date():
-                raise ValidationError('Birth date should be past date')
+                raise ValidationError(_('[Warning] Employee date of birth should be past date'))
+
+    @api.one
+    @api.constrains('fam_father_date_of_birth')
+    def valid_father_birthdate(self):
+        if self.fam_father_date_of_birth:
+            birthdate = dateutil.parser.parse(self.fam_father_date_of_birth).date()
+            if birthdate > datetime.datetime.now().date():
+                raise ValidationError(_('[Warning] Father date of birth should be past date'))
+
+    @api.one
+    @api.constrains('fam_mother_date_of_birth')
+    def valid_mother_birthdate(self):
+        if self.fam_mother_date_of_birth:
+            birthdate = dateutil.parser.parse(self.fam_mother_date_of_birth).date()
+            if birthdate > datetime.datetime.now().date():
+                raise ValidationError(_('[Warning] Mother date of birth should be past date'))
 
     @api.onchange('user_id')
     def _onchange_user(self):
@@ -113,3 +129,15 @@ class HrEmployeeContractType(models.Model):
             except IntegrityError:
                 raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
                                         "- deletion: you may be trying to delete a record while other records still reference it"))
+
+
+class HrEmployeeChildren(models.Model):
+    _inherit = 'hr.employee.children'
+
+    @api.one
+    @api.constrains('date_of_birth')
+    def valid_birthdate(self):
+        if self.date_of_birth:
+            birthdate = dateutil.parser.parse(self.date_of_birth).date()
+            if birthdate > datetime.datetime.now().date():
+                raise ValidationError(_('[Warning] Children date of birth should be past date'))
