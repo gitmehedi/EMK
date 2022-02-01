@@ -25,17 +25,19 @@
             <xpath expr="//form/header" position="after">
                 <field name="state" invisible="True"/>
                 <field name="company_id"/>
-                <div class="alert alert-info" role="alert" style="margin-bottom:0px; text-align:center;"
-                     attrs="{'invisible': ['|',('membership_days_remaining','&gt;',30),('membership_days_remaining','=',0)]}">
-                    Current membership will expire soon, see
-                    <strong style="color: red;">Membership</strong>
-                    tab.
-                    <br/>
-                    Please request for renew membership or active auto-renew feature.
-                </div>
-                <div class="alert alert-danger" role="alert" style="margin-bottom:0px; text-align:center;"
-                     attrs="{'invisible': [('membership_days_remaining','!=',0),('state','=','member')]}">
-                    <strong style="color: red;">Membership Expired</strong>
+                <div attrs="{'invisible': [('state','!=','member'),('free_member','=',False)]}">
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px; text-align:center;"
+                         attrs="{'invisible': ['|',('membership_days_remaining','&gt;',30),('membership_days_remaining','=',0)]}">
+                        Current membership will expire soon, see
+                        <strong style="color: red;">Membership</strong>
+                        tab.
+                        <br/>
+                        Please request for renew membership or active auto-renew feature.
+                    </div>
+                    <div class="alert alert-danger" role="alert" style="margin-bottom:0px; text-align:center;"
+                         attrs="{'invisible': [('membership_days_remaining','&gt;',0)]}">
+                        <strong style="color: red;">Membership Expired</strong>
+                    </div>
                 </div>
             </xpath>
             <xpath expr="//form/sheet/div/button[@name='toggle_active']" position="before">

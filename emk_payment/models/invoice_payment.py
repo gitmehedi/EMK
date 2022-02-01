@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError
 
 
 class MemberPayment(models.Model):
@@ -56,8 +56,11 @@ class MemberPayment(models.Model):
         users = []
         self.payment_partner_id = None
         if self.invoice_type == 'membership_payment':
-            applicant = self.env['res.partner'].search([('is_applicant', '=', True), ('state', '=', 'invoice')])
-            users = applicant.ids
+            inv = self.env['account.invoice'].search([('state', '=', 'open'),
+                                                      ('residual', '>', 0)])
+            member_inv = [val.partner_id.id for val in inv]
+            members = self.env['res.partner'].search([('is_applicant', '=', True), ('id', 'in', member_inv)])
+            users = members.ids
         if self.invoice_type == 'event_payment':
             payment_users = self.env['account.invoice'].search(
                 [('state', '=', 'open'), ('partner_id.is_poc', '=', True)])
@@ -72,8 +75,10 @@ class MemberPayment(models.Model):
     def onchange_partner(self):
         if self.payment_partner_id:
             res = {}
-            invoice = self.env['account.invoice'].search(
-                [('state', '=', 'open'), ('partner_id', '=', self.payment_partner_id.id)])
+            self.invoice_id = None
+            invoice = self.env['account.invoice'].search([('state', '=', 'open'),
+                                                          ('partner_id', '=', self.payment_partner_id.id),
+                                                          ('residual', '>', 0)])
             res['domain'] = {
                 'invoice_id': [('id', 'in', invoice.ids)],
             }
@@ -151,7 +156,8 @@ class MemberPayment(models.Model):
                                       'membership_state': membership_state
                                       })
                         for inv_line in invoice.invoice_line_ids:
-                            mem_inv = self.env['membership.membership_line'].search([('account_invoice_line', '=', inv_line.id)])
+                            mem_inv = self.env['membership.membership_line'].search(
+                                [('account_invoice_line', '=', inv_line.id)])
                             if len(mem_inv) > 0:
                                 mem_inv.write({
                                     'date': self.date,
@@ -176,6 +182,30 @@ class MemberPayment(models.Model):
                             renew_req.write({'state': 'done'})
                         else:
                             self.env['rfid.generation'].create({'membership_id': member.id})
+                        self.env['res.partner'].mailsend(vals)
+
+                    if rec.state == 'open' and member.state == 'member':
+                        renew_obj = self.env['renew.request'].search([('invoice_id', '=', invoice.id)])
+
+                        for inv_line in invoice.invoice_line_ids:
+                            mem_inv = self.env['membership.membership_line'].search(
+                                [('account_invoice_line', '=', inv_line.id)])
+                            if len(mem_inv) > 0 and renew_obj:
+                                mem_inv.write({
+                                    'date': self.date,
+                                    'date_from': renew_obj.membership_state_date,
+                                    'date_to': renew_obj.membership_end_date
+                                })
+
+                        if renew_obj:
+                            renew_obj.write({'state': 'done'})
+
+                        vals = {
+                            'template': 'emk_payment.member_payment_confirmation_tmpl',
+                            'email_to': member.email,
+                            'context': {'name': member.name},
+                        }
+
                         self.env['res.partner'].mailsend(vals)
 
             if rem_amount > 0:

@@ -17,22 +17,24 @@
                 <sheet>
                     <label for="membership_id"/>
                     <h1>
-                        <field name="membership_id"
-                               options="{'no_create':True,'no_create_edit':True,}"/>
+                        <field name="membership_id" options="{'no_create':True,'no_create_edit':True}"/>
                     </h1>
-                    <group string="Membership Duration">
-                        <group>
+                    <group>
+                        <group string="Membership Duration">
+                            <field name="membership_type_id"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="membership_duration"/>
                             <field name="membership_state_date"/>
                             <field name="membership_end_date"/>
                         </group>
-                        <group>
-                            <field name="payment_ids" widget="many2many_tags"/>
-                            <field name="payment_amount"/>
+                        <group string="Payment Information">
                             <field name="renew_amount"/>
                             <field name="request_date"/>
-                            <field name="approve_date" states="invoice"/>
                             <field name="invoice_id" states="invoice"
                                    options="{'no_create':True,'no_create_edit':True}"/>
+                            <field name="payment_ids" widget="many2many_tags" states="done"/>
+                            <field name="payment_amount" states="done"/>
+                            <field name="approve_date" states="done"/>
                         </group>
                     </group>
                 </sheet>

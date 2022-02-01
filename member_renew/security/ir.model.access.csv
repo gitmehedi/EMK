@@ -4,3 +4,14 @@ acc_renew_request_app,renew_request_app,model_renew_request,member_user.group_us
 acc_renew_request_off,renew_request_off,model_renew_request,member_user.group_mem_user_officer,1,1,1,1
 acc_renew_request_mang,renew_request_mang,model_renew_request,membership_extension.group_membership_manager,1,1,1,1
 
+acc_renew_pp_app,acc_renew_pp_app,product.model_product_product,member_user.group_user_member,1,0,0,0
+acc_renew_pp_off,acc_renew_pp_off,product.model_product_product,member_user.group_mem_user_officer,1,1,1,0
+acc_renew_pp_mang,acc_renew_pp_mang,product.model_product_product,membership_extension.group_membership_manager,1,1,1,1
+
+acc_renew_pt_app,acc_renew_pt_app,product.model_product_template,member_user.group_user_member,1,0,0,0
+acc_renew_pt_off,acc_renew_pt_off,product.model_product_template,member_user.group_mem_user_officer,1,1,1,0
+acc_renew_pt_mang,acc_renew_pt_mang,product.model_product_template,membership_extension.group_membership_manager,1,1,1,1
+
+acc_acc_pay_app,acc_acc_pay_app,account.model_account_payment,member_user.group_user_member,1,0,0,0
+acc_acc_pay_off,acc_acc_pay_off,account.model_account_payment,member_user.group_mem_user_officer,1,1,1,0
+acc_acc_pay_mang,acc_acc_pay_mang,account.model_account_payment,membership_extension.group_membership_manager,1,1,1,1

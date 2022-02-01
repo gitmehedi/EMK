@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import random
 import re
-import random, string
-
+import string
 from datetime import datetime, timedelta
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError, Warning
+
+from dateutil.relativedelta import relativedelta
+from odoo import fields, _
+from odoo.exceptions import ValidationError
 
 DATE_PFORMAT = "%d/%m/%Y"
 DATE_MFORMAT = "%Y-%m-%d"
@@ -68,3 +70,12 @@ class Utility:
         if not pattern.match(phone):
             return False
         return True
+
+    @staticmethod
+    def next_date(date, duration, time='years', format='%Y-%m-%d'):
+        if time=='years':
+            rel_date = datetime.strptime(date, format) + relativedelta(years=duration)
+        elif time=='days':
+            rel_date = datetime.strptime(date, format) + relativedelta(days=duration)
+        next_date = rel_date.strftime(format)
+        return next_date
