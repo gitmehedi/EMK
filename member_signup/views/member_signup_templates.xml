@@ -83,7 +83,7 @@
                         <div class="form-group form-field">
                             <label for="phone" class="control-label">Phone</label>
                             <input type="text" name="phone" t-att-value="phone" id="phone"
-                                   placeholder="01900000000"  minlength="13" maxlength="13" pattern="(880)([0-9]{10})"
+                                   placeholder="8801900000000"  minlength="13" maxlength="13" pattern="(880)([0-9]{10})"
                                    class="form-control input-sm reqfield number"
                                    data-minlength="13" data-maxlength="13" required="required"/>
                         </div>
@@ -342,7 +342,7 @@
                         <div class="form-group form-field">
                             <label for="work_phone" class="control-label">Work Phone</label>
                             <input type="text" name="work_phone" t-att-value="work_phone" id="work_phone"
-                                   placeholder="01900000000"
+                                   placeholder="8801900000000"
                                    class="form-control input-sm number" data-minlength="11" data-maxlength="14"/>
                         </div>
                     </div>

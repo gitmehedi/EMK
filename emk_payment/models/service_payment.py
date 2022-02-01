@@ -69,7 +69,7 @@ class ServicePayment(models.Model):
         self.check_type = self.payment_type_id.service_type
         if self.payment_type_id.service_type == 'card':
             member = self.env['member.card.replacement'].search([('state', '=', 'approve')])
-            ids = [rec.authority_id.id for rec in member]
+            ids = [rec.membership_id.id for rec in member]
             res['domain'] = {
                 'authority_id': [('id', 'in', ids)],
             }

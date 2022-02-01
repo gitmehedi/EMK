@@ -19,9 +19,6 @@
             <xpath expr="//page[@name='sales_purchases']" position="attributes">
                 <attribute name="attrs">{'invisible':True}</attribute>
             </xpath>
-            <xpath expr="//field[@name='email']" position="attributes">
-                <attribute name="attrs">{'readonly':True}</attribute>
-            </xpath>
             <xpath expr="//form/header" position="after">
                 <field name="state" invisible="True"/>
                 <field name="company_id"/>
@@ -56,6 +53,7 @@
             </xpath>
             <xpath expr="//field[@name='firstname']" position="attributes">
                 <attribute name="required">True</attribute>
+                <attribute name="style">text-transform: uppercase;</attribute>
             </xpath>
 
             <xpath expr="//field[@name='name']" position="before">
@@ -65,6 +63,10 @@
             </xpath>
             <xpath expr="//field[@name='lastname']" position="attributes">
                 <attribute name="required">True</attribute>
+                <attribute name="style">text-transform: uppercase;</attribute>
+            </xpath>
+            <xpath expr="//field[@name='middlename']" position="attributes">
+                <attribute name="style">text-transform: uppercase;</attribute>
             </xpath>
             <xpath expr="//field[@name='function']" position="attributes">
                 <attribute name="invisible">True</attribute>
