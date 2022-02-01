@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError
 
 
 class ServicePayment(models.Model):
@@ -143,6 +143,10 @@ class ServicePayment(models.Model):
                     'payment_id': payment.id,
                     'name': seq
                 })
+                card = self.env['member.card.replacement'].search(
+                    [('membership_id', '=', self.authority_id.id), ('state', '=', 'approve')])
+                if card:
+                    card.write({'state': 'paid'})
 
     @api.multi
     def print_receipt(self):
