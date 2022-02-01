@@ -7,14 +7,14 @@
             <field name="name">view.item.transfer.send.tree</field>
             <field name="model">item.loan.lending</field>
             <field name="arch" type="xml">
-                <tree string="Send Item">
+                <tree string="Send Item" default_order="request_date desc" ecoration-bf="message_needaction == True"
+                      colors="gray:state=='approved';green:state=='waiting_approval';red:state=='reject';">
                     <field name="name"/>
                     <field name="issuer_id"/>
                     <field name="request_date"/>
-                    <field name="company_id"/>
                     <field name="operating_unit_id"/>
-                    <field name="location_id"/>
-                    <field name="is_transfer"/>
+                    <field name="receiving_operating_unit_id"/>
+                    <field name="is_transfer" invisible="1"/>
                     <field name="state"/>
                     <field name="message_needaction" invisible="1"/>
                 </tree>
@@ -50,25 +50,28 @@
                                     attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
                             <field name="picking_id" invisible="1"/>
                         </div>
-                        <group col="2">
+                        <group>
                             <group>
-                                <field name="is_transfer"/>
+                                <field name="is_transfer" invisible="1"/>
                                 <field name="issuer_id"/>
-                                <field name="request_date"/>
+                                <field name="request_date" readonly="0"/>
+
+
                                 <field name="borrower_id" invisible="1"/>
                             </group>
                             <group>
-                                <field name="company_id" groups="base.group_multi_company"
-                                       options="{'no_create': True,'no_open':True}"/>
-                                <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
+                                <field name="operating_unit_id" string='Sending Unit'
+                                       options="{'no_create': True,'no_open':True}"
                                        groups="operating_unit.group_multi_operating_unit"/>
-                                <div/>
-                                <field name="receiving_operating_unit_id" options="{'no_create': True,'no_open':True}"
+
+                                <field name="receiving_operating_unit_id" string='Receiver Unit'
+                                       options="{'no_create': True,'no_open':True}"
                                        groups="operating_unit.group_multi_operating_unit"
                                        attrs="{'required': [('is_transfer', '=', True)]}"
                                 />
-                                <field name="approved_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                                <field name="approver_id" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="approved_date" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
+
                             </group>
 
                         </group>
@@ -82,9 +85,9 @@
                                         <field name="qty_available" readonly="1"/>
                                         <field name="product_uom" string="UOM"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
-                                        <field name="given_qty" sum="Total Given Qty" readonly="1"/>
-                                        <field name="received_qty" sum="Total Receive Qty" readonly="1"/>
-                                        <field name="due_qty" sum="Total Due" readonly="1"/>
+                                        <field name="given_qty" sum="Total Given Qty" invisible="1" readonly="1"/>
+                                        <field name="received_qty" sum="Total Receive Qty" invisible="1" readonly="1"/>
+                                        <field name="due_qty" sum="Total Due" invisible="1" readonly="1"/>
                                         <field name="state" invisible="1"/>
                                     </tree>
                                 </field>
@@ -96,11 +99,15 @@
                             <page string="Others">
                                 <group>
                                     <group>
-                                        <field name="location_id" options="{'no_create': True,'no_open':True}"/>
-                                        <field name="picking_type_id"/>
+                                        <field name="location_id" readonly="1"
+                                               options="{'no_create': True,'no_open':True}"/>
+                                        <field name="picking_type_id" invisible="1"/>
                                     </group>
                                     <group>
-                                        <field name="item_loan_location_id"/>
+                                        <field name="item_loan_location_id" readonly="1"/>
+
+                                        <field name="company_id" groups="base.group_multi_company"
+                                               options="{'no_create': True,'no_open':True}"/>
                                     </group>
                                 </group>
                             </page>
@@ -114,6 +121,29 @@
             </field>
         </record>
 
+
+        <record id="view_item_transfer_send_search" model="ir.ui.view">
+            <field name="name">view.item.transfer.send.search</field>
+            <field name="model">item.loan.lending</field>
+            <field name="arch" type="xml">
+                <search string="Send Items">
+                    <field name="name"/>
+                    <field name="issuer_id"/>
+                    <field name="request_date"/>
+                    <field name="operating_unit_id"/>
+                    <field name="receiving_operating_unit_id"/>
+                    <filter string="Draft" domain="[('state', '=', 'draft')]"
+                            name="draft_state"></filter>
+                    <filter string="Waiting Approval" domain="[('state', '=', 'waiting_approval')]"
+                            name="waiting_approval_state"></filter>
+                    <filter string="Approved" domain="[('state', '=', 'approved')]"
+                            name="approved_state"></filter>
+                    <filter string="Reject" domain="[('state', '=', 'reject')]"
+                            name="reject_state"></filter>
+                </search>
+            </field>
+        </record>
+
         <!-- Item Sending Window Action -->
         <record id='action_item_transfer_send' model='ir.actions.act_window'>
             <field name="name">Send Items</field>
@@ -121,7 +151,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('is_transfer', '=', True)]</field>
-            <field name="context">{'default_is_transfer': True}</field>
+            <field name="context">{'default_is_transfer': True, 'search_default_draft_state': 1, 'search_default_waiting_approval_state': 1}</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                     (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('view_item_transfer_send_tree')}),
@@ -132,6 +162,7 @@
                     Click to create a new record for sending items.
                 </p>
             </field>
+            <field name="search_view_id" ref="view_item_transfer_send_search"/>
         </record>
 
 
@@ -147,9 +178,6 @@
         <menuitem action="action_item_transfer_send" name="All Records"
                   parent="send_items_menu" id="send_items_all_records_menu" sequence="1"
                   groups="stock.group_stock_user"/>
-
-
-
 
 
     </data>

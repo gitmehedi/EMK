@@ -11,27 +11,17 @@ class InheritedItemBorrowing(models.Model):
 
     is_transfer = fields.Boolean(string='Is Transfer')
     item_transfer_send_id = fields.Many2one('item.loan.lending', string='Transfer')
+    receive_date = fields.Datetime('Receive Date', track_visibility='onchange')
 
     @api.multi
     def button_confirm_receive(self):
-        # if send stock picking not done state show Validation Error
-        if not self.item_transfer_send_id.picking_id.state == 'done':
-            raise UserError(_('You cannot confirm this because item sender has not completed stock picking operation.'))
-
-        for loan in self:
-            if not loan.item_lines:
-                raise UserError(_('You cannot confirm this without product.'))
-            res = {
-                'state': 'waiting_approval',
-            }
-            requested_date = datetime.strptime(self.request_date, "%Y-%m-%d %H:%M:%S").date()
-
-            new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing.receive', requested_date)
-
-            if new_seq:
-                res['name'] = new_seq
-            loan.write(res)
-            loan.item_lines.write({'state': 'waiting_approval'})
+        return {
+            'name': _('Confirmation'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'confirm.item.receive.wizard',
+            'target': 'new'
+        }
 
     @api.multi
     def button_approve_receive(self):
@@ -78,6 +68,7 @@ class InheritedItemBorrowing(models.Model):
                         'origin': self.name,
                         'name': self.name,
                         'date': self.request_date,
+                        'date_done': self.receive_date,
                         'partner_id': self.partner_id.id or False,
                         'location_id': self.location_id.id,
                         'location_dest_id': self.item_loan_borrow_location_id.id,
@@ -107,3 +98,9 @@ class InheritedItemBorrowing(models.Model):
                 move_obj.create(moves)
 
         return picking_id
+
+    def unlink(self):
+        for indent in self:
+            if indent.is_transfer and indent.state == 'draft':
+                raise ValidationError(_('You cannot delete this !!'))
+        return super(InheritedItemBorrowing, self).unlink()

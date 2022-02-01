@@ -29,9 +29,12 @@ class ItemBorrowing(models.Model):
                                  states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
+    def _get_operating_unit(self):
+        domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
+        return domain
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,readonly=True,
                                         states={'draft': [('readonly', False)]},
-                                        default=lambda self: self.env.user.default_operating_unit_id)
+                                        default=lambda self: self.env.user.default_operating_unit_id, domain=_get_operating_unit)
     description = fields.Text('Description', readonly=True, states={'draft': [('readonly', False)]})
     item_lines = fields.One2many('item.borrowing.line', 'item_borrowing_id', 'Items', readonly=True,
                                  states={'draft': [('readonly', False)]})

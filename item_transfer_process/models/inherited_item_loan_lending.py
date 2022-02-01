@@ -30,7 +30,29 @@ class InheritedItemLoanLending(models.Model):
         return res
 
     is_transfer = fields.Boolean(string='Is Transfer')
-    receiving_operating_unit_id = fields.Many2one('operating.unit', string='Receiving Operating Unit')
+
+    @api.model
+    def create(self, vals):
+        # location_id will be based on operating unit
+        if vals['is_transfer']:
+            operating_unit_obj = self.env['operating.unit'].browse(vals['operating_unit_id'])
+            vals['location_id'] = self.env['stock.location'].search(
+                [('operating_unit_id', '=', operating_unit_obj.id), ('name', '=', 'Stock')], limit=1).id
+
+        return super(InheritedItemLoanLending, self).create(vals)
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        return {'domain': {'receiving_operating_unit_id': [('company_id', '=', self.env.user.company_id.id),
+                                                           ('id', '!=', self.operating_unit_id.id)]}}
+
+    receiving_operating_unit_id = fields.Many2one('operating.unit')
+
+    @api.onchange('receiving_operating_unit_id', 'operating_unit_id')
+    def onchange_receiving_operating_unit_id(self):
+        if self.receiving_operating_unit_id and self.operating_unit_id:
+            if self.receiving_operating_unit_id.id == self.operating_unit_id.id:
+                raise UserError(_('Source and Destination Operating Unit cannot be same!'))
 
     @api.onchange('issuer_id')
     def onchange_issuer_id(self):
@@ -49,10 +71,10 @@ class InheritedItemLoanLending(models.Model):
         picking_obj = self.env['stock.picking']
         picking_id = False
         borrow_picking_id = False
-
         requested_date = datetime.strptime(self.request_date, "%Y-%m-%d %H:%M:%S").date()
         # creating loan borrow object
-        new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing.receive', requested_date)
+        new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing.receive', requested_date,
+                                                           self.receiving_operating_unit_id)
         borrow_name = ''
         if new_seq:
             borrow_name = new_seq
@@ -61,16 +83,18 @@ class InheritedItemLoanLending(models.Model):
             [('operating_unit_id', '=', self.receiving_operating_unit_id.id), ('name', '=', 'Input')],
             limit=1).id
 
-        receiving_picking_type = self.env['stock.picking.type'].search(
+        receiving_picking_type = self.env['stock.picking.type'].suspend_security().search(
             [('default_location_src_id', '=', self.item_loan_location_id.id),
              ('code', '=', 'operating_unit_transfer'),
              ('default_location_dest_id', '=', destination_loc_id),
              ('operating_unit_id', '=', self.receiving_operating_unit_id.id)])
         if not receiving_picking_type:
-            raise UserError(_('Please create "Incoming" picking type for Item Receiving.'))
+            raise UserError(
+                _('Please create "Incoming" picking type for Item Receiving - ' + self.receiving_operating_unit_id.name))
 
         borrow_picking = self.env['item.borrowing'].suspend_security().create({
             'name': borrow_name,
+
             'issuer_id': self.issuer_id.id,
             'is_transfer': self.is_transfer,
             'item_transfer_send_id': self.id,
@@ -98,7 +122,8 @@ class InheritedItemLoanLending(models.Model):
                          ('default_location_dest_id', '=', self.item_loan_location_id.id),
                          ('operating_unit_id', '=', self.operating_unit_id.id)])
                     if not picking_type:
-                        raise UserError(_('Please create "Outgoing" picking type for Item Sending.'))
+                        raise UserError(
+                            ('Please create "Outgoing" picking type for Item Sending - ' + self.operating_unit_id.name))
 
                     res = {
                         'picking_type_id': picking_type.id,
@@ -111,13 +136,13 @@ class InheritedItemLoanLending(models.Model):
                         'origin': self.name,
                         'name': self.name,
                         'date': self.request_date,
+                        'date_done': self.request_date,
                         'partner_id': self.borrower_id.id or False,
                         'location_id': self.location_id.id,
                         'location_dest_id': self.item_loan_location_id.id,
                     }
                     if self.company_id:
                         vals = dict(res, company_id=self.company_id.id)
-
                     picking = picking_obj.create(vals)
                     if picking:
                         picking_id = picking.id
@@ -155,8 +180,6 @@ class InheritedItemLoanLending(models.Model):
                         'state': 'draft'
                     })
 
-
-
         return picking_id
 
     def button_approve_for_sending(self):
@@ -187,14 +210,16 @@ class InheritedItemLoanLending(models.Model):
                  ('default_location_dest_id', '=', self.item_loan_location_id.id),
                  ('operating_unit_id', '=', self.operating_unit_id.id)])
             if not picking_type:
-                raise UserError(_('Please create "Outgoing" picking type for Item Sending.'))
+                raise UserError(
+                    ('Please create "Outgoing" picking type for Item Sending - ' + self.operating_unit_id.name))
 
             res = {
                 'state': 'waiting_approval',
                 'picking_type_id': picking_type.id
             }
             requested_date = datetime.strptime(self.request_date, "%Y-%m-%d %H:%M:%S").date()
-            new_seq = self.env['ir.sequence'].next_by_code_new('item.loan.lending.send', requested_date)
+            new_seq = self.env['ir.sequence'].next_by_code_new('item.loan.lending.send', requested_date,
+                                                               self.operating_unit_id)
             if new_seq:
                 res['name'] = new_seq
             loan.write(res)

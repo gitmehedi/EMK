@@ -18,5 +18,4 @@ class StockUtility(models.TransientModel):
             location_id = self.env['stock.location'].search(
                 [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
                 limit=1).id
-        print(location_id)
         return location_id
