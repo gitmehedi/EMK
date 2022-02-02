@@ -159,6 +159,13 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <record model="ir.actions.act_window" id="hr_employee_loan_disbursed_done_action">
+            <field name="name">Disbursed Loan</field>
+            <field name="res_model">hr.employee.loan</field>
+            <field name="domain">[('state','=', 'disbursed')]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
 
         <menuitem id="loan_request_menu" name="Loan Requests" parent="main_loan_menu"
                   sequence="10" action="hr_employee_loan_applied_action" groups="base.group_user"/>
@@ -166,6 +173,8 @@
                   action="hr_employee_loan_approved_action" groups="hr_employee_loan.group_manager_loan"/>
         <menuitem id="loan_disburse_menu" name="Loans to Disburse" parent="main_loan_menu" sequence="30"
                   action="hr_employee_loan_disbursed_action" groups="hr_employee_loan.group_manager_loan"/>
+        <menuitem id="loan_disbursed_menu" name="Disburse Loans" parent="main_loan_menu" sequence="35"
+                  action="hr_employee_loan_disbursed_done_action" groups="hr_employee_loan.group_manager_loan"/>
 
     </data>
 </odoo>

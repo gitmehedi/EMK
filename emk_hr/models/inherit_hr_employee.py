@@ -66,6 +66,12 @@ class Employee(models.Model):
         self.name = self.name
         self.image = self.image
 
+    @api.one
+    @api.constrains('user_id')
+    def _check_user_id(self):
+        user = self.search([('user_id', '=', self.user_id.id)])
+        if user:
+            raise ValidationError(_('[DUPLICATE] Related user already exist, choose another.'))
 
 class HrEmployeeContractType(models.Model):
     _inherit = ['hr.contract.type']
