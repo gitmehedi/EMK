@@ -8,6 +8,8 @@ class StockUtility(models.TransientModel):
 
     def get_location_id(self, operating_unit_id):
         warehouse_id = self.env['stock.warehouse'].search([('operating_unit_id', '=', operating_unit_id)])
+        for warehouse in warehouse_id:
+            print(warehouse.name)
         if warehouse_id:
             location_id = warehouse_id.wh_main_stock_loc_id.id
             if not location_id:

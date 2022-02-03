@@ -34,10 +34,11 @@ class InheritedItemLoanLending(models.Model):
     @api.model
     def create(self, vals):
         # location_id will be based on operating unit
-        if vals['is_transfer']:
-            operating_unit_obj = self.env['operating.unit'].browse(vals['operating_unit_id'])
-            vals['location_id'] = self.env['stock.location'].search(
-                [('operating_unit_id', '=', operating_unit_obj.id), ('name', '=', 'Stock')], limit=1).id
+        if 'is_transfer' in vals:
+            if vals['is_transfer']:
+                operating_unit_obj = self.env['operating.unit'].browse(vals['operating_unit_id'])
+                vals['location_id'] = self.env['stock.location'].search(
+                    [('operating_unit_id', '=', operating_unit_obj.id), ('name', '=', 'Stock')], limit=1).id
 
         return super(InheritedItemLoanLending, self).create(vals)
 

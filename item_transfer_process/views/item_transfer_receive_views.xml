@@ -144,7 +144,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('is_transfer', '=', True)]</field>
-            <field name="context">{'default_is_transfer': True, 'search_default_draft_state': 1, 'search_default_waiting_approval_state': 1}</field>
+            <field name="context">{'default_is_transfer': True, 'search_default_draft_state': 1,
+                'search_default_waiting_approval_state': 1}
+            </field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                     (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('view_item_transfer_receive_tree')}),
@@ -157,6 +159,20 @@
             </field>
             <field name="search_view_id" ref="view_item_transfer_receive_search"/>
         </record>
+
+
+        <!--Inherit existing loan lending action to add context-->
+        <record id="item_loan_process.action_item_borrowing" model="ir.actions.act_window">
+            <field name="domain">[('is_transfer', '=', False)]</field>
+            <field name="context">{'default_is_transfer': False}</field>
+        </record>
+
+        <record id="item_loan_process.action_pending_item_borrowing" model="ir.actions.act_window">
+            <field name="domain">[('is_transfer', '=', False)]</field>
+            <field name="context">{'default_is_transfer': False}</field>
+        </record>
+
+
         <menuitem name="Receive Items"
                   parent="main_menu_item_transfer" id="receive_items_menu" sequence="2"
                   groups="stock.group_stock_user"/>

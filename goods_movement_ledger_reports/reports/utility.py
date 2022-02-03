@@ -282,11 +282,7 @@ class ProductReportUtility(models.TransientModel):
         # location_main_stock = self.env['stock.location'].search(
         #     [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
         #     limit=1)
-
-        stock_utility = self.env['stock.utility']
-        location_id = stock_utility.get_location_id(operating_unit_id)
-        if not location_id:
-            location_id = self.env['stock.location'].search(
+        location_id = self.env['stock.location'].search(
                 [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
                 limit=1).id
         location_main_stock = self.env['stock.location'].browse(location_id)

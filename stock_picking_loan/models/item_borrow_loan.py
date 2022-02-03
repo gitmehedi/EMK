@@ -59,12 +59,9 @@ class ItemBorrowing(models.Model):
         picking_id = False
         for line in product_list:
             date_planned = datetime.strptime(self.request_date, DEFAULT_SERVER_DATETIME_FORMAT)
-            stock_utility = self.env['stock.utility']
-            location_id = stock_utility.get_location_id(self.operating_unit_id.id)
-            if not location_id:
-                location_id = self.env['stock.location'].search(
-                    [('operating_unit_id', '=', self.operating_unit_id.id), ('name', '=', 'Stock')],
-                    limit=1).id
+            location_id = self.env['stock.location'].search(
+                [('operating_unit_id', '=', self.operating_unit_id.id), ('name', '=', 'Stock')],
+                limit=1).id
             location_dest_id = self.location_id.id
             if line.product_id:
                 if not picking_id:

@@ -106,7 +106,7 @@
                                     <group>
                                         <field name="item_loan_location_id" readonly="1"/>
 
-                                        <field name="company_id" groups="base.group_multi_company"
+                                        <field name="company_id" readonly="1" groups="base.group_multi_company"
                                                options="{'no_create': True,'no_open':True}"/>
                                     </group>
                                 </group>
@@ -151,7 +151,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('is_transfer', '=', True)]</field>
-            <field name="context">{'default_is_transfer': True, 'search_default_draft_state': 1, 'search_default_waiting_approval_state': 1}</field>
+            <field name="context">{'default_is_transfer': True, 'search_default_draft_state': 1,
+                'search_default_waiting_approval_state': 1}
+            </field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                     (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('view_item_transfer_send_tree')}),
@@ -165,6 +167,17 @@
             <field name="search_view_id" ref="view_item_transfer_send_search"/>
         </record>
 
+
+        <!--Inherit existing loan lending action to add context-->
+        <record id="item_loan_process.action_item_loan_lending" model="ir.actions.act_window">
+            <field name="domain">[('is_transfer', '=', False)]</field>
+            <field name="context">{'default_is_transfer': False}</field>
+        </record>
+
+        <record id="item_loan_process.action_pending_item_loan_lending" model="ir.actions.act_window">
+            <field name="domain">[('is_transfer', '=', False)]</field>
+            <field name="context">{'default_is_transfer': False}</field>
+        </record>
 
         <!-- Item Transfer Main Menu -->
 

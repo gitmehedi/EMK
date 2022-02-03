@@ -112,8 +112,6 @@
             <field name="res_model">item.borrowing</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-             <field name="domain">[('is_transfer', '=', False)]</field>
-            <field name="context">{'default_is_transfer': False}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a new Item Borrowing.
@@ -145,10 +143,8 @@
             <field name="res_model">item.borrowing</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('is_transfer', '=', False)]</field>
             <field name="context">{
-                'search_default_approve_manager':1,
-                'default_is_transfer':False
+                'search_default_approve_manager':1
                 }
             </field>
             <field name="help" type="html">

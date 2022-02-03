@@ -25,11 +25,10 @@ class LoanDataUtility(models.TransientModel):
             [('operating_unit_id', '=', operating_unit_id), ('code', '=', 'loan_outgoing'),
              ('default_location_dest_id', '=', customer_location_for_loan_lending.id)], limit=1)
         stock_utility = self.env['stock.utility']
-        location_id = stock_utility.get_location_id(operating_unit_id)
-        if not location_id:
-            location_id = self.env['stock.location'].search(
-                [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
-                limit=1).id
+
+        location_id = self.env['stock.location'].search(
+            [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
+            limit=1).id
         location_main_stock = self.env['stock.location'].browse(location_id)
 
         sql = '''
@@ -104,10 +103,7 @@ class LoanDataUtility(models.TransientModel):
         qc_location_id = self.env['stock.location'].search(
             [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Quality Control')],
             limit=1).id
-        stock_utility = self.env['stock.utility']
-        location_id = stock_utility.get_location_id(operating_unit_id)
-        if not location_id:
-            location_id = self.env['stock.location'].search(
+        location_id = self.env['stock.location'].search(
                 [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
                 limit=1).id
         location_main_stock = self.env['stock.location'].browse(location_id)
@@ -201,17 +197,20 @@ class LoanDataUtility(models.TransientModel):
         input_location_id = self.env['stock.location'].search(
             [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Input')],
             limit=1).id
+        if not input_location_id:
+            input_location_id = 'NULL'
+
         operating_unit_obj = self.env['operating.unit'].browse(operating_unit_id)
         transit_location_id = self.env['stock.location'].search(
             [('company_id', '=', operating_unit_obj.company_id.id), ('usage', '=', 'transit'),
              ('can_operating_unit_transfer', '=', True)], limit=1).id
+
+        if not transit_location_id:
+            transit_location_id = 'NULL'
         qc_location_id = self.env['stock.location'].search(
             [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Quality Control')],
             limit=1).id
-        stock_utility = self.env['stock.utility']
-        location_id = stock_utility.get_location_id(operating_unit_id)
-        if not location_id:
-            location_id = self.env['stock.location'].search(
+        location_id = self.env['stock.location'].search(
                 [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
                 limit=1).id
         location_main_stock = self.env['stock.location'].browse(location_id)
@@ -277,10 +276,10 @@ class LoanDataUtility(models.TransientModel):
         transit_location_id = self.env['stock.location'].search(
             [('company_id', '=', operating_unit_obj.company_id.id), ('usage', '=', 'transit'),
              ('can_operating_unit_transfer', '=', True)], limit=1).id
-        stock_utility = self.env['stock.utility']
-        location_id = stock_utility.get_location_id(operating_unit_id)
-        if not location_id:
-            location_id = self.env['stock.location'].search(
+        if not transit_location_id:
+            transit_location_id = 'NULL'
+
+        location_id = self.env['stock.location'].search(
                 [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
                 limit=1).id
         location_main_stock = self.env['stock.location'].browse(location_id)

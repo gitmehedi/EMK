@@ -266,13 +266,10 @@ class VariantWiseReportXLSX(ReportXlsx):
             if datewise_issue_to_other_unit:
                 for sent_stock in datewise_issue_to_other_unit:
                     if sent_stock['item_send_qty']:
-                        available_stock = available_stock + float(sent_stock['item_send_qty'])
                         sheet.write(row_no, 12, sent_stock['item_send_qty'], normal_format_left)
                     else:
-                        available_stock = available_stock + 0
                         sheet.write(row_no, 12, 0, normal_format_left)
             else:
-                available_stock = available_stock + 0
                 sheet.write(row_no, 12, 0, normal_format_left)
             # datewise_loss_adjustment
             datewise_loss_adjustment = product_report_utility.get_loss_adjustment_issued(start_date, end_date,
