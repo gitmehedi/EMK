@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="website_event_reservation" name="Website Event Reservation" inherit_id="web.assets_common">
+    <template id="website_event_reservation" name="Website Event Reservation" inherit_id="website.assets_frontend">
         <xpath expr="." position="inside">
-            <script type="text/javascript" src="/event_registration/static/src/js/utils.js"></script>
+            <script type="text/javascript" src="/opa_utility/static/src/js/bootstrap.validator.js"></script>
+            <script type="text/javascript" src="/opa_utility/static/src/js/utils.js"></script>
             <script type="text/javascript" src="/event_registration/static/src/js/custom.js"></script>
             <link rel="stylesheet" href="/event_registration/static/src/css/style.css"/>
-
         </xpath>
     </template>
 
@@ -68,7 +68,6 @@
                                                                t-att-value="label_value[0]"
                                                                t-att-checked="'checked' if label_value[0] in facilities_ids else None"/>
                                                         <t t-esc="label_value[1]"/>
-
                                                     </t>
                                                 </div>
                                             </div>
@@ -125,7 +124,7 @@
                                                 <div class="mar-btm">
                                                     <t t-foreach="seats_available_ids" t-as='label'>
                                                         <label class="radio-inline">
-                                                            <input type="radio" name="seats_available"
+                                                            <input type="radio" name="seats_available" class="number"
                                                                    t-att-value="label_value[0]" required="required"
                                                                    t-att-checked="'checked' if label_value[0]==seats_available else None"
                                                             />
@@ -141,7 +140,8 @@
                                                 </label>
                                                 <input type="text" name="attendee_number" t-att-value="attendee_number"
                                                        id="attendee_number" maxlength="10"
-                                                       class="form-control input-sm reqfield" required="required"/>
+                                                       class="form-control input-sm reqfield number"
+                                                       required="required"/>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -149,7 +149,7 @@
                                                 <label for="total_session" class="control-label">No. of Sessions</label>
                                                 <input type="text" name="total_session" t-att-value="total_session"
                                                        id="total_session" maxlength="2" required="required"
-                                                       class="form-control input-sm reqfield"/>
+                                                       class="form-control input-sm reqfield number"/>
                                             </div>
                                         </div>
                                     </div>
@@ -159,9 +159,13 @@
                                                 <label for="request_date" class="control-label">Requested Date
                                                 </label>
                                                 <input type="text" name="request_date" t-att-value="request_date"
-                                                       id="request_date" placeholder="1960-12-31"
+                                                       id="request_date" placeholder="1960-12-31" readonly="readonly"
                                                        class="form-control input-sm reqfield" required="required"/>
                                             </div>
+                                            <!--                                                         <input type="text" name="phone" t-att-value="phone" id="phone"-->
+                                            <!--                                                       placeholder="8801900000000" maxlength="13" minlength="13"-->
+                                            <!--                                                       class="form-control input-sm reqfield number" pattern="(880)([0-9]{10})"-->
+                                            <!--                                                       data-minlength="13" data-maxlength="13" required="required"/>-->
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
@@ -250,7 +254,8 @@
                                                 </label>
                                                 <input type="text" name="proposed_budget" t-att-value="proposed_budget"
                                                        id="proposed_budget"
-                                                       class="form-control input-sm reqfield" required="required"/>
+                                                       class="form-control input-sm reqfield number "
+                                                       required="required"/>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -277,7 +282,8 @@
                                                 </label>
                                                 <input type="text" name="participating_amount"
                                                        t-att-value="participating_amount" id="participating_amount"
-                                                       class="form-control input-sm reqfield" required="required"/>
+                                                       class="form-control input-sm reqfield number "
+                                                       required="required"/>
                                             </div>
                                         </div>
                                     </div>
@@ -313,8 +319,8 @@
                                             <div class="form-group form-field">
                                                 <label for="target_age" class="control-label">Target Age</label>
                                                 <input type="text" name="target_age" t-att-value="target_age"
-                                                       id="target_age"
-                                                       class="form-control input-sm reqfield" required="required"/>
+                                                       class="form-control input-sm reqfield number"
+                                                       id="target_age" required="required"/>
                                             </div>
                                         </div>
                                     </div>
@@ -379,7 +385,7 @@
                                                 <label for="description" class="control-label">Event Description
                                                 </label>
                                                 <textarea type="textarea" name="description" id="description" rows="4"
-                                                          class="form-control input-sm reqfield"
+                                                          class="form-control load_editor"
                                                           required="required">
                                                     <t t-esc="description"/>
                                                 </textarea>

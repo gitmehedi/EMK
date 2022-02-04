@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
-import babel.dates
-import re
-import werkzeug
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-
-from odoo import fields, http, _
-from odoo.addons.website.models.website import slug
-from odoo.http import request
+from odoo import http, _
+from odoo.addons.opa_utility.helper.utility import Utility
+from odoo.addons.event_management.data import helper
 from odoo.addons.website_event.controllers.main import WebsiteEventController
-from odoo.addons.opa_utility.helper.utility import Utility as utility
+from odoo.http import request
 
 
 class WebsiteRegistration(WebsiteEventController):
@@ -43,8 +38,7 @@ class WebsiteRegistration(WebsiteEventController):
         qctx = self.get_signup_context()
         token = request.params.get('token')
         if token:
-            event = request.env['event.reservation'].sudo().search(
-                [('reserv_token', '=', token), ('state', '=', 'draft')])
+            event = request.env['event.reservation'].sudo().search([('reserv_token', '=', token), ('state', '=', 'draft')])
             if event:
                 qctx['id'] = event.id
                 qctx['event_name'] = event.event_name
@@ -74,15 +68,16 @@ class WebsiteRegistration(WebsiteEventController):
         qctx['space_id'] = 'yes' if 'space_id' not in qctx else qctx['space_id']
         qctx['seats_available'] = 'limited' if 'seats_available' not in qctx else qctx['seats_available']
         qctx['total_session'] = None if 'total_session' not in qctx else qctx['total_session']
-        qctx['request_date'] = None if 'request_date' not in qctx else qctx['request_date']
+        qctx['request_date'] = Utility.date_format(datetime.today()) if 'request_date' not in qctx else qctx[
+            'request_date']
         qctx['start_date'] = None if 'start_date' not in qctx else qctx['start_date']
         qctx['end_date'] = None if 'end_date' not in qctx else qctx['end_date']
         qctx['last_date_reg'] = None if 'last_date_reg' not in qctx else qctx['last_date_reg']
         qctx['mode_of_payment'] = 'cash' if 'mode_of_payment' not in qctx else qctx['mode_of_payment']
-        qctx['payment_type'] = 'paid' if 'payment_type' not in qctx else qctx['payment_type']
+        qctx['payment_type'] = 'free' if 'payment_type' not in qctx else qctx['payment_type']
         qctx['date_of_payment'] = None if 'date_of_payment' not in qctx else qctx['date_of_payment']
         qctx['proposed_budget'] = None if 'proposed_budget' not in qctx else qctx['proposed_budget']
-        qctx['paid_attendee'] = 'yes' if 'paid_attendee' not in qctx else qctx['paid_attendee']
+        qctx['paid_attendee'] = 'no' if 'paid_attendee' not in qctx else qctx['paid_attendee']
         qctx['attendee_number'] = None if 'attendee_number' not in qctx else qctx['attendee_number']
         qctx['participating_amount'] = None if 'participating_amount' not in qctx else qctx['participating_amount']
         qctx['target_audience_group'] = 'paid' if 'target_audience_group' not in qctx else qctx['target_audience_group']
@@ -99,7 +94,7 @@ class WebsiteRegistration(WebsiteEventController):
             qctx['facilities_ids'] = []
         else:
             qctx['facilities_ids'] = [int(val) for val in
-                                               request.httprequest.form.getlist('facilities_ids')]
+                                      request.httprequest.form.getlist('facilities_ids')]
 
         if 'poc_ids' not in qctx:
             qctx['poc_ids'] = self.generateDropdown('res.partner')
@@ -117,28 +112,25 @@ class WebsiteRegistration(WebsiteEventController):
             qctx['space_ids'] = [('yes', 'Yes'), ('no', 'No')]
 
         if 'seats_available_ids' not in qctx:
-            qctx['seats_available_ids'] = [('limited', 'Limited'), ('unlimited', 'Unlimited')]
+            qctx['seats_available_ids'] = helper.seats_availability
 
         if 'payment_ids' not in qctx:
-            qctx['payment_ids'] = [('cash', 'Cash'), ('bank', 'Bank'), ('bkash', 'bKash')]
+            qctx['payment_ids'] = self.generateDropdown('account.journal', ('type', 'in', ['bank', 'cash']))
 
         if 'payment_type_ids' not in qctx:
-            qctx['payment_type_ids'] = [('paid', 'Paid'), ('free', 'Free')]
+            qctx['payment_type_ids'] = helper.payment_type
 
         if 'snakes_ids' not in qctx:
-            qctx['snakes_ids'] = [('yes', 'Yes'), ('no', 'No')]
+            qctx['snakes_ids'] = helper.snacks_required
 
         if 'target_audience_group_ids' not in qctx:
-            qctx['target_audience_group_ids'] = [('yes', 'Yes'), ('no', 'No')]
+            qctx['target_audience_group_ids'] = helper.target_audience_group
 
         if 'paid_attendee_ids' not in qctx:
-            qctx['paid_attendee_ids'] = [('yes', 'Yes'), ('no', 'No')]
+            qctx['paid_attendee_ids'] = helper.paid_attendee
 
         if 'outreach_plan_ids' not in qctx:
-            qctx['outreach_plan_ids'] = [('social_media', 'Social Media Promotions'),
-                                         ('press_coverage', 'Press Coverage'),
-                                         ('designing', 'Designing'),
-                                         ('others', 'Others')]
+            qctx['outreach_plan_ids'] = helper.outreach_plan
 
         return request.render("event_registration.event_reservation", qctx)
 
@@ -147,14 +139,16 @@ class WebsiteRegistration(WebsiteEventController):
         qctx['baseurl'] = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         return qctx
 
-    def generateDropdown(self, model, status=False):
+    def generateDropdown(self, model, param=False):
         data = []
-        status = [('status', '=', True)] if status else []
+        # status = [('state', '=', 'approve'), ('active', '=', True), ('pending', '=', False)]
+        status = [('active', '=', True)]
+        status.append(param) if param else []
         record = request.env[model].sudo().search(status, order='id ASC')
         for rec in record:
             if status:
                 val = '_'.join((rec.name).strip().lower().split())
-                data.append((val, rec.name))
+                data.append((rec.id, rec.name))
             else:
                 data.append((rec.id, rec.name))
         return data
@@ -175,7 +169,7 @@ class WebsiteRegistration(WebsiteEventController):
                     error_fields.append(field_name)
 
         if len(data) > 0:
-            data['state'] = 'reservation'
+            data['state'] = 'draft'
             vals = [int(val) for val in request.httprequest.form.getlist('facilities_ids')]
             data['facilities_ids'] = [(6, 0, vals)]
 

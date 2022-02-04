@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 import base64
-import random
 from datetime import datetime, timedelta
 
 from odoo import models, fields, api, _
+from odoo.addons.event_management.data import helper
+from odoo.addons.opa_utility.helper.utility import Utility
 from odoo.exceptions import ValidationError
-
-
-def random_token():
-    # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
-    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return ''.join(random.SystemRandom().choice(chars) for i in xrange(20))
 
 
 class EventReservation(models.Model):
@@ -27,137 +22,123 @@ class EventReservation(models.Model):
     name = fields.Char(string='ID', readonly=True, states={'draft': [('readonly', False)]})
     event_name = fields.Char(string='Event Name', readonly=True, states={'draft': [('readonly', False)]})
     poc_id = fields.Many2one('res.partner', string='PoC Name', domain=[('is_poc', '=', True)],
-                             readonly=True, track_visibility='onchange',
+                             readonly=True, track_visibility='onchange', required=True,
                              states={'draft': [('readonly', False)],
-                                     'reservation': [('readonly', False), ('required', True)]})
+                                     'approve': [('readonly', False), ('required', True)]})
     contact_number = fields.Char(string="Contact Number", readonly=True, related='poc_id.mobile')
     work_email = fields.Char(string="Email", readonly=True, related='poc_id.email')
     org_id = fields.Many2one('hr.employee', string='Organizer Name', default=get_employee,
                              track_visibility='onchange', readonly=True,
                              states={'draft': [('readonly', False)],
-                                     'reservation': [('readonly', False), ('required', True)]})
+                                     'approve': [('readonly', False), ('required', True)]})
     event_type_id = fields.Many2one('event.type', string='Event Type', track_visibility='onchange', readonly=True,
                                     states={'draft': [('readonly', False)],
-                                            'reservation': [('readonly', False), ('required', True)]})
+                                            'approve': [('readonly', False), ('required', True)]})
     event_id = fields.Many2one('event.event', string='Event', track_visibility='onchange', readonly=True)
     poc_type_id = fields.Many2one('event.poc.type', string="PoC Type", track_visibility='onchange', readonly=True,
                                   states={'draft': [('readonly', False)],
-                                          'reservation': [('readonly', False), ('required', True)]})
+                                          'approve': [('readonly', False), ('required', True)]})
     pillar_id = fields.Many2one('event.pillar', string='Event Pillar', track_visibility='onchange', readonly=True,
                                 states={'draft': [('readonly', False)],
-                                        'reservation': [('readonly', False), ('required', True)]})
+                                        'approve': [('readonly', False), ('required', True)]})
     theme_id = fields.Many2one('event.theme', string='Event Theme', track_visibility='onchange', readonly=True,
                                states={'draft': [('readonly', False)],
-                                       'reservation': [('readonly', False), ('required', True)]})
+                                       'approve': [('readonly', False), ('required', True)]})
     facilities_ids = fields.Many2many('event.service.type', string="Facilities Requested", track_visibility='onchange',
                                       readonly=True,
                                       states={'draft': [('readonly', False)],
-                                              'reservation': [('readonly', False), ('required', True)]})
+                                              'approve': [('readonly', False), ('required', True)]})
     attendee_number = fields.Integer('No. of Attendees', track_visibility='onchange', readonly=True,
                                      states={'draft': [('readonly', False)],
-                                             'reservation': [('readonly', False), ('required', True)]})
+                                             'approve': [('readonly', False), ('required', True)]})
     total_session = fields.Integer('No. of Sessions', track_visibility='onchange', readonly=True,
                                    states={'draft': [('readonly', False)],
-                                           'reservation': [('readonly', False), ('required', True)]})
+                                           'approve': [('readonly', False), ('required', True)]})
     start_date = fields.Datetime(string='Start Date', track_visibility='onchange',
-                                 readonly=True,
-                                 states={'draft': [('readonly', False)],
-                                         'reservation': [('readonly', False), ('required', True)]})
+                                 readonly=True, states={'draft': [('readonly', False)],
+                                                        'approve': [('readonly', False), ('required', True)]})
     end_date = fields.Datetime(string='End Date', track_visibility='onchange', readonly=True,
                                states={'draft': [('readonly', False)],
-                                       'reservation': [('readonly', False), ('required', True)]})
+                                       'approve': [('readonly', False), ('required', True)]})
     last_date_reg = fields.Datetime(string='Last Date of Registration', track_visibility='onchange', readonly=True,
                                     states={'draft': [('readonly', False)],
-                                            'reservation': [('readonly', False), ('required', True)]})
+                                            'approve': [('readonly', False), ('required', True)]})
     request_date = fields.Datetime(string='Requested Date', track_visibility='onchange',
                                    default=fields.Datetime.now, readonly=True,
                                    states={'draft': [('readonly', False)],
-                                           'reservation': [('readonly', False), ('required', True)]})
+                                           'approve': [('readonly', False), ('required', True)]})
     description = fields.Html('Description', track_visibility='onchange', sanitize=False, readonly=True,
                               states={'draft': [('readonly', False)],
-                                      'reservation': [('readonly', False), ('required', True)]})
-    payment_type = fields.Selection([('paid', 'Paid'), ('free', 'Free')], default='paid', string='Type', readonly=True,
+                                      'approve': [('readonly', False), ('required', True)]})
+    payment_type = fields.Selection(helper.payment_type, default='free', string='Type', readonly=True,
                                     states={'draft': [('readonly', False)],
-                                            'reservation': [('readonly', False), ('required', True)]})
-    mode_of_payment = fields.Selection([('cash', 'Cash'), ('bank', 'Bank'), ('bkash', 'bKash')],
-                                       default='cash', string='Mode of Payment', track_visibility='onchange',
-                                       readonly=True,
-                                       states={'draft': [('readonly', False)],
-                                               'reservation': [('readonly', False), ('required', True)]})
+                                            'approve': [('readonly', False), ('required', True)]})
+    mode_of_payment = fields.Many2one('account.journal', string='Mode of Payment',
+                                      track_visibility='onchange', domain=[('type', 'in', ['bank', 'cash'])],
+                                      readonly=True, states={'draft': [('readonly', False)]})
     paid_amount = fields.Float(string='Paid Amount', digits=(12, 2), track_visibility='onchange', readonly=True,
                                states={'draft': [('readonly', False)],
-                                       'reservation': [('readonly', False), ('required', True)]})
+                                       'approve': [('readonly', False), ('required', True)]})
     refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2), track_visibility='onchange',
-                                     readonly=True,
-                                     states={'draft': [('readonly', False)],
-                                             'reservation': [('readonly', False), ('required', True)]})
+                                     readonly=True, states={'draft': [('readonly', False)],
+                                                            'approve': [('readonly', False), ('required', True)]})
     approved_budget = fields.Float(string='Approved Budget', digits=(12, 2), track_visibility='onchange', readonly=True,
                                    states={'draft': [('readonly', False)],
-                                           'reservation': [('readonly', False), ('required', True)]})
+                                           'approve': [('readonly', False), ('required', True)]})
     proposed_budget = fields.Float(string='Proposed Budget', digits=(12, 2), track_visibility='onchange', readonly=True,
                                    states={'draft': [('readonly', False)],
-                                           'reservation': [('readonly', False), ('required', True)]})
+                                           'approve': [('readonly', False), ('required', True)]})
     rules_regulation = fields.Html(string='Rules and Regulation', track_visibility='onchange', sanitize=True,
-                                   readonly=True,
-                                   states={'draft': [('readonly', False)],
-                                           'reservation': [('readonly', False), ('required', True)]})
+                                   readonly=True, states={'draft': [('readonly', False)],
+                                                          'approve': [('readonly', False), ('required', True)]})
     date_of_payment = fields.Date(string="Date for Payment", track_visibility='onchange', readonly=True,
                                   states={'draft': [('readonly', False)],
-                                          'reservation': [('readonly', False), ('required', True)]})
+                                          'approve': [('readonly', False), ('required', True)]})
     notes = fields.Html(string="Comments/Notes", track_visibility='onchange', sanitize=False,
                         readonly=True, states={'draft': [('readonly', False)],
-                                               'reservation': [('readonly', False), ('required', True)]})
+                                               'approve': [('readonly', False), ('required', True)]})
     purpose_of_event = fields.Html(string="Purpose of Event", track_visibility='onchange', sanitize=False,
-                                   readonly=True,
-                                   states={'draft': [('readonly', False)],
-                                           'reservation': [('readonly', False), ('required', True)]})
-    target_audience_group = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes',
+                                   readonly=True, states={'draft': [('readonly', False)],
+                                                          'approve': [('readonly', False), ('required', True)]})
+    target_audience_group = fields.Selection(helper.target_audience_group, default='yes',
                                              string="Target Audience Group", readonly=True,
                                              states={'draft': [('readonly', False)],
-                                                     'reservation': [('readonly', False), ('required', True)]})
+                                                     'approve': [('readonly', False), ('required', True)]})
     target_age = fields.Integer(string="Target Age", readonly=True, track_visibility='onchange',
                                 states={'draft': [('readonly', False)],
-                                        'reservation': [('readonly', False), ('required', True)]})
-    outreach_plan = fields.Selection([('social_media', 'Social Media Promotions'),
-                                      ('press_coverage', 'Press Coverage'),
-                                      ('designing', 'Designing'),
-                                      ('others', 'Others'),
-                                      ], track_visibility='onchange', string="Outreach Plan", readonly=True,
-                                     states={'draft': [('readonly', False)],
-                                             'reservation': [('readonly', False), ('required', True)]})
+                                        'approve': [('readonly', False), ('required', True)]})
+    outreach_plan = fields.Selection(helper.outreach_plan, track_visibility='onchange', string="Outreach Plan",
+                                     readonly=True, states={'draft': [('readonly', False)],
+                                                            'approve': [('readonly', False), ('required', True)]})
     outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True, track_visibility='onchange',
                                       states={'draft': [('readonly', False)],
-                                              'reservation': [('readonly', False), ('required', True)]})
-    snacks_required = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', track_visibility='onchange',
+                                              'approve': [('readonly', False), ('required', True)]})
+    snacks_required = fields.Selection(helper.snacks_required, default='yes', track_visibility='onchange',
                                        string="Food/Beverage/Snacks?", readonly=True,
                                        states={'draft': [('readonly', False)],
-                                               'reservation': [('readonly', False), ('required', True)]})
-    paid_attendee = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', track_visibility='onchange',
+                                               'approve': [('readonly', False), ('required', True)]})
+    paid_attendee = fields.Selection(helper.paid_attendee, default='no', track_visibility='onchange',
                                      string="Participation Charge", readonly=True,
                                      states={'draft': [('readonly', False)],
-                                             'reservation': [('readonly', False), ('required', True)]})
+                                             'approve': [('readonly', False), ('required', True)]})
     participating_amount = fields.Float(string="Participation Amount", readonly=True, track_visibility='onchange',
                                         states={'draft': [('readonly', False)],
-                                                'reservation': [('readonly', False), ('required', True)]})
-    space_id = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='yes', string="Need EMK Space?",
+                                                'approve': [('readonly', False), ('required', True)]})
+    space_id = fields.Selection(helper.space_id, default='yes', string="Need EMK Space?",
                                 track_visibility='onchange', readonly=True,
                                 states={'draft': [('readonly', False)],
-                                        'reservation': [('readonly', False), ('required', True)]})
-    seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')], default="limited",
+                                        'approve': [('readonly', False), ('required', True)]})
+    seats_availability = fields.Selection(helper.seats_availability, default="limited",
                                           track_visibility='onchange', readonly=True, string='Available Seats',
                                           states={'draft': [('readonly', False)],
-                                                  'reservation': [('readonly', False), ('required', True)]})
+                                                  'approve': [('readonly', False), ('required', True)]})
     image_medium = fields.Binary(string='Photo', attachment=True, readonly=True,
                                  states={'draft': [('readonly', False)],
-                                         'reservation': [('readonly', False), ('required', True)]})
+                                         'approve': [('readonly', False), ('required', True)]})
 
     reserv_token = fields.Char(copy=False)
     reserv_url = fields.Char(string='Reservation URL', track_visibility='onchange', )
-
-    state = fields.Selection(
-        [('draft', 'Draft'), ('reservation', 'Reservation'), ('on_process', 'On Process'),
-         ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], string="State", default="draft",
-        track_visibility='onchange')
+    state = fields.Selection(helper.reservation_state, string="State", default="draft", track_visibility='onchange')
 
     @api.constrains('start_date', 'end_date')
     def _check_start_date(self):
@@ -171,26 +152,20 @@ class EventReservation(models.Model):
         if self.end_date and not self.start_date:
             self.end_date = ''
 
-    # @api.constrains('event_name')
-    # def _check_name(self):
-    #     name = self.search([('event_name', '=ilike', self.event_name)])
-    #     if len(name) > 1:
-    #         raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
-
-    # @api.constrains('payment_type', 'paid_amount', 'refundable_amount')
-    # def _check_payment(self):
-    #
-    #     if self.payment_type == 'paid' and self.state=='draft':
-    #         if not self.paid_amount:
-    #             raise ValidationError(
-    #                 _('Paid amount should have value when event type is [Paid]'.format(self.payment_type)))
-    #         if not self.refundable_amount:
-    #             raise ValidationError(
-    #                 _('Refundable amount should have value when event type is [Paid]'.format(self.payment_type)))
-    #     else:
-    #         if not self.refundable_amount:
-    #             raise ValidationError(
-    #                 _('Refundable amount should have value when event type is [Free]'.format(self.payment_type)))
+    @api.constrains('payment_type', 'paid_amount', 'refundable_amount')
+    def _check_payment(self):
+        if self.state == 'approve':
+            if self.payment_type == 'paid':
+                if not self.paid_amount:
+                    raise ValidationError(
+                        _('Paid amount should have value when event type is [Paid]'.format(self.payment_type)))
+                if not self.refundable_amount:
+                    raise ValidationError(
+                        _('Refundable amount should have value when event type is [Paid]'.format(self.payment_type)))
+            else:
+                if not self.refundable_amount:
+                    raise ValidationError(
+                        _('Refundable amount should have value when event type is [Free]'.format(self.payment_type)))
 
     @api.constrains('paid_attendee')
     def _check_participating_amount(self):
@@ -212,42 +187,45 @@ class EventReservation(models.Model):
         if self.state == 'draft':
             """ create signup token for each user, and send their signup url by email """
             base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-            url = "/event/event-reservation/register"
-            token = random_token()
-            reserv_url = '{0}{1}?token={2}'.format(base_url, url, token)
+            token = Utility.random_token()
+            reservation_url = '{0}{1}?token={2}'.format(base_url, helper.url, token)
 
-            # if reserv_url:
-            #     data = {'reserv_url': reserv_url,'name': self.poc_id.name}
-            #
-            #     send_mail = {
-            #         'template': 'event_registration.event_reservation_email',
-            #         'email_to': self.poc_id.email,
-            #         'context': data,
-            #     }
-            #
-            #     try:
-            #         self.env['res.partner'].sudo().mailsend(send_mail)
-            #     except:
-            #         pass
+            if reservation_url:
+                data = {
+                    'reserv_url': reservation_url,
+                    'name': self.poc_id.name
+                }
+
+                vals = {
+                    'template': 'event_management.event_reservation_email',
+                    'email_to': self.poc_id.email,
+                    'context': data,
+                }
+                self.env['res.partner'].mailsend(vals)
 
             self.write({
                 'reserv_token': token,
-                'reserv_url': reserv_url,
+                'reserv_url': reservation_url,
             })
 
     @api.one
     def act_draft(self):
-        if self.state == 'reservation':
+        if self.state == 'approve':
             self.state = 'draft'
 
     @api.one
-    def act_reservation(self):
+    def act_approve(self):
         if self.state == 'draft':
-            self.state = 'reservation'
+            self.state = 'approve'
+
+    @api.one
+    def act_set_approve(self):
+        if self.state == 'on_process':
+            self.state = 'approve'
 
     @api.one
     def act_on_process(self):
-        if self.state == 'reservation':
+        if self.state == 'approve':
             self.state = 'on_process'
 
     @api.one
@@ -270,7 +248,7 @@ class EventReservation(models.Model):
                 'last_date_reg': self.last_date_reg,
                 'seats_availability': self.seats_availability,
                 'seats_max': self.attendee_number,
-                'mode_of_payment': self.mode_of_payment,
+                'mode_of_payment': self.mode_of_payment.id,
                 'payment_type': self.payment_type,
                 'date_of_payment': self.date_of_payment,
                 'proposed_budget': self.proposed_budget,
@@ -304,8 +282,8 @@ class EventReservation(models.Model):
                     'name': seq,
                     'event_id': event.id
                 })
-                self._create_invoice()
-                event.write({'state': 'draft'})
+                invoices = self._create_invoice()
+                event.write({'state': 'draft', 'invoice_ids': invoices})
             self.state = 'confirm'
 
     @api.one
@@ -323,6 +301,7 @@ class EventReservation(models.Model):
         serv_name = ['Event Organization Fee', 'Event Refund Fee']
         services = self.env['product.product'].search([('name', 'in', serv_name), ('active', 'in', serv_name)],
                                                       order='id desc')
+        invoices = []
         if len(services) != 2:
             raise ValidationError(_('Please configure your event services.'))
 
@@ -372,18 +351,21 @@ class EventReservation(models.Model):
                         'subject': vals['subject']
                     },
                 }
-                # self.env['mail.mail'].mailsend(vals)
+                self.env['mail.mail'].mailsend(vals)
+                return inv.id
 
         for ser in services:
             if ser.name == 'Event Organization Fee':
-                if self.payment_type == 'paid':
-                    if self.paid_amount == 0:
-                        raise ValidationError(_("Please set paid amount which is required for paid event"))
+                if self.paid_amount == 0:
+                    raise ValidationError(_("Please set paid amount which is required for paid event"))
+
+                if self.paid_amount > 0:
                     vals = {
                         'amount': self.paid_amount,
                         'subject': 'Event Fee',
                     }
-                    create_invoice(ser, vals)
+                    org_inv = create_invoice(ser, vals)
+                    invoices.append((4, org_inv))
 
             if ser.name == 'Event Refund Fee':
                 if self.refundable_amount == 0:
@@ -393,7 +375,9 @@ class EventReservation(models.Model):
                     'subject': 'Refundable Amount',
                 }
 
-                create_invoice(ser, vals)
+                refund_inv = create_invoice(ser, vals)
+                invoices.append((4, refund_inv))
+        return invoices
 
     @api.model
     def post_event_reservation(self, vals, token=None):

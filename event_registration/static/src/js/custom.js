@@ -1,15 +1,39 @@
 $(function () {
     var dateformat = 'yy-mm-dd'
 
-    $("#request_date,#start_date,#end_date,#last_date_reg,#date_of_payment").datepicker({
-        minDate: new Date(1900,1-1,1),
+    $("#start_date,#end_date,#last_date_reg,#date_of_payment").datepicker({
+        minDate: '+1D',
+        maxDate: new Date(2050,12,31),
         changeMonth: true,
         changeYear: true,
-        yearRange: "-100:-15",
-        dateFormat: dateformat
+        dateFormat: 'yy-mm-dd'
+//        beforeShowDay: _nonScheduleDate
     });
-    $('#request_date,#start_date,#end_date,#last_date_reg,#date_of_payment').datepicker("option", "dateFormat", dateformat);
-
+//    $("#notes").Editor(
+//        {"bold":false,
+//         "italics": false,
+//         "fonts": false
+//        }
+//    );
+//    $("#purpose_of_event").Editor(
+//        {"bold":false,
+//         "italics": false,
+//         "fonts": false
+//        }
+//    );
+//    $("#rules_regulation").Editor(
+//        {"bold":false,
+//         "italics": false,
+//         "fonts": false
+//        }
+//    );
+//    $("#description").Editor(
+//        {"bold":false,
+//         "italics": false,
+//         "fonts": false
+//        }
+//    );
+    $('#start_date,#end_date,#last_date_reg,#date_of_payment').datepicker("option", "dateFormat", dateformat);
 
     $('#birth_date').change(function(){
      var currDate = $(this).val();
@@ -20,11 +44,11 @@ $(function () {
             $(this).val('');
             alert('Birth Date should not greater than current date.');
         }
-        }
+     }
     });
 
-
-    $('#memberapp').validator();
+$('#notes').summernote();
+//    $('#event-reservation').validator();
 
     $('#website').change(function(){
         vals = $(this).val();

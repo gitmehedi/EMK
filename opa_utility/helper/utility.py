@@ -11,6 +11,8 @@ from odoo.exceptions import ValidationError
 
 DATE_PFORMAT = "%d/%m/%Y"
 DATE_MFORMAT = "%Y-%m-%d"
+DATE_WOUTH = "%Y-%m-%d"
+DATE_WITHH = "%Y-%m-%d HH:MM:SS"
 
 
 class Utility:
@@ -26,6 +28,12 @@ class Utility:
     def now(self, **kwargs):
         dt = datetime.now() + timedelta(**kwargs)
         return fields.Datetime.to_string(dt)
+
+    @staticmethod
+    def random_token():
+        # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+        return ''.join(random.SystemRandom().choice(chars) for i in xrange(20))
 
     @staticmethod
     def check_email(val):
@@ -73,9 +81,9 @@ class Utility:
 
     @staticmethod
     def next_date(date, duration, time='years', format='%Y-%m-%d'):
-        if time=='years':
+        if time == 'years':
             rel_date = datetime.strptime(date, format) + relativedelta(years=duration)
-        elif time=='days':
+        elif time == 'days':
             rel_date = datetime.strptime(date, format) + relativedelta(days=duration)
         next_date = rel_date.strftime(format)
         return next_date
@@ -86,3 +94,17 @@ class Utility:
         if not pattern.match(number):
             return False
         return True
+
+    @staticmethod
+    def date_format(date, with_time=False):
+        if with_time:
+            date = datetime.strftime(date, DATE_WITHH)
+        else:
+            date = datetime.strftime(date, DATE_WOUTH)
+        return date
+
+
+class Message:
+    UNLINK_WARNING = "[Warning] Approves and Rejected record cannot be deleted."
+    UNLINK_INT_WARNING = "The operation cannot be completed, probably due to the following:\n " \
+                     "- deletion: you may be trying to delete a record while other records still reference it"

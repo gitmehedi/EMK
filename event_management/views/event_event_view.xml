@@ -19,23 +19,22 @@
                         </group>
                     </page>
                 </xpath>
-                <xpath expr="//form/header/button[@name='button_confirm']" position="before">
-                    <button string="Approve Event" name="button_approve" states="draft" type="object" class="oe_highlight" groups="event_user.group_event_officer"/>
-                </xpath>
-                <xpath expr="//form/header/button[@name='button_confirm']" position="attributes">
-                    <attribute name="groups">event_user.group_event_officer</attribute>
-                </xpath>
-                <xpath expr="//form/header/button[@name='button_confirm']" position="attributes">
-                    <attribute name="groups">event_user.group_event_officer</attribute>
-                </xpath>
-                <xpath expr="//form/header/button[@name='button_done']" position="attributes">
-                    <attribute name="groups">event_user.group_event_officer</attribute>
-                </xpath>
-                <xpath expr="//form/header/button[@name='button_draft']" position="attributes">
-                    <attribute name="groups">event_user.group_event_officer</attribute>
-                </xpath>
-                <xpath expr="//form/header/button[@name='button_cancel']" position="attributes">
-                    <attribute name="groups">event_user.group_event_officer</attribute>
+                <xpath expr="//form/header" position="replace">
+                    <header>
+                        <button string="Approve Event" name="button_approve" states="draft" type="object"
+                                class="oe_highlight" groups="event_user.group_event_officer"/>
+                        <button string="Confirm Event" name="button_confirm" states="approve" type="object"
+                                class="oe_highlight" groups="event_user.group_event_officer"/>
+                        <button string="Mark as Close" name="act_mark_close" states="confirm" type="object"
+                                class="oe_highlight" groups="event_user.group_event_officer"/>
+                        <button string="Finish Event" name="button_done" states="mark_close" type="object"
+                                class="oe_highlight" groups="event_user.group_event_officer"/>
+                        <button string="Set To Draft" name="button_draft" states="cancel" type="object"
+                                groups="event_user.group_event_officer"/>
+                        <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"
+                                groups="event_user.group_event_officer"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approve,confirm"/>
+                    </header>
                 </xpath>
                 <xpath expr="//button[@name='toggle_active']" position="replace"></xpath>
                 <xpath expr="//field[@name='address_id']" position="attributes">
@@ -84,9 +83,12 @@
                 <xpath expr="//group[@name='main_field_group']/group[2]" position="replace">
                     <group>
                         <field name="user_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                        <field name="event_type_id" domain="[('state','=','approve')]" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                        <field name="pillar_id" domain="[('state','=','approve')]" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                        <field name="theme_id" domain="[('state','=','approve')]" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="event_type_id" domain="[('state','=','approve')]"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="pillar_id" domain="[('state','=','approve')]"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="theme_id" domain="[('state','=','approve')]"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         <field name="space_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     </group>
                 </xpath>
@@ -111,7 +113,8 @@
                     </group>
                     <group string="Payments Information">
                         <group>
-                            <field name="mode_of_payment"/>
+                            <field name="mode_of_payment"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,'horizontal': true}"/>
                             <field name="payment_type" widget="radio" options="{'horizontal':true}"/>
                             <field name="date_of_payment"/>
                         </group>
@@ -123,6 +126,7 @@
                             <field name="paid_attendee" widget="radio"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True,'horizontal': true}"/>
                             <field name="participating_amount" attrs="{'required':[('paid_attendee','=','yes')]}"/>
+
                         </group>
                     </group>
                     <group string="Additional Information">
@@ -146,6 +150,8 @@
                         <field name="rules_regulation" nolabel="1"/>
                         <separator string="Comments/Notes"/>
                         <field name="notes" nolabel="1"/>
+                        <separator string="Purpose of Events"/>
+                        <field name="purpose_of_event" nolabel="1"/>
                     </page>
                     <page string="Room Booking">
                         <field name="event_book_ids">
@@ -177,6 +183,9 @@
                             </tree>
                         </field>
                     </page>
+                    <page string="Invoices">
+                        <field name="invoice_ids"/>
+                    </page>
                 </xpath>
             </field>
         </record>
@@ -186,7 +195,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="replace">
                     <tree string="Events" duplicate="0" create="0" delete="0"
-                          colors="orange:state=='draft';green:state=='confirm';grey:state=='done';red:state=='cancel';">
+                          colors="orange:state=='draft';green:state=='confirm';yellowgreen:state=='mark_close';grey:state=='done';red:state=='cancel';">
                         <field name="name"/>
                         <field name="organizer_id"/>
                         <field name="user_id"/>
@@ -203,7 +212,21 @@
         </record>
         <record model="ir.actions.act_window" id="event.action_event_view">
             <field name="view_mode">tree,kanban,calendar,form</field>
+            <field name="domain">[('state','in',['draft','approve','confirm'])]</field>
             <field name="context">{}</field>
         </record>
+
+        <record id="event_event_close_action" model="ir.actions.act_window">
+            <field name="name">Events Close</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">event.event</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,calendar,form</field>
+            <field name="domain">[('state','in',['mark_close','close','done'])]</field>
+            <field name="search_view_id" ref="event.view_event_search"/>
+        </record>
+
+        <menuitem id="event_event_close_menu" name="Event Close" sequence="21" groups="event_user.group_event_officer"
+                  parent="menu_event_general" action="event_event_close_action"/>
     </data>
 </odoo>

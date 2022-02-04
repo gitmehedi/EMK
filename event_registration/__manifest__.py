@@ -15,6 +15,7 @@
         'website',
         'website_event',
         'event_management',
+        'opa_utility',
     ],
     'data': [
         'views/event_reservation_templates.xml',
