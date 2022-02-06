@@ -49,6 +49,14 @@ class ProductProduct(models.Model):
 
         return res
 
+    def _get_domain_locations(self):
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = super(ProductProduct, self)._get_domain_locations()
+
+        if self.env.context.get('operating_unit_id'):
+            domain_quant_loc += [('location_id.operating_unit_id', '=', self.env.context.get('operating_unit_id'))]
+
+        return domain_quant_loc, domain_move_in_loc, domain_move_out_loc
+
 
 class ProductStandardPrice(models.Model):
     _name = 'product.standard.price'
