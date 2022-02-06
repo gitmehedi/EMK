@@ -17,6 +17,7 @@
         'operating_unit',
         'date_range',
         'survey',
+        'hr_recruitment_survey',
     ],
     'data': [
         'security/hr_security.xml',

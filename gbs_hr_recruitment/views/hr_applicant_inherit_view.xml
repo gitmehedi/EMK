@@ -13,8 +13,11 @@
                     <field name="manager_id"/>
                 </xpath>
                 <xpath expr="//field[@name='type_id']" position="after">
-                    <field name="gender"/>
+                    <field name="gender" options="{'no_create':True,'no_open':True}" />
                     <field name="marital_status"/>
+                </xpath>
+                <xpath expr="//field[@name='reference']" position="after">
+                    <field name="stage_id" options="{'no_create':True,'no_open':True}" />
                 </xpath>
 
                 <xpath expr="//button[@name='archive_applicant']" position="attributes">
@@ -23,7 +26,6 @@
                 <xpath expr="//button[@name='archive_applicant']" position="before">
                     <button name="generate_appointment_letter" string="Appointment Letter"  type="object" icon='fa-file-text'
                         class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
-
                 </xpath>
                 <xpath expr="//button[1]" position="attributes">
                     <attribute name="attrs">{'invisible': [('state', '!=', 'approved')]}</attribute>
@@ -49,8 +51,29 @@
                 <xpath expr="//field[@name='source_id']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
+                <xpath expr="//field[@name='partner_mobile']" position="attributes">
+                    <attribute name="placeholder">8801900000000</attribute>
+                </xpath>
             </field>
 		</record>
+
+
+        <record id="hr_applicant_tree_view_inherit" model="ir.ui.view">
+            <field name="name">hr.applicant.tree.view.inherit</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="state" />
+                </field>
+            </field>
+        </record>
+
+
+        <record id="hr_recruitment.crm_case_categ0_act_job" model="ir.actions.act_window">
+             <field name="view_mode">tree,form,pivot,graph,calendar,kanban</field>
+        </record>
+
         <menuitem
             name="Applications"
             parent="hr_recruitment.menu_hr_recruitment_root"

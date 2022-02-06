@@ -118,6 +118,7 @@
         "l10n_in_hr_payroll",
         "hr_attendance_settings",
         "hr_employee_operating_unit",
+        "gbs_hr_recruitment",
 
     ],
     'installable': True,

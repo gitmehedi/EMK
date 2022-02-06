@@ -1,5 +1,6 @@
 from odoo import api, fields, models,_
-from openerp.exceptions import Warning as UserError
+from odoo.exceptions import UserError, ValidationError
+from odoo.addons.opa_utility.helper.utility import Utility
 
 
 class HrApplicantInherit(models.Model):
@@ -7,8 +8,9 @@ class HrApplicantInherit(models.Model):
 
     manager_id = fields.Many2one('hr.employee', string='Manager', related='department_id.manager_id',
                                  readonly=True, copy=False)
-    gender = fields.Selection([('male', 'Male'),('female', 'Female'),('other','Other')],
-                               string='Gender')
+    # gender = fields.Selection([('male', 'Male'),('female', 'Female'),('other','Other')],
+    #                            string='Gender')
+    gender = fields.Many2one('res.gender', string='Gender', track_visibility='onchange')
     marital_status = fields.Selection([('single', 'Single'),('married', 'Married'),('other','Other')],
                                string='Marital Status')
 
@@ -20,6 +22,20 @@ class HrApplicantInherit(models.Model):
         ('declined', 'Declined'),
         ('reset', 'Reset To Draft'),
     ], string='Status', default='draft',track_visibility='onchange')
+
+    @api.one
+    @api.constrains('partner_mobile')
+    def valid_mobile(self):
+        if self.partner_mobile:
+            if not Utility.valid_mobile(self.partner_mobile):
+                raise ValidationError(_('[Warning] Mobile no should be input a valid'))
+
+    @api.one
+    @api.constrains('email_from')
+    def validate_mail(self):
+        if self.email_from:
+            if not Utility.valid_email(self.email_from):
+                raise ValidationError(_('[Warning] Email should be input a valid'))
 
     @api.multi
     def generate_appointment_letter(self):
