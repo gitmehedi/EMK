@@ -19,10 +19,22 @@
                 <xpath expr="//field[@name='reference']" position="after">
                     <field name="stage_id" options="{'no_create':True,'no_open':True}" />
                 </xpath>
-
-                <xpath expr="//button[@name='archive_applicant']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+                <xpath expr="//button[@name='archive_applicant']" position="before">
+                    <button name="action_confirm" string="Confirm"  type="object"
+                        class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                 </xpath>
+                <xpath expr="//button[@name='archive_applicant']" position="before">
+                    <button name="action_cxo_approve" string="Approve"  type="object"
+                        class="oe_highlight" attrs="{'invisible': [('state', '!=', 'gm_approve')]}"/>
+                </xpath>
+                <xpath expr="//button[@name='archive_applicant']" position="before">
+                    <button name="action_approve" string="Approve"  type="object"
+                        class="oe_highlight" attrs="{'invisible': [('state', '!=', 'cxo_approve')]}"/>
+                </xpath>
+
+<!--                <xpath expr="//button[@name='archive_applicant']" position="attributes">-->
+<!--                    <attribute name="invisible">0</attribute>-->
+<!--                </xpath>-->
                 <xpath expr="//button[@name='archive_applicant']" position="before">
                     <button name="generate_appointment_letter" string="Appointment Letter"  type="object" icon='fa-file-text'
                         class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>

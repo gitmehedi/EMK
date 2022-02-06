@@ -81,13 +81,27 @@ class HrApplicantInherit(models.Model):
     ####################################################
     # ORM Overrides methods
     ####################################################
+    @api.multi
+    def action_confirm(self):
+        if self.state == 'draft':
+            self.state = 'gm_approve'
 
     @api.multi
-    def write(self, vals):
-        if self.state == 'approved':
-            raise UserError(_('You can not edit in this state!!'))
-        else:
-            return super(HrApplicantInherit, self).write(vals)
+    def action_cxo_approve(self):
+        if self.state == 'gm_approve':
+            self.state = 'cxo_approve'
+
+    @api.multi
+    def action_approve(self):
+        if self.state == 'cxo_approve':
+            self.state = 'approved'
+
+    # @api.multi
+    # def write(self, vals):
+    #     if self.state == 'approved':
+    #         raise UserError(_('You can not edit in this state!!'))
+    #     else:
+    #         return super(HrApplicantInherit, self).write(vals)
 
     @api.multi
     def unlink(self):
