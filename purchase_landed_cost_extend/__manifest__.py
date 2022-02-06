@@ -13,6 +13,7 @@
     ],
     'data': [
         'data/landed_cost_sequence.xml',
+        'wizard/picking_import_wizard_view.xml',
         'views/purchase_cost_distribution_view.xml',
         'views/purchase_expense_type_view.xml'
     ],

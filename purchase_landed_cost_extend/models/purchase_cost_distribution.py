@@ -3,6 +3,7 @@ import datetime
 
 # import of odoo
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
 
 
@@ -12,6 +13,14 @@ class PurchaseCostDistribution(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True, readonly=True,
                                         states={'draft': [('readonly', False)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
+
+    @api.multi
+    def action_calculate(self):
+        # validation
+        if any(datetime.datetime.strptime(line.picking_id.date_done, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d") > self.date for line in self.cost_lines):
+            raise ValidationError(_("Date cannot be less than the date of transfer of incoming shipments."))
+
+        return super(PurchaseCostDistribution, self).action_calculate()
 
     @api.multi
     def action_done(self):
@@ -30,3 +39,9 @@ class PurchaseCostDistribution(models.Model):
             operating_unit = self.env['operating.unit'].browse(vals.get('operating_unit_id'))
             vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.cost.distribution', self.date, operating_unit)
         return super(PurchaseCostDistribution, self).create(vals)
+
+    @api.constrains('date')
+    def _check_date(self):
+        if self.date > datetime.datetime.today().strftime("%Y-%m-%d"):
+            raise ValidationError(_("Date cannot be greater than Current Date."))
+
