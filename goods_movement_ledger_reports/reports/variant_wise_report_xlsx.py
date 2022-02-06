@@ -57,7 +57,7 @@ class VariantWiseReportXLSX(ReportXlsx):
         name_border_format_colored = workbook.add_format(
             {'align': 'center', 'border': 1, 'bg_color': '#eaede6', 'valign': 'vcenter', 'bold': True, 'size': 8})
         normal_format_left = workbook.add_format(
-            {'align': 'left', 'size': 8})
+            {'num_format': '#,###0.00', 'align': 'left', 'size': 8})
         name_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 8})
         header_format_left = workbook.add_format(
             {'align': 'left', 'bg_color': '#d7ecfa', 'bold': True, 'size': 8, 'border': 1})
@@ -99,6 +99,20 @@ class VariantWiseReportXLSX(ReportXlsx):
         sheet.write(9, 14, "Closing Stock", header_format_left)
         row_no = 10
 
+        opening_stock_total = 0
+        production_total = 0
+        purchase_total = 0
+        by_loan_total = 0
+        received_from_other_unit_total = 0
+        other_adjustment_total = 0
+        available_stock_total = 0
+        sales_total = 0
+        own_consumption_total = 0
+        to_loan_total = 0
+        issue_to_other_unit_total = 0
+        loss_total = 0
+        closing_stock_total = 0
+
         while date_start_obj <= date_end_obj:
             available_stock = 0.0
             # + ' 00:00:01'
@@ -122,20 +136,24 @@ class VariantWiseReportXLSX(ReportXlsx):
                     if opening_closing_stock['opening_stock']:
                         sheet.write(row_no, 2, opening_closing_stock['opening_stock'], normal_format_left)
                         available_stock = available_stock + float(opening_closing_stock['opening_stock'])
-
+                        opening_stock_total = opening_stock_total + float(opening_closing_stock['opening_stock'])
                     else:
                         sheet.write(row_no, 2, 0, normal_format_left)
                         available_stock = available_stock + 0
+                        opening_stock_total = opening_stock_total + 0
 
                     if opening_closing_stock['closing_stock']:
                         sheet.write(row_no, 14, opening_closing_stock['closing_stock'], normal_format_left)
-
+                        closing_stock_total = closing_stock_total + float(opening_closing_stock['closing_stock'])
                     else:
                         sheet.write(row_no, 14, 0, normal_format_left)
+                        closing_stock_total = closing_stock_total + 0
             else:
                 available_stock = available_stock + 0
                 sheet.write(row_no, 2, 0, normal_format_left)
                 sheet.write(row_no, 14, 0, normal_format_left)
+                opening_stock_total = opening_stock_total + 0
+                closing_stock_total = closing_stock_total + 0
 
             # datewise_production
             production_total_qty = product_report_utility.get_production_stock(start_date, end_date,
@@ -145,9 +163,11 @@ class VariantWiseReportXLSX(ReportXlsx):
             if production_total_qty:
                 available_stock = available_stock + float(production_total_qty)
                 sheet.write(row_no, 3, production_total_qty, normal_format_left)
+                production_total = production_total + float(production_total_qty)
             else:
                 available_stock = available_stock + 0
                 sheet.write(row_no, 3, 0, normal_format_left)
+                production_total = production_total + 0
             # datewise_purchase
             datewise_purchase_stocklist = product_report_utility.get_purchase_stock(start_date, end_date,
                                                                                     obj.operating_unit_id.id,
@@ -158,30 +178,35 @@ class VariantWiseReportXLSX(ReportXlsx):
                     if purchase_stock['purchase_qty']:
                         available_stock = available_stock + float(purchase_stock['purchase_qty'])
                         sheet.write(row_no, 4, purchase_stock['purchase_qty'], normal_format_left)
+                        purchase_total = purchase_total + float(purchase_stock['purchase_qty'])
                     else:
                         available_stock = available_stock + 0
                         sheet.write(row_no, 4, 0, normal_format_left)
+                        purchase_total = purchase_total + 0
             else:
                 available_stock = available_stock + 0
                 sheet.write(row_no, 4, 0, normal_format_left)
+                purchase_total = purchase_total + 0
             # datewise_loan_borrowed
 
             datewise_loan_borrowed = loan_data_utility.get_loan_stock_received(start_date, end_date,
-                                                                                     operating_unit_id,
-                                                                                     product_param,False)
+                                                                               operating_unit_id,
+                                                                               product_param, False)
 
             if datewise_loan_borrowed:
                 for loan_borrowing_stock in datewise_loan_borrowed:
                     if loan_borrowing_stock['loan_borrowing_qty']:
                         available_stock = available_stock + float(loan_borrowing_stock['loan_borrowing_qty'])
-
                         sheet.write(row_no, 5, loan_borrowing_stock['loan_borrowing_qty'], normal_format_left)
+                        by_loan_total = by_loan_total + float(loan_borrowing_stock['loan_borrowing_qty'])
                     else:
                         available_stock = available_stock + 0
                         sheet.write(row_no, 5, 0, normal_format_left)
+                        by_loan_total = by_loan_total + 0
             else:
                 available_stock = available_stock + 0
                 sheet.write(row_no, 5, 0, normal_format_left)
+                by_loan_total = by_loan_total + 0
 
             # datewise_received_from_other_unit
 
@@ -194,12 +219,15 @@ class VariantWiseReportXLSX(ReportXlsx):
                     if received_stock['item_receiving_qty']:
                         available_stock = available_stock + float(received_stock['item_receiving_qty'])
                         sheet.write(row_no, 6, received_stock['item_receiving_qty'], normal_format_left)
+                        received_from_other_unit_total = received_from_other_unit_total + float(received_stock['item_receiving_qty'])
                     else:
                         available_stock = available_stock + 0
                         sheet.write(row_no, 6, 0, normal_format_left)
+                        received_from_other_unit_total = received_from_other_unit_total + 0
             else:
                 available_stock = available_stock + 0
                 sheet.write(row_no, 6, 0, normal_format_left)
+                received_from_other_unit_total = received_from_other_unit_total + 0
 
             # datewise_other_adjustment
             datewise_other_adjustment = product_report_utility.get_other_adjustment_received(start_date, end_date,
@@ -210,14 +238,16 @@ class VariantWiseReportXLSX(ReportXlsx):
                 for other_adjustment in datewise_other_adjustment:
                     if other_adjustment['adjustment_qty']:
                         available_stock = available_stock + float(other_adjustment['adjustment_qty'])
-
                         sheet.write(row_no, 7, other_adjustment['adjustment_qty'], normal_format_left)
+                        other_adjustment_total = other_adjustment_total + float(other_adjustment['adjustment_qty'])
                     else:
                         available_stock = available_stock + 0
                         sheet.write(row_no, 7, 0, normal_format_left)
+                        other_adjustment_total = other_adjustment_total + 0
             else:
                 available_stock = available_stock + 0
                 sheet.write(row_no, 7, 0, normal_format_left)
+                other_adjustment_total = other_adjustment_total + 0
 
             # datewise_available_stock
             # datewise_sales
@@ -229,6 +259,7 @@ class VariantWiseReportXLSX(ReportXlsx):
                 delivery_quantity = sum(map(lambda x: x['delivered_qty'], value['deliveries']))
 
             sheet.write(row_no, 9, delivery_quantity, normal_format_left)
+            sales_total = sales_total + delivery_quantity
 
             # datewise_own_consumption
             datewise_own_consumption_stocklist = product_report_utility.get_own_consumption_stock(start_date, end_date,
@@ -239,23 +270,29 @@ class VariantWiseReportXLSX(ReportXlsx):
                 for own_consumption_stock in datewise_own_consumption_stocklist:
                     if own_consumption_stock['consumed_qty']:
                         sheet.write(row_no, 10, own_consumption_stock['consumed_qty'], normal_format_left)
+                        own_consumption_total = own_consumption_total + float(own_consumption_stock['consumed_qty'])
                     else:
                         sheet.write(row_no, 10, 0, normal_format_left)
+                        own_consumption_total = own_consumption_total + 0
             else:
                 sheet.write(row_no, 10, 0, normal_format_left)
+                own_consumption_total = own_consumption_total + 0
             # datewise_loan_lending
             datewise_loan_lending = loan_data_utility.get_loan_lending_stock_issued(start_date, end_date,
-                                                                                  operating_unit_id,
-                                                                                  product_param,False)
+                                                                                    operating_unit_id,
+                                                                                    product_param, False)
 
             if datewise_loan_lending:
                 for loan_lending_stock in datewise_loan_lending:
                     if loan_lending_stock['loan_lending_qty']:
                         sheet.write(row_no, 11, loan_lending_stock['loan_lending_qty'], normal_format_left)
+                        to_loan_total = to_loan_total + float(loan_lending_stock['loan_lending_qty'])
                     else:
                         sheet.write(row_no, 11, 0, normal_format_left)
+                        to_loan_total = to_loan_total + 0
             else:
                 sheet.write(row_no, 11, 0, normal_format_left)
+                to_loan_total = to_loan_total + 0
 
             # datewise_issue_to_other_unit
 
@@ -267,10 +304,13 @@ class VariantWiseReportXLSX(ReportXlsx):
                 for sent_stock in datewise_issue_to_other_unit:
                     if sent_stock['item_send_qty']:
                         sheet.write(row_no, 12, sent_stock['item_send_qty'], normal_format_left)
+                        issue_to_other_unit_total = issue_to_other_unit_total + float(sent_stock['item_send_qty'])
                     else:
                         sheet.write(row_no, 12, 0, normal_format_left)
+                        issue_to_other_unit_total = issue_to_other_unit_total + 0
             else:
                 sheet.write(row_no, 12, 0, normal_format_left)
+                issue_to_other_unit_total = issue_to_other_unit_total + 0
             # datewise_loss_adjustment
             datewise_loss_adjustment = product_report_utility.get_loss_adjustment_issued(start_date, end_date,
                                                                                          operating_unit_id,
@@ -280,16 +320,36 @@ class VariantWiseReportXLSX(ReportXlsx):
                 for loss_adjustment in datewise_loss_adjustment:
                     if loss_adjustment['adjustment_qty']:
                         sheet.write(row_no, 13, loss_adjustment['adjustment_qty'], normal_format_left)
+                        loss_total = loss_total + float(loss_adjustment['adjustment_qty'])
                     else:
                         sheet.write(row_no, 13, 0, normal_format_left)
+                        loss_total = loss_total + 0
             else:
                 sheet.write(row_no, 13, 0, normal_format_left)
+                loss_total = loss_total + 0
 
             sheet.write(row_no, 8, available_stock, normal_format_left)
+            available_stock_total = available_stock_total + float(available_stock)
 
             row_no = row_no + 1
 
             date_start_obj += timedelta(days=1)
+
+        sheet.write(row_no + 1, 0, "Grand Total", header_format_left)
+        sheet.write(row_no + 1, 1, "", header_format_left)
+        sheet.write(row_no + 1, 2, opening_stock_total, header_format_left)
+        sheet.write(row_no + 1, 3, production_total, header_format_left)
+        sheet.write(row_no + 1, 4, purchase_total, header_format_left)
+        sheet.write(row_no + 1, 5, by_loan_total, header_format_left)
+        sheet.write(row_no + 1, 6, received_from_other_unit_total, header_format_left)
+        sheet.write(row_no + 1, 7, other_adjustment_total, header_format_left)
+        sheet.write(row_no + 1, 8, available_stock_total, header_format_left)
+        sheet.write(row_no + 1, 9, sales_total, header_format_left)
+        sheet.write(row_no + 1, 10, own_consumption_total, header_format_left)
+        sheet.write(row_no + 1, 11, to_loan_total, header_format_left)
+        sheet.write(row_no + 1, 12, issue_to_other_unit_total, header_format_left)
+        sheet.write(row_no + 1, 13, loss_total, header_format_left)
+        sheet.write(row_no + 1, 14, closing_stock_total, header_format_left)
 
         data['name'] = 'Variant Wise Report'
 

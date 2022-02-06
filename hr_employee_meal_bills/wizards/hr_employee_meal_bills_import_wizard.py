@@ -23,8 +23,7 @@ class HrEmployeeMealBillsImportWizard(models.TransientModel):
     meal_bill_id = fields.Many2one(
         'hr.meal.bill',
         default=lambda self: self._default_meal_bill_id(),
-        string='Meal Bill',
-        required=True
+        string='Meal Bill'
     )
 
     def _default_description(self):
@@ -50,25 +49,32 @@ class HrEmployeeMealBillsImportWizard(models.TransientModel):
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
                                         default=lambda self: self._default_operating_unit(), readonly=True)
 
-
     def save_line_data(self, values):
         # ('values', [[u'', '1511', '867'],[u'', '1511', '867']])
         meal_bill_line_obj = self.env['hr.meal.bill.line']
         errors = []
         for val in values:
-            employee_obj = self.env['hr.employee'].search([('device_employee_acc', '=', int(val[1]))])
+            employee_obj = self.env['hr.employee'].search(
+                [('device_employee_acc', '=', int(val[1])), ('operating_unit_id', '=', self.operating_unit_id.id)])
+
+            if len(employee_obj) > 1:
+                error_msg = 'Uploading Failed ! Below Employees have same account number!'
+                for emp in employee_obj:
+                    error_msg = error_msg + "\n" + str(emp.name) + ' AC NO: ' + str(emp.device_employee_acc)
+
+                raise UserError(error_msg)
             # checking active employee
             if not employee_obj.resource_id.active:
                 errors.append(
                     'AC NO : ' + str(int(val[1])) + ', Error : Wrong Employee in excel! You '
-                                                                         'cannot upload archived employee data!')
+                                                    'cannot upload archived employee data!')
 
             # checking selected operating unit employee
             if employee_obj.operating_unit_id.id != self.operating_unit_id.id:
                 errors.append(
                     'AC NO : ' + str(int(val[1])) + ', Error : Wrong Employee in excel! You can '
-                                                                         'only upload selected Operating Unit '
-                                                                         'Employee!')
+                                                    'only upload selected Operating Unit '
+                                                    'Employee!')
 
             if employee_obj:
                 self._cr.execute('''

@@ -25,8 +25,7 @@ class HrPayrollArrearImportWizard(models.TransientModel):
     arrear_id = fields.Many2one(
         'hr.payroll.arrear',
         default=lambda self: self._default_arrear_id(),
-        string='Arrear',
-        required=True
+        string='Arrear'
     )
 
     def _default_description(self):
@@ -58,7 +57,13 @@ class HrPayrollArrearImportWizard(models.TransientModel):
         arrear_line_obj = self.env['hr.payroll.arrear.line']
         errors = []
         for val in values:
-            employee_obj = self.env['hr.employee'].search([('device_employee_acc', '=', int(val[1]))])
+            employee_obj = self.env['hr.employee'].search([('device_employee_acc', '=', int(val[1])),('operating_unit_id', '=', self.operating_unit_id.id)])
+            if len(employee_obj) > 1:
+                error_msg = 'Uploading Failed ! Below Employees have same account number!'
+                for emp in employee_obj:
+                    error_msg = error_msg + "\n" + str(emp.name) + ' AC NO: ' + str(emp.device_employee_acc)
+
+                raise UserError(error_msg)
             # checking active employee
             if not employee_obj.resource_id.active:
                 errors.append(
