@@ -62,7 +62,8 @@ class MrpProduction(models.Model):
         self._add_operating_unit_in_context(vals.get('operating_unit_id') or self.env.user.default_operating_unit_id.id)
         if not vals.get('name', False) or vals['name'] == _('New'):
             requested_date = datetime.datetime.strptime(fields.Date.today(), "%Y-%m-%d").date()
-            vals['name'] = self.env['ir.sequence'].next_by_code_new('mrp.production', requested_date)
+            operating_unit = self.env['operating.unit'].browse(vals.get('operating_unit_id'))
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('mrp.production', requested_date, operating_unit)
 
         location = self.env.ref('stock.stock_location_stock')
         picking_type = self.env['stock.picking.type'].search([
