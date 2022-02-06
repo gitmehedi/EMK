@@ -22,5 +22,6 @@
         'views/item_transfer_send_views.xml',
         'views/item_transfer_receive_views.xml',
         'views/stock_location_view.xml',
+        'wizards/confirm_item_receive_view.xml'
     ]
 }

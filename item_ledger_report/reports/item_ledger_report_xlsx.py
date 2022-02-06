@@ -12,12 +12,9 @@ class ItemLedgerReportXLSX(ReportXlsx):
         reportUtility = self.env['report.utility']
         # location = self.env['stock.location'].search(
         #     [('operating_unit_id', '=', obj.operating_unit_id.id), ('name', '=', 'Stock')])
-        stock_utility = self.env['stock.utility']
-        location_id = stock_utility.get_location_id(obj.operating_unit_id.id)
-        if not location_id:
-            location_id = self.env['stock.location'].search(
-                [('operating_unit_id', '=', obj.operating_unit_id.id), ('name', '=', 'Stock')],
-                limit=1).id
+        location_id = self.env['stock.location'].search(
+            [('operating_unit_id', '=', obj.operating_unit_id.id), ('name', '=', 'Stock')],
+            limit=1).id
 
         if not location_id:
             raise UserError(_("There are no stock location for this unit. "

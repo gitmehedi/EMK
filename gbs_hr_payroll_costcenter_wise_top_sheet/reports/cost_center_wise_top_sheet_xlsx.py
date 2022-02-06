@@ -96,7 +96,8 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
 
                 if not payslip_list:
                     if cost_center_len == 1:
-                        raise UserError(_('No payslip generated for this cost center employee!'))
+                        raise UserError(
+                            _('No payslip generated for this cost center employee!'))
                 rule_list = self.get_rule_list(payslip_list, non_costcenter_payslip_list)
 
                 if rule_list:
@@ -196,7 +197,6 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     grand_total[key] = grand_total[key] + value
                     total_col = total_col + 1
                 last_row = row
-
         else:
             cost_centers = self.env['account.cost.center'].search([])
 
@@ -312,9 +312,7 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
         bnet = 0
         net = 0
         record = OrderedDict()
-
-        if found_non_cost_center > 0:
-
+        if found_non_cost_center > 0 and not obj.cost_center_ids:
             # only undefined will be shown
             non_cost_center_rule_list = self.get_non_costcenter_rule_list(non_costcenter_payslip_list)
             header = OrderedDict()
@@ -350,60 +348,39 @@ class CostCenterWiseTopSheetXLSX(ReportXlsx):
                     if line.code == 'NET':
                         net = net + math.ceil(line.total)
 
-        else:
+        if found_non_cost_center > 0 and not obj.cost_center_ids:
+            sheet.write(last_row + 1, 0, 'Undefined', normal)
 
-            for rec in non_costcenter_payslip_list:
-                rules = OrderedDict()
-                for rule in final_rule_list:
-                    rules[rule[1]] = 0
-                record[rec.employee_id.department_id.name] = {}
-                record[rec.employee_id.department_id.name]['count'] = 0
-                record[rec.employee_id.department_id.name]['vals'] = rules
+            row = last_row + 1 + 1
+            sub_employee_count = 0
+            for key, value in record.items():
+                sheet.write(row, 1, key, normal)
+                sheet.write(row, 2, value['count'], normal)
+                col = 3
+                for rule_key, rule_value in value['vals'].items():
+                    sheet.write(row, col, rule_value, no_format)
+                    col = col + 1
+                row = row + 1
+                sub_employee_count = sub_employee_count + value['count']
 
-            for slip in non_costcenter_payslip_list:
-                rec = record[slip.employee_id.department_id.name]
-                rec['count'] = rec['count'] + 1
-                for line in slip.line_ids:
-                    if line.appears_on_payslip:
-                        rec['vals'][line.name] = rec['vals'][line.name] + math.ceil(line.total)
-                        total[line.name] = total[line.name] + math.ceil(line.total)
-                    if line.code == 'BNET' and slip.employee_id.bank_account_id.bank_id:
-                        bnet = bnet + math.ceil(line.total)
-                    if line.code == 'NET':
-                        net = net + math.ceil(line.total)
+            sheet.write(row, 0, 'Sub Total', bg_normal_bordered)
+            sheet.write(row, 1, ' ', bg_normal_bordered)
+            sheet.write(row, 2, sub_employee_count, bg_normal_bordered)
+            total_employee_count = total_employee_count + sub_employee_count
 
-        sheet.write(last_row + 1, 0, 'Undefined', normal)
+            set1 = set(total)
+            set2 = set(grand_total)
+            shared_items = set2 - set1
 
-        row = last_row + 1 + 1
-        sub_employee_count = 0
-        for key, value in record.items():
-            sheet.write(row, 1, key, normal)
-            sheet.write(row, 2, value['count'], normal)
-            col = 3
-            for rule_key, rule_value in value['vals'].items():
-                sheet.write(row, col, rule_value, no_format)
-                col = col + 1
-            row = row + 1
-            sub_employee_count = sub_employee_count + value['count']
-
-        sheet.write(row, 0, 'Sub Total', bg_normal_bordered)
-        sheet.write(row, 1, ' ', bg_normal_bordered)
-        sheet.write(row, 2, sub_employee_count, bg_normal_bordered)
-        total_employee_count = total_employee_count + sub_employee_count
-
-        set1 = set(total)
-        set2 = set(grand_total)
-        shared_items = set2 - set1
-
-        for name in shared_items:
-            if name in grand_total:
-                del grand_total[name]
-        total_col = 3
-        for key, value in total.items():
-            sheet.write(row, total_col, value, no_format_bold_bg)
-            grand_total[key] = grand_total[key] + value
-            total_col = total_col + 1
-        last_row = row
+            for name in shared_items:
+                if name in grand_total:
+                    del grand_total[name]
+            total_col = 3
+            for key, value in total.items():
+                sheet.write(row, total_col, value, no_format_bold_bg)
+                grand_total[key] = grand_total[key] + value
+                total_col = total_col + 1
+            last_row = row
 
         sheet.write(last_row + 1, 0, 'Total', bg_normal_bordered)
         sheet.write(last_row + 1, 1, ' ', bg_normal_bordered)

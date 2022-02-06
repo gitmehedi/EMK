@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="confirm_item_receive_wizard_view" model="ir.ui.view">
+            <field name="name">confirm.item.receive.wizard.view</field>
+            <field name="model">confirm.item.receive.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Item Ledger Report">
+                    <group>
+                        <group>
+                            <field name="receive_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="confirm" string="Confirm" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>

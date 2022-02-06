@@ -20,7 +20,7 @@ class ItemLoanLending(models.Model):
 
     name = fields.Char('Issue #', size=100, readonly=True, default=lambda self: _('New'),copy=False,
                        states={'draft': [('readonly', False)]},track_visibility='onchange')
-    request_date = fields.Datetime('Request Date', required=True, readonly=True,
+    request_date = fields.Datetime('Request Date', required=True,
                                   default=fields.Datetime.now,track_visibility='onchange')
     issuer_id = fields.Many2one('res.users', string='Issue By', required=True, readonly=True,track_visibility='onchange',
                                   default=lambda self: self.env.user,states={'draft': [('readonly', False)]})
@@ -32,9 +32,13 @@ class ItemLoanLending(models.Model):
                                   help="who have approve or reject.",track_visibility='onchange')
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
+
+    def _get_operating_unit(self):
+        domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
+        return domain
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,readonly=True,
                                         states={'draft': [('readonly', False)]},
-                                        default=lambda self: self.env.user.default_operating_unit_id)
+                                        default=lambda self: self.env.user.default_operating_unit_id, domain=_get_operating_unit)
     location_id = fields.Many2one('stock.location', 'Source Location', default=_get_default_location_id,
                                   domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",
                                   required=True,

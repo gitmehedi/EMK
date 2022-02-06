@@ -9,6 +9,7 @@ class MultiVariantInventoryReportXLSX(ReportXlsx):
 
     def generate_xlsx_report(self, workbook, data, obj):
         ReportUtility = self.env['report.utility']
+        loan_data_utility = self.env['loan.data.utility']
         product_report_utility = self.env['product.ledger.report.utility']
         location = self.env['stock.location'].search(
             [('operating_unit_id', '=', obj.operating_unit_id.id)])
@@ -171,9 +172,9 @@ class MultiVariantInventoryReportXLSX(ReportXlsx):
                 sheet.write(row_no, 4, 0, normal_format_left)
             # datewise_loan_borrowed
 
-            datewise_loan_borrowed = product_report_utility.get_loan_borrowing_stock(start_date, end_date,
+            datewise_loan_borrowed = loan_data_utility.get_loan_stock_received(start_date, end_date,
                                                                                      operating_unit_id,
-                                                                                     product_param)
+                                                                                     product_param,False)
 
             if datewise_loan_borrowed:
                 for loan_borrowing_stock in datewise_loan_borrowed:
@@ -188,6 +189,23 @@ class MultiVariantInventoryReportXLSX(ReportXlsx):
                 sheet.write(row_no, 5, 0, normal_format_left)
 
             # datewise_received_from_other_unit
+
+            datewise_received_from_other_unit = loan_data_utility.get_received_from_other_unit(start_date, end_date,
+                                                                                               operating_unit_id,
+                                                                                               product_param, True)
+
+            if datewise_received_from_other_unit:
+                for received_stock in datewise_received_from_other_unit:
+                    if received_stock['item_receiving_qty']:
+                        available_stock = available_stock + float(received_stock['item_receiving_qty'])
+                        sheet.write(row_no, 6, received_stock['item_receiving_qty'], normal_format_left)
+                    else:
+                        available_stock = available_stock + 0
+                        sheet.write(row_no, 6, 0, normal_format_left)
+            else:
+                available_stock = available_stock + 0
+                sheet.write(row_no, 6, 0, normal_format_left)
+
             # datewise_other_adjustment
             datewise_other_adjustment = product_report_utility.get_other_adjustment_received(start_date, end_date,
                                                                                              operating_unit_id,
@@ -230,9 +248,9 @@ class MultiVariantInventoryReportXLSX(ReportXlsx):
             else:
                 sheet.write(row_no, 10, 0, normal_format_left)
             # datewise_loan_lending
-            datewise_loan_lending = product_report_utility.get_loan_lending_stock(start_date, end_date,
+            datewise_loan_lending = loan_data_utility.get_loan_lending_stock_issued(start_date, end_date,
                                                                                   operating_unit_id,
-                                                                                  product_param)
+                                                                                  product_param,False)
 
             if datewise_loan_lending:
                 for loan_lending_stock in datewise_loan_lending:
@@ -244,6 +262,19 @@ class MultiVariantInventoryReportXLSX(ReportXlsx):
                 sheet.write(row_no, 11, 0, normal_format_left)
 
             # datewise_issue_to_other_unit
+
+            datewise_issue_to_other_unit = loan_data_utility.get_issued_to_other_unit_stock(start_date, end_date,
+                                                                                            operating_unit_id,
+                                                                                            product_param, True)
+
+            if datewise_issue_to_other_unit:
+                for sent_stock in datewise_issue_to_other_unit:
+                    if sent_stock['item_send_qty']:
+                        sheet.write(row_no, 12, sent_stock['item_send_qty'], normal_format_left)
+                    else:
+                        sheet.write(row_no, 12, 0, normal_format_left)
+            else:
+                sheet.write(row_no, 12, 0, normal_format_left)
             # datewise_loss_adjustment
             datewise_loss_adjustment = product_report_utility.get_loss_adjustment_issued(start_date, end_date,
                                                                                          operating_unit_id,

@@ -67,6 +67,7 @@ class LetterOfCreditCommon(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': view_id,
+            'context': {'is_amendment': True},
             'target': 'current',
             'nodestroy': True,
             'flags': {'initial_mode': 'edit'},
