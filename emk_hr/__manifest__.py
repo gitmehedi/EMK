@@ -18,6 +18,7 @@
         'date_range',
         'survey',
         'hr_recruitment_survey',
+        'hr_experience',
     ],
     'data': [
         'security/hr_security.xml',

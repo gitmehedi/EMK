@@ -106,7 +106,7 @@ class ResPartner(models.Model):
     #         utility.valid_email(self.email)
 
     @api.one
-    @api.constrains('phone')
+    @api.constrains('mobile')
     def valid_mobile(self):
         if self.mobile:
             if not utility.valid_mobile(self.mobile):

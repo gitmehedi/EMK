@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api,SUPERUSER_ID
+from odoo import models, fields, api,SUPERUSER_ID,_
 from odoo.exceptions import UserError, AccessError, ValidationError
 
 HOURS_PER_DAY = 8
@@ -44,6 +44,7 @@ class HrHolidayHour(models.Model):
             diff = finish_dt - start_dt
             hours = float(diff.total_seconds() / 3600)
             self.number_of_days = hours
+
 
     @api.onchange('date_to')
     def _onchange_date_to(self):
@@ -106,10 +107,10 @@ class HrHolidayHour(models.Model):
 
     @api.constrains('number_of_days')
     def _check_number_of_days(self):
-        if self.holiday_status_id.compensatory_flag == False:
+        if not self.holiday_status_id.compensatory_flag:
             if self.holiday_status_id.short_leave_flag and self.number_of_days:
-               if self.number_of_days != 4.00 :
-                   raise ValidationError('Half day leave takes only 4 hours!')
+               if self.number_of_days > self.holiday_status_id.number_of_hours:
+                   raise ValidationError(_('[Warning] Half leave cannot exceed %s hours' % self.holiday_status_id.number_of_hours))
                else:
                    pass
 
@@ -118,7 +119,7 @@ class HrHolidayHour(models.Model):
 
         date_from = self.date_from
         date_to = self.date_to
-        holidays = self.env['hr.holidays'].search([])
+        holidays = self.env['hr.holidays'].search([('employee_id', '=', self.employee_id.id), ('leave_year_id','=', self.leave_year_id.id)])
         for i in holidays:
             if i.expire_date:
                 if date_from > i.expire_date or date_to > i.expire_date:
@@ -132,6 +133,7 @@ class HrHolidayStatus(models.Model):
 
     short_leave_flag = fields.Boolean(string='Allow Short Leave', default=False)
     compensatory_flag = fields.Boolean(string='Allow Compensatory Leave', default=False)
+    number_of_hours = fields.Integer(string='Leave Hours')
 
 class EmployeeLeaves(models.Model):
     _name = "hr.employee"

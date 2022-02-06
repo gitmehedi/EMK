@@ -53,6 +53,7 @@
                 </xpath>
                 <xpath expr="//field[@name='department_id']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                    <attribute name="required">True</attribute>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
