@@ -60,7 +60,7 @@ class VariantWiseReportXLSX(ReportXlsx):
             {'num_format': '#,###0.00', 'align': 'left', 'size': 8})
         name_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 8})
         header_format_left = workbook.add_format(
-            {'align': 'left', 'bg_color': '#d7ecfa', 'bold': True, 'size': 8, 'border': 1})
+            {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#d7ecfa', 'bold': True, 'size': 8, 'border': 1})
 
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 7})
 
