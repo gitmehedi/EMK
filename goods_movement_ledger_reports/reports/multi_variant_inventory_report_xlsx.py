@@ -23,7 +23,6 @@ class MultiVariantInventoryReportXLSX(ReportXlsx):
 
         date_to = obj.date_to
         date_end = date_to + ' 23:59:59'
-
         location_outsource = tuple(location.ids)
 
         operating_unit_id = obj.operating_unit_id.id
@@ -33,11 +32,17 @@ class MultiVariantInventoryReportXLSX(ReportXlsx):
         else:
             if self.env.user.has_group('mrp.group_mrp_user'):
                 if self.env.user.has_group('mrp_gbs_access.group_mrp_adviser'):
-                    product_ids = self.env['product.product'].sudo().search([]).ids
+                    product_ids = self.env['product.product'].sudo().search(
+                        [('product_tmpl_id', '=', obj.product_tmpl_id.id)]).ids
                 else:
-                    product_ids = self.env.user.product_ids.ids
+                    # product_ids = self.env.user.product_ids
+                    product_ids = self.env['product.product'].sudo().search(
+                        [('product_tmpl_id', '=', obj.product_tmpl_id.id),
+                         ('id', 'in', self.env.user.product_ids.ids)]).ids
+
             elif self.env.user.has_group('mrp_gbs_access.group_mrp_adviser'):
-                product_ids = self.env['product.product'].sudo().search([]).ids
+                product_ids = self.env['product.product'].sudo().search(
+                    [('product_tmpl_id', '=', obj.product_tmpl_id.id)]).ids
 
         date_start_obj = datetime.strptime(date_from, "%Y-%m-%d")
 
@@ -198,8 +203,8 @@ class MultiVariantInventoryReportXLSX(ReportXlsx):
             # datewise_loan_borrowed
 
             datewise_loan_borrowed = loan_data_utility.get_loan_stock_received(start_date, end_date,
-                                                                                     operating_unit_id,
-                                                                                     product_param,False)
+                                                                               operating_unit_id,
+                                                                               product_param, False)
 
             if datewise_loan_borrowed:
                 for loan_borrowing_stock in datewise_loan_borrowed:
@@ -227,7 +232,8 @@ class MultiVariantInventoryReportXLSX(ReportXlsx):
                     if received_stock['item_receiving_qty']:
                         available_stock = available_stock + float(received_stock['item_receiving_qty'])
                         sheet.write(row_no, 6, received_stock['item_receiving_qty'], normal_format_left)
-                        received_from_other_unit_total = received_from_other_unit_total + float(received_stock['item_receiving_qty'])
+                        received_from_other_unit_total = received_from_other_unit_total + float(
+                            received_stock['item_receiving_qty'])
                     else:
                         available_stock = available_stock + 0
                         sheet.write(row_no, 6, 0, normal_format_left)
@@ -287,8 +293,8 @@ class MultiVariantInventoryReportXLSX(ReportXlsx):
                 own_consumption_total = own_consumption_total + 0
             # datewise_loan_lending
             datewise_loan_lending = loan_data_utility.get_loan_lending_stock_issued(start_date, end_date,
-                                                                                  operating_unit_id,
-                                                                                  product_param,False)
+                                                                                    operating_unit_id,
+                                                                                    product_param, False)
 
             if datewise_loan_lending:
                 for loan_lending_stock in datewise_loan_lending:
