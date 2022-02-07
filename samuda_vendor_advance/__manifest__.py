@@ -11,12 +11,8 @@
     ],
     'data': [
         'data/data_vendor_advance.xml',
-        # 'security/ir_rule.xml',
-        # 'security/ir.model.access.csv',
-        'views/vendor_advance_view.xml',
-        # 'views/account_invoice.xml',
-        # 'views/receive_outstanding_advance.xml',
-        # 'views/menu.xml',
+        'security/ir.model.access.csv',
+        'views/vendor_advance_view.xml'
     ],
     'installable': True,
     'application': False,

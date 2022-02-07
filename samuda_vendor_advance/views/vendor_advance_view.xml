@@ -59,7 +59,8 @@
                         <group string="Advance Calculation">
                             <group>
                                 <field name="advance_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                <field name="security_deposit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="security_deposit" invisible="1"
+                                       widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="vat_account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="tds_account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="company_id" invisible="1"/>
@@ -121,6 +122,7 @@
                   name="Vendor Advances"
                   parent="account.menu_finance_payables"
                   action="vendor_advance_action"
+                  groups="account.group_account_user"
                   sequence="100"
         />
 
