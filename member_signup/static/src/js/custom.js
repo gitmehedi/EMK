@@ -18,8 +18,8 @@ $(function () {
         if (birthDate >= serverDate){
             $(this).val('');
             alert('Birth Date should not greater than current date.');
-        }
-        }
+            }
+      }
     });
 
 
@@ -98,22 +98,30 @@ $(function () {
         }
     });
 
-
-
-    $('.member_image_layer').on('click', function() {
-        $('#member-image-upload').click();
-    });
-
-    $("#member-image-upload").change(function() {
-        readURL(this,'member_image');
-    });
-
-    $('.signature_image_layer').on('click', function() {
-        $('#signature-image-upload').click();
+    $('.img_select_layer').on('click', function() {
+        $(this).siblings('input').click();
     });
 
     $("#signature-image-upload").change(function() {
-        readURL(this,'signature_image');
+        var validImg = validateFile(this,'signature_image');
+        if (validImg==false){
+            $(this).val(null);
+            $(this).parent('.img_ctx').siblings('.warning').css('color','red');
+        } else{
+            $(this).parent('.img_ctx').siblings('.warning').css('color','black');
+        }
+
+    });
+
+    $("#member-image-upload").change(function() {
+        var validImg = validateFile(this,'member_image');
+        if (validImg==false){
+            $(this).val(null);
+            $(this).parent('.img_ctx').siblings('.warning').css('color','red');
+        } else{
+            $(this).parent('.img_ctx').siblings('.warning').css('color','black');
+        }
+
     });
 
     $("#email").change(function(){
@@ -134,13 +142,13 @@ $(function () {
     }
 
 
-    $("#file").on('change',function(e){
-        var self = this;
-        if (self.files[0].size>207200){
-            alert('File size is larger than system accept.');
-            $(self).val('');
-        }
-    });
+//    $("#file").on('change',function(e){
+//        var self = this;
+//        if (self.files[0].size>207200){
+//            alert('File size is larger than system accept.');
+//            $(self).val('');
+//        }
+//    });
     var maxAttach=10;
     var attachNo=1;
     $('#createAttachment').on('click',function(e){
@@ -167,15 +175,40 @@ $(function () {
 
     });
 
-    function readURL(input,loc) {
-
-      if (input.files && input.files[0]) {
+    function validateFile(file,loc) {
+      if (file.files && file.files[0]) {
+        var extensions = ['jpg', 'gif', 'png'];
         var reader = new FileReader();
-
-        reader.onload = function(e) {
-          $('#'+loc).attr('src', e.target.result);
+        var fileOrNot=false;
+        if (file) {
+            var get_ext = file.files[0]['name'].split('.').pop().toLowerCase();
+            var iSize = (file.files[0].size / (1024 * 1024));
+            if (($.inArray(get_ext, extensions) > -1)) {
+                reader.onload = function(e) {
+                    var img = new Image;
+                    img.src = reader.result;
+                    img.onload = function() {
+                        if (loc=='member_image'){
+                            if ((img.width<=200) && (img.height) <=200 && (iSize < 2)){
+                                $('#'+loc).attr('src', e.target.result);
+                                fileOrNot=true;
+                            } else {
+                                $('#'+loc).attr('src','');
+                            }
+                        }
+                        if (loc=='signature_image'){
+                            if ((img.width<=300) && (img.height <=80) && (iSize < .2)){
+                                $('#'+loc).attr('src', e.target.result);
+                                fileOrNot=true;
+                            } else {
+                                $('#'+loc).attr('src','');
+                            }
+                        }
+                    };
+                }
+                reader.readAsDataURL(file.files[0]);
+            }
         }
-        reader.readAsDataURL(input.files[0]);
       }
     }
 

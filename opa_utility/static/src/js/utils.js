@@ -216,8 +216,6 @@ function redirect(url) {
     document.location.href = baseUrl + "/" + url;
 }
 
-
-
 function ajaxRequest(url, data, callBack)
 {
     $.ajax({
@@ -755,6 +753,17 @@ var countryStateCity = {
         $('#' + city).empty().append(select);
     },
 };
+
+function callAjax(url,data,method,callBack,event){
+        var params ={
+            url: url,
+            method: method,
+            data:data
+        };
+        $.ajax(params).done(function(responseData){
+            callBack(JSON.parse(responseData),event);
+        });
+    }
 
 
 

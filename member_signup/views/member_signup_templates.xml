@@ -4,7 +4,7 @@
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/member_signup/static/src/js/utils.js"></script>
             <script type="text/javascript" src="/member_signup/static/src/js/custom.js"></script>
-            <script type="text/javascript" src="/member_signup/static/src/js/bootstrap.validator.js"></script>
+            <script type="text/javascript" src="/opa_utility/static/src/js/bootstrap.validator.js"></script>
             <link rel="stylesheet" href="/member_signup/static/src/css/style.css"/>
         </xpath>
     </template>
@@ -83,7 +83,7 @@
                         <div class="form-group form-field">
                             <label for="phone" class="control-label">Phone</label>
                             <input type="text" name="phone" t-att-value="phone" id="phone"
-                                   placeholder="8801900000000"  minlength="13" maxlength="13" pattern="(880)([0-9]{10})"
+                                   placeholder="8801900000000" minlength="13" maxlength="13" pattern="(880)([0-9]{10})"
                                    class="form-control input-sm reqfield number"
                                    data-minlength="13" data-maxlength="13" required="required"/>
                         </div>
@@ -371,25 +371,28 @@
                             regulation.
                         </div>
                         <div class="col-md-6">
-                            <div class="wrap_signature pull-left" id="wrap_signature">
+                            <div class="warning">Signature Image (Resolution: 300px * 80px, Size: 200KB)</div>
+                            <div class="img_ctx pull-left">
                                 <input id="signature-image-upload" name="signature_image" class="hidden reqfield"
                                        type="file" required="required">
                                     <img id="signature_image"/>
                                 </input>
-                                <div class="signature_image_layer">
-                                    <p class="img_desc text-center">Click here to upload signature.</p>
+                                <div class="img_select_layer">
+                                    <p class="img_desc text-center">Signature</p>
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="col-md-6">
-                            <div class="img__wrap  pull-right" id="img_wrap">
+                            <div class="warning pull-right" style="padding-left: 100px;">Profile Image (Resolution: 200px * 200px , Size: 2MB)</div>
+                            <div class="img_ctx  pull-right">
                                 <input id="member-image-upload" class="hidden reqfield" type="file" name="image"
                                        required="required">
                                     <img id="member_image"/>
                                 </input>
-                                <div class="member_image_layer">
-                                    <p class="img_desc text-center">Click here to upload image.</p>
+                                <div class="img_select_layer">
+                                    <p class="img_desc text-center">Profile Image</p>
                                 </div>
                             </div>
                         </div>
