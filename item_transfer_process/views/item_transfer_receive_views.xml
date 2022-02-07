@@ -6,7 +6,7 @@
             <field name="name">view.item.transfer.receive.tree</field>
             <field name="model">item.borrowing</field>
             <field name="arch" type="xml">
-                <tree string="Receive Item" default_order="request_date desc" ecoration-bf="message_needaction == True"
+                <tree string="Receive Item" create="false" default_order="request_date desc" ecoration-bf="message_needaction == True"
                       colors="gray:state=='approved';green:state=='waiting_approval';red:state=='reject';">
                     <field name="name"/>
                     <field name="item_transfer_send_id"/>
@@ -24,7 +24,7 @@
             <field name="name">view.item.transfer.receive.form</field>
             <field name="model">item.borrowing</field>
             <field name="arch" type="xml">
-                <form string="Receive Item">
+                <form string="Receive Item" create="false">
                     <header>
                         <button name="button_confirm_receive" string="Confirm" states="draft"
                                 class="oe_highlight" type="object" groups="stock.group_stock_user"/>

@@ -15,15 +15,13 @@ class HrOtherAllowanceImportWizard(models.TransientModel):
     file = fields.Binary(string="File", required=True)
     fname = fields.Char(string='Filename')
 
-
-
     def _default_allowance_id(self):
         allowance_id = self.env['hr.other.allowance'].browse(self.env.context.get('active_id'))
         return allowance_id
 
     allowance_id = fields.Many2one(
-        'hr.other.allowance',default=lambda self: self._default_allowance_id(),
-        string='Other Allowance',required=True)
+        'hr.other.allowance', default=lambda self: self._default_allowance_id(),
+        string='Other Allowance')
 
     def _default_description(self):
         allowance_id = self.env['hr.other.allowance'].browse(self.env.context.get('active_id'))
@@ -45,27 +43,31 @@ class HrOtherAllowanceImportWizard(models.TransientModel):
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit',
                                         default=lambda self: self._default_operating_unit(), readonly=True)
 
-
-
-
     def save_line_data(self, values):
         # ('values format', [[u'', '1511', '867'],[u'', '1511', '867']])
         allowance_line_obj = self.env['hr.other.allowance.line']
         errors = []
         for val in values:
-            employee_obj = self.env['hr.employee'].search([('device_employee_acc', '=', int(val[1]))])
+            employee_obj = self.env['hr.employee'].search(
+                [('device_employee_acc', '=', int(val[1])), ('operating_unit_id', '=', self.operating_unit_id.id)])
+            if len(employee_obj) > 1:
+                error_msg = 'Uploading Failed ! Below Employees have same account number!'
+                for emp in employee_obj:
+                    error_msg = error_msg + "\n" + str(emp.name) + ' AC NO: ' + str(emp.device_employee_acc)
+
+                raise UserError(error_msg)
             # checking active employee
             if not employee_obj.resource_id.active:
                 errors.append(
                     'AC NO : ' + str(int(val[1])) + ', Error : Wrong Employee in excel! You '
-                                                                         'cannot upload archived employee data!')
+                                                    'cannot upload archived employee data!')
 
             # checking selected operating unit employee
             if employee_obj.operating_unit_id.id != self.operating_unit_id.id:
                 errors.append(
                     'AC NO : ' + str(int(val[1])) + ', Error : Wrong Employee in excel! You can '
-                                                                         'only upload selected Operating Unit '
-                                                                         'Employee!')
+                                                    'only upload selected Operating Unit '
+                                                    'Employee!')
 
             if employee_obj:
                 self._cr.execute('''
@@ -110,7 +112,6 @@ class HrOtherAllowanceImportWizard(models.TransientModel):
             raise UserError(error_msg)
 
         return True
-
 
     @api.multi
     def allowance_import(self):
