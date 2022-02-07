@@ -173,9 +173,9 @@
                         <attribute name="invisible">1</attribute>
                     </xpath>
                     <xpath expr="//field[@name='price_unit']" position="after" type="object">
-                        <field name="last_requisition_no"/>
-                        <field name="last_requisition_date"/>
-                        <field name="last_requisition_qty"/>
+                        <field name="last_requisition_no" readonly="1"/>
+                        <field name="last_requisition_date" readonly="1"/>
+                        <field name="last_requisition_qty" readonly="1"/>
                         <field name="last_purchase_date" readonly="1"/>
                         <field name="last_qty" readonly="1"/>
                         <field name="last_product_uom_id" readonly="1"/>
