@@ -28,6 +28,7 @@
                         <group>
                             <group>
                                 <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+                                <field name="holiday_status_id"  options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <label for="number_of_days_temp" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"  string="Duration"/>
                                 <div>
                                     <div>

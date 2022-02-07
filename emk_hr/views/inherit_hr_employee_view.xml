@@ -8,7 +8,6 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-
                 <xpath expr="//field[@name='employee_number']" position="attributes">
                     <field name="employee_number">
                         <attribute name="required">True</attribute>
@@ -24,7 +23,7 @@
                     <attribute name="placeholder">8801900000000</attribute>
                 </xpath>
                 <xpath expr="//field[@name='work_phone']" position="attributes">
-                      <attribute name="string">Personal Mobile</attribute>
+                    <attribute name="string">Personal Mobile</attribute>
                     <attribute name="placeholder">8801900000000</attribute>
                 </xpath>
                 <xpath expr="//field[@name='department_id']" position="attributes">
@@ -49,8 +48,26 @@
                 <xpath expr="//form/sheet/notebook/page[2]/group/group[2]" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+
             </field>
         </record>
+        <record model="ir.ui.view" id="view_employee_form_experience">
+            <field name="name">hr.experience.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_experience.view_employee_form_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/notebook/page/field[@name='academic_ids']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page/field[@name='experience_ids']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page/field[@name='certification_ids']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
 
         <record id="inherit_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.employee.view.form</field>
@@ -58,8 +75,8 @@
             <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='bank_account_id']" position="replace">
-<!--                    <field name="bank_account_id" context="{'default_partner_id': address_home_id}"-->
-<!--                           options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>-->
+                    <!--                    <field name="bank_account_id" context="{'default_partner_id': address_home_id}"-->
+                    <!--                           options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>-->
                     <field name="bank_account_number"></field>
 
                 </xpath>

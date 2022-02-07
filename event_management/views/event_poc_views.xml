@@ -102,7 +102,7 @@
                                 <field name="function" placeholder="e.g. Job Position"
                                        attrs="{'invisible': [('is_company','=', True)]}"/>
                                 <field name="phone" widget="phone"/>
-                                <field name="mobile" widget="phone"/>
+                                <field name="mobile" widget="phone" placeholder="8801900000000"/>
                                 <field name="fax"/>
                                 <field name="user_ids" invisible="1"/>
                                 <field name="email" widget="email" required="1"/>

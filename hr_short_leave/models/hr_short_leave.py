@@ -56,6 +56,9 @@ class HrShortLeave(models.Model):
                                               compute='_compute_current_user_is_approver')
     approbations = fields.One2many('hr.employee.short.leave.approbation', 'short_leave_ids', string='Approvals',
                                    readonly=True)
+    holiday_status_id = fields.Many2one("hr.holidays.status", string="Leave Type", required=True, readonly=True,
+                                        domain="[('short_leave_flag','=',True)]",
+                                        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -85,6 +88,14 @@ class HrShortLeave(models.Model):
             diff = finish_dt - start_dt
             hours = float(diff.total_seconds() / 3600)
             self.number_of_days = hours
+
+    @api.one
+    @api.constrains('number_of_days')
+    def _check_number_of_hours(self):
+        if self.number_of_days:
+            if self.number_of_days > self.holiday_status_id.number_of_hours:
+                raise ValidationError(_('[Warning] Short leave cannot exceed %s hours' % self.holiday_status_id.number_of_hours))
+
 
     @api.multi
     def _compute_can_reset(self):

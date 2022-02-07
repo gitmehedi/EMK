@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.addons.opa_utility.helper.utility import Utility as utility
-from odoo.exceptions import UserError
 from urlparse import urljoin
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -56,9 +56,7 @@ class ResPartner(models.Model):
     is_applicant = fields.Boolean(default=False, track_visibility="onchange")
     info_about_emk = fields.Text(string="How did you learn about the EMK Center?", track_visibility="onchange")
     application_ref = fields.Text(string="Application Ref", track_visibility="onchange")
-
-    gender = fields.Selection([('male', 'Male'), ('female', 'Female')], default='male', string='Gender',
-                              track_visibility="onchange")
+    gender = fields.Many2one('res.gender', string='Gender', required=True, track_visibility='onchange')
     usa_work_or_study = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='no',
                                          string="Have you worked, or studied in the U.S?", track_visibility="onchange")
     usa_work_or_study_place = fields.Text(string="If yes, where in the U.S have you worked, or studied?",
@@ -89,23 +87,30 @@ class ResPartner(models.Model):
             today = str(datetime.now().date())
             if self.birth_date > today:
                 raise UserError(
-                    _('Birth Date should not greater than current date.'))
+                    _('[Warning] Birth Date should not greater than current date.'))
 
     @api.constrains('birth_date')
     def _check_birthdate(self):
         today = str(datetime.now().date())
         if self.birth_date > today:
-            raise ValueError(_('Birth Date should not greater than current date.'))
+            raise ValueError(_('[Warning] Birth Date should not greater than current date.'))
 
     @api.onchange('email')
     def validate_email(self):
         if self.email:
             utility.valid_email(self.email)
 
-    @api.constrains('email')
-    def check_email(self):
-        if self.email:
-            utility.valid_email(self.email)
+    # @api.constrains('email')
+    # def check_email(self):
+    #     if self.email:
+    #         utility.valid_email(self.email)
+
+    @api.one
+    @api.constrains('mobile')
+    def valid_mobile(self):
+        if self.mobile:
+            if not utility.valid_mobile(self.mobile):
+                raise ValidationError('Mobile no should be input a valid')
 
     @api.model
     def create(self, vals):
