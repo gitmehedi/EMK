@@ -83,34 +83,34 @@ class InheritedItemLoanLending(models.Model):
         destination_loc_id = self.env['stock.location'].search(
             [('operating_unit_id', '=', self.receiving_operating_unit_id.id), ('name', '=', 'Input')],
             limit=1).id
+        # TODO
+        # receiving_picking_type = self.env['stock.picking.type'].suspend_security().search(
+        #     [('default_location_src_id', '=', self.item_loan_location_id.id),
+        #      ('code', '=', 'operating_unit_transfer'),
+        #      ('default_location_dest_id', '=', destination_loc_id),
+        #      ('operating_unit_id', '=', self.receiving_operating_unit_id.id)])
+        # if not receiving_picking_type:
+        #     raise UserError(
+        #         _('Please create "Incoming" picking type for Item Receiving - ' + self.receiving_operating_unit_id.name))
 
-        receiving_picking_type = self.env['stock.picking.type'].suspend_security().search(
-            [('default_location_src_id', '=', self.item_loan_location_id.id),
-             ('code', '=', 'operating_unit_transfer'),
-             ('default_location_dest_id', '=', destination_loc_id),
-             ('operating_unit_id', '=', self.receiving_operating_unit_id.id)])
-        if not receiving_picking_type:
-            raise UserError(
-                _('Please create "Incoming" picking type for Item Receiving - ' + self.receiving_operating_unit_id.name))
-
-        borrow_picking = self.env['item.borrowing'].suspend_security().create({
-            'name': borrow_name,
-
-            'issuer_id': self.issuer_id.id,
-            'is_transfer': self.is_transfer,
-            'item_transfer_send_id': self.id,
-            'request_date': self.request_date,
-            'partner_id': self.company_id.partner_id.id,
-            'description': self.description,
-            'location_id': receiving_picking_type.default_location_src_id.id,
-            'item_loan_borrow_location_id': receiving_picking_type.default_location_dest_id.id,
-            'company_id': self.company_id.id,
-            'operating_unit_id': self.receiving_operating_unit_id.id,
-            'picking_type_id': receiving_picking_type.id,
-            'priority': '1',
-            'state': 'draft'
-
-        })
+        # borrow_picking = self.env['item.borrowing'].suspend_security().create({
+        #     'name': borrow_name,
+        #
+        #     'issuer_id': self.issuer_id.id,
+        #     'is_transfer': self.is_transfer,
+        #     'item_transfer_send_id': self.id,
+        #     'request_date': self.request_date,
+        #     'partner_id': self.company_id.partner_id.id,
+        #     'description': self.description,
+        #     'location_id': receiving_picking_type.default_location_src_id.id,
+        #     'item_loan_borrow_location_id': receiving_picking_type.default_location_dest_id.id,
+        #     'company_id': self.company_id.id,
+        #     'operating_unit_id': self.receiving_operating_unit_id.id,
+        #     'picking_type_id': receiving_picking_type.id,
+        #     'priority': '1',
+        #     'state': 'draft'
+        #
+        # })
 
         for line in self.item_lines:
             date_planned = datetime.strptime(self.request_date, DEFAULT_SERVER_DATETIME_FORMAT)
@@ -166,20 +166,20 @@ class InheritedItemLoanLending(models.Model):
 
                 }
                 move_obj.create(moves)
-
-                if borrow_picking:
-                    borrow_line_obj = self.env['item.borrowing.line'].suspend_security().create({
-                        'item_borrowing_id': borrow_picking.id,
-                        'product_id': line.product_id.id,
-                        'product_uom_qty': line.product_uom_qty,
-                        'product_uom': line.product_uom.id,
-                        'price_unit': line.price_unit,
-                        'name': line.product_id.name,
-                        'given_qty': line.given_qty,
-                        'received_qty': line.received_qty,
-                        'due_qty': line.due_qty,
-                        'state': 'draft'
-                    })
+#TODO
+                # if borrow_picking:
+                #     borrow_line_obj = self.env['item.borrowing.line'].suspend_security().create({
+                #         'item_borrowing_id': borrow_picking.id,
+                #         'product_id': line.product_id.id,
+                #         'product_uom_qty': line.product_uom_qty,
+                #         'product_uom': line.product_uom.id,
+                #         'price_unit': line.price_unit,
+                #         'name': line.product_id.name,
+                #         'given_qty': line.given_qty,
+                #         'received_qty': line.received_qty,
+                #         'due_qty': line.due_qty,
+                #         'state': 'draft'
+                #     })
 
         return picking_id
 

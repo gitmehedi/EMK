@@ -2,14 +2,13 @@
 <odoo>
     <data>
         <!-- Item Receiving Tree View -->
-        <record id='view_item_transfer_receive_tree' model='ir.ui.view'>
-            <field name="name">view.item.transfer.receive.tree</field>
+        <record id='view_item_transfer_receive_tree_temp' model='ir.ui.view'>
+            <field name="name">view.item.transfer.receive.tree.temp</field>
             <field name="model">item.borrowing</field>
             <field name="arch" type="xml">
-                <tree string="Receive Item" create="false" default_order="request_date desc" ecoration-bf="message_needaction == True"
+                <tree string="Receive Item" default_order="request_date desc" ecoration-bf="message_needaction == True"
                       colors="gray:state=='approved';green:state=='waiting_approval';red:state=='reject';">
                     <field name="name"/>
-                    <field name="item_transfer_send_id"/>
                     <field name="issuer_id"/>
                     <field name="request_date"/>
                     <field name="receive_date"/>
@@ -20,11 +19,11 @@
             </field>
         </record>
         <!-- Item Receiving Form View -->
-        <record id='view_item_transfer_receive_form' model='ir.ui.view'>
-            <field name="name">view.item.transfer.receive.form</field>
+        <record id='view_item_transfer_receive_form_temp' model='ir.ui.view'>
+            <field name="name">view.item.transfer.receive.form.temp</field>
             <field name="model">item.borrowing</field>
             <field name="arch" type="xml">
-                <form string="Receive Item" create="false">
+                <form string="Receive Item">
                     <header>
                         <button name="button_confirm_receive" string="Confirm" states="draft"
                                 class="oe_highlight" type="object" groups="stock.group_stock_user"/>
@@ -58,9 +57,10 @@
                                 <field name="partner_id"/>
                             </group>
                             <group>
+                                <field name="operating_unit_id" string="Receiving Unit" options="{'no_create': True,'no_open':True}"
+                                               groups="operating_unit.group_multi_operating_unit" />
                                 <field name="receive_date" readonly="1"
                                        attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                                <field name="item_transfer_send_id" readonly="1"/>
                                 <field name="approved_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 <field name="approver_id" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             </group>
@@ -89,16 +89,15 @@
                             <page string="Other">
                                 <group>
                                     <group>
-                                        <field name="location_id" readonly="1"/>
+                                        <field name="location_id" readonly="1" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                         <field name="item_loan_borrow_location_id"
-                                               options="{'no_create': True,'no_open':True}" readonly="1"/>
-                                        <field name="picking_type_id" readonly="1"/>
+                                               options="{'no_create': True,'no_open':True}" readonly="1" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                        <field name="picking_type_id" readonly="1" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                     </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company"
                                                options="{'no_create': True,'no_open':True}" readonly="1"/>
-                                        <field name="operating_unit_id" options="{'no_create': True,'no_open':True}"
-                                               groups="operating_unit.group_multi_operating_unit" readonly="1"/>
+
                                     </group>
                                 </group>
                             </page>
@@ -113,8 +112,8 @@
         </record>
 
 
-        <record id="view_item_transfer_receive_search" model="ir.ui.view">
-            <field name="name">view.item.transfer.receive.search</field>
+        <record id="view_item_transfer_receive_search_temp" model="ir.ui.view">
+            <field name="name">view.item.transfer.receive.search.temp</field>
             <field name="model">item.borrowing</field>
             <field name="arch" type="xml">
                 <search string="Receive Items">
@@ -138,7 +137,7 @@
 
 
         <!-- Item Receiving Window Action -->
-        <record id='action_item_transfer_receive' model='ir.actions.act_window'>
+        <record id='action_item_transfer_receive_temp' model='ir.actions.act_window'>
             <field name="name">Receive Items</field>
             <field name="res_model">item.borrowing</field>
             <field name="view_type">form</field>
@@ -149,15 +148,15 @@
             </field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                    (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('view_item_transfer_receive_tree')}),
-                    (0, 0, {'sequence': 1002, 'view_mode': 'form', 'view_id': ref('view_item_transfer_receive_form')}),
+                    (0, 0, {'sequence': 1005, 'view_mode': 'tree', 'view_id': ref('view_item_transfer_receive_tree_temp')}),
+                    (0, 0, {'sequence': 1006, 'view_mode': 'form', 'view_id': ref('view_item_transfer_receive_form_temp')}),
                 ]"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a new record for receiving items.
                 </p>
             </field>
-            <field name="search_view_id" ref="view_item_transfer_receive_search"/>
+            <field name="search_view_id" ref="view_item_transfer_receive_search_temp"/>
         </record>
 
 
@@ -174,12 +173,12 @@
 
 
         <menuitem name="Receive Items"
-                  parent="main_menu_item_transfer" id="receive_items_menu" sequence="2"
+                  parent="main_menu_item_transfer" id="receive_items_menu_temp" sequence="2"
                   groups="stock.group_stock_user"/>
 
 
-        <menuitem action="action_item_transfer_receive" name="All Records"
-                  parent="receive_items_menu" id="receive_items_all_records_menu" sequence="1"
+        <menuitem action="action_item_transfer_receive_temp" name="All Records"
+                  parent="receive_items_menu_temp" id="receive_items_all_records_menu_temp" sequence="1"
                   groups="stock.group_stock_user"/>
 
 
