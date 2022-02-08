@@ -21,6 +21,7 @@
         'membership_withdrawal',
         'partner_fullname',
         'create_users',
+        'account_configuration',
     ],
     'data': [
         'security/ir_rule.xml',
