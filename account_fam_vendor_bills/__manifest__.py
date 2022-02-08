@@ -12,8 +12,10 @@
         'account_parent',
         'account_operating_unit',
         'account_fam_menu',
+        'base_vat_bd',
     ],
     "data": [
+        'views/vendor_view.xml',
         'views/cost_centre_view.xml',
         'views/inherit_product_product_view.xml',
     ],

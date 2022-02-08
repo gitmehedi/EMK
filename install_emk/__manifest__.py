@@ -59,6 +59,7 @@
         "website_hr_recruitment",
         "website_mail",
         "website_partner",
+        "account_configuration",
     ],
     'installable': True,
     'application': True,

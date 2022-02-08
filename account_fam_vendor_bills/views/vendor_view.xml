@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_vendor_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Vendors">
+                    <sheet>
+                        <field name="image" widget='image' class="oe_avatar"
+                               options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+
+                        <div class="oe_title">
+                            <field name="is_company" invisible="1"/>
+                            <field name="commercial_partner_id" invisible="1"/>
+                            <field name="company_type" widget="radio" invisible="1"
+                                   class="oe_edit_only" options="{'horizontal': true}"/>
+                            <h1>
+                                <field name="name" default_focus="1" placeholder="Name"
+                                       attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            </h1>
+
+                            <div class="oe_edit_only">
+                                <group attrs="{'invisible': [('is_company', '=', True)]}">
+                                    <field name="firstname" required="True"/>
+                                    <field name="middlename"/>
+                                    <field name="lastname" required="True"/>
+                                </group>
+                            </div>
+                            <div class="o_row">
+                                <field name="parent_id" placeholder="Company" domain="[('is_company', '=', True)]"
+                                       invisible="True"/>
+                                <field name="company_name" invisible="True"/>
+                                <button name="create_company" type="object" string="Create company"
+                                        class="btn btn-sm oe_edit_only fa fa-external-link btn btn-link "
+                                        attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}"/>
+                            </div>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type" attrs="{'invisible': [('parent_id','=', False)]}"
+                                       groups="base.group_no_one"/>
+                                <label for="street" string="Address"/>
+                                <div class="o_address_format">
+                                    <div class="oe_edit_only">
+                                        <button name="open_parent" type="object" string="(edit)" class="oe_link"
+                                                attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}"/>
+                                    </div>
+                                    <field name="street" placeholder="Street..." class="o_address_street"
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="city" placeholder="City" class="o_address_city"
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="state_id" class="o_address_state" placeholder="State"
+                                           options='{"no_open": True}'
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"
+                                           context="{'country_id': country_id, 'zip': zip}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country"
+                                           options='{"no_open": True, "no_create": True}'
+                                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                </div>
+                                <field name="website" widget="url"/>
+                            </group>
+                            <group>
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
+                                <field name="fax"/>
+                                <field name="user_ids" invisible="1"/>
+                                <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
+
+                                <field name="supplier" invisible="True"/>
+                            </group>
+                        </group>
+
+                        <notebook colspan="4">
+                            <page string="Personal Information">
+                                <group>
+                                    <group string="Basic Information">
+                                        <field name="gender" options="{'no_create_edit':True,'no_open':True}"/>
+                                        <field name="function" string="Occupation"
+                                               options="{'no_create_edit':True,'no_open':True}"/>
+                                        <field name="current_employee"/>
+                                        <field name="work_title"/>
+                                    </group>
+                                    <group string="Signature">
+                                        <field name="signature_image" widget='image' class="oe_avatar"
+                                               options='{"preview_signature_image": "image_medium", "size": [90, 90]}'/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Tax Information">
+                                        <field name="tax"/>
+                                        <field name="tax_zone"/>
+                                        <field name="tax_circle"/>
+                                        <field name="tax_location"/>
+                                    </group>
+                                    <group string="Tax Information">
+                                        <field name="nid" required="True"/>
+                                        <field name="tin" required="True"/>
+                                        <field name="vat"/>
+                                        <field name="bin"/>
+                                        <field name="bank_account_number"/>
+                                        <field name="bank_routing"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name='internal_notes' string="Internal Notes">
+                                <group>
+                                    <field name="comment" placeholder="Internal note..."/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_vendor_tree" model="ir.ui.view">
+            <field name="name">res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts">
+                    <field name="display_name" string="Name"/>
+                    <field name="function" invisible="1"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="current_employee"/>
+                    <field name="gender"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_vendor_form" model="ir.actions.act_window">
+            <field name="name">Vendors</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('supplier','=','True')]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_supplier': 1}</field>
+            <field name="filter" eval="True"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a contact in your address book.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_vendor_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_vendor_tree"/>
+            <field name="act_window_id" ref="action_vendor_form"/>
+        </record>
+
+        <record id="action_vendor_form_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_vendor_form"/>
+            <field name="act_window_id" ref="action_vendor_form"/>
+        </record>
+
+        <menuitem id="fixed_asset_vendors" name="Vendors" sequence="10" action="action_vendor_form"
+                  parent="account_fam_menu.sub_configuration_menu" groups="account.group_account_manager"/>
+    </data>
+</odoo>

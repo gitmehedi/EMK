@@ -129,7 +129,7 @@ class MemberApplicationContoller(Home):
                         return request.render('member_signup.success', {'name': auth_data['name']})
                     except:
                         return request.render('member_signup.success', {'name': auth_data['name']})
-            except (SignupError, AssertionError), e:
+            except (SignupError, AssertionError) as e:
                 qcontext['error'] = _("Could not create a new account.")
 
         qcontext['firstname'] = None if 'firstname' not in qcontext else qcontext['firstname']
@@ -183,7 +183,7 @@ class MemberApplicationContoller(Home):
         if 'usa_work_or_study_ids' not in qcontext:
             qcontext['usa_work_or_study_ids'] = {'yes': 'Yes', 'no': 'No'}
         if 'gender_ids' not in qcontext:
-            qcontext['gender_ids'] = {'male': 'Male', 'female': 'Female'}
+            qcontext['gender_ids'] = self.generateDropdown('res.gender')
 
         return request.render('member_signup.signup', qcontext)
 

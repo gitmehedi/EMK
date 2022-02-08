@@ -41,22 +41,9 @@ evt_room_book_usr,evt_room_book_usr,model_event_room_book,event.group_event_user
 evt_room_book_adm,evt_room_book_adm,model_event_room_book,event_user.group_event_officer,1,1,1,1
 evt_room_book_mng,evt_room_book_mng,model_event_room_book,event.group_event_manager,1,1,1,1
 
-evt_close_usr,evt_close_usr,model_event_close,event.group_event_user,1,0,0,0
-evt_close_adm,evt_close_adm,model_event_close,event_user.group_event_officer,1,1,1,1
-evt_close_mng,evt_close_mng,model_event_close,event.group_event_manager,1,1,1,1
-
-evt_attachment_usr,evt_attachment_usr,model_event_attachment,event.group_event_user,1,0,0,0
-evt_attachment_adm,evt_attachment_adm,model_event_attachment,event_user.group_event_officer,1,1,1,1
-evt_attachment_mng,evt_attachment_mng,model_event_attachment,event.group_event_manager,1,1,1,1
-
 evt_reservation_usr,evt_reservation_usr,model_event_reservation,event.group_event_user,1,0,0,0
 evt_reservation_adm,evt_reservation_adm,model_event_reservation,event_user.group_event_officer,1,1,1,1
 evt_reservation_mng,evt_reservation_mng,model_event_reservation,event.group_event_manager,1,1,1,1
-
-evt_associate_usr,evt_associate_usr,model_event_associate,event.group_event_user,1,0,0,0
-evt_associate_adm,evt_associate_adm,model_event_associate,event_user.group_event_officer,1,1,1,1
-evt_associate_mng,evt_associate_mng,model_event_associate,event.group_event_manager,1,1,1,1
-
 
 evt_mail_usr,evt_mail_usr,event.model_event_mail,event.group_event_user,1,0,0,0
 evt_mail_adm,evt_mail_adm,event.model_event_mail,event_user.group_event_officer,1,1,1,1
