@@ -48,6 +48,9 @@ class HrOtherDeductionImportWizard(models.TransientModel):
         deduction_line_obj = self.env['hr.other.deduction.line']
         errors = []
         for val in values:
+            if val[1] == '0':
+                raise UserError('''You cannot upload Other Deduction data which contains '0' as AC No!''')
+
             employee_obj = self.env['hr.employee'].search(
                 [('device_employee_acc', '=', int(val[1])), ('operating_unit_id', '=', self.operating_unit_id.id)])
             if len(employee_obj) > 1:

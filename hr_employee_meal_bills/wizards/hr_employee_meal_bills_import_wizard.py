@@ -54,6 +54,9 @@ class HrEmployeeMealBillsImportWizard(models.TransientModel):
         meal_bill_line_obj = self.env['hr.meal.bill.line']
         errors = []
         for val in values:
+            if val[1] == '0':
+                raise UserError('''You cannot upload employee Meal Bill which contains '0' as AC No!''')
+
             employee_obj = self.env['hr.employee'].search(
                 [('device_employee_acc', '=', int(val[1])), ('operating_unit_id', '=', self.operating_unit_id.id)])
 
