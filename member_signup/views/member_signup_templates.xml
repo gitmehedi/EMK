@@ -174,16 +174,17 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group form-field">
-                            <label for="gender" class="control-label">Gender</label>
-                            <div class="mar-btm">
+                            <label for="gender_id" class="control-label">Gender</label>
+                            <select class="form-control input-sm reqfield" name="gender_id"
+                                    id="gender_id" required="required">
+                                <option value="">--Please Select--</option>
                                 <t t-foreach="gender_ids" t-as='label'>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="gender" t-att-value="label"
-                                               t-att-checked="'checked' if label==gender else None"/>
-                                        <t t-esc="label_value"/>
-                                    </label>
+                                    <option t-att-value="label_value[0]"
+                                            t-att-selected="'selected' if gender_id==label_value[0] else None">
+                                        <t t-esc="label_value[1]"/>
+                                    </option>
                                 </t>
-                            </div>
+                            </select>
                         </div>
                     </div>
 
@@ -385,7 +386,9 @@
                         </div>
 
                         <div class="col-md-6">
-                            <div class="warning pull-right" style="padding-left: 100px;">Profile Image (Resolution: 200px * 200px , Size: 2MB)</div>
+                            <div class="warning pull-right" style="padding-left: 100px;">Profile Image (Resolution:
+                                200px * 200px , Size: 2MB)
+                            </div>
                             <div class="img_ctx  pull-right">
                                 <input id="member-image-upload" class="hidden reqfield" type="file" name="image"
                                        required="required">
