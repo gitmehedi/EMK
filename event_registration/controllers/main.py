@@ -2,8 +2,8 @@
 from datetime import datetime
 
 from odoo import http, _
-from odoo.addons.opa_utility.helper.utility import Utility
 from odoo.addons.event_management.data import helper
+from odoo.addons.opa_utility.helper.utility import Utility
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.http import request
 
@@ -26,9 +26,13 @@ class WebsiteRegistration(WebsiteEventController):
         if not tickets:
             return False
 
+        filter = [('active', '=', True),
+                  ('pending', '=', False),
+                  ('state', '=', 'approve')]
+
         vals = {
-            'professions': http.request.env['attendee.profession'].sudo().search([('status', '=', True)]),
-            'gender_ids': http.request.env['res.gender'].sudo().search([('status', '=', True)], order='id asc'),
+            'professions': http.request.env['attendee.profession'].sudo().search(filter),
+            'gender_ids': http.request.env['res.gender'].sudo().search(filter, order='id asc')
         }
         return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details",
                                                          {'tickets': tickets, 'event': event, 'vals': vals})
@@ -38,7 +42,8 @@ class WebsiteRegistration(WebsiteEventController):
         qctx = self.get_signup_context()
         token = request.params.get('token')
         if token:
-            event = request.env['event.reservation'].sudo().search([('reserv_token', '=', token), ('state', '=', 'draft')])
+            event = request.env['event.reservation'].sudo().search(
+                [('reserv_token', '=', token), ('state', '=', 'draft')])
             if event:
                 qctx['id'] = event.id
                 qctx['event_name'] = event.event_name

@@ -14,6 +14,7 @@
     'depends': [
         'website',
         'website_event',
+        'website_event_questions',
         'event_management',
         'opa_utility',
     ],
