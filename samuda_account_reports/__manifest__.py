@@ -17,10 +17,12 @@
         'reports/account_general_ledger_xlsx_view.xml',
         'reports/analytic_account_xlsx_view.xml',
         'reports/cost_sheet_xlsx_view.xml',
+        'reports/account_general_ledger_details_xlsx_view.xml',
         'wizard/profit_loss_with_realization_view.xml',
         'wizard/account_general_ledger_wizard_view.xml',
         'wizard/analytic_account_wizard_view.xml',
-        'wizard/cost_sheet_wizard_view.xml'
+        'wizard/cost_sheet_wizard_view.xml',
+        'wizard/account_general_ledger_details_wizard_view.xml'
     ],
     'installable': True,
     'application': False,
