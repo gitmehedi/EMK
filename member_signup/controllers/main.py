@@ -151,7 +151,6 @@ class MemberApplicationContoller(Home):
         qcontext['info_about_emk'] = None if 'info_about_emk' not in qcontext else qcontext['info_about_emk']
         qcontext['usa_work_or_study'] = 'no' if 'usa_work_or_study' not in qcontext else qcontext[
             'usa_work_or_study']
-        qcontext['gender'] = 'male' if 'gender' not in qcontext else qcontext['gender']
         qcontext['country_id'] = int(qcontext['country_id']) if 'country_id' in qcontext else 20
 
         if 'per_district' in qcontext:
@@ -162,6 +161,9 @@ class MemberApplicationContoller(Home):
         if 'highest_certification' in qcontext:
             qcontext['highest_certification'] = int(qcontext['highest_certification']) if qcontext[
                 'highest_certification'] else ''
+
+        if 'gender' in qcontext:
+            qcontext['gender'] = int(qcontext['gender']) if qcontext['gender'] else ''
 
         if 'subject_of_interest' not in qcontext:
             qcontext['subject_of_interest'] = []
@@ -231,6 +233,7 @@ class MemberApplicationContoller(Home):
             data['zip'] = data['zipcode']
             vals = [int(val) for val in request.httprequest.form.getlist('subject_of_interest')]
             data['subject_of_interest'] = [(6, 0, vals)]
+            data['usa_work_or_study'] = data['usa_work_or_study'].lower()
             data['password'] = utility.token(length=8)
         # self.upload_attachment(request.httprequest.files.getlist('attachment'))
         assert values.values(), "The form was not properly filled in."

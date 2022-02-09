@@ -174,13 +174,13 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group form-field">
-                            <label for="gender_id" class="control-label">Gender</label>
-                            <select class="form-control input-sm reqfield" name="gender_id"
-                                    id="gender_id" required="required">
+                            <label for="gender" class="control-label">Gender</label>
+                            <select class="form-control input-sm reqfield" name="gender"
+                                    id="gender" required="required">
                                 <option value="">--Please Select--</option>
                                 <t t-foreach="gender_ids" t-as='label'>
                                     <option t-att-value="label_value[0]"
-                                            t-att-selected="'selected' if gender_id==label_value[0] else None">
+                                            t-att-selected="'selected' if gender==label_value[0] else None">
                                         <t t-esc="label_value[1]"/>
                                     </option>
                                 </t>
