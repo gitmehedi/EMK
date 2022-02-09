@@ -3,10 +3,24 @@ from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 from odoo.exceptions import ValidationError, UserError
 from odoo import api, fields, models, _
 from operator import attrgetter
-import datetime
+from datetime import date, timedelta, datetime
 
 
 class ItemLedgerReportXLSX(ReportXlsx):
+
+    def get_product_rate_datewise(self, product_id, for_date):
+        sql = '''
+            SELECT datetime,cost FROM product_price_history 
+                        WHERE datetime + interval'6h' <= '%s'
+                        AND product_id = %s ORDER BY datetime DESC LIMIT 1
+        ''' % (for_date, product_id)
+
+        self.env.cr.execute(sql)
+        opening_rate = 0
+        for vals in self.env.cr.dictfetchall():
+            opening_rate = float(vals['cost'])
+
+        return opening_rate
 
     def generate_xlsx_report(self, workbook, data, obj):
         reportUtility = self.env['report.utility']
@@ -49,10 +63,10 @@ class ItemLedgerReportXLSX(ReportXlsx):
         footer_format_left_comma_separator = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'bold': True, 'size': 10})
         normal_format_left = workbook.add_format({'align': 'left', 'size': 10})
-        date_format_left = workbook.add_format({'align': 'left', 'size' :10, 'border': 1})
+        date_format_left = workbook.add_format({'align': 'left', 'size': 10, 'border': 1})
         normal_format_left_comma_separator = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'size': 10})
-        merged_format_center = workbook.add_format({'align': 'center', 'border' :1, 'size': 10})
+        merged_format_center = workbook.add_format({'align': 'center', 'border': 1, 'size': 10})
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
 
         # SHEET HEADER
@@ -338,10 +352,79 @@ class ItemLedgerReportXLSX(ReportXlsx):
         sheet.write(row_no, 2, '', footer_format_left)
         sheet.write(row_no, 3, total_in_qty, footer_format_left_comma_separator)
         sheet.write(row_no, 4, total_out_qty, footer_format_left_comma_separator)
-        sheet.write(row_no, 5, total_rate, footer_format_left_comma_separator)
+
+        total_rate_value = (total_amount_in + total_amount_out) / (total_in_qty + total_out_qty)
+
+        sheet.write(row_no, 5, total_rate_value, footer_format_left_comma_separator)
         sheet.write(row_no, 6, '', footer_format_left)
         sheet.write(row_no, 7, total_amount_in, footer_format_left_comma_separator)
         sheet.write(row_no, 8, total_amount_out, footer_format_left_comma_separator)
+        # modification
+        product_report_utility = self.env['product.ledger.report.utility']
+        date_start_obj = datetime.strptime(date_from, "%Y-%m-%d")
+
+        date_end_obj = datetime.strptime(date_to, "%Y-%m-%d")
+
+        start_date = date_start_obj.replace(second=01).strftime("%Y-%m-%d, %H:%M:%S")
+        # + ' 23:59:59'
+        end_date = date_end_obj.replace(hour=23, minute=59, second=59).strftime("%Y-%m-%d, %H:%M:%S")
+
+        location_param = "(" + str(location.id) + ")"
+
+        datewise_opening_closing_stocklist = product_report_utility.get_opening_closing_stock(start_date, end_date,
+                                                                                              location_param,
+                                                                                              product_param)
+
+        opening_balance = 0
+        closing_balance = 0
+        if datewise_opening_closing_stocklist:
+            for opening_closing_stock in datewise_opening_closing_stocklist:
+                if opening_closing_stock['opening_stock']:
+                    opening_balance = float(opening_closing_stock['opening_stock'])
+
+                if opening_closing_stock['closing_stock']:
+                    closing_balance = float(opening_closing_stock['closing_stock'])
+
+        opening_rate = self.get_product_rate_datewise(product_id, date_start)
+        closing_rate = self.get_product_rate_datewise(product_id, date_end)
+
+        new_header_row = row_no + 2
+        new_section_row = new_header_row + 1
+        sheet.write(new_header_row, 0, "", header_format_left)
+        sheet.write(new_header_row, 1, "", header_format_left)
+        sheet.write(new_header_row, 2, "", header_format_left)
+        sheet.write(new_header_row, 3, "Qty", header_format_left)
+        sheet.write(new_header_row, 4, "Rate", header_format_left)
+        sheet.write(new_header_row, 5, "Amount", header_format_left)
+
+        sheet.write(new_section_row, 0, 'Opening Balance', footer_format_left)
+        sheet.write(new_section_row, 1, ' ', footer_format_left)
+        sheet.write(new_section_row, 2, ' ', footer_format_left)
+        sheet.write(new_section_row, 3, opening_balance, footer_format_left_comma_separator)
+        sheet.write(new_section_row, 4, opening_rate, footer_format_left_comma_separator)
+        sheet.write(new_section_row, 5, opening_balance * opening_rate, footer_format_left_comma_separator)
+
+        sheet.write(new_section_row + 1, 0, 'Total Received', footer_format_left)
+        sheet.write(new_section_row + 1, 1, ' ', footer_format_left)
+        sheet.write(new_section_row + 1, 2, ' ', footer_format_left)
+        sheet.write(new_section_row + 1, 3, total_in_qty, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 1, 4, total_rate_value, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 1, 5, total_in_qty * total_rate_value, footer_format_left_comma_separator)
+
+        sheet.write(new_section_row + 2, 0, 'Total Issued', footer_format_left)
+        sheet.write(new_section_row + 2, 1, ' ', footer_format_left)
+        sheet.write(new_section_row + 2, 2, ' ', footer_format_left)
+        sheet.write(new_section_row + 2, 3, total_out_qty, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 2, 4, total_rate_value, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 2, 5, total_out_qty * total_rate_value, footer_format_left_comma_separator)
+
+        sheet.write(new_section_row + 3, 0, 'Closing Balance', footer_format_left)
+        sheet.write(new_section_row + 3, 1, ' ', footer_format_left)
+        sheet.write(new_section_row + 3, 2, ' ', footer_format_left)
+        sheet.write(new_section_row + 3, 3, closing_balance, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 3, 4, closing_rate, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 3, 5, closing_balance*closing_rate, footer_format_left_comma_separator)
+
         data['name'] = 'Item Ledger Report'
 
 

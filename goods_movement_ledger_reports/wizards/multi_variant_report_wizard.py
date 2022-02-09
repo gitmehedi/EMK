@@ -18,14 +18,14 @@ class MultiVariantReportWizard(models.TransientModel):
     def _get_products(self):
         if self.env.user.has_group('mrp.group_mrp_user'):
             if self.env.user.has_group('mrp_gbs_access.group_mrp_adviser'):
-                domain = [("id", "in", self.env['product.product'].sudo().search([]).ids)]
+                domain = [("id", "in", self.env['product.product'].sudo().search([('manufacture_ok', '=', True)]).ids)]
                 return domain
             else:
                 # if mrp manager he will view only allowed products, mrp advisor will view all products
                 domain = [("id", "in", self.env.user.product_ids.ids)]
                 return domain
         elif self.env.user.has_group('mrp_gbs_access.group_mrp_adviser'):
-            domain = [("id", "in", self.env['product.product'].sudo().search([]).ids)]
+            domain = [("id", "in", self.env['product.product'].sudo().search([('manufacture_ok', '=', True)]).ids)]
             return domain
         else:
             raise UserError(_('Manufacturing group not set to the user!'))
