@@ -1,10 +1,10 @@
 import datetime
-
+from psycopg2 import IntegrityError
+import dateutil.parser
 from odoo import api, fields, models, _
 from odoo.addons.opa_utility.helper.utility import Utility
 from odoo.exceptions import UserError, ValidationError
-from psycopg2 import IntegrityError
-import dateutil.parser
+
 
 
 class Employee(models.Model):
@@ -62,16 +62,22 @@ class Employee(models.Model):
 
     @api.onchange('user_id')
     def _onchange_user(self):
-        self.work_email = self.work_email
-        self.name = self.name
-        self.image = self.image
+        if self.user_id:
+            self.work_email = self.work_email
+            self.name = self.name
+            self.image = self.image
+            user = self.search([('user_id', '=', self.user_id.id)])
+            if len(user) > 0:
+                raise ValidationError(_('[DUPLICATE] Related user already exist, choose another.'))
 
-    @api.one
-    @api.constrains('user_id')
-    def _check_user_id(self):
-        user = self.search([('user_id', '=', self.user_id.id)])
-        if user:
-            raise ValidationError(_('[DUPLICATE] Related user already exist, choose another.'))
+    # @api.one
+    # @api.onchange('user_id')
+    # def _check_user_id(self):
+    #     if self.user_id.id:
+    #         user = self.search([('user_id', '=', self.user_id.id)])
+    #         if len(user) > 0:
+    #             raise ValidationError(_('[DUPLICATE] Related user already exist, choose another.'))
+
 
 class HrEmployeeContractType(models.Model):
     _inherit = ['hr.contract.type']

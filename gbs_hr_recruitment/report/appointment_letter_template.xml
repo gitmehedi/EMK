@@ -20,8 +20,8 @@
                             <div class="row">
                                 <div class="col-xs-6" style="text-align:left">
                                     <p><span t-esc="applicant_name" /></p>
-                                    <p>S/O: MD Abdul Momin Talukder</p>
-                                    <p>Vill: Dhanbandhi J.C Road,Sirajgoanj Sadar,Narayanganj</p>
+<!--                                    <p>S/O: <span t-esc="applicant_name" /></p>-->
+<!--                                    <p>Vill: Dhanbandhi J.C Road,Sirajgoanj Sadar,Narayanganj</p>-->
                                 </div>
                                 <div class="col-xs-6" style="text-align:right">
                                     <p><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d,%Y')"/></p>
