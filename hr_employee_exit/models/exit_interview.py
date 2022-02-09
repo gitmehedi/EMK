@@ -149,7 +149,7 @@ class FactorsSet(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Factor Set'
 
-    name = fields.Char('Name', track_visibility='onchange')
+    name = fields.Char('Name', track_visibility='onchange', required=True)
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',

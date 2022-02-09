@@ -8,6 +8,9 @@
             <field name="model">hr.academic</field>
             <field name="inherit_id" ref="hr_experience.view_academic_form"/>
             <field name="arch" type="xml">
+                 <xpath expr="//field[@name='employee_id']" position="attributes">
+                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
                 <xpath expr="//field[@name='start_date']" position="before">
                     <field name="passed_date"></field>
                 </xpath>
@@ -22,6 +25,9 @@
             <field name="model">hr.experience</field>
             <field name="inherit_id" ref="hr_experience.view_professional_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
                 <xpath expr="//field[@name='start_date']" position="before">
                     <field name="passed_date"></field>
                 </xpath>
@@ -37,11 +43,45 @@
             <field name="model">hr.certification</field>
             <field name="inherit_id" ref="hr_experience.view_certification_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
                 <xpath expr="//field[@name='start_date']" position="before">
                     <field name="passed_date"></field>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="replace">
                     <field name="issued_by"></field>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_view_hr_academic_tree" model="ir.ui.view">
+            <field name="name">inherit.view.hr.academic.tree</field>
+            <field name="model">hr.academic</field>
+            <field name="inherit_id" ref="hr_experience.view_academic_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="passed_institute"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="inherit_view_hr_professional_tree" model="ir.ui.view">
+            <field name="name">inherit.view.hr.professional.tree</field>
+            <field name="model">hr.experience</field>
+            <field name="inherit_id" ref="hr_experience.view_professional_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="employer_name"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="inherit_view_hr_certifications_tree" model="ir.ui.view">
+            <field name="name">inherit.view.hr.certifications.tree</field>
+            <field name="model">hr.certification</field>
+            <field name="inherit_id" ref="hr_experience.view_certification_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="issued_by"/>
                 </xpath>
             </field>
         </record>

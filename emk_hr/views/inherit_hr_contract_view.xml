@@ -29,6 +29,27 @@
             </field>
         </record>
 
+        <record id="hr_contract_form_inherit2" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/form/*" position="replace">
+                        <header>
+                            <button name="act_approve" string="Running" states="draft" type="object" class="oe_highlight"/>
+                            <button name="act_draft" string="Draft" states="close" type="object" class="oe_highlight"/>
+                            <button name="act_renew" string="Renew" states="open" type="object" class="oe_highlight"/>
+                            <button name="act_reject" string="Expired" states="open" type="object"/>
+                            <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                        </header>
+                    </xpath>
+
+                </data>
+            </field>
+
+        </record>
+
         <record id="hr_contract_form_inherit1" model="ir.ui.view">
             <field name="name">hr.contract.view.form.inherit</field>
             <field name="model">hr.contract</field>

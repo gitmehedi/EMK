@@ -14,6 +14,7 @@ class Employee(models.Model):
     tax_circle = fields.Char('Tax Circle')
     tax_location = fields.Char('Tax Location')
     bank_account_number = fields.Char('Bank Account Number')
+    gender_id = fields.Many2one('res.gender', string='Gender', track_visibility='onchange')
 
     @api.one
     @api.constrains('work_phone')
@@ -153,3 +154,36 @@ class HrEmployeeChildren(models.Model):
             birthdate = dateutil.parser.parse(self.date_of_birth).date()
             if birthdate > datetime.datetime.now().date():
                 raise ValidationError(_('[Warning] Children date of birth should be past date'))
+
+class HrEmployeeContract(models.Model):
+    _inherit = ['hr.contract']
+
+    @api.one
+    def act_draft(self):
+        if self.state == 'open':
+            self.write({
+                'state': 'close',
+            })
+
+    @api.one
+    def act_approve(self):
+        if self.state == 'draft':
+            self.write({
+                'state': 'open',
+
+            })
+
+    @api.one
+    def act_renew(self):
+        if self.state == 'open':
+            self.write({
+                'state': 'pending',
+
+            })
+
+    @api.one
+    def act_reject(self):
+        if self.state == 'open':
+            self.write({
+                'state': 'close',
+            })
