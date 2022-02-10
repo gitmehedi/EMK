@@ -79,9 +79,9 @@
                     <!--                           options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"/>-->
                     <field name="bank_account_number"></field>
                 </xpath>
-                <xpath expr="//field[@name='gender']" position="replace">
-                    <field name="gender_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"></field>
-                </xpath>
+<!--                <xpath expr="//field[@name='gender_id']" position="replace">-->
+<!--                    <field name="gender" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"></field>-->
+<!--                </xpath>-->
             </field>
         </record>
 
