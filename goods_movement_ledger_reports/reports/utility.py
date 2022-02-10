@@ -283,8 +283,8 @@ class ProductReportUtility(models.TransientModel):
         #     [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
         #     limit=1)
         location_id = self.env['stock.location'].search(
-                [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
-                limit=1).id
+            [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
+            limit=1).id
         location_main_stock = self.env['stock.location'].browse(location_id)
         input_location_id = self.env['stock.location'].search(
             [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Input')],
@@ -295,7 +295,7 @@ class ProductReportUtility(models.TransientModel):
             limit=1).id
 
         origin_sql = '''
-            SELECT sm.origin FROM stock_move sm
+            SELECT sp.transfer_type, sp.receive_type,sm.origin FROM stock_move sm
                     LEFT JOIN stock_picking sp ON sm.picking_id = sp.id
                     LEFT JOIN purchase_order po ON po.name = sp.origin
                     LEFT JOIN stock_picking_type spt ON sp.picking_type_id = spt.id
@@ -316,19 +316,20 @@ class ProductReportUtility(models.TransientModel):
         total_returned_qty = 0.0
         for vals in self.env.cr.dictfetchall():
             origin = vals['origin']
-            received_item_sql = '''
-                            SELECT sm.id,COALESCE(sm.product_qty, 0) as received_item
-                            FROM stock_move sm
-                            LEFT JOIN stock_picking sp ON sm.picking_id = sp.id
-                            WHERE sp.origin = '%s'
-                                    AND sm.state = 'done'
-                                    AND sm.location_id = %s
-                                    AND sm.location_dest_id = %s
-                                        ''' % (origin, qc_location_id, location_main_stock.id)
+            if vals['transfer_type'] != 'loan' and vals['receive_type'] != 'loan':
+                received_item_sql = '''
+                                SELECT sm.id,COALESCE(sm.product_qty, 0) as received_item
+                                FROM stock_move sm
+                                LEFT JOIN stock_picking sp ON sm.picking_id = sp.id
+                                WHERE sp.origin = '%s'
+                                        AND sm.state = 'done'
+                                        AND sm.location_id = %s
+                                        AND sm.location_dest_id = %s
+                                            ''' % (origin, qc_location_id, location_main_stock.id)
 
-            self.env.cr.execute(received_item_sql)
-            for values in self.env.cr.dictfetchall():
-                total_received_qty = total_received_qty + float(values['received_item'])
+                self.env.cr.execute(received_item_sql)
+                for values in self.env.cr.dictfetchall():
+                    total_received_qty = total_received_qty + float(values['received_item'])
 
             return_sql = '''
                             SELECT sm.id

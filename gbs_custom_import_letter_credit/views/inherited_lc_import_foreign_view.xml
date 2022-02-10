@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="letter_of_credit.view_local_credit_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header" position="inside">
-                    <button string="Update LC Number" name="action_update_lc_number_import" class="btn-primary btn-info mr24 pull-right oe_read_only" type="object" groups="commercial.group_commercial_manager_export" states="confirmed,progress"/>
+                    <button string="Update LC Number" name="action_update_lc_number_import" class="btn-primary btn-info mr24 pull-right oe_read_only" type="object" groups="commercial.group_commercial_manager" states="confirmed,progress"/>
                 </xpath>
             </field>
         </record>

@@ -228,9 +228,9 @@ class PurchaseRequisitionLine(models.Model):
 
     receive_qty = fields.Float(string='PO Qty')
     due_qty = fields.Float(string='Due Qty',compute='_compute_due_qty')
-    last_requisition_no = fields.Char('Last PR NO')
-    last_requisition_date = fields.Date(string='Last PR Date')
-    last_requisition_qty = fields.Float(string='Last PR Qty')
+    last_requisition_no = fields.Char('Last PR NO',compute='_get_last_requisition_no',store=True)
+    last_requisition_date = fields.Date(string='Last PR Date',compute='_get_last_requisition_date',store=True)
+    last_requisition_qty = fields.Float(string='Last PR Qty',compute='_get_last_requisition_qty',store=True)
 
 
 
@@ -282,15 +282,42 @@ class PurchaseRequisitionLine(models.Model):
 
             self._get_product_quantity()
 
-    @api.onchange('product_id')
-    def _get_last_purchase_requisition(self):
-        """ Get last purchase price, last purchase date and last supplier """
-        if self.product_id:
-            lines = self.env['purchase.requisition.line'].search(
-                [('requisition_id.operating_unit_id', '=', self.requisition_id.operating_unit_id.id),
-                 ('product_id', '=', self.product_id.id),('requisition_id.state', '=', 'done')]).sorted(
-                key=lambda l:l.requisition_id.create_date, reverse=True)
-            if lines:
-                self.last_requisition_date = lines[:1].requisition_id.requisition_date
-                self.last_requisition_no = lines[:1].requisition_id.name
-                self.last_requisition_qty = lines[:1].product_ordered_qty
+    @api.depends('product_id')
+    def _get_last_requisition_no(self):
+        for rec in self:
+
+            if rec.product_id:
+                lines = self.env['purchase.requisition.line'].search(
+                    [('requisition_id.operating_unit_id', '=', rec.requisition_id.operating_unit_id.id),
+                     ('product_id', '=', rec.product_id.id), ('requisition_id.state', '=', 'done')]).sorted(
+                    key=lambda l: l.requisition_id.create_date, reverse=True)
+                if lines:
+                    rec.last_requisition_no = lines[:1].requisition_id.name
+                else:
+                    rec.last_requisition_no = False
+
+    @api.depends('product_id')
+    def _get_last_requisition_date(self):
+        for rec in self:
+            if rec.product_id:
+                lines = self.env['purchase.requisition.line'].search(
+                    [('requisition_id.operating_unit_id', '=', rec.requisition_id.operating_unit_id.id),
+                     ('product_id', '=', rec.product_id.id), ('requisition_id.state', '=', 'done')]).sorted(
+                    key=lambda l: l.requisition_id.create_date, reverse=True)
+                if lines:
+                    rec.last_requisition_date = lines[:1].requisition_id.requisition_date
+                else:
+                    rec.last_requisition_date = False
+
+    @api.depends('product_id')
+    def _get_last_requisition_qty(self):
+        for rec in self:
+            if rec.product_id:
+                lines = self.env['purchase.requisition.line'].search(
+                    [('requisition_id.operating_unit_id', '=', rec.requisition_id.operating_unit_id.id),
+                     ('product_id', '=', rec.product_id.id), ('requisition_id.state', '=', 'done')]).sorted(
+                    key=lambda l: l.requisition_id.create_date, reverse=True)
+                if lines:
+                    rec.last_requisition_qty = lines[:1].product_ordered_qty
+                else:
+                    rec.last_requisition_qty = False

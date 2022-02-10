@@ -18,7 +18,7 @@ class MultiVariantInventoryReportWizard(models.TransientModel):
 
     product_tmpl_id = fields.Many2one('product.template', string='Product', required=True)
 
-    product_ids = fields.Many2many('product.product', string='Product')
+    product_ids = fields.Many2many('product.product', string='Variant')
 
     def _get_operating_unit(self):
         domain = [("id", "in", self.env.user.operating_unit_ids.ids)]

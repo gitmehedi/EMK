@@ -19,7 +19,7 @@ class ItemBorrowing(models.Model):
         return self.env['stock.location'].search([('usage', '=', 'supplier'),('can_loan_request', '=', True)], limit=1).id
 
     name = fields.Char('Issue #', size=100, readonly=True, default=lambda self: _('New'),track_visibility='onchange')
-    request_date = fields.Datetime('Request Date', required=True, readonly=True,
+    request_date = fields.Datetime('Request Date', required=True,
                                  default=fields.Datetime.now,track_visibility='onchange')
     issuer_id = fields.Many2one('res.users', string='Issuer', required=True, readonly=True,
                                 default=lambda self: self.env.user,track_visibility='onchange',

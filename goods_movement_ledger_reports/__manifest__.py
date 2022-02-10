@@ -13,7 +13,7 @@
     'category': 'Manufacturing',
     'version': '10.0.0.0.1',
 
-    'depends': ['base', 'report_xlsx', 'report', 'mrp', 'stock_utility'],
+    'depends': ['base', 'report_xlsx', 'report', 'mrp_bom_product_user', 'stock_utility'],
 
     'data': [
         'wizards/variant_wise_report_wizard_view.xml',
