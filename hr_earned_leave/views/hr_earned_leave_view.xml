@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form" />
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//form/group/group/field[@name='limit']" position="after">
+                    <xpath expr="//field[@name='limit']" position="after">
                         <field name="earned_leave_flag" invisible="1" />
                         <field name="earned_leave_type" attrs="{'invisible':[('earned_leave_flag','=',False)]}" />
                     </xpath> 

@@ -143,7 +143,7 @@
             <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//form/group/group/field[@name='limit']" position="after">
+                    <xpath expr="//field[@name='limit']" position="after">
                         <field name="short_leave_flag"/>
                         <field name="compensatory_flag"/>
                         <field name="number_of_hours" attrs="{'invisible': [('short_leave_flag', '=', False)]}" />

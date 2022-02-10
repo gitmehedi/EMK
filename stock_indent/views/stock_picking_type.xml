@@ -28,9 +28,9 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-<!--        <menuitem id="menu_stock_picking_type" name="Stock Picking Type"-->
-<!--                  parent="stock.menu_stock_config_settings"-->
-<!--                  action="action_stock_picking_type" sequence="37" />-->
+        <menuitem id="menu_stock_picking_type" name="Stock Picking Type"
+                  parent="stock.menu_stock_config_settings"
+                  action="action_stock_picking_type" sequence="37" />
     </data>
 
 </odoo>

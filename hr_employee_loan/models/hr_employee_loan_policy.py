@@ -43,7 +43,7 @@ class HrEmployeeLoanPolicy(models.Model):
                 [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
                  ('active', '=', False)])
             if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
+                raise Warning('[DUPLICATE] Name already exist, choose another.')
 
     @api.onchange("name")
     def onchange_strips(self):
