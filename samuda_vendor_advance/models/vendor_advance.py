@@ -105,11 +105,15 @@ class VendorAdvance(models.Model):
                 raise ValidationError(
                     _("[Validation Error] Summation of Security Deposit, VAT and TDS"
                       " cannot be greater than approved advance!"))
-            name = self.env['ir.sequence'].next_by_code('vendor.advance') or ''
-            self.write({
-                'state': 'confirm',
-                'name': name
-            })
+
+            vals = {
+                'state': 'confirm'
+            }
+
+            if self.name == '/':
+                vals['name'] = self.env['ir.sequence'].next_by_code('vendor.advance') or self.name
+
+            self.write(vals)
 
     @api.one
     def action_validate(self):
@@ -130,7 +134,7 @@ class VendorAdvance(models.Model):
 
     @api.multi
     def action_cancel(self):
-        if self.state == 'approve':
+        if self.state == 'confirm':
             self.write({'state': 'cancel'})
 
     def _generate_move(self):
