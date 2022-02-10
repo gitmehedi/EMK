@@ -91,7 +91,8 @@
                             <group>
                                 <field name="target_audience_group"/>
                                 <field name="target_age"/>
-                                <field name="event_details"/>
+                                <field name="event_details_name" invisible="1"/>
+                                <field name="event_details" filename="event_details_name"/>
                             </group>
                             <group>
                                 <field name="outreach_plan"/>

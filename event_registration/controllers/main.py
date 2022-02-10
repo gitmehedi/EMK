@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 from datetime import datetime
 
 from odoo import http, _
@@ -43,6 +44,10 @@ class WebsiteRegistration(WebsiteEventController):
         token = request.params.get('token')
         if not token:
             return request.render('event_registration.event_reservation_expire')
+        else:
+            event = request.env['event.reservation'].sudo().search([('reserv_token', '=', token),
+                                                                    ('state', '=', 'draft')])
+            qctx['id'] = event.id
 
         if request.httprequest.method == 'POST' and ('error' not in qctx):
             try:
@@ -55,10 +60,8 @@ class WebsiteRegistration(WebsiteEventController):
             except (WebsiteRegistration, AssertionError) as e:
                 qctx['error'] = _("Could not create a new account.")
         else:
-            event = request.env['event.reservation'].sudo().search([('reserv_token', '=', token),
-                                                                    ('state', '=', 'draft')])
+
             if event:
-                qctx['id'] = event.id
                 qctx['event_name'] = event.event_name
                 qctx['poc_id'] = event.poc_id.id
                 qctx['org_id'] = event.org_id.id
@@ -167,6 +170,7 @@ class WebsiteRegistration(WebsiteEventController):
             if hasattr(field_value, 'filename'):
                 field_name = field_name.rsplit('[', 1)[0]
                 field_value.field_name = field_name
+                data[field_name] = base64.b64encode(field_value.read())
             elif field_name in authorized_fields:
                 try:
                     data[field_name] = field_value
@@ -175,6 +179,7 @@ class WebsiteRegistration(WebsiteEventController):
 
         if len(data) > 0:
             data['state'] = 'draft'
+            data['event_details_name'] = values['event_details'].filename
             vals = [int(val) for val in request.httprequest.form.getlist('facilities_ids')]
             data['facilities_ids'] = [(6, 0, vals)]
 

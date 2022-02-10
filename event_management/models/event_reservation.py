@@ -135,10 +135,10 @@ class EventReservation(models.Model):
     image_medium = fields.Binary(string='Photo', attachment=True, readonly=True,
                                  states={'draft': [('readonly', False)],
                                          'approve': [('readonly', False), ('required', True)]})
-
     reserv_token = fields.Char(copy=False)
     reserv_url = fields.Char(string='Reservation URL', track_visibility='onchange', )
     state = fields.Selection(helper.reservation_state, string="State", default="draft", track_visibility='onchange')
+    event_details_name = fields.Char()
     event_details = fields.Binary(string="Event Details", attachment=True, track_visibility='onchange')
 
     @api.constrains('start_date', 'end_date')

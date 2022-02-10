@@ -5,7 +5,6 @@ import json
 import logging
 import werkzeug.wrappers
 from datetime import datetime
-from PIL import Image, ImageFont, ImageDraw
 
 from odoo import http, tools, _
 from odoo.addons.member_signup.models.res_users import SignupError
@@ -63,7 +62,7 @@ class MemberApplicationContoller(Home):
             except SignupError:
                 qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')
-            except Exception, e:
+            except (MemberApplicationContoller, AssertionError) as e:
                 qcontext['error'] = e.message or e.name
 
         return request.render('member_signup.reset_password', qcontext)
@@ -272,6 +271,7 @@ class MemberApplicationContoller(Home):
                 'res_id': id,
                 'datas': base64.b64encode(attachment),
             })
+
 
     def generateDropdown(self, model, status=False):
         data = []
