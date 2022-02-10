@@ -193,7 +193,6 @@
                                                        minlength="10" class="form-control input-sm reqfield"
                                                        id="appointment_date" required="required"/>
                                             </div>
-
                                             <div class="form-group form-field">
                                                 <label for="timeslot_id" class="control-label">Time Slot</label>
                                                 <select class="form-control input-sm reqfield" name="timeslot_id"
@@ -208,8 +207,8 @@
                         </div>
                         <div class="col-md-4 col-md-offset-5" style="margin-bottom: 100px;">
                             <div class="clearfix oe_login_buttons">
-                                <button type="submit" class="btn btn-success">Place Appointment</button>
-                                <button type="button" class="btn">Cancel</button>
+                                <button type="submit" class="btn btn-primary btn-lg">Submit Appointment</button>
+                                <button type="button" class="btn btn-lg">Cancel</button>
                             </div>
                         </div>
                     </form>
@@ -240,7 +239,7 @@
                     <div class="jumbotron mt32">
                         <h1>Thank you!</h1>
                         <div>
-                            Session has expire, please contact with administrator
+                            Session has expired, please contact with administrator
                         </div>
                     </div>
                 </div>

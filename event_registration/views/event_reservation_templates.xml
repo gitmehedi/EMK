@@ -376,54 +376,21 @@
                         <div class="col-md-12">
                             <div class="panel panel-success">
                                 <div class="panel-heading odoobg">
-                                    <h3 class="panel-title text-left">Details &amp; Rules Regulations</h3>
+                                    <h3 class="panel-title text-left">Event Details</h3>
                                 </div>
                                 <div class="panel-body">
                                     <div class="col-md-12">
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label for="description" class="control-label">Event Description
-                                                </label>
-                                                <textarea type="textarea" name="description" id="description" rows="4"
-                                                          class="form-control load_editor"
-                                                          required="required">
-                                                    <t t-esc="description"/>
-                                                </textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label for="rules_regulation" class="control-label">Rules and
-                                                    Regulations
-                                                </label>
-                                                <textarea type="textarea" name="rules_regulation"
-                                                          t-att-value="rules_regulation" id="rules_regulation" rows="4"
-                                                          class="form-control input-sm reqfield"
-                                                          required="required">
-                                                    <t t-esc="rules_regulation"/>
-                                                </textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label for="notes" class="control-label">Comments/Notes</label>
-                                                <textarea type="textarea" name="notes" t-att-value="notes"
-                                                          id="notes" rows="4"
-                                                          class="form-control input-sm reqfield"
-                                                          required="required">
-                                                    <t t-esc="notes"/>
-                                                </textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label for="purpose_of_event" class="control-label">Purpose of Events
-                                                </label>
-                                                <textarea type="textarea" name="purpose_of_event" rows="4"
-                                                          required="required" id="purpose_of_event"
-                                                          class="form-control input-sm reqfield">
-                                                    <t t-esc="purpose_of_event"/>
-                                                </textarea>
+                                        <h4>Upload Event Details</h4>
+                                        <div class="input_fields_wrap">
+                                            <div>
+                                                <table class="table table-hover" id="uploadtable">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="file" class="attachment"  name="event_details" required="required"
+                                                            accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"/>
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -432,7 +399,7 @@
                         </div>
                         <div class="col-md-4 col-md-offset-5" style="margin-bottom: 100px;">
                             <div class="clearfix oe_login_buttons">
-                                <button type="submit" class="btn btn-success">Submit Event</button>
+                                <button type="submit" class="btn btn-primary btn-lg">Submit Event</button>
                             </div>
                         </div>
                     </form>

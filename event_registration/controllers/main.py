@@ -41,18 +41,7 @@ class WebsiteRegistration(WebsiteEventController):
     def event_reservation(self, **post):
         qctx = self.get_signup_context()
         token = request.params.get('token')
-        if token:
-            event = request.env['event.reservation'].sudo().search(
-                [('reserv_token', '=', token), ('state', '=', 'draft')])
-            if event:
-                qctx['id'] = event.id
-                qctx['event_name'] = event.event_name
-                qctx['poc_id'] = event.poc_id.id
-                qctx['org_id'] = event.org_id.id
-                qctx['token'] = token
-            if not event:
-                return request.render('event_registration.event_reservation_expire')
-        else:
+        if not token:
             return request.render('event_registration.event_reservation_expire')
 
         if request.httprequest.method == 'POST' and ('error' not in qctx):
@@ -65,6 +54,17 @@ class WebsiteRegistration(WebsiteEventController):
                         return request.render('event_registration.event_reservation_success')
             except (WebsiteRegistration, AssertionError) as e:
                 qctx['error'] = _("Could not create a new account.")
+        else:
+            event = request.env['event.reservation'].sudo().search([('reserv_token', '=', token),
+                                                                    ('state', '=', 'draft')])
+            if event:
+                qctx['id'] = event.id
+                qctx['event_name'] = event.event_name
+                qctx['poc_id'] = event.poc_id.id
+                qctx['org_id'] = event.org_id.id
+                qctx['token'] = token
+            if not event:
+                return request.render('event_registration.event_reservation_expire')
 
         qctx['event_name'] = None if 'event_name' not in qctx else qctx['event_name']
         qctx['poc_type_id'] = None if 'poc_type_id' not in qctx else int(qctx['poc_type_id'])
@@ -93,7 +93,7 @@ class WebsiteRegistration(WebsiteEventController):
         qctx['description'] = None if 'description' not in qctx else qctx['description'].strip()
         qctx['rules_regulation'] = None if 'rules_regulation' not in qctx else qctx['rules_regulation'].strip()
         qctx['notes'] = None if 'notes' not in qctx else qctx['notes'].strip()
-        qctx['purpose_of_event'] = None if 'purpose_of_event' not in qctx else qctx['purpose_of_event'].strip()
+        qctx['event_details'] = None if 'event_details' not in qctx else qctx['event_details'].strip()
 
         if 'facilities_ids' not in qctx:
             qctx['facilities_ids'] = []
@@ -188,7 +188,6 @@ class WebsiteRegistration(WebsiteEventController):
             'token',
             'org_id',
             'event_name',
-            'event_name',
             'poc_id',
             'poc_type_id',
             'facilities_ids',
@@ -212,8 +211,5 @@ class WebsiteRegistration(WebsiteEventController):
             'outreach_plan',
             'outreach_plan_other',
             'snakes_required',
-            'description',
-            'rules_regulation',
-            'notes',
-            'purpose_of_event',
+            'event_details',
         )

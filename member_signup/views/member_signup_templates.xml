@@ -375,14 +375,13 @@
                             <div class="warning">Signature Image (Resolution: 300px * 80px, Size: 200KB)</div>
                             <div class="img_ctx pull-left">
                                 <input id="signature-image-upload" name="signature_image" class="hidden reqfield"
-                                       type="file" required="required">
+                                       type="file" accept="image/*" required="required">
                                     <img id="signature_image"/>
                                 </input>
                                 <div class="img_select_layer">
                                     <p class="img_desc text-center">Signature</p>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="col-md-6">
@@ -391,7 +390,7 @@
                             </div>
                             <div class="img_ctx  pull-right">
                                 <input id="member-image-upload" class="hidden reqfield" type="file" name="image"
-                                       required="required">
+                                       accept="image/*" required="required">
                                     <img id="member_image"/>
                                 </input>
                                 <div class="img_select_layer">
@@ -422,7 +421,8 @@
                                 <table class="table table-hover" id="uploadtable">
                                     <tr>
                                         <td>
-                                            <input type="file" class="attachment" name="attachment"/>
+                                            <input type="file" class="attachment" name="attachment"
+                                            accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"/>
                                         </td>
                                         <td>
                                             <a href="#" class="remove_field btn btn-danger btn-xs">Remove</a>
@@ -482,8 +482,8 @@
                         </t>
                         <div class="col-md-4 col-md-offset-5" style="margin-top: 50px; margin-bottom: 80px;">
                             <div class="clearfix oe_login_buttons">
-                                <button type="submit" class="btn btn-success">Sign up</button>
-                                <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-default">
+                                <button type="submit" class="btn btn-primary btn-lg">Sign up</button>
+                                <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-default btn-lg">
                                     <i class="fa fa-angle-double-left"></i>
                                     Back to Login
                                 </a>

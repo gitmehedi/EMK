@@ -139,6 +139,7 @@ class EventReservation(models.Model):
     reserv_token = fields.Char(copy=False)
     reserv_url = fields.Char(string='Reservation URL', track_visibility='onchange', )
     state = fields.Selection(helper.reservation_state, string="State", default="draft", track_visibility='onchange')
+    event_details = fields.Binary(string="Event Details", attachment=True, track_visibility='onchange')
 
     @api.constrains('start_date', 'end_date')
     def _check_start_date(self):
@@ -381,50 +382,11 @@ class EventReservation(models.Model):
 
     @api.model
     def post_event_reservation(self, vals, token=None):
-        reserv = self.search([('id', '=', vals['id']), ('reserv_token', '=', vals['token'])])
-        if reserv:
-            reserv.write(vals)
+        event = self.search([('reserv_token', '=', token), ('state', '=', 'draft')])
+        if event:
+            event.write(vals)
             return vals
-
-        # if token:
-        #     # signup with a token: find the corresponding partner id
-        #     partner = self.env['res.partner']._signup_retrieve_partner(token, check_validity=True, raise_exception=True)
-        #     # invalidate signup token
-        #     partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
-        #
-        #     partner_user = partner.user_ids and partner.user_ids[0] or False
-        #
-        #     # avoid overwriting existing (presumably correct) values with geolocation data
-        #     if partner.country_id or partner.zip or partner.city:
-        #         values.pop('city', None)
-        #         values.pop('country_id', None)
-        #     if partner.lang:
-        #         values.pop('lang', None)
-        #
-        #     if partner_user:
-        #         # user exists, modify it according to values
-        #         values.pop('login', None)
-        #         values.pop('name', None)
-        #         partner_user.write(values)
-        #         return (self.env.cr.dbname, partner_user.login, values.get('password'))
-        #     else:
-        #         # user does not exist: sign up invited user
-        #         values.update({
-        #             'name': partner.name,
-        #             'partner_id': partner.id,
-        #             'email': values.get('email') or values.get('login'),
-        #         })
-        #         if partner.company_id:
-        #             values['company_id'] = partner.company_id.id
-        #             values['company_ids'] = [(6, 0, [partner.company_id.id])]
-        #         self._signup_create_user(values)
-        # else:
-        #     # no token, sign up an external user
-        #     values['email'] = values.get('email') or values.get('login')
-        #     self._signup_create_user(values)
-        #
-        # return (self.env.cr.dbname, values.get('login'), values.get('password'))
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['draft', 'on_process', 'confirm'])]
+        return [('state', 'in', ['draft', 'approve', 'on_process'])]

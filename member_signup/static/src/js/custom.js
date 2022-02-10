@@ -163,7 +163,7 @@ $(function () {
         });
 
         if ( attachNo < maxAttach && val==true){
-            $('#uploadtable').append('<tr><td><input type="file" class="attachment" name="attachment"/></td><td><a href="#" class="remove_field btn btn-danger btn-xs">Remove</a></td></tr>');
+            $('#uploadtable').append('<tr><td><input type="file" class="attachment" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf" name="attachment"/></td><td><a href="#" class="remove_field btn btn-danger btn-xs">Remove</a></td></tr>');
             attachNo++;
         }
     });
@@ -172,7 +172,6 @@ $(function () {
         $(this).closest('tr').remove();
         attachNo--;
     })
-
     });
 
     function validateFile(file,loc) {
