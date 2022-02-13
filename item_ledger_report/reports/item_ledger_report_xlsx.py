@@ -35,10 +35,6 @@ class ItemLedgerReportXLSX(ReportXlsx):
                               "\nPlease create stock location for this unit."))
         location = self.env['stock.location'].browse(location_id)
 
-        date_from = obj.date_from
-        date_start = date_from + ' 00:00:00'
-        date_to = obj.date_to
-        date_end = date_to + ' 23:59:59'
         location_outsource = location.id
         category_id = obj.category_id.id
         product_id = obj.product_id.id
@@ -159,144 +155,14 @@ class ItemLedgerReportXLSX(ReportXlsx):
             else:
                 product_param = '(0)'
 
-        sql_in_tk = '''
-                                    SELECT product_id, 
-                                           NAME, 
-                                           origin,
-                                           code,
-                                            'IN' as type,
-                                            move_date,
-                                           uom_name, 
-                                           category,
-                                           cost_val AS rate,
-                                           Sum(qty_in_tk) AS qty_in_tk, 
-                                           Sum(val_in_tk) AS value_amount 
-                                    FROM   (SELECT sm.product_id, 
-                                                   sm.origin,
-                                                   pt.NAME, 
-                                                   DATE(sm.date) AS move_date,
-                                                   pp.default_code                          AS code,
-                                                   pu.name                                  AS uom_name, 
-                                                   pc.name                                  AS category, 
-                                                   sm.product_qty                           AS qty_in_tk, 
-                                                   sm.product_qty * Coalesce((SELECT ph.cost
-                                                     FROM   product_price_history ph
-                                                     WHERE  ph.datetime + interval'6h' <= '%s'
-                                                            AND pp.id = ph.product_id
-                                                     ORDER  BY ph.datetime DESC,ph.id DESC
-                                                     LIMIT  1), 0) AS val_in_tk,
-                                                   Coalesce((SELECT ph.cost
-                                                     FROM   product_price_history ph
-                                                     WHERE  ph.datetime + interval'6h' <= '%s'
-                                                            AND pp.id = ph.product_id
-                                                     ORDER  BY ph.datetime DESC,ph.id DESC
-                                                     LIMIT  1), 0)          AS cost_val
-                                            FROM   stock_move sm 
-                                                   LEFT JOIN stock_picking sp 
-                                                          ON sm.picking_id = sp.id 
-                                                   LEFT JOIN product_product pp 
-                                                          ON sm.product_id = pp.id 
-                                                   LEFT JOIN product_template pt 
-                                                          ON pp.product_tmpl_id = pt.id 
-                                                   LEFT JOIN stock_location sl 
-                                                          ON sm.location_id = sl.id 
-                                                   LEFT JOIN product_category pc 
-                                                          ON pt.categ_id = pc.id
-                                                   LEFT JOIN product_uom pu 
-                				                          ON( pu.id = pt.uom_id )
-                                            WHERE  sm.date + interval'6h' BETWEEN '%s' AND '%s' 
-                                                   AND sm.state = 'done' 
-                                                   --AND sp.location_type = 'outsource_out' 
-                                                   AND sm.location_id <> %s
-                                                   AND sm.location_dest_id = %s 
-                                                   AND pc.id IN %s
-                                                   AND pp.id IN %s
-                                           --AND usage like 'internal' 
-                                           )t1 
-                                    GROUP  BY product_id, 
-                                              NAME, 
-                                              code,
-                                              uom_name,
-                                              origin,
-                                              move_date,
-                                              category,
-                                              cost_val 
-                                ''' % (
-            date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param,
-            product_param)
+        date_from = obj.date_from
+        date_start = date_from + ' 00:00:00'
+        date_to = obj.date_to
+        date_end = date_to + ' 23:59:59'
 
-        sql_out_tk = '''SELECT product_id,
-                                   name,
-                                   origin,
-                                   code,
-                                    'OUT' as type,
-                                    move_date,
-                                   uom_name,
-                                   category,
-                                   list_price AS rate,
-                                   Sum(qty_out_tk)              AS qty_out_tk,
-                                   Sum(val_out_tk)              AS value_amount
-                            FROM   (SELECT sm.product_id,
-                                           sm.origin,
-                                           pt.name,
-                                           DATE(sm.date) AS move_date,
-                                           pp.default_code         AS code,
-                                           pu.name                 AS uom_name,
-                                           pc.name                 AS category,
-                                           sm.product_qty          AS qty_out_tk,
-                                           Coalesce((SELECT ph.cost
-                                                     FROM   product_price_history ph
-                                                     WHERE  ph.datetime + interval'6h' <= '%s'
-                                                            AND pp.id = ph.product_id
-                                                     ORDER  BY ph.datetime DESC,ph.id DESC
-                                                     LIMIT  1), 0) AS list_price,
-                                           sm.product_qty * Coalesce((SELECT ph.cost
-                                                     FROM   product_price_history ph
-                                                     WHERE  ph.datetime + interval'6h' <= '%s'
-                                                            AND pp.id = ph.product_id
-                                                     ORDER  BY ph.datetime DESC,ph.id DESC
-                                                     LIMIT  1), 0) AS val_out_tk
-                                    FROM   stock_move sm
-                                           LEFT JOIN stock_picking sp
-                                                  ON sm.picking_id = sp.id
-                                           LEFT JOIN product_product pp
-                                                  ON sm.product_id = pp.id
-                                           LEFT JOIN product_template pt
-                                                  ON pp.product_tmpl_id = pt.id
-                                           LEFT JOIN stock_location sl
-                                                  ON sm.location_id = sl.id
-                                           LEFT JOIN product_category pc
-                                                  ON pt.categ_id = pc.id
-                                           LEFT JOIN product_uom pu
-        				                          ON( pu.id = pt.uom_id )
-                                    WHERE  sm.date + interval'6h' BETWEEN '%s' AND '%s'
-                                           AND sm.state = 'done'
-                                           AND sm.location_id = %s
-                                           AND sm.location_dest_id <> %s
-                                           AND pc.id IN %s
-                                           AND pp.id IN %s
-                                   )t1
-                            GROUP  BY product_id,
-                                      name,
-                                      code,
-                                      origin,
-                                      uom_name,
-                                      category,
-                                      move_date,
-                                      list_price
-                                ''' % (
-            date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param,
-            product_param)
+        date_start_obj = datetime.strptime(date_from, "%Y-%m-%d")
 
-        item_ledger_vals_list = []
-
-        self.env.cr.execute(sql_in_tk)
-        for vals1 in self.env.cr.dictfetchall():
-            item_ledger_vals_list.append(vals1)
-        self.env.cr.execute(sql_out_tk)
-        for vals2 in self.env.cr.dictfetchall():
-            item_ledger_vals_list.append(vals2)
-        sorted_item_ledger_vals_list = sorted(item_ledger_vals_list, key=lambda d: d['move_date'])
+        date_end_obj = datetime.strptime(date_to, "%Y-%m-%d")
 
         row_no = 9
         total_in_qty = 0
@@ -304,48 +170,195 @@ class ItemLedgerReportXLSX(ReportXlsx):
         total_rate = 0
         total_amount_in = 0
         total_amount_out = 0
-        for vals in sorted_item_ledger_vals_list:
-            sheet.write(row_no, 0, reportUtility.get_date_from_string(vals['move_date']), date_format_left)
-            if vals['origin']:
-                sheet.write(row_no, 1, vals['origin'], date_format_left)
-            else:
-                sheet.write(row_no, 1, 'ADJUSTMENT', date_format_left)
-            sheet.write(row_no, 2, vals['uom_name'], date_format_left)
-            # in qty
-            if vals['type'] == 'IN':
-                sheet.write(row_no, 3, vals['qty_in_tk'], normal_format_left_comma_separator)
-                total_in_qty = total_in_qty + vals['qty_in_tk']
-            else:
-                total_in_qty = total_in_qty + 0
-                sheet.write(row_no, 3, '0', normal_format_left_comma_separator)
-            # out qty
-            if vals['type'] == 'OUT':
-                sheet.write(row_no, 4, vals['qty_out_tk'], normal_format_left_comma_separator)
-                total_out_qty = total_out_qty + vals['qty_out_tk']
-            else:
-                sheet.write(row_no, 4, '0', normal_format_left_comma_separator)
-                total_out_qty = total_out_qty + 0
-            # rate
-            sheet.write(row_no, 5, vals['rate'], normal_format_left_comma_separator)
-            total_rate = total_rate + vals['rate']
-            # type
-            sheet.write(row_no, 6, vals['type'], normal_format_left_comma_separator)
-            # amount in
-            if vals['type'] == 'IN':
-                sheet.write(row_no, 7, vals['value_amount'], normal_format_left_comma_separator)
-                total_amount_in = total_amount_in + vals['value_amount']
-            else:
-                sheet.write(row_no, 7, '0', normal_format_left_comma_separator)
-                total_amount_in = total_amount_in + 0
+        while date_start_obj <= date_end_obj:
+            # + ' 00:00:01'
+            date_start = date_start_obj.replace(second=01).strftime("%Y-%m-%d, %H:%M:%S")
+            # + ' 23:59:59'
+            date_end = date_start_obj.replace(hour=23, minute=59, second=59).strftime("%Y-%m-%d, %H:%M:%S")
 
-            # amount out
-            if vals['type'] == 'OUT':
-                total_amount_out = total_amount_out + vals['value_amount']
-                sheet.write(row_no, 8, vals['value_amount'], normal_format_left_comma_separator)
-            else:
-                total_amount_out = total_amount_out + 0
-                sheet.write(row_no, 8, '0', normal_format_left_comma_separator)
-            row_no = row_no + 1
+            sql_in_tk = '''
+                                        SELECT product_id, 
+                                               NAME, 
+                                               origin,
+                                               code,
+                                                'IN' as type,
+                                                move_date,
+                                               uom_name, 
+                                               category,
+                                               cost_val AS rate,
+                                               Sum(qty_in_tk) AS qty_in_tk, 
+                                               Sum(val_in_tk) AS value_amount 
+                                        FROM   (SELECT sm.product_id, 
+                                                       sm.origin,
+                                                       pt.NAME, 
+                                                       DATE(sm.date) AS move_date,
+                                                       pp.default_code                          AS code,
+                                                       pu.name                                  AS uom_name, 
+                                                       pc.name                                  AS category, 
+                                                       sm.product_qty                           AS qty_in_tk, 
+                                                       sm.product_qty * Coalesce((SELECT ph.cost
+                                                         FROM   product_price_history ph
+                                                         WHERE  ph.datetime + interval'6h' <= '%s'
+                                                                AND pp.id = ph.product_id
+                                                         ORDER  BY ph.datetime DESC,ph.id DESC
+                                                         LIMIT  1), 0) AS val_in_tk,
+                                                       Coalesce((SELECT ph.cost
+                                                         FROM   product_price_history ph
+                                                         WHERE  ph.datetime + interval'6h' <= '%s'
+                                                                AND pp.id = ph.product_id
+                                                         ORDER  BY ph.datetime DESC,ph.id DESC
+                                                         LIMIT  1), 0)          AS cost_val
+                                                FROM   stock_move sm 
+                                                       LEFT JOIN stock_picking sp 
+                                                              ON sm.picking_id = sp.id 
+                                                       LEFT JOIN product_product pp 
+                                                              ON sm.product_id = pp.id 
+                                                       LEFT JOIN product_template pt 
+                                                              ON pp.product_tmpl_id = pt.id 
+                                                       LEFT JOIN stock_location sl 
+                                                              ON sm.location_id = sl.id 
+                                                       LEFT JOIN product_category pc 
+                                                              ON pt.categ_id = pc.id
+                                                       LEFT JOIN product_uom pu 
+                                                              ON( pu.id = pt.uom_id )
+                                                WHERE  sm.date + interval'6h' BETWEEN '%s' AND '%s' 
+                                                       AND sm.state = 'done' 
+                                                       --AND sp.location_type = 'outsource_out' 
+                                                       AND sm.location_id <> %s
+                                                       AND sm.location_dest_id = %s 
+                                                       AND pc.id IN %s
+                                                       AND pp.id IN %s
+                                               --AND usage like 'internal' 
+                                               )t1 
+                                        GROUP  BY product_id, 
+                                                  NAME, 
+                                                  code,
+                                                  uom_name,
+                                                  origin,
+                                                  move_date,
+                                                  category,
+                                                  cost_val 
+                                    ''' % (
+                date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param,
+                product_param)
+
+            sql_out_tk = '''SELECT product_id,
+                                       name,
+                                       origin,
+                                       code,
+                                        'OUT' as type,
+                                        move_date,
+                                       uom_name,
+                                       category,
+                                       list_price AS rate,
+                                       Sum(qty_out_tk)              AS qty_out_tk,
+                                       Sum(val_out_tk)              AS value_amount
+                                FROM   (SELECT sm.product_id,
+                                               sm.origin,
+                                               pt.name,
+                                               DATE(sm.date) AS move_date,
+                                               pp.default_code         AS code,
+                                               pu.name                 AS uom_name,
+                                               pc.name                 AS category,
+                                               sm.product_qty          AS qty_out_tk,
+                                               Coalesce((SELECT ph.cost
+                                                         FROM   product_price_history ph
+                                                         WHERE  ph.datetime + interval'6h' <= '%s'
+                                                                AND pp.id = ph.product_id
+                                                         ORDER  BY ph.datetime DESC,ph.id DESC
+                                                         LIMIT  1), 0) AS list_price,
+                                               sm.product_qty * Coalesce((SELECT ph.cost
+                                                         FROM   product_price_history ph
+                                                         WHERE  ph.datetime + interval'6h' <= '%s'
+                                                                AND pp.id = ph.product_id
+                                                         ORDER  BY ph.datetime DESC,ph.id DESC
+                                                         LIMIT  1), 0) AS val_out_tk
+                                        FROM   stock_move sm
+                                               LEFT JOIN stock_picking sp
+                                                      ON sm.picking_id = sp.id
+                                               LEFT JOIN product_product pp
+                                                      ON sm.product_id = pp.id
+                                               LEFT JOIN product_template pt
+                                                      ON pp.product_tmpl_id = pt.id
+                                               LEFT JOIN stock_location sl
+                                                      ON sm.location_id = sl.id
+                                               LEFT JOIN product_category pc
+                                                      ON pt.categ_id = pc.id
+                                               LEFT JOIN product_uom pu
+                                                      ON( pu.id = pt.uom_id )
+                                        WHERE  sm.date + interval'6h' BETWEEN '%s' AND '%s'
+                                               AND sm.state = 'done'
+                                               AND sm.location_id = %s
+                                               AND sm.location_dest_id <> %s
+                                               AND pc.id IN %s
+                                               AND pp.id IN %s
+                                       )t1
+                                GROUP  BY product_id,
+                                          name,
+                                          code,
+                                          origin,
+                                          uom_name,
+                                          category,
+                                          move_date,
+                                          list_price
+                                    ''' % (
+                date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param,
+                product_param)
+
+            item_ledger_vals_list = []
+
+            self.env.cr.execute(sql_in_tk)
+            for vals1 in self.env.cr.dictfetchall():
+                item_ledger_vals_list.append(vals1)
+            self.env.cr.execute(sql_out_tk)
+            for vals2 in self.env.cr.dictfetchall():
+                item_ledger_vals_list.append(vals2)
+            sorted_item_ledger_vals_list = sorted(item_ledger_vals_list, key=lambda d: d['move_date'])
+
+            for vals in sorted_item_ledger_vals_list:
+                sheet.write(row_no, 0, reportUtility.get_date_from_string(vals['move_date']), date_format_left)
+                if vals['origin']:
+                    sheet.write(row_no, 1, vals['origin'], date_format_left)
+                else:
+                    sheet.write(row_no, 1, 'ADJUSTMENT', date_format_left)
+                sheet.write(row_no, 2, vals['uom_name'], date_format_left)
+                # in qty
+                if vals['type'] == 'IN':
+                    sheet.write(row_no, 3, vals['qty_in_tk'], normal_format_left_comma_separator)
+                    total_in_qty = total_in_qty + vals['qty_in_tk']
+                else:
+                    total_in_qty = total_in_qty + 0
+                    sheet.write(row_no, 3, '0', normal_format_left_comma_separator)
+                # out qty
+                if vals['type'] == 'OUT':
+                    sheet.write(row_no, 4, vals['qty_out_tk'], normal_format_left_comma_separator)
+                    total_out_qty = total_out_qty + vals['qty_out_tk']
+                else:
+                    sheet.write(row_no, 4, '0', normal_format_left_comma_separator)
+                    total_out_qty = total_out_qty + 0
+                # rate
+                sheet.write(row_no, 5, vals['rate'], normal_format_left_comma_separator)
+                total_rate = total_rate + vals['rate']
+                # type
+                sheet.write(row_no, 6, vals['type'], normal_format_left_comma_separator)
+                # amount in
+                if vals['type'] == 'IN':
+                    sheet.write(row_no, 7, vals['value_amount'], normal_format_left_comma_separator)
+                    total_amount_in = total_amount_in + vals['value_amount']
+                else:
+                    sheet.write(row_no, 7, '0', normal_format_left_comma_separator)
+                    total_amount_in = total_amount_in + 0
+
+                # amount out
+                if vals['type'] == 'OUT':
+                    total_amount_out = total_amount_out + vals['value_amount']
+                    sheet.write(row_no, 8, vals['value_amount'], normal_format_left_comma_separator)
+                else:
+                    total_amount_out = total_amount_out + 0
+                    sheet.write(row_no, 8, '0', normal_format_left_comma_separator)
+                row_no = row_no + 1
+
+            date_start_obj += timedelta(days=1)
 
         sheet.write(row_no, 0, 'Closing Information', footer_format_left)
         sheet.write(row_no, 1, '', footer_format_left)
@@ -385,8 +398,10 @@ class ItemLedgerReportXLSX(ReportXlsx):
                 if opening_closing_stock['closing_stock']:
                     closing_balance = float(opening_closing_stock['closing_stock'])
 
-        opening_rate = self.get_product_rate_datewise(product_id, date_start)
-        closing_rate = self.get_product_rate_datewise(product_id, date_end)
+        opening_rate = self.get_product_rate_datewise(product_id, start_date)
+        closing_rate = self.get_product_rate_datewise(product_id, end_date)
+        received_rate = total_amount_in / total_in_qty
+        issued_rate = total_amount_out / total_out_qty
 
         new_header_row = row_no + 2
         new_section_row = new_header_row + 1
@@ -408,22 +423,22 @@ class ItemLedgerReportXLSX(ReportXlsx):
         sheet.write(new_section_row + 1, 1, ' ', footer_format_left)
         sheet.write(new_section_row + 1, 2, ' ', footer_format_left)
         sheet.write(new_section_row + 1, 3, total_in_qty, footer_format_left_comma_separator)
-        sheet.write(new_section_row + 1, 4, total_rate_value, footer_format_left_comma_separator)
-        sheet.write(new_section_row + 1, 5, total_in_qty * total_rate_value, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 1, 4, received_rate, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 1, 5, total_in_qty * received_rate, footer_format_left_comma_separator)
 
         sheet.write(new_section_row + 2, 0, 'Total Issued', footer_format_left)
         sheet.write(new_section_row + 2, 1, ' ', footer_format_left)
         sheet.write(new_section_row + 2, 2, ' ', footer_format_left)
         sheet.write(new_section_row + 2, 3, total_out_qty, footer_format_left_comma_separator)
-        sheet.write(new_section_row + 2, 4, total_rate_value, footer_format_left_comma_separator)
-        sheet.write(new_section_row + 2, 5, total_out_qty * total_rate_value, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 2, 4, issued_rate, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 2, 5, total_out_qty * issued_rate, footer_format_left_comma_separator)
 
         sheet.write(new_section_row + 3, 0, 'Closing Balance', footer_format_left)
         sheet.write(new_section_row + 3, 1, ' ', footer_format_left)
         sheet.write(new_section_row + 3, 2, ' ', footer_format_left)
         sheet.write(new_section_row + 3, 3, closing_balance, footer_format_left_comma_separator)
         sheet.write(new_section_row + 3, 4, closing_rate, footer_format_left_comma_separator)
-        sheet.write(new_section_row + 3, 5, closing_balance*closing_rate, footer_format_left_comma_separator)
+        sheet.write(new_section_row + 3, 5, closing_balance * closing_rate, footer_format_left_comma_separator)
 
         data['name'] = 'Item Ledger Report'
 
