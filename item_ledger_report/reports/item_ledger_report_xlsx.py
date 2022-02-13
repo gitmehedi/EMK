@@ -365,9 +365,11 @@ class ItemLedgerReportXLSX(ReportXlsx):
         sheet.write(row_no, 2, '', footer_format_left)
         sheet.write(row_no, 3, total_in_qty, footer_format_left_comma_separator)
         sheet.write(row_no, 4, total_out_qty, footer_format_left_comma_separator)
+        if (total_in_qty + total_out_qty) > 0:
 
-        total_rate_value = (total_amount_in + total_amount_out) / (total_in_qty + total_out_qty)
-
+            total_rate_value = (total_amount_in + total_amount_out) / (total_in_qty + total_out_qty)
+        else:
+            total_rate_value = 0
         sheet.write(row_no, 5, total_rate_value, footer_format_left_comma_separator)
         sheet.write(row_no, 6, '', footer_format_left)
         sheet.write(row_no, 7, total_amount_in, footer_format_left_comma_separator)
@@ -400,9 +402,15 @@ class ItemLedgerReportXLSX(ReportXlsx):
 
         opening_rate = self.get_product_rate_datewise(product_id, start_date)
         closing_rate = self.get_product_rate_datewise(product_id, end_date)
-        received_rate = total_amount_in / total_in_qty
-        issued_rate = total_amount_out / total_out_qty
+        if total_in_qty > 0:
+            received_rate = total_amount_in / total_in_qty
+        else:
+            received_rate = 0
 
+        if total_out_qty> 0:
+            issued_rate = total_amount_out / total_out_qty
+        else:
+            issued_rate = 0
         new_header_row = row_no + 2
         new_section_row = new_header_row + 1
         sheet.write(new_header_row, 0, "", header_format_left)
