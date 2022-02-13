@@ -111,7 +111,12 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
 
         sql_filters = ""
         if used_context['account_type_ids']:
-            sql_filters += " AND acc.user_type_id IN %s" % str(tuple(used_context['account_type_ids']))
+            if len(used_context['account_type_ids']) > 1:
+                sql_filters += """ AND acc.user_type_id IN %s""" % (tuple(used_context['account_type_ids']),)
+            else:
+                sql_filters += """ AND acc.user_type_id=%s""" % used_context['account_type_ids'][0]
+
+
 
         # Get move lines base on sql query and Calculate the total balance of move lines
         sql = ('''SELECT 
