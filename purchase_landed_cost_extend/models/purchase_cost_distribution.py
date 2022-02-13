@@ -39,6 +39,9 @@ class PurchaseCostDistribution(models.Model):
         if vals.get('name', '/') == '/':
             operating_unit = self.env['operating.unit'].browse(vals.get('operating_unit_id'))
             vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.cost.distribution', self.date, operating_unit)
+        if not vals.get('field_readonly', False):
+            vals['field_readonly'] = True
+
         return super(PurchaseCostDistribution, self).create(vals)
 
     @api.constrains('date')
