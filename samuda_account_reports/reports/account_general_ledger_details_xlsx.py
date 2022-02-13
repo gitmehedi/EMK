@@ -116,6 +116,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
         # Get move lines base on sql query and Calculate the total balance of move lines
         sql = ('''SELECT 
                         m.id AS move_id
+                        ,m.narration
                         ,m.date
                         ,j.name AS journal_name
                         ,acc.id AS account_id
@@ -147,6 +148,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                     ''' + sql_filters + '''
                 GROUP BY 
                      m.id
+                     ,m.narration
                     ,m.date
                     ,j.name
                     ,acc.id
@@ -201,6 +203,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
 
         name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
+        narration_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 10,  'bg_color' : '#f4e4d4'})
 
         # table header cell format
         th_cell_left = workbook.add_format({'align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
@@ -237,6 +240,8 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
         sheet.set_column(11, 11, 15)
         sheet.set_column(12, 12, 15)
         sheet.set_column(13, 13, 15)
+        sheet.set_column(14, 14, 15)
+
 
         # SHEET HEADER
         sheet.merge_range(0, 0, 0, 13, docs.company_id.name, name_format)
@@ -269,6 +274,8 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
         # TABLE BODY
         temp_move_id = False
         balance = 0
+        is_last_line = False
+        narration = ''
         row += 1
         for rec in accounts_result:
             if rec['move_id'] == 0:
@@ -280,8 +287,14 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                 row += 1
                 balance += rec['balance']
             else:
+                if rec['move_id'] != temp_move_id and is_last_line:
+                    is_last_line = False
+                    sheet.merge_range(row, col, row, col + 13, 'Narration: ' + narration, narration_format)
+                    row += 1
+
                 if rec['move_id'] != temp_move_id:
                     temp_move_id = rec['move_id']
+                    narration = rec['narration'] if rec['narration'] else ''
                     sheet.write(row, col, rec['date'], td_cell_center_color)
                     sheet.write(row, col + 1, rec['journal_name'], td_cell_center_color)
                     sheet.write(row, col + 2, rec['account_code'], td_cell_left_color)
@@ -295,12 +308,16 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                     sheet.write(row, col + 10, rec['entry_label'], td_cell_left_color)
                     sheet.write(row, col + 11, rec['debit'], no_format_color)
                     sheet.write(row, col + 12, rec['credit'], no_format_color)
+
                     if rec['account_code'] == docs.code:
                         balance += rec['balance']
                         sheet.write(row, col + 13, balance, no_format_color)
                     else:
                         sheet.write(row, col + 13, '', no_format_color)
                     row += 1
+
+                    is_last_line = True
+
                 else:
                     sheet.write(row, col, '', td_cell_center)
                     sheet.write(row, col + 1, '', td_cell_center)
@@ -315,12 +332,15 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                     sheet.write(row, col + 10, rec['entry_label'], td_cell_left)
                     sheet.write(row, col + 11, rec['debit'], no_format)
                     sheet.write(row, col + 12, rec['credit'], no_format)
+
                     if rec['account_code'] == docs.code:
                         balance += rec['balance']
                         sheet.write(row, col + 13, balance, no_format)
                     else:
                         sheet.write(row, col + 13, '', no_format)
                     row += 1
+
+                    is_last_line = True
 
 
 AccountGeneralLedgerDetailsXLSX('report.samuda_account_reports.account_general_ledger_details_xlsx', 'account.general.ledger.details.wizard', parser=report_sxw.rml_parse)

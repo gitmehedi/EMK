@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_picking_form" model="ir.ui.view">
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="purchase_landed_cost.view_picking_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_open_landed_cost']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_stock_picking_form1" model="ir.ui.view">
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock_picking_extend.view_stock_picking_form1"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button"
+                            name="action_open_landed_cost"
+                            icon="fa-credit-card"
+                            type="object"
+                            string="Landed costs">
+                    </button>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

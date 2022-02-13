@@ -13,6 +13,7 @@ class PurchaseCostDistribution(models.Model):
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True, readonly=True,
                                         states={'draft': [('readonly', False)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
+    field_readonly = fields.Boolean(string='Field Readonly')
 
     @api.multi
     def action_calculate(self):
@@ -45,3 +46,8 @@ class PurchaseCostDistribution(models.Model):
         if self.date > datetime.datetime.today().strftime("%Y-%m-%d"):
             raise ValidationError(_("Date cannot be greater than Current Date."))
 
+
+class PurchaseCostDistributionLine(models.Model):
+    _inherit = 'purchase.cost.distribution.line'
+
+    date_done = fields.Datetime(string='Date of Transfer', related='move_id.picking_id.date_done')
