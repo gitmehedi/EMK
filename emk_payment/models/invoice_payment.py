@@ -113,6 +113,9 @@ class MemberPayment(models.Model):
             payment = self.create_payment(vals)
             if payment:
                 self.state = 'paid'
+                if self.invoice_id.move_id:
+                    sql = "UPDATE account_invoice SET state='paid' WHERE id={0};".format(self.invoice_id.id)
+                    self.env.cr.execute(sql)
 
         if self.invoice_type == 'membership_payment':
             # invoice = self.env['account.invoice'].search(
@@ -217,6 +220,9 @@ class MemberPayment(models.Model):
 
             if not rem_amount:
                 self.state = 'paid'
+                if self.invoice_id.move_id:
+                    sql = "UPDATE account_invoice SET state='paid' WHERE id={0};".format(self.invoice_id.id)
+                    self.env.cr.execute(sql)
 
     @api.model
     def _needaction_domain_get(self):
@@ -227,7 +233,7 @@ class MemberPayment(models.Model):
         name = self.payment_partner_id.name
         if self.payment_partner_id:
             name = '[%s] %s' % (self.payment_partner_id.member_sequence, self.payment_partner_id.name)
-        return (self.id, name)
+        return self.id, name
 
     def create_payment(self, vals):
         payment_method = self.env['account.payment.method'].search(
