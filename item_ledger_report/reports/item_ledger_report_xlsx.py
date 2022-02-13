@@ -22,6 +22,20 @@ class ItemLedgerReportXLSX(ReportXlsx):
 
         return opening_rate
 
+    def get_rate_on_this_time(self, move_time, product_param):
+        sql = '''
+                    SELECT datetime,cost FROM product_price_history 
+                                WHERE datetime <= '%s'
+                                AND product_id in %s ORDER BY datetime DESC LIMIT 1
+                ''' % (move_time, product_param)
+
+        self.env.cr.execute(sql)
+        _rate = 0
+        for vals in self.env.cr.dictfetchall():
+            _rate = float(vals['cost'])
+
+        return _rate
+
     def generate_xlsx_report(self, workbook, data, obj):
         reportUtility = self.env['report.utility']
         # location = self.env['stock.location'].search(
@@ -183,6 +197,7 @@ class ItemLedgerReportXLSX(ReportXlsx):
                                                code,
                                                 'IN' as type,
                                                 move_date,
+                                                 move_datetime,
                                                uom_name, 
                                                category,
                                                cost_val AS rate,
@@ -192,6 +207,7 @@ class ItemLedgerReportXLSX(ReportXlsx):
                                                        sm.origin,
                                                        pt.NAME, 
                                                        DATE(sm.date) AS move_date,
+                                                       sm.date AS move_datetime,
                                                        pp.default_code                          AS code,
                                                        pu.name                                  AS uom_name, 
                                                        pc.name                                  AS category, 
@@ -236,6 +252,7 @@ class ItemLedgerReportXLSX(ReportXlsx):
                                                   uom_name,
                                                   origin,
                                                   move_date,
+                                                  move_datetime,
                                                   category,
                                                   cost_val 
                                     ''' % (
@@ -248,6 +265,7 @@ class ItemLedgerReportXLSX(ReportXlsx):
                                        code,
                                         'OUT' as type,
                                         move_date,
+                                        move_datetime,
                                        uom_name,
                                        category,
                                        list_price AS rate,
@@ -257,6 +275,7 @@ class ItemLedgerReportXLSX(ReportXlsx):
                                                sm.origin,
                                                pt.name,
                                                DATE(sm.date) AS move_date,
+                                                sm.date AS move_datetime,
                                                pp.default_code         AS code,
                                                pu.name                 AS uom_name,
                                                pc.name                 AS category,
@@ -300,6 +319,7 @@ class ItemLedgerReportXLSX(ReportXlsx):
                                           uom_name,
                                           category,
                                           move_date,
+                                          move_datetime,
                                           list_price
                                     ''' % (
                 date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param,
@@ -314,7 +334,6 @@ class ItemLedgerReportXLSX(ReportXlsx):
             for vals2 in self.env.cr.dictfetchall():
                 item_ledger_vals_list.append(vals2)
             sorted_item_ledger_vals_list = sorted(item_ledger_vals_list, key=lambda d: d['move_date'])
-
             for vals in sorted_item_ledger_vals_list:
                 sheet.write(row_no, 0, reportUtility.get_date_from_string(vals['move_date']), date_format_left)
                 if vals['origin']:
@@ -337,8 +356,11 @@ class ItemLedgerReportXLSX(ReportXlsx):
                     sheet.write(row_no, 4, '0', normal_format_left_comma_separator)
                     total_out_qty = total_out_qty + 0
                 # rate
-                sheet.write(row_no, 5, vals['rate'], normal_format_left_comma_separator)
-                total_rate = total_rate + vals['rate']
+
+                _rate = self.get_rate_on_this_time(vals['move_datetime'], product_param)
+
+                sheet.write(row_no, 5, _rate, normal_format_left_comma_separator)
+                total_rate = total_rate + _rate
                 # type
                 sheet.write(row_no, 6, vals['type'], normal_format_left_comma_separator)
                 # amount in
@@ -407,7 +429,7 @@ class ItemLedgerReportXLSX(ReportXlsx):
         else:
             received_rate = 0
 
-        if total_out_qty> 0:
+        if total_out_qty > 0:
             issued_rate = total_amount_out / total_out_qty
         else:
             issued_rate = 0
