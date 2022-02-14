@@ -341,43 +341,59 @@ class ItemLedgerReportXLSX(ReportXlsx):
                 else:
                     sheet.write(row_no, 1, 'ADJUSTMENT', date_format_left)
                 sheet.write(row_no, 2, vals['uom_name'], date_format_left)
-                # in qty
-                if vals['type'] == 'IN':
-                    sheet.write(row_no, 3, vals['qty_in_tk'], normal_format_left_comma_separator)
-                    total_in_qty = total_in_qty + vals['qty_in_tk']
-                else:
-                    total_in_qty = total_in_qty + 0
-                    sheet.write(row_no, 3, '0', normal_format_left_comma_separator)
-                # out qty
-                if vals['type'] == 'OUT':
-                    sheet.write(row_no, 4, vals['qty_out_tk'], normal_format_left_comma_separator)
-                    total_out_qty = total_out_qty + vals['qty_out_tk']
-                else:
-                    sheet.write(row_no, 4, '0', normal_format_left_comma_separator)
-                    total_out_qty = total_out_qty + 0
+
                 # rate
 
                 _rate = self.get_rate_on_this_time(vals['move_datetime'], product_param)
 
                 sheet.write(row_no, 5, _rate, normal_format_left_comma_separator)
                 total_rate = total_rate + _rate
+
+                # in qty
+                if vals['type'] == 'IN':
+                    sheet.write(row_no, 3, vals['qty_in_tk'], normal_format_left_comma_separator)
+                    total_in_qty = total_in_qty + vals['qty_in_tk']
+
+                    sheet.write(row_no, 7, float(vals['qty_in_tk']) * _rate, normal_format_left_comma_separator)
+                    total_amount_in = total_amount_in + float(vals['qty_in_tk']) * _rate
+
+                else:
+                    total_in_qty = total_in_qty + 0
+                    sheet.write(row_no, 3, '0', normal_format_left_comma_separator)
+
+                    sheet.write(row_no, 7, '0', normal_format_left_comma_separator)
+                    total_amount_in = total_amount_in + 0
+                # out qty
+                if vals['type'] == 'OUT':
+                    sheet.write(row_no, 4, vals['qty_out_tk'], normal_format_left_comma_separator)
+                    total_out_qty = total_out_qty + vals['qty_out_tk']
+
+                    sheet.write(row_no, 8, float(vals['qty_out_tk']) * _rate, normal_format_left_comma_separator)
+                    total_amount_out = total_amount_out + float(vals['qty_out_tk']) * _rate
+                else:
+                    sheet.write(row_no, 4, '0', normal_format_left_comma_separator)
+                    total_out_qty = total_out_qty + 0
+
+                    sheet.write(row_no, 8, '0', normal_format_left_comma_separator)
+                    total_amount_out = total_amount_out + 0
+
                 # type
                 sheet.write(row_no, 6, vals['type'], normal_format_left_comma_separator)
                 # amount in
-                if vals['type'] == 'IN':
-                    sheet.write(row_no, 7, vals['value_amount'], normal_format_left_comma_separator)
-                    total_amount_in = total_amount_in + vals['value_amount']
-                else:
-                    sheet.write(row_no, 7, '0', normal_format_left_comma_separator)
-                    total_amount_in = total_amount_in + 0
+                # if vals['type'] == 'IN':
+                #     sheet.write(row_no, 7, vals['value_amount'], normal_format_left_comma_separator)
+                #     total_amount_in = total_amount_in + vals['value_amount']
+                # else:
+                #     sheet.write(row_no, 7, '0', normal_format_left_comma_separator)
+                #     total_amount_in = total_amount_in + 0
 
                 # amount out
-                if vals['type'] == 'OUT':
-                    total_amount_out = total_amount_out + vals['value_amount']
-                    sheet.write(row_no, 8, vals['value_amount'], normal_format_left_comma_separator)
-                else:
-                    total_amount_out = total_amount_out + 0
-                    sheet.write(row_no, 8, '0', normal_format_left_comma_separator)
+                # if vals['type'] == 'OUT':
+                #     total_amount_out = total_amount_out + vals['value_amount']
+                #     sheet.write(row_no, 8, vals['value_amount'], normal_format_left_comma_separator)
+                # else:
+                #     total_amount_out = total_amount_out + 0
+                #     sheet.write(row_no, 8, '0', normal_format_left_comma_separator)
                 row_no = row_no + 1
 
             date_start_obj += timedelta(days=1)
