@@ -123,7 +123,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                         m.id AS move_id
                         ,m.narration
                         ,m.date
-                        ,j.name AS journal_name
+                        ,j.code AS journal_name
                         ,acc.id AS account_id
                         ,acc.code AS account_code
                         ,acc.name AS account_name
@@ -155,7 +155,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                      m.id
                      ,m.narration
                     ,m.date
-                    ,j.name
+                    ,j.code
                     ,acc.id
                     ,acc.code
                     ,acc.name
@@ -282,7 +282,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
         is_last_line = False
         narration = ''
         row += 1
-        for rec in accounts_result:
+        for index, rec in enumerate(accounts_result):
             if rec['move_id'] == 0:
                 # opening balance block
                 sheet.merge_range(row, col, row, col + 9, rec['entry_label'], td_cell_center_bold)
@@ -300,7 +300,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                 if rec['move_id'] != temp_move_id:
                     temp_move_id = rec['move_id']
                     narration = rec['narration'] if rec['narration'] else ''
-                    sheet.write(row, col, rec['date'], td_cell_center_color)
+                    sheet.write(row, col, ReportUtility.get_date_from_string(rec['date']), td_cell_center_color)
                     sheet.write(row, col + 1, rec['journal_name'], td_cell_center_color)
                     sheet.write(row, col + 2, rec['account_code'], td_cell_left_color)
                     sheet.write(row, col + 3, rec['account_name'], td_cell_left_color)
@@ -346,6 +346,9 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                     row += 1
 
                     is_last_line = True
+
+                if len(accounts_result) - 1 == index:
+                    sheet.merge_range(row, col, row, col + 13, 'Narration: ' + narration, narration_format)
 
 
 AccountGeneralLedgerDetailsXLSX('report.samuda_account_reports.account_general_ledger_details_xlsx', 'account.general.ledger.details.wizard', parser=report_sxw.rml_parse)
