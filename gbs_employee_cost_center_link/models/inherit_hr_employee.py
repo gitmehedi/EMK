@@ -21,4 +21,4 @@ class InheritedHrEmployee(models.Model):
 
     # depends on operating_unit and company
     # cost_center load depending on company
-    cost_center_id = fields.Many2one('account.cost.center', string="Cost Center")
+    cost_center_id = fields.Many2one('account.cost.center', string="Cost Center", track_visibility='always')

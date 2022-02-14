@@ -7,12 +7,16 @@
     'depends': ['hr',
         'hr_payroll',
         'l10n_in_hr_payroll',
-        'gbs_hr_security'
+        'gbs_hr_security',
+        'gbs_read_excel_utility'
         ],
     'data': [
         'security/ir.model.access.csv',
         #'security/ir_rule.xml',
         'views/hr_payroll_arrear.xml',
+        'wizards/hr_payroll_arrear_import_wizard_views.xml',
+        'wizards/success_wizard.xml'
+
     ],
 
     'summary': 'Calculates HR Payroll Arrear Information',

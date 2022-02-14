@@ -13,7 +13,8 @@
     'category': 'Warehouse Management',
     'version': '10.0.0.0.1',
 
-    'depends': ['base', 'report_xlsx', 'report', 'stock_operating_unit', 'gbs_stock_product'],
+    'depends': ['base', 'report_xlsx', 'report', 'stock_operating_unit', 'gbs_stock_product', 'stock_utility',
+                'goods_movement_ledger_reports'],
 
     'data': [
         'wizards/item_ledger_report_wizard_view.xml',

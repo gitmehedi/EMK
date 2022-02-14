@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherited_local_export_letter_credit_form" model="ir.ui.view">
+        <field name="name">inherited.local.export.letter.credit.form</field>
+        <field name="model">letter.credit</field>
+        <field name="inherit_id" ref="lc_sales_product_local.view_lc_export_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='shipment_date']" position="after">
+                    <field name="can_edit" invisible="1"/>
+                    <field name="is_amendment" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='expiry_date']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('can_edit', '!=', True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='shipment_date']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('can_edit', '!=', True)]}</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="inherited_foreign_export_letter_credit_form" model="ir.ui.view">
+        <field name="name">inherited.foreign.export.letter.credit.form</field>
+        <field name="model">letter.credit</field>
+        <field name="inherit_id" ref="lc_sales_product_foreign.view_lc_export_foreign_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='shipment_date']" position="after">
+                    <field name="can_edit" invisible="1"/>
+                    <field name="is_amendment" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='expiry_date']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('can_edit', '!=', True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='shipment_date']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('can_edit', '!=', True)]}</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

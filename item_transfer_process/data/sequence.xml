@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_item_receiving_SCCL_HO_11" model="ir.sequence">
+            <field name="name">Item Receiving SCCL HO1</field>
+            <field name="code">item.borrowing.receive</field>
+            <field name="prefix">RECV-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+        <record id="sequence_item_receiving_SCCL_DF_11" model="ir.sequence">
+            <field name="name">Item Receiving SCCL DF1</field>
+            <field name="code">item.borrowing.receive</field>
+            <field name="prefix">RECV-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+        <record id="sequence_item_receiving_SCCL_CTG_11" model="ir.sequence">
+            <field name="name">Item Receiving SCCL CTG1</field>
+            <field name="code">item.borrowing.receive</field>
+            <field name="prefix">RECV-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+
+        <record id="sequence_item_sending_SCCL_HO_11" model="ir.sequence">
+            <field name="name">Item Sending SCCL HO1</field>
+            <field name="code">item.loan.lending.send</field>
+            <field name="prefix">TRNS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+        <record id="sequence_item_sending_SCCL_DF_11" model="ir.sequence">
+            <field name="name">Item Sending SCCL DF1</field>
+            <field name="code">item.loan.lending.send</field>
+            <field name="prefix">TRNS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+        <record id="sequence_item_sending_SCCL_CTG_11" model="ir.sequence">
+            <field name="name">Item Sending SCCL CTG1</field>
+            <field name="code">item.loan.lending.send</field>
+            <field name="prefix">TRNS-OU-%(year)s-</field>
+            <field eval="6" name="padding"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="False" name="company_id"/>
+        </record>
+
+    </data>
+</odoo>

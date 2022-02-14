@@ -9,6 +9,24 @@ from odoo.tools import frozendict
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
+    operating_unit_id = fields.Many2one(
+        'operating.unit', 'Operating Unit',
+        domain=lambda self: [("id", "in", self.env.user.operating_unit_ids.ids)],
+        readonly=True,
+        states={'confirmed': [('readonly', False)]}
+    )
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_id(self):
+        if self.operating_unit_id:
+            picking_type = self.env['stock.picking.type'].search([
+                ('code', '=', 'mrp_operation'),
+                ('operating_unit_id', '=', self.operating_unit_id.id),
+                ('warehouse_id.company_id', 'in',
+                 [self.env.context.get('company_id', self.env.user.company_id.id), False])],
+                limit=1)
+            self.picking_type_id = picking_type.id
+
     @api.onchange('product_id', 'picking_type_id', 'company_id', 'operating_unit_id')
     def onchange_product_id(self):
         """ Finds UoM of changed product. """
@@ -44,7 +62,20 @@ class MrpProduction(models.Model):
         self._add_operating_unit_in_context(vals.get('operating_unit_id') or self.env.user.default_operating_unit_id.id)
         if not vals.get('name', False) or vals['name'] == _('New'):
             requested_date = datetime.datetime.strptime(fields.Date.today(), "%Y-%m-%d").date()
-            vals['name'] = self.env['ir.sequence'].next_by_code_new('mrp.production', requested_date)
+            operating_unit = self.env['operating.unit'].browse(vals.get('operating_unit_id'))
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('mrp.production', requested_date, operating_unit)
+
+        location = self.env.ref('stock.stock_location_stock')
+        picking_type = self.env['stock.picking.type'].search([
+            ('code', '=', 'mrp_operation'),
+            ('operating_unit_id', '=', vals['operating_unit_id']),
+            ('warehouse_id.company_id', 'in',
+             [self.env.context.get('company_id', self.env.user.company_id.id), False])],
+            limit=1)
+
+        vals['picking_type_id'] = picking_type.id
+        vals['location_src_id'] = picking_type.default_location_src_id.id or location.id
+        vals['location_dest_id'] = picking_type.default_location_dest_id.id or location.id
 
         return super(MrpProduction, self).create(vals)
 

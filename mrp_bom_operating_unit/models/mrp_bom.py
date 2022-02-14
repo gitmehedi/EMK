@@ -6,9 +6,18 @@ from odoo.exceptions import Warning
 class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
+    @api.model
+    def _get_default_picking_type(self):
+        return self.env['stock.picking.type'].search([
+            ('code', '=', 'mrp_operation'),
+            ('warehouse_id.company_id', 'in', [self.env.context.get('company_id', self.env.user.company_id.id), False]),
+            ('operating_unit_id', '=', self.env.user.default_operating_unit_id.id)]
+            , limit=1).id
+
     name = fields.Char(string='BOM Number', readonly=True, default='/')
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', readonly=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
+    picking_type_id = fields.Many2one(default=_get_default_picking_type)
 
     @api.multi
     def action_confirm(self):

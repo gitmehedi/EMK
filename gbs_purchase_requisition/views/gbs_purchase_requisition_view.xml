@@ -41,7 +41,8 @@
                         <button name="%(purchase_requisition.action_purchase_requisition_to_so)d" type="action"
                                 string="New Quotation" class="btn-primary"
                                 attrs="{'invisible': [('state', 'not in', ['approve_head_procurement','done'])]}"/>
-                        <button name="action_approve" groups="gbs_purchase_requisition.group_purchase_requisition_approver"
+                        <button name="action_approve"
+                                groups="gbs_purchase_requisition.group_purchase_requisition_approver"
                                 states="approve_head_procurement" string="Approve" type="object" class="btn-primary"/>
 
                     </header>
@@ -53,18 +54,24 @@
                         <attribute name="context">{'operating_unit_id': operating_unit_id}</attribute>
                     </xpath>
                     <xpath expr="//button[@name='action_cancel']" position="replace">
-                        <button name="action_cancel" groups="commercial.group_commercial_user,gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
-                                confirm="Are you sure you want to cancel?" states="approve_head_procurement,done" string="Cancel" type="object"/>
+                        <button name="action_cancel"
+                                groups="commercial.group_commercial_user,gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
+                                confirm="Are you sure you want to cancel?" states="approve_head_procurement,done"
+                                string="Cancel" type="object"/>
                     </xpath>
                     <xpath expr="//button[@name='action_draft']" position="replace">
-                        <button name="action_draft" states="cancel" string="Reset to Draft" type="object" invisible="1"/>
+                        <button name="action_draft" states="cancel" string="Reset to Draft" type="object"
+                                invisible="1"/>
                     </xpath>
                     <xpath expr="//button[@name='action_in_progress']" position="before">
-                        <button name="action_done" states="done" confirm="Are you sure you want to continue?" string="Done" type="object" groups="gbs_procure_n_commercial_access.group_pr_done"/>
-                        <button name="action_back_to_approve" states="cancel,close" string="Reset to Approve" type="object" groups="commercial.group_commercial_manager"/>
+                        <button name="action_done" states="done" confirm="Are you sure you want to continue?"
+                                string="Done" type="object" groups="gbs_procure_n_commercial_access.group_pr_done"/>
+                        <button name="action_back_to_approve" states="cancel,close" string="Reset to Approve"
+                                type="object" groups="commercial.group_commercial_manager"/>
                     </xpath>
                     <xpath expr="//button[@name='action_open']" position="replace">
-                        <button name="action_open" groups="gbs_purchase_requisition.group_purchase_requisition_validator"
+                        <button name="action_open"
+                                groups="gbs_purchase_requisition.group_purchase_requisition_validator"
                                 states="in_progress" string="Validate" type="object" class="btn-primary"/>
                     </xpath>
                     <xpath expr="//field[@name='order_count']" position="attributes">
@@ -73,13 +80,14 @@
                     <xpath expr="//sheet/div[@name='button_box']" position="inside">
                         <field name="indent_ids" invisible="True"/>
                         <button name="action_get_indent" type="object"
-                            class="oe_stat_button" icon="fa-list-alt"
-                            attrs="{'invisible':[('indent_ids','=',[])]}">
+                                class="oe_stat_button" icon="fa-list-alt"
+                                attrs="{'invisible':[('indent_ids','=',[])]}">
                             <label string="Indents"/>
                         </button>
                     </xpath>
                     <xpath expr="//field[@name='state']" position="replace">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,approve_head_procurement,done"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,in_progress,approve_head_procurement,done"/>
                     </xpath>
                     <xpath expr="//label[@for='name']" position="replace">
                         <label for="name" class="oe_edit_only oe_inline" string="Purchase Requisition"/>
@@ -112,7 +120,8 @@
                         <field name="required_date" attrs="{'readonly': [('state','!=','draft')]}"/>
                     </xpath>
                     <xpath expr="//field[@name='required_date']" position="after">
-                        <field name="purchase_from" placeholder="Please Select" attrs="{'readonly': [('state','!=','draft')]}"/>
+                        <field name="purchase_from" placeholder="Please Select"
+                               attrs="{'readonly': [('state','!=','draft')]}"/>
                     </xpath>
                     <xpath expr="//field[@name='picking_type_id']" position="attributes">
                         <attribute name="invisible">1</attribute>
@@ -124,11 +133,14 @@
                     <!--</xpath>-->
                     <xpath expr="//field[@name='vendor_id']" position="after">
                         <field name="dept_location_id" options="{'no_create': True,'no_open':True}"/>
-                        <field name="indent_ids" widget="many2many_tags" domain="[('operating_unit_id','=',operating_unit_id),('state','=','inprogress'),('pr_indent_check','=',True)]"
-                               attrs="{'readonly': [('state','!=','draft')]}" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        <field name="indent_ids" widget="many2many_tags"
+                               domain="[('operating_unit_id','=',operating_unit_id),('state','=','inprogress'),('pr_indent_check','=',True)]"
+                               attrs="{'readonly': [('state','!=','draft')]}"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="replace">
-                        <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state','!=','draft')]}"
+                        <field name="company_id" groups="base.group_multi_company"
+                               attrs="{'readonly': [('state','!=','draft')]}"
                                invisible="1" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="after">
@@ -156,10 +168,14 @@
                     <xpath expr="//field[@name='price_unit']" position="attributes" type="object">
                         <attribute name="readonly">1</attribute>
                     </xpath>
-                    <xpath expr="//notebook/page/field/tree/field[@name='schedule_date']" position="attributes" type="object">
+                    <xpath expr="//notebook/page/field/tree/field[@name='schedule_date']" position="attributes"
+                           type="object">
                         <attribute name="invisible">1</attribute>
                     </xpath>
                     <xpath expr="//field[@name='price_unit']" position="after" type="object">
+                        <field name="last_requisition_no" readonly="1"/>
+                        <field name="last_requisition_date" readonly="1"/>
+                        <field name="last_requisition_qty" readonly="1"/>
                         <field name="last_purchase_date" readonly="1"/>
                         <field name="last_qty" readonly="1"/>
                         <field name="last_product_uom_id" readonly="1"/>
@@ -169,7 +185,8 @@
 
                     <xpath expr="//notebook/page[1]" position="after">
                         <page string="Attachments">
-                            <field name="attachment_ids" widget="one2many_list" context="{'default_res_id': id, 'default_res_model': 'purchase.requisition'}">
+                            <field name="attachment_ids" widget="one2many_list"
+                                   context="{'default_res_id': id, 'default_res_model': 'purchase.requisition'}">
                                 <tree string="Attachments" editable="top">
                                     <field name="res_id" invisible="1"/>
                                     <field name="res_model" invisible="1"/>
@@ -183,10 +200,16 @@
                         <page string="Others">
                             <group>
                                 <group>
-                                    <field name="vendor_id" string='Supplier' attrs="{'readonly': [('state','in',('done'))]}" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True),('parent_id', '=', False)]"/>
-                                    <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('state','!=','draft')]}" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                    <field name="vendor_id" string='Supplier'
+                                           attrs="{'readonly': [('state','in',('done'))]}"
+                                           context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}"
+                                           domain="[('supplier','=',True),('parent_id', '=', False)]"/>
+                                    <field name="company_id" groups="base.group_multi_company"
+                                           attrs="{'readonly': [('state','!=','draft')]}"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                     <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
-                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}' attrs="{'readonly': [('state','!=','draft')]}"/>
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                           attrs="{'readonly': [('state','!=','draft')]}"/>
                                 </group>
                             </group>
                         </page>
@@ -202,18 +225,20 @@
             <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="replace">
-                    <field name="name" string="Purchase Requisition" filter_domain="['|', ('name','ilike',self), ('origin','ilike',self)]"/>
+                    <field name="name" string="Purchase Requisition"
+                           filter_domain="['|', ('name','ilike',self), ('origin','ilike',self)]"/>
                 </xpath>
                 <xpath expr="//field[@name='type_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='user_id']" position="replace">
-                    <field name="indent_ids" />
+                    <field name="indent_ids"/>
                     <filter name="my_approval_draft" string="To Confirm" domain="[('state','=','draft')]"/>
                     <filter name="validation" string="To Validate" domain="[('state','=','in_progress')]"/>
                     <filter name="approval" string="To Approve" domain="[('state','=','approve_head_procurement')]"/>
                     <filter name="approval_local_foreign" string="To Approve" domain="[('state','=','done')]"/>
-                    <filter name="active" string="Active" domain="[('state', 'in', ('draft','in_progress','approve_head_procurement','done'))]"/>
+                    <filter name="active" string="Active"
+                            domain="[('state', 'in', ('draft','in_progress','approve_head_procurement','done'))]"/>
                 </xpath>
             </field>
         </record>
@@ -229,18 +254,21 @@
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to start a new purchase requisition.
-                </p><p>
-                Example of purchase agreements include call for tenders and blanket orders.
-            </p><p>
-                In a call for tenders, you can record the products you need to buy
-                and generate the creation of RfQs to vendors. Once the tenders have
-                been registered, you can review and compare them and you can
-                validate some and cancel others.
-            </p><p>
-                For a blanket order, you can record an agreement for a specifc period
-                (e.g. a year) and you order products within this agreement, benefiting
-                from the negociated prices.
-            </p>
+                </p>
+                <p>
+                    Example of purchase agreements include call for tenders and blanket orders.
+                </p>
+                <p>
+                    In a call for tenders, you can record the products you need to buy
+                    and generate the creation of RfQs to vendors. Once the tenders have
+                    been registered, you can review and compare them and you can
+                    validate some and cancel others.
+                </p>
+                <p>
+                    For a blanket order, you can record an agreement for a specifc period
+                    (e.g. a year) and you order products within this agreement, benefiting
+                    from the negociated prices.
+                </p>
             </field>
         </record>
 
@@ -317,15 +345,17 @@
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to define a new product.
-                </p><p>
-                You must define a product for everything you purchase, whether
-                it's a physical product, a consumable or services you buy to
-                subcontractors.
-            </p><p>
-                The product form contains detailed information to improve the
-                purchase process: prices, procurement logistics, accounting data,
-                available vendors, etc.
-            </p>
+                </p>
+                <p>
+                    You must define a product for everything you purchase, whether
+                    it's a physical product, a consumable or services you buy to
+                    subcontractors.
+                </p>
+                <p>
+                    The product form contains detailed information to improve the
+                    purchase process: prices, procurement logistics, accounting data,
+                    available vendors, etc.
+                </p>
             </field>
         </record>
 
@@ -338,15 +368,17 @@
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to define a new product.
-                </p><p>
-                You must define a product for everything you purchase, whether
-                it's a physical product, a consumable or services you buy to
-                subcontractors.
-            </p><p>
-                The product form contains detailed information to improve the
-                purchase process: prices, procurement logistics, accounting data,
-                available vendors, etc.
-            </p>
+                </p>
+                <p>
+                    You must define a product for everything you purchase, whether
+                    it's a physical product, a consumable or services you buy to
+                    subcontractors.
+                </p>
+                <p>
+                    The product form contains detailed information to improve the
+                    purchase process: prices, procurement logistics, accounting data,
+                    available vendors, etc.
+                </p>
             </field>
         </record>
 
@@ -417,13 +449,33 @@
 
 
         <act_window
-            domain="[('requisition_id', '=', active_id)]"
-            context="{'default_requisition_id': active_id}"
-            id="purchase_requisition.act_res_partner_2_purchase_order"
-            name="Purchase orders"
-            res_model="purchase.order"
-            src_model="purchase.requisition"
-            groups="base.group_system"/>
+                domain="[('requisition_id', '=', active_id)]"
+                context="{'default_requisition_id': active_id}"
+                id="purchase_requisition.act_res_partner_2_purchase_order"
+                name="Purchase orders"
+                res_model="purchase.order"
+                src_model="purchase.requisition"
+                groups="base.group_system"/>
 
+
+        <template id="assets_backend" name="gbs_purchase_requisition assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link href="/gbs_purchase_requisition/static/src/css/gbs_pr.css" rel="stylesheet"/>
+            </xpath>
+        </template>
+
+        <record id="view_inherit_gbs_purchase_requisition_form_1" model="ir.ui.view">
+            <field name="name">inherit.gbs.purchase.requisition.form</field>
+            <field name="model">purchase.requisition</field>
+            <field name="inherit_id" ref="gbs_purchase_requisition.inherit_pr_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="class">gbs_pr</attribute>
+                </xpath>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="class">gbs_pr_tree</attribute>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

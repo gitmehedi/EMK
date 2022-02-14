@@ -23,7 +23,7 @@ class ProductProduct(models.Model):
                     'cost': value,
                     'company_id': self._context.get('force_company', self.env.user.company_id.id),
                     'operating_unit_id': operating_unit_id,
-                    'datetime': self.env.context.get('datetime_of_price_history') or fields.Datetime.now
+                    'datetime': self.env.context.get('datetime_of_price_history') or fields.Datetime.now()
                 })
         else:
             _logger.info("SAMUDA-CUSTOM-ERROR: [VALIDATION] operating unit not found in the context")
@@ -48,6 +48,14 @@ class ProductProduct(models.Model):
                     pass
 
         return res
+
+    def _get_domain_locations(self):
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = super(ProductProduct, self)._get_domain_locations()
+
+        if self.env.context.get('operating_unit_id'):
+            domain_quant_loc += [('location_id.operating_unit_id', '=', self.env.context.get('operating_unit_id'))]
+
+        return domain_quant_loc, domain_move_in_loc, domain_move_out_loc
 
 
 class ProductStandardPrice(models.Model):

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_vendor_advance_tree" model="ir.ui.view">
+            <field name="name">vendor.advance.tree</field>
+            <field name="model">vendor.advance</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Vendor Advances" duplicate="0"
+                      decoration-info="state=='draft'"
+                      decoration-success="state=='approve'"
+                      decoration-muted="state in ('cancel', 'done')">
+                    <field name="name" string="REF #"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="date"/>
+                    <field name="advance_amount" sum="advance_amount"/>
+                    <field name="adjusted_amount" sum="adjusted_amount"/>
+                    <field name="outstanding_amount" sum="adjusted_amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_vendor_advance_form" model="ir.ui.view">
+            <field name="name">vendor.advance.form</field>
+            <field name="model">vendor.advance</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Vendor Advance" duplicate="0">
+                    <header>
+                        <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
+                        <button name="action_validate" type="object" string="Validate" states="confirm" class="oe_highlight"/>
+                        <button name="action_cancel" type="object" string="Cancel" states="confirm"/>
+                        <button name="action_draft" type="object" string="Reset to draft" states="cancel"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done"/>
+                    </header>
+                    <sheet>
+                        <div class="pull-left">
+                            <h1>
+                                <field name="name" readonly="1" nolabel="1"/>
+                            </h1>
+                        </div>
+                        <group name="main">
+                            <group>
+                                <field name="partner_id" string="Vendor" required="True"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="journal_id" string="Bank Name" required="1" domain="[('type', '=', 'bank')]"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="description" required="1"/>
+
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="operating_unit_id" required="True"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="move_id" attrs="{'invisible': [('move_id', '=',False )]}"/>
+                            </group>
+                        </group>
+                        <group string="Advance Calculation">
+                            <group>
+                                <field name="advance_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="security_deposit" invisible="1"
+                                       widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="vat_account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="tds_account_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="company_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="adjusted_amount" readonly="1" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="outstanding_amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                <field name="vat_amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="tds_amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="payable_to_supplier" widget="monetary" readonly="1"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="vendor_advance_search" model="ir.ui.view">
+            <field name="name">vendor.advance.search.view</field>
+            <field name="model">vendor.advance</field>
+            <field name="arch" type="xml">
+                <search string="Search Vendor Advances">
+                    <field name="name" filter_domain="[('name', 'ilike', self)]"
+                           string="Advance No"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="state" string="Status"/>
+                    <filter name="pending_va" string="Pending" domain="[('state','=', 'draft')]"/>
+                    <filter name="approve_va" string="Active" domain="[('state','=', 'approve')]"/>
+                    <separator/>
+                    <filter name="done_va" string="Done" domain="[('state','=', 'done')]"/>
+                    <separator/>
+                    <group name="groupby">
+                        <filter string="By Vendor" name="partner_groupby" domain=""
+                                context="{'group_by': 'partner_id'}"/>
+                        <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="vendor_advance_action" model="ir.actions.act_window">
+            <field name="name">Vendor Advances</field>
+            <field name="res_model">vendor.advance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="vendor_advance_search"/>
+        </record>
+
+        <menuitem id="advance_menu"
+                  name="Vendor Advances"
+                  parent="account.menu_finance_payables"
+                  action="vendor_advance_action"
+                  groups="account.group_account_user"
+                  sequence="100"
+        />
+
+    </data>
+</odoo>
