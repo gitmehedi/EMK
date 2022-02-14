@@ -8,6 +8,7 @@ class EventRoomBook(models.Model):
     _name = 'event.room.book'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'id desc'
+    _rec_name = 'room_id'
 
     event_id = fields.Many2one('event.event', string='Event')
     room_id = fields.Many2one('event.room', string='Event Room', required=True)

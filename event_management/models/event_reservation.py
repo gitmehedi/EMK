@@ -137,9 +137,11 @@ class EventReservation(models.Model):
                                          'approve': [('readonly', False), ('required', True)]})
     reserv_token = fields.Char(copy=False)
     reserv_url = fields.Char(string='Reservation URL', track_visibility='onchange', )
-    state = fields.Selection(helper.reservation_state, string="State", default="draft", track_visibility='onchange')
     event_details_name = fields.Char()
-    event_details = fields.Binary(string="Event Details", attachment=True, track_visibility='onchange')
+    event_details = fields.Binary(string="Event Details", attachment=True, track_visibility='onchange',
+                                  states={'draft': [('readonly', False)],
+                                          'approve': [('readonly', False), ('required', True)]})
+    state = fields.Selection(helper.reservation_state, string="State", default="draft", track_visibility='onchange')
 
     @api.constrains('start_date', 'end_date')
     def _check_start_date(self):
@@ -160,13 +162,9 @@ class EventReservation(models.Model):
                 if not self.paid_amount:
                     raise ValidationError(
                         _('Paid amount should have value when event type is [Paid]'.format(self.payment_type)))
-                if not self.refundable_amount:
-                    raise ValidationError(
-                        _('Refundable amount should have value when event type is [Paid]'.format(self.payment_type)))
-            else:
-                if not self.refundable_amount:
-                    raise ValidationError(
-                        _('Refundable amount should have value when event type is [Free]'.format(self.payment_type)))
+            if not self.refundable_amount:
+                raise ValidationError(
+                    _('Refundable amount should have value'.format(self.payment_type)))
 
     @api.constrains('paid_attendee')
     def _check_participating_amount(self):
@@ -227,6 +225,7 @@ class EventReservation(models.Model):
     @api.one
     def act_on_process(self):
         if self.state == 'approve':
+            self._check_payment()
             self.state = 'on_process'
 
     @api.one
@@ -357,16 +356,17 @@ class EventReservation(models.Model):
 
         for ser in services:
             if ser.name == 'Event Organization Fee':
-                if self.paid_amount == 0:
-                    raise ValidationError(_("Please set paid amount which is required for paid event"))
+                if self.payment_type == 'paid':
+                    if self.paid_amount == 0:
+                        raise ValidationError(_("Please set paid amount which is required for paid event"))
 
-                if self.paid_amount > 0:
-                    vals = {
-                        'amount': self.paid_amount,
-                        'subject': 'Event Fee',
-                    }
-                    org_inv = create_invoice(ser, vals)
-                    invoices.append((4, org_inv))
+                    if self.paid_amount > 0:
+                        vals = {
+                            'amount': self.paid_amount,
+                            'subject': 'Event Fee',
+                        }
+                        org_inv = create_invoice(ser, vals)
+                        invoices.append((4, org_inv))
 
             if ser.name == 'Event Refund Fee':
                 if self.refundable_amount == 0:
