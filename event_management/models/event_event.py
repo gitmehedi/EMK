@@ -48,7 +48,7 @@ class EventEvent(models.Model):
     event_task_ids = fields.One2many('event.task.list', 'event_id', string='Event Tasks', readonly=False,
                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     date_begin = fields.Datetime(string='Start Date', required=True, track_visibility='onchange',
-                                 states={'confirm': [('readonly', True)], 'done': [('readonly', True)]})
+                                 states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     payment_type = fields.Selection(helper.payment_type, required=True,
                                     default='free', string='Type', readonly=True,
                                     states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
@@ -113,12 +113,25 @@ class EventEvent(models.Model):
                                states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     date_end = fields.Datetime(readonly=True,
                                states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
+    event_share_name = fields.Char()
+    event_share = fields.Binary(string="Event Share Upload", attachment=True, track_visibility='onchange',
+                                  states={'draft': [('readonly', False)],
+                                          'approve': [('readonly', False), ('required', True)]})
     state = fields.Selection(helper.event_state, string="State")
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):
         for record in self:
             record.total_seat_available = sum([rec.seat_no for rec in record.event_book_ids])
+
+    # @api.onchange('event_book_ids')
+    # def onchange_event_book_ids(self):
+    #     if self.facilities_ids:
+    #         room = self.env['event.room'].search([('service_ids','in',self.facilities_ids.ids)])
+    #
+    #
+    #     self.facilities_ids.ids
+    #     return True
 
     @api.multi
     @api.constrains('date_begin')
@@ -172,6 +185,10 @@ class EventEvent(models.Model):
     def button_approve(self):
         if self.state == 'draft':
             self.state = 'approve'
+
+    @api.one
+    def button_confirm(self):
+        self.state = 'confirm'
 
     @api.multi
     def unlink(self):

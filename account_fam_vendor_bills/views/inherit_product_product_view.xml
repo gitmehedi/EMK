@@ -190,6 +190,6 @@
             </field>
         </record>
         <menuitem id="product_product_menu_vendor" action="product_product_action1"
-                  parent="account_fam_menu.sub_configuration_menu" sequence="20"/>
+                  parent="account_fam_menu.sub_configuration_menu" sequence="20" groups="account.group_account_user"/>
     </data>
 </odoo>
