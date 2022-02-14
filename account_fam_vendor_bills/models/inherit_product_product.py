@@ -1,7 +1,7 @@
 from odoo import api, fields, models, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
-
+from odoo.addons.opa_utility.helper.utility import Utility
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -53,7 +53,7 @@ class ProductProduct(models.Model):
                 [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
                  ('active', '=', False)])
             if len(name) > 1:
-                raise Warning('[Unique Error] Name must be unique!')
+                raise ValidationError(_(Utility.UNIQE))
 
     @api.onchange("name", "code")
     def onchange_strips(self):
@@ -66,13 +66,12 @@ class ProductProduct(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
-
+                raise ValidationError(_(Utility.UNLINK_WARNING))
             try:
                 return super(ProductProduct, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
-                                        "- deletion: you may be trying to delete a record while other records still reference it"))
+                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -118,14 +117,12 @@ class ProductTemplate(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+                raise ValidationError(_(Utility.UNLINK_WARNING))
 
             try:
                 return super(ProductTemplate, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
-                                        "- deletion: you may be trying to delete a record while other records still reference it"))
-
+                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:

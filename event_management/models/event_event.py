@@ -132,7 +132,7 @@ class EventEvent(models.Model):
     def _check_name(self):
         name = self.search([('name', '=ilike', self.name)])
         if len(name) > 1:
-            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
+            raise ValidationError(_(Message.UNIQUE_WARNING))
 
     @api.one
     def button_done(self):
@@ -231,7 +231,7 @@ class AttendeeProfession(models.Model):
             [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
              ('active', '=', False)])
         if len(name) > 1:
-            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
+            raise ValidationError(_(Message.UNIQUE_WARNING))
 
     @api.onchange("name")
     def onchange_strips(self):

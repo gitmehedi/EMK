@@ -98,14 +98,12 @@ class AccountAnalyticAccount(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+                raise ValidationError(_(Utility.UNLINK_WARNING))
 
             try:
                 return super(AccountAnalyticAccount, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
-                                        "- deletion: you may be trying to delete a record while other records still reference it"))
-
+                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'

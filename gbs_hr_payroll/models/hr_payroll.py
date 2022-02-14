@@ -4,6 +4,7 @@ from dateutil import relativedelta
 import babel
 from odoo import api, fields, models, tools, _
 
+
 class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
@@ -16,3 +17,5 @@ class HrPayslip(models.Model):
             locale = self.env.context.get('lang') or 'en_US'
             self.write({'name':_('Salary Slip of %s for %s') % (self.employee_id.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))})
         return result
+
+
