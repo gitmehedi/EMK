@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="hr_manual_attendance_process_wizard_form" model="ir.ui.view">
+        <field name="name">hr.manual.attendance.process.wizard.form</field>
+        <field name="model">hr.manual.attendance.process.wizard</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Process Attendance">
+                <group string="Select CSV file for data Import">
+                    <group>
+                        <field name="aml_data" filename="aml_fname" options="{'accept':'.csv'}"/>
+                    </group>
+                    <group>
+                        <field name="date"/>
+                        <field name="aml_fname" invisible="1"/>
+                        <field name="csv_separator" groups="base.group_system" invisible="1"/>
+                        <field name="decimal_separator" groups="base.group_system" invisible="1"/>
+                        <field name="codepage" groups="base.group_system" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="process_manual_attendance" string="Process Attendance" type="object"
+                            class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_manual_attendance_process_wizard" model="ir.actions.act_window">
+        <field name="name">Process Attendance</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.manual.attendance.process.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
