@@ -13,6 +13,7 @@ Accounting Reports
     'depends': ['base', 'account_reports', 'gbs_application_group'],
     'data': [
         'data/inherit_account_financial_report_data.xml',
+        'views/account_financial_report_view.xml'
     ],
     'installable': True,
     'application': False,
