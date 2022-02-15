@@ -29,6 +29,7 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         move_lines = dict(map(lambda x: (x, []), accounts.ids))
         display_account = used_context['display_account']
 
+
         # OPENING BALANCE
         opening_balance_move_line = {'lid': 0, 'account_id': accounts.ids[0], 'ldate': '', 'lcode': '',
                                      'amount_currency': '', 'lref': '', 'lname': 'Opening Balance',
@@ -147,6 +148,8 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id', []))
         journal_ids = self.env['account.journal'].search([('type', '!=', 'situation')])
+        ReportUtility = self.env['report.utility']
+
 
         # create context dictionary
         used_context = {}
@@ -208,7 +211,9 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         sheet.merge_range(3, 0, 3, 13, docs.company_id.city + '-' + docs.company_id.zip, address_format)
         sheet.merge_range(4, 0, 4, 13, "General Ledger", name_format)
         sheet.merge_range(5, 0, 5, 4, "Account: " + docs.code + " " + docs.name, bold)
-        sheet.merge_range(5, 11, 5, 13, "Date: " + obj.date_from + " To " + obj.date_to, bold)
+        # sheet.merge_range(5, 11, 5, 13, "Date: " + obj.date_from + " To " + obj.date_to, bold)
+        sheet.merge_range(5, 11, 5, 13, "Date: " + ReportUtility.get_date_from_string(obj.date_from) + " To " + ReportUtility.get_date_from_string(obj.date_to), bold)
+
         if obj.operating_unit_id:
             sheet.merge_range(5, 8, 5, 9, "Operating Unit: " + obj.operating_unit_id.code, bold)
 
@@ -247,7 +252,8 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
                     else:
                         amount_currency_str = ''
 
-                    sheet.write(row, col, rec['ldate'], td_cell_center)
+                    sheet.write(row, col, ReportUtility.get_date_from_string(rec['ldate']), td_cell_center)
+
                     sheet.write(row, col + 1, rec['lcode'], td_cell_center)
                     sheet.write(row, col + 2, rec['partner_name'], td_cell_left)
                     sheet.write(row, col + 3, rec['lref'], td_cell_left)
