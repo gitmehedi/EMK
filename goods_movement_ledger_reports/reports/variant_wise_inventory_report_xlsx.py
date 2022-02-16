@@ -12,7 +12,7 @@ class VariantWiseInventoryReportXLSX(ReportXlsx):
         loan_data_utility = self.env['loan.data.utility']
         product_report_utility = self.env['product.ledger.report.utility']
         location = self.env['stock.location'].search(
-            [('operating_unit_id', '=', obj.operating_unit_id.id)])
+            [('operating_unit_id', '=', obj.operating_unit_id.id), ('name', '=', 'Stock')], limit=1)
 
         if not location:
             raise UserError(_("There are no stock location for this unit. "
@@ -24,7 +24,7 @@ class VariantWiseInventoryReportXLSX(ReportXlsx):
         date_to = obj.date_to
         date_end = date_to + ' 23:59:59'
 
-        location_outsource = tuple(location.ids)
+        location_outsource = "(" + str(location.id) + ")"
         operating_unit_id = obj.operating_unit_id.id
         product_id = obj.product_id.id
         product_pool = self.env['product.product']
