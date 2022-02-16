@@ -2,7 +2,7 @@
 from psycopg2 import IntegrityError
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.opa_utility.helper.utility import Utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 
 
 class EventTheme(models.Model):
@@ -29,7 +29,7 @@ class EventTheme(models.Model):
             [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
              ('active', '=', False)])
         if len(name) > 1:
-            raise ValidationError(_(Utility.UNIQUE_WARNING))
+            raise ValidationError(_(Message.UNIQUE_WARNING))
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -71,8 +71,8 @@ class EventTheme(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_(Utility.UNLINK_WARNING))
+                raise ValidationError(_(Message.UNLINK_WARNING))
             try:
                 return super(EventTheme, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
+                raise ValidationError(_(Message.UNLINK_INT_WARNING))

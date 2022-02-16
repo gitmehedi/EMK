@@ -1,5 +1,5 @@
 from odoo import api, fields, models, _
-from odoo.addons.opa_utility.helper.utility import Utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 from odoo.exceptions import UserError, ValidationError
 
 

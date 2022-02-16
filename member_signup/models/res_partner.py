@@ -7,7 +7,7 @@ import werkzeug
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
-from odoo.addons.opa_utility.helper.utility import Utility as utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 from urlparse import urljoin
 from odoo.exceptions import UserError, ValidationError
 

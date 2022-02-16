@@ -1,23 +1,22 @@
-from openerp import models, fields
-from openerp import api
-from odoo import exceptions, _
 from datetime import datetime
+
+from odoo import exceptions, _
+from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.exceptions import UserError, ValidationError
-from odoo.addons.opa_utility.helper.utility import Utility
+from openerp import api
+from openerp import models, fields
 
 
 class HrAttendance(models.Model):
     _inherit = ['hr.attendance']
 
-
     is_system_generated = fields.Boolean(string='Is System Generated', default=False)
     # attendance_server_id will be deprecated after 02-08-2017. operating_unit_id will fill
-    #attendance_server_id = fields.Integer(string='Server ID', required=False)
+    # attendance_server_id = fields.Integer(string='Server ID', required=False)
     operating_unit_id = fields.Integer(string='Operating Unit Id', required=False)
 
     duty_date = fields.Date(string='Duty Date', required=False)
-    attempt_set_duty_date = fields.Integer(string='Attempt to set Duty Date', required=False,default=0)
+    attempt_set_duty_date = fields.Integer(string='Attempt to set Duty Date', required=False, default=0)
     check_in = fields.Datetime(string="Check In", required=False)
 
     @api.depends('check_in', 'check_out')
@@ -47,8 +46,10 @@ class HrAttendance(models.Model):
                 raise exceptions.ValidationError(_(
                     "Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s") % {
                                                      'empl_name': attendance.employee_id.name_related,
-                                                     'datetime': fields.Datetime.to_string(fields.Datetime.context_timestamp(self,
-                                                      fields.Datetime.from_string(attendance.check_in))), })
+                                                     'datetime': fields.Datetime.to_string(
+                                                         fields.Datetime.context_timestamp(self,
+                                                                                           fields.Datetime.from_string(
+                                                                                               attendance.check_in))), })
 
     @api.depends('check_in', 'check_out')
     def onchange_attendance_data(self):
@@ -62,33 +63,31 @@ class HrAttendance(models.Model):
             else:
                 att.has_error = False
 
+
 class HrEmployee(models.Model):
     _inherit = ['hr.employee']
 
-    device_employee_acc = fields.Integer(string='AC No.', required=True)
-    is_monitor_attendance = fields.Boolean(string='Monitor Attendance',default=True)
-    is_executive = fields.Boolean(string='Executive',default=False)
+    device_employee_acc = fields.Integer(string='Attendance ID', required=True)
+    is_monitor_attendance = fields.Boolean(string='Monitor Attendance', default=True)
+    is_executive = fields.Boolean(string='Executive', default=False)
 
     _sql_constraints = [
         ('device_employee_acc_uniq', 'unique(device_employee_acc, operating_unit_id)',
          'The Account Number must be unique per Unit!'),
     ]
-    # print(isinstance(my_variable, int)) if not Utility.valid_number(self.device_employee_acc):
 
     @api.onchange('device_employee_acc')
     def _check_number(self):
         if self.device_employee_acc:
-            print(self.device_employee_acc)
             if not isinstance(self.device_employee_acc, int):
-                raise ValidationError('AC no should be input a valid')
+                raise ValidationError('Attendance ID should be input a valid')
 
     @api.one
     @api.constrains('device_employee_acc')
     def _valid_device_ac(self):
         if self.device_employee_acc:
-            if len(str(abs(self.device_employee_acc))) > 4:
-                raise ValidationError(_('AC no of digits must not exceed 4'))
-
+            if len(str(abs(self.device_employee_acc))) > 8:
+                raise ValidationError(_('Attendance ID of digits must not exceed 8'))
 
     @api.one
     @api.constrains('device_employee_acc')
@@ -96,4 +95,3 @@ class HrEmployee(models.Model):
         device_acc = self.search_count([('device_employee_acc', '=', self.device_employee_acc)])
         if device_acc > 1:
             raise ValidationError(_('[DUPLICATE] AC no already exist, choose another.'))
-

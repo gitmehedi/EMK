@@ -1,7 +1,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from psycopg2 import IntegrityError
-from odoo.addons.opa_utility.helper.utility import Utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 
 DAYS = [
     ('saturday', 'Saturday'),
@@ -48,7 +48,7 @@ class AppointmentTimeSlot(models.Model):
         name = self.search([('day', '=', self.day), ('start_time', '=', self.start_time),
                             ('end_time', '=', self.end_time)])
         if len(name) > 1:
-            raise ValidationError(_(Utility.UNIQUE_WARNING))
+            raise ValidationError(_(Message.UNIQUE_WARNING))
 
 
     @api.constrains('start_time', 'end_time')
@@ -121,8 +121,8 @@ class AppointmentTimeSlot(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_(Utility.UNLINK_WARNING))
+                raise ValidationError(_(Message.UNLINK_WARNING))
             try:
                 return super(AppointmentTimeSlot, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
+                raise ValidationError(_(Message.UNLINK_INT_WARNING))

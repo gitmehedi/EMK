@@ -1,0 +1,477 @@
+Date,Time,Terminal ID,User ID,Name,Employee ID,Class,Mode,Type,Card Serial No.,Result,Property
+2022-01-31,18:32:31,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-31,18:32:00,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-31,18:31:19,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-31,17:41:51,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-31,17:32:30,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-31,17:32:15,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-31,17:32:01,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-31,14:23:33,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-31,14:23:24,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-31,14:19:15,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-31,12:44:56,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-31,10:23:53,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-31,09:40:03,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-31,09:35:13,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-31,08:46:45,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-31,08:44:11,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-31,08:44:08,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-30,18:42:48,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-30,16:51:04,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-30,16:49:32,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-30,16:33:40,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-30,16:33:29,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-30,13:42:03,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-30,12:42:22,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-30,12:39:49,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-30,12:39:43,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-30,12:22:57,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-30,09:43:49,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-30,09:38:41,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-29,18:32:51,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-29,16:11:38,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-29,16:10:21,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-29,16:07:35,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-29,16:07:17,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,Attend,Card,3409021,Success,1000
+2022-01-29,15:49:53,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,Attend,Card,3409021,Success,1000
+2022-01-29,09:03:15,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-29,09:03:09,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-26,16:22:53,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-26,16:21:24,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-26,16:18:57,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-26,16:18:38,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-26,15:00:50,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,Attend,Card,3409021,Success,1000
+2022-01-26,14:46:21,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,Attend,Card,3409021,Success,1000
+2022-01-26,14:45:05,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-26,09:14:50,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-26,09:13:42,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-26,09:09:02,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-26,08:56:30,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-26,08:56:27,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-26,08:55:30,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-26,08:55:16,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-25,18:12:18,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-25,14:32:42,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-25,14:32:26,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,Attend,Card,3409021,Success,1000
+2022-01-25,14:30:57,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,Attend,Card,3409021,Success,1000
+2022-01-25,14:17:54,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-25,14:17:19,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,Attend,Card,3409021,Success,1000
+2022-01-25,14:15:49,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,Attend,Card,3409021,Success,1000
+2022-01-25,14:15:33,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-25,12:44:40,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-25,12:08:12,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-25,11:56:36,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-25,11:51:05,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-25,11:07:48,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-25,10:57:19,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-25,10:57:04,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-25,10:55:54,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-25,09:27:28,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-25,09:26:51,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-24,18:26:16,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,18:19:49,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,18:19:44,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-24,18:18:55,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-24,17:51:17,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,17:51:12,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-24,17:48:44,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-24,16:00:14,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-24,15:41:31,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-24,12:16:13,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,12:11:35,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,11:56:44,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,10:32:26,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,10:13:37,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,10:13:19,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,09:41:12,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,09:24:46,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,09:00:32,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,09:00:30,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-24,08:59:28,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-23,18:57:54,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-23,18:57:32,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,16:43:23,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-23,15:29:49,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-23,15:27:01,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-23,15:25:07,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-23,15:04:24,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-23,15:01:15,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-23,12:05:34,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,11:35:29,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,11:01:18,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,10:44:25,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,10:07:19,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,09:38:30,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,09:31:55,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,09:01:11,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,09:00:16,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,09:00:14,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-23,08:58:49,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-22,17:43:14,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-22,17:34:36,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-22,17:32:08,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,In,Card,3409021,Success,1000
+2022-01-22,16:54:08,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-22,16:23:30,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-22,13:17:09,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-22,13:17:00,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-22,12:47:52,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-22,11:10:23,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-22,10:43:46,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-22,09:04:39,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-22,08:59:26,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-22,08:59:24,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-22,08:57:49,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-20,20:08:08,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-20,20:07:25,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-20,20:07:16,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-20,14:09:34,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-20,13:57:44,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-20,13:36:56,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-20,13:30:42,0010 : Golpo Studio ,2016040,Shala Uddin Patw,2016040,User,Attend,1:N,,Success,1000
+2022-01-20,09:44:28,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-20,09:23:42,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-20,09:03:49,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-20,09:03:46,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-20,09:02:43,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-19,19:48:36,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-19,19:48:09,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-19,19:34:17,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-19,10:13:11,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-19,09:06:16,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-19,08:43:11,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-19,08:42:29,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-18,19:23:47,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-18,19:23:31,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-18,16:04:38,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-18,14:57:17,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-18,14:56:01,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-18,14:52:34,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-18,14:50:50,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-18,14:50:09,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-18,14:50:06,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-18,09:37:59,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-18,09:13:22,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-18,09:12:42,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-17,20:04:43,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-17,20:04:16,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-17,19:59:01,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-17,19:23:19,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-17,16:35:47,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-17,16:30:12,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-17,16:26:27,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-17,16:16:14,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-17,14:23:28,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-17,10:44:40,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-17,10:44:33,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-17,10:36:00,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-17,10:14:14,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-17,10:13:59,0010 : Golpo Studio ,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-17,10:12:18,0010 : Golpo Studio ,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-17,09:44:08,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-17,09:25:23,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-17,09:23:44,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,19:06:57,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,18:10:48,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,18:10:25,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,In,Card,3409021,Success,1000
+2022-01-16,18:08:05,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,In,Card,3409021,Success,1000
+2022-01-16,15:56:33,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,15:56:16,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-16,15:55:24,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-16,15:47:58,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,15:44:58,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-16,15:43:29,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,15:21:43,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-16,13:01:34,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,13:01:29,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-16,13:00:00,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-16,12:41:56,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,12:41:47,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-16,12:38:23,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-16,10:55:53,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,10:51:14,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-16,10:51:04,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-16,10:37:35,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-16,10:35:17,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-16,09:56:56,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,09:41:52,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,09:39:35,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,09:06:59,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,09:05:55,0007 : GREEN ROOM,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-16,09:03:06,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,08:57:28,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,08:57:25,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-16,08:56:43,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-15,18:29:09,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-15,17:18:23,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-15,17:09:46,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-15,10:40:01,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-15,08:58:00,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-15,08:56:50,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-15,08:56:45,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-15,08:55:10,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-13,18:56:27,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-13,18:56:11,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,18:05:52,0007 : GREEN ROOM,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-13,18:02:07,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,17:48:56,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,17:48:48,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-13,17:30:12,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-13,17:19:48,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,17:19:40,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-13,17:18:09,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-13,17:15:13,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,16:30:51,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,16:29:31,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,16:29:25,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-13,16:14:34,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-13,15:02:07,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,15:01:59,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-13,14:53:12,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-13,14:46:52,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-13,14:23:51,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,14:23:43,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-13,14:20:13,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-13,12:55:08,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,12:51:23,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-13,12:24:43,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,12:21:44,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,09:11:08,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-13,08:48:10,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-12,19:18:41,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-12,19:11:49,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-12,18:26:00,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-12,10:32:03,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-12,10:31:55,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-12,10:25:23,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-12,09:48:53,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-12,09:25:29,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-12,09:17:58,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-12,09:14:20,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-12,09:14:17,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-12,09:13:27,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-11,18:51:38,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,16:11:53,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,In,Card,3409021,Success,1000
+2022-01-11,16:08:31,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,In,Card,3409021,Success,1000
+2022-01-11,16:08:03,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,16:07:54,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,16:07:29,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,In,Card,3409021,Success,1000
+2022-01-11,15:52:29,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,15:49:14,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-11,15:48:51,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,In,Card,3409021,Success,1000
+2022-01-11,15:44:23,0006 : Meeting Room -6,2016040,Shala Uddin Patw,2016040,User,In,Card,3409021,Success,1000
+2022-01-11,15:39:14,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,13:11:07,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,11:58:37,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-11,11:58:12,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-11,11:53:41,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-11,11:52:34,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,11:50:08,0010 : Golpo Studio ,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-11,11:47:49,0010 : Golpo Studio ,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-11,11:25:55,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,11:02:36,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,10:30:08,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,10:04:23,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,09:33:52,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,09:25:21,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,09:22:47,0010 : Golpo Studio ,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-11,09:16:01,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,08:52:52,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,08:51:17,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-11,08:50:30,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-10,18:39:55,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,18:37:35,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,18:23:31,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,17:57:20,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,17:57:13,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,17:47:35,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,16:55:58,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,15:25:40,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,15:23:14,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,15:21:36,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,15:05:19,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,15:05:08,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-10,15:03:51,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-10,14:25:38,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,14:25:32,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,14:24:23,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,13:37:23,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,13:36:55,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,11:57:40,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,11:57:34,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,11:57:23,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,10:59:22,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,10:59:14,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,10:19:26,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,10:18:23,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,10:18:18,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,10:14:44,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,10:14:21,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,10:06:38,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,10:06:22,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,10:06:17,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,09:50:58,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,09:50:50,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-10,09:46:27,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-10,09:45:53,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-10,09:38:36,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-10,09:38:21,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-10,09:30:08,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,09:29:48,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-10,09:25:53,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-10,09:25:12,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-10,08:55:51,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,08:53:48,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,08:53:46,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-10,08:52:47,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-09,18:29:15,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-09,17:35:32,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-09,15:24:38,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-09,14:38:44,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-09,14:34:30,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-09,11:09:19,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-09,10:24:11,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-09,09:40:23,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-09,09:40:07,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-09,09:29:31,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,18:42:45,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,18:08:55,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,17:27:51,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,16:04:56,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,15:48:54,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,14:54:29,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,14:20:31,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,13:33:13,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,13:32:56,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,12:59:24,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,09:29:13,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-08,09:29:11,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Attend,1:N,,Success,1000
+2022-01-08,09:28:01,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-06,19:28:43,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Attend,1:N,,Success,1000
+2022-01-06,17:27:12,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,17:23:34,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,15:59:20,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,15:38:39,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-06,14:42:55,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-06,14:05:49,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,13:12:18,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-06,12:37:44,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,12:36:53,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,12:35:24,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,12:35:03,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,12:34:53,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-06,12:28:21,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-06,12:26:02,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,12:25:56,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-06,12:22:08,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-06,12:05:22,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,12:04:47,0007 : GREEN ROOM,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-06,11:57:43,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,11:56:31,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,11:45:22,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,11:28:31,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,11:11:55,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,09:30:03,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,09:22:14,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-06,09:19:31,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-05,18:37:27,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Attend,1:N,,Success,1000
+2022-01-05,14:46:59,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-05,13:56:07,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,18:31:39,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Attend,1:N,,Success,1000
+2022-01-04,18:01:49,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-04,17:57:30,0007 : GREEN ROOM,2016040,Shala Uddin Patw,2016040,User,In,1:N,,Success,1000
+2022-01-04,17:50:09,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,17:39:47,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,17:37:27,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,17:05:18,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,16:19:31,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,15:49:02,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,15:40:11,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,15:31:55,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,14:16:00,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,11:12:25,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-04,11:12:15,0010 : Golpo Studio ,2016040,Shala Uddin Patw,2016040,User,Attend,Card,3409021,Success,1000
+2022-01-04,11:09:56,0010 : Golpo Studio ,2016040,Shala Uddin Patw,2016040,User,Attend,Card,3409021,Success,1000
+2022-01-04,10:11:13,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-04,10:08:46,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-04,10:08:05,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,10:07:35,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-04,10:07:28,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-04,10:05:42,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-04,09:24:10,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-04,09:23:15,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-03,17:09:58,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,16:32:53,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,16:32:42,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-03,16:13:07,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,16:12:57,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-03,15:59:25,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-03,15:51:11,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,15:20:14,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,14:43:52,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-03,14:43:46,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-03,14:41:58,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-03,14:41:49,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-03,14:34:55,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-03,14:32:46,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,14:28:47,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,13:43:25,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,13:02:43,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,12:10:15,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-03,11:46:04,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,11:31:01,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,11:13:18,0003 : Server Room -3,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,10:32:52,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,10:20:03,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-03,10:19:54,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-03,10:09:48,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-03,10:05:49,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,10:05:37,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-03,09:58:28,0005 : Library -5,2016040,Shala Uddin Patw,2016040,User,Out,Card,3409021,Success,1000
+2022-01-03,09:41:50,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-03,09:41:12,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-02,17:28:14,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Attend,1:N,,Success,1000
+2022-01-02,16:27:38,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-02,16:27:34,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,15:34:06,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-02,15:03:56,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-02,14:44:09,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,13:49:46,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-02,13:26:53,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-02,13:26:46,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,12:54:10,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,12:53:43,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-02,11:37:10,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-02,11:37:05,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,11:12:53,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,10:58:37,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-02,10:58:31,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,10:50:37,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,10:24:06,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-02,10:17:08,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,10:06:44,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,Card,22233D,Success,1000
+2022-01-02,10:06:40,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,10:01:58,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,10:01:11,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-02,10:01:04,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,09:40:38,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,09:29:59,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-02,09:27:43,0004 : Maker Lab -4,2016040,Shala Uddin Patw,2016040,User,Access,Card,3409021,Success,1000
+2022-01-02,09:20:20,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-02,09:20:17,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Attend,1:N,,Success,1000
+2022-01-02,09:19:29,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000
+2022-01-01,18:30:55,0009 : Office Gate -1 Attendance -9,2016040,Shala Uddin Patw,2016040,User,Attend,1:N,,Success,1000
+2022-01-01,16:50:13,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,16:08:09,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,15:13:27,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,13:49:20,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,12:49:39,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,12:06:18,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,12:04:01,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,12:00:32,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,10:17:46,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,10:10:01,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,09:36:13,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,09:15:27,0002 : Office Gate -2,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,09:13:47,0010 : Golpo Studio ,2016040,Shala Uddin Patw,2016040,User,Out,1:N,,Success,1000
+2022-01-01,08:46:25,0001 : Office Gate -1,2016040,Shala Uddin Patw,2016040,User,Access,1:N,,Success,1000
+2022-01-01,08:45:17,0008 : Main Gate -8,2016040,Shala Uddin Patw,2016040,User,Access,1:N,3409021,Success,1000

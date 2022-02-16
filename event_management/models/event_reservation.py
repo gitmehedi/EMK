@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from odoo import models, fields, api, _
 from odoo.addons.event_management.data import helper
-from odoo.addons.opa_utility.helper.utility import Utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 from odoo.exceptions import ValidationError
 
 
