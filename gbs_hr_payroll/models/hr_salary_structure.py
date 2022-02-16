@@ -138,13 +138,13 @@ class HRSalaryRule(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
                              string='Status', track_visibility='onchange', )
 
-    @api.constrains('name')
-    def _check_name(self):
-        name = self.search(
-            [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
-             ('active', '=', False)])
-        if len(name) > 1:
-            raise ValidationError(_(Utility.UNIQUE_WARNING))
+    # @api.constrains('name')
+    # def _check_name(self):
+    #     name = self.search(
+    #         [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
+    #          ('active', '=', False)])
+    #     if len(name) > 1:
+    #         raise ValidationError(_(Utility.UNIQUE_WARNING))
 
     @api.onchange("name")
     def onchange_strips(self):

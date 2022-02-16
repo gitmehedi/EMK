@@ -9,9 +9,10 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
         error = {}
         default = {}
         districts = sorted(self.get_districts())
-        authorize_districts = request.env['bd.district'].sudo().browse(job.authorize_district.ids)
+        # authorize_districts = request.env['bd.district'].sudo().browse(job.authorize_district.ids)
+        authorize_districts = request.env['bd.district'].sudo().search([])
         degree = request.env['hr.recruitment.degree'].sudo().search([])
-
+        gender = self.generateGender()
         quota = self.get_quota()
         religion = self.get_religion()
         department = request.env['hr.job'].sudo().search([])
@@ -28,6 +29,7 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
             'religion': religion,
             'authorize_districts': authorize_districts,
             'degree': degree,
+            'gender': gender,
         })
 
     def get_religion(self):
@@ -43,11 +45,23 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
     def get_quota(self):
         return {
             "": "---Please Select---",
+            "no_quota": "No Quota",
             "freedom_fighter": "Son-daughter/Grandson-Granddaughter of Freedom Fighters/Martyred Freedom Fighters",
             "ansar_and_vdp_member": "Ansar and VDP Member",
             "indigenous_community": "Indigenous Community",
             "others": "Others",
         }
+    def generateGender(self, status=False):
+        data = []
+        status = [('active', '=', True),('pending', '=', False)] if status else []
+        record = request.env['res.gender'].sudo().search(status, order='id ASC')
+        for rec in record:
+            if status:
+                val = '_'.join((rec.name).strip().lower().split())
+                data.append((val, rec.name))
+            else:
+                data.append((rec.id, rec.name))
+        return data
 
     def get_districts(self):
         return {

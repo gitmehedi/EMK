@@ -18,7 +18,7 @@ $(function () {
     $('#quota').change(function(){
         var quotaVal = $('#quota').val();
 
-        if (quotaVal){
+        if (quotaVal != 'no_quota'){
             $('#quota_table').show();
         }else{
             $('#quota_table').hide();

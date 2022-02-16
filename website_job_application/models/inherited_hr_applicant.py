@@ -88,9 +88,9 @@ class InheritedHrApplicant(models.Model):
     @api.multi
     def write(self, vals):
         res = super(InheritedHrApplicant, self).write(vals)
-        for val in vals['description'].split("\n"):
-            value = val.split(":")
-            if len(value) > 1:
-                super(InheritedHrApplicant, self).write({value[0].encode("utf-8").strip(): str(value[1].encode('utf-8').strip())})
+        # for val in vals['description'].split("\n"):
+        #     value = val.split(":")
+        #     if len(value) > 1:
+        #         super(InheritedHrApplicant, self).write({value[0].encode("utf-8").strip(): str(value[1].encode('utf-8').strip())})
 
         return res
