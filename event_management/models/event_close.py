@@ -3,6 +3,7 @@
 import logging
 from odoo import models, fields, api, exceptions, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.opa_utility.helper.utility import Utility
 
 _logger = logging.getLogger(__name__)
 
@@ -128,7 +129,7 @@ class EventClose(models.Model):
     def _check_name(self):
         name = self.search([('event_id', '=ilike', self.event_id.name), ('state', 'not in', ['cancel'])])
         if len(name) > 1:
-            raise ValidationError(_('[DUPLICATE] Event already exist, choose another.'))
+            raise ValidationError(_(Utility.UNIQUE_WARNING))
 
     @api.multi
     def unlink(self):

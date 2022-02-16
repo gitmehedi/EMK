@@ -25,6 +25,7 @@
         'views/inherited_hr_payslip_run_views.xml',
         'views/hr_payslip.xml',
         'views/email_template.xml',
+        'views/hr_salary_structure.xml',
     ],
     'summary': 'Shows payslip reports',
     'description':

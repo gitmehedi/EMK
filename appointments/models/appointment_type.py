@@ -1,5 +1,5 @@
 from psycopg2 import IntegrityError
-
+from odoo.addons.opa_utility.helper.utility import Utility
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -11,7 +11,6 @@ class AppointmentType(models.Model):
     _order = "id desc"
 
     name = fields.Char(string='Name', required=True, track_visibility="onchange")
-    # status = fields.Boolean(string='Status', default=True, track_visibility='onchange')
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
@@ -23,7 +22,7 @@ class AppointmentType(models.Model):
             [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
              ('active', '=', False)])
         if len(name) > 1:
-            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
+            raise ValidationError(_(Utility.UNIQUE_WARNING))
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -65,11 +64,9 @@ class AppointmentType(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+                raise ValidationError(_(Utility.UNLINK_WARNING))
             try:
                 return super(AppointmentType, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
-                                        "- deletion: you may be trying to delete a record while other records still reference it"))
-
+                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
 

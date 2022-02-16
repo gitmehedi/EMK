@@ -1,7 +1,7 @@
 from odoo import api, fields, models, _
-from odoo.addons.opa_utility.helper.utility import Utility
 from odoo.exceptions import ValidationError
 from psycopg2 import IntegrityError
+from odoo.addons.opa_utility.helper.utility import Utility
 
 DAYS = [
     ('saturday', 'Saturday'),
@@ -48,19 +48,20 @@ class AppointmentTimeSlot(models.Model):
         name = self.search([('day', '=', self.day), ('start_time', '=', self.start_time),
                             ('end_time', '=', self.end_time)])
         if len(name) > 1:
-            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
+            raise ValidationError(_(Utility.UNIQUE_WARNING))
+
 
     @api.constrains('start_time', 'end_time')
     def _check_max_min(self):
         for rec in self:
-            if functions.float_to_time(rec.end_time) <= Utility.float_to_time(rec.start_time):
+            if Utility.float_to_time(rec.end_time) <= Utility.float_to_time(rec.start_time):
                 raise ValidationError(_("Start Time should not be greater than End Time."))
 
     @api.constrains('start_time', 'end_time')
     def _check_valid_time(self):
-        if functions.float_to_time(self.start_time) < '00:00' or Utility.float_to_time(self.start_time) > '23:59':
+        if Utility.float_to_time(self.start_time) < '00:00' or Utility.float_to_time(self.start_time) > '23:59':
             raise ValidationError(_("Start Time should be valid date time"))
-        if functions.float_to_time(self.end_time) < '00:00' or Utility.float_to_time(self.end_time) > '23:59':
+        if Utility.float_to_time(self.end_time) < '00:00' or Utility.float_to_time(self.end_time) > '23:59':
             raise ValidationError(_("End Time should be valid date time"))
 
     @api.constrains('start_time', 'end_time', 'day')
@@ -73,9 +74,6 @@ class AppointmentTimeSlot(models.Model):
         self.env.cr.execute(query)
         for val in self.env.cr.fetchall():
             "{0}:{1}-{2}:{3}".format(val[0], val[1], val[2], val[3])
-        # if rec:
-        #     raise ValidationError(_('[Warning] Time should not be overlap at same day.'))
-        # for val in rec:
             if val[0]:
                 raise ValidationError(_('[Warning] Time should not be overlap at same day.'))
 
@@ -123,9 +121,8 @@ class AppointmentTimeSlot(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+                raise ValidationError(_(Utility.UNLINK_WARNING))
             try:
                 return super(AppointmentTimeSlot, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
-                                        "- deletion: you may be trying to delete a record while other records still reference it"))
+                raise ValidationError(_(Utility.UNLINK_INT_WARNING))

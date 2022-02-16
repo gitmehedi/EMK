@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-
+from psycopg2 import IntegrityError
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-from psycopg2 import IntegrityError
+from odoo.addons.opa_utility.helper.utility import Utility
+
 
 class EventPoCType(models.Model):
     _name = 'event.poc.type'
@@ -21,7 +22,7 @@ class EventPoCType(models.Model):
             [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
              ('active', '=', False)])
         if len(name) > 1:
-            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
+            raise ValidationError(_(Utility.UNIQUE_WARNING))
 
     @api.multi
     def toggle_status(self):
@@ -69,9 +70,8 @@ class EventPoCType(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+                raise ValidationError(_(Utility.UNLINK_WARNING))
             try:
                 return super(EventPoCType, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
-                                        "- deletion: you may be trying to delete a record while other records still reference it"))
+                raise ValidationError(_(Utility.UNLINK_INT_WARNING))

@@ -94,7 +94,7 @@ class HrEmployeeContractType(models.Model):
             [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
              ('active', '=', False)])
         if len(name) > 1:
-            raise ValidationError(_('[DUPLICATE] Name already exist, choose another.'))
+            raise ValidationError(_(Utility.UNIQUE_WARNING))
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -136,12 +136,11 @@ class HrEmployeeContractType(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+                raise ValidationError(_(Utility.UNLINK_WARNING))
             try:
                 return super(HrEmployeeContractType, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
-                                        "- deletion: you may be trying to delete a record while other records still reference it"))
+                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
 
 
 class HrEmployeeChildren(models.Model):
@@ -187,3 +186,4 @@ class HrEmployeeContract(models.Model):
             self.write({
                 'state': 'close',
             })
+

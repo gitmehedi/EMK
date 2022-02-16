@@ -1,6 +1,7 @@
+from psycopg2 import IntegrityError
 from odoo import fields, models, api,_
 from odoo.exceptions import ValidationError
-from psycopg2 import IntegrityError
+from odoo.addons.opa_utility.helper.utility import Utility
 
 class IndentType(models.Model):
     _name = "indent.type"
@@ -20,7 +21,7 @@ class IndentType(models.Model):
             [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
              ('active', '=', False)])
         if len(name) > 1:
-            raise ValidationError('[UNIQUE] Name must be unique!')
+            raise ValidationError(_(Utility.UNIQUE_WARNING))
 
     @api.one
     def act_draft(self):
@@ -53,10 +54,8 @@ class IndentType(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_('[Warning] Approves and Rejected record cannot be deleted.'))
+                raise ValidationError(_(Utility.UNLINK_WARNING))
             try:
                 return super(IndentType, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_("The operation cannot be completed, probably due to the following:\n"
-                                        "- deletion: you may be trying to delete a record while other records still reference it"))
-
+                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
