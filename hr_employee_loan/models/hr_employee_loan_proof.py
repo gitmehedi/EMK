@@ -66,8 +66,8 @@ class HrEmployeeLoanProof(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_(Utility.UNLINK_WARNING))
+                raise ValidationError(_(Message.UNLINK_WARNING))
             try:
                 return super(HrEmployeeLoanProof, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
+                raise ValidationError(_(Message.UNLINK_INT_WARNING))

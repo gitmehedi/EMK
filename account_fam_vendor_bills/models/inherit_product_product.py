@@ -1,7 +1,7 @@
 from odoo import api, fields, models, _, SUPERUSER_ID
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
-from odoo.addons.opa_utility.helper.utility import Utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -66,11 +66,11 @@ class ProductProduct(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_(Utility.UNLINK_WARNING))
+                raise ValidationError(_(Message.UNLINK_WARNING))
             try:
                 return super(ProductProduct, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
+                raise ValidationError(_(Message.UNLINK_INT_WARNING))
 
 
 class ProductTemplate(models.Model):
@@ -117,12 +117,12 @@ class ProductTemplate(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_(Utility.UNLINK_WARNING))
+                raise ValidationError(_(Message.UNLINK_WARNING))
 
             try:
                 return super(ProductTemplate, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
+                raise ValidationError(_(Message.UNLINK_INT_WARNING))
     @api.constrains('name')
     def _check_unique_constrain(self):
         if self.name:

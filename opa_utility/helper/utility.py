@@ -103,14 +103,9 @@ class Utility:
             date = datetime.strftime(date, DATE_WOUTH)
         return date
 
-    UNLINK_WARNING = "[Warning] Approves and Rejected record cannot be deleted."
-    UNLINK_INT_WARNING = "The operation cannot be completed, probably due to the following:\n " \
-                     "- deletion: you may be trying to delete a record while other records still reference it"
-    UNIQUE_WARNING ='[DUPLICATE] Name already exist, choose another.'
 
 class Message:
-
     UNLINK_WARNING = "[Warning] Approves and Rejected record cannot be deleted."
     UNLINK_INT_WARNING = "The operation cannot be completed, probably due to the following:\n " \
-                     "- deletion: you may be trying to delete a record while other records still reference it"
-    UNIQUE_WARNING ='[DUPLICATE] Name already exist, choose another.'
+                         "- deletion: you may be trying to delete a record while other records still reference it"
+    UNIQUE_WARNING = '[DUPLICATE] Name already exist, choose another.'

@@ -1,7 +1,7 @@
 import base64
 
 from odoo import models, fields, api, _
-from odoo.addons.opa_utility.helper.utility import Utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 from odoo.exceptions import ValidationError, Warning
 
 

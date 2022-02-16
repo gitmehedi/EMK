@@ -3,7 +3,7 @@
 from psycopg2 import IntegrityError
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.opa_utility.helper.utility import Utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 
 
 class MemberOccupation(models.Model):
@@ -24,7 +24,7 @@ class MemberOccupation(models.Model):
             [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
              ('active', '=', False)])
         if len(name) > 1:
-            raise ValidationError(_(Utility.UNIQUE_WARNING))
+            raise ValidationError(_(Message.UNIQUE_WARNING))
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -66,11 +66,11 @@ class MemberOccupation(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_(Utility.UNLINK_WARNING))
+                raise ValidationError(_(Message.UNLINK_WARNING))
             try:
                 return super(MemberOccupation, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
+                raise ValidationError(_(Message.UNLINK_INT_WARNING))
 
 class MemberSubjectOfInterest(models.Model):
     _name = 'member.subject.interest'
@@ -90,7 +90,7 @@ class MemberSubjectOfInterest(models.Model):
             [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
              ('active', '=', False)])
         if len(name) > 1:
-            raise ValidationError(_(Utility.UNIQUE_WARNING))
+            raise ValidationError(_(Message.UNIQUE_WARNING))
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -132,11 +132,11 @@ class MemberSubjectOfInterest(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_(Utility.UNLINK_WARNING))
+                raise ValidationError(_(Message.UNLINK_WARNING))
             try:
                 return super(MemberSubjectOfInterest, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
+                raise ValidationError(_(Message.UNLINK_INT_WARNING))
 
 class MemberCertification(models.Model):
     _name = 'member.certification'
@@ -156,7 +156,7 @@ class MemberCertification(models.Model):
             [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
              ('active', '=', False)])
         if len(name) > 1:
-            raise ValidationError(_(Utility.UNIQUE_WARNING))
+            raise ValidationError(_(Message.UNIQUE_WARNING))
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -198,8 +198,8 @@ class MemberCertification(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_(Utility.UNLINK_WARNING))
+                raise ValidationError(_(Message.UNLINK_WARNING))
             try:
                 return super(MemberCertification, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
+                raise ValidationError(_(Message.UNLINK_INT_WARNING))

@@ -4,7 +4,7 @@ from datetime import datetime
 
 from odoo import http, _
 from odoo.addons.event_management.data import helper
-from odoo.addons.opa_utility.helper.utility import Utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.http import request
 

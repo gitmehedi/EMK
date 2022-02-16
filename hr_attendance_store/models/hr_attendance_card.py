@@ -1,6 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.addons.hr_attendance_store.helpers import helper
-from odoo.addons.opa_utility.helper.utility import Utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 from odoo.exceptions import ValidationError
 from psycopg2 import IntegrityError
 
@@ -25,12 +25,12 @@ class HRAttendanceCard(models.Model):
         serial_no = self.search([('serial_no', '=ilike', self.serial_no.strip()), ('state', '!=', 'reject'),
                                  '|', ('active', '=', True), ('active', '=', False)])
         if len(serial_no) > 1:
-            raise ValidationError(_(Utility.UNIQUE_WARNING))
+            raise ValidationError(_(Message.UNIQUE_WARNING))
 
         code = self.search([('code', '=ilike', self.code.strip()), ('state', '!=', 'reject'),
                             '|', ('active', '=', True), ('active', '=', False)])
         if len(code) > 1:
-            raise ValidationError(_(Utility.UNIQUE_WARNING))
+            raise ValidationError(_(Message.UNIQUE_WARNING))
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -72,7 +72,7 @@ class HRAttendanceCard(models.Model):
             try:
                 return super(HRAttendanceCard, rec).unlink()
             except IntegrityError:
-                raise ValidationError(_(Utility.UNLINK_INT_WARNING))
+                raise ValidationError(_(Message.UNLINK_INT_WARNING))
 
     @api.model
     def _needaction_domain_get(self):

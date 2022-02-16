@@ -10,7 +10,7 @@ from odoo import http, tools, _
 from odoo.addons.member_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
 from odoo.http import request, Response
-from odoo.addons.opa_utility.helper.utility import Utility as utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 
 _logger = logging.getLogger(__name__)
 
@@ -233,7 +233,7 @@ class MemberApplicationContoller(Home):
             vals = [int(val) for val in request.httprequest.form.getlist('subject_of_interest')]
             data['subject_of_interest'] = [(6, 0, vals)]
             data['usa_work_or_study'] = data['usa_work_or_study'].lower()
-            data['password'] = utility.token(length=8)
+            data['password'] = Utility.token(length=8)
         # self.upload_attachment(request.httprequest.files.getlist('attachment'))
         assert values.values(), "The form was not properly filled in."
         supported_langs = [lang['code'] for lang in request.env['res.lang'].sudo().search_read([], ['code'])]

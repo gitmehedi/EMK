@@ -13,7 +13,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 from odoo.exceptions import ValidationError, Warning
-from odoo.addons.opa_utility.helper.utility import Utility as utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 
 
 class EMKMemberDataImportWizard(models.TransientModel):
@@ -205,12 +205,12 @@ class EMKMemberDataImportWizard(models.TransientModel):
             id_number = line['id number'].strip()
             membership_categories = line['membership categories'].strip()
             membership_status = line['membership status'].strip()
-            joining_date = utility.date_format(line['joining date'].strip())
-            membership_expire = utility.date_format(line['membership expire'].strip())
+            joining_date = Utility.date_format(line['joining date'].strip())
+            membership_expire = Utility.date_format(line['membership expire'].strip())
             first_name = line['first name'].strip()
             middle_name = line['middle name'].strip()
             last_name = line['last name'].strip()
-            date_of_birth = utility.date_format(line['date of birth'].strip())
+            date_of_birth = Utility.date_format(line['date of birth'].strip())
             gender = line['gender'].strip()
             phone = line['phone'].strip()
             address = line['address'].strip()

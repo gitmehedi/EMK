@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from odoo import http, _
-from odoo.addons.opa_utility.helper.utility import Utility as utility
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 from odoo.http import request
 
 DATE_FORMAT = "%Y-%m-%d"
@@ -134,7 +134,7 @@ class WebsiteAppointmentReservation(http.Controller):
             data['firstname'] = data['first_name']
             data['lastname'] = data['last_name']
             data['login'] = data['email']
-            data['password'] = utility.token(length=8)
+            data['password'] = Utility.token(length=8)
 
         db, login, password = request.env['res.users'].sudo().signup(data, values.get('token'))
         if login:
