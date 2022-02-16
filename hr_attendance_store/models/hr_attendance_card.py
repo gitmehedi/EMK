@@ -68,7 +68,7 @@ class HRAttendanceCard(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state in ('approve', 'reject'):
-                raise ValidationError(_(Utility.UNLINK_WARNING))
+                raise ValidationError(_(Message.UNLINK_WARNING))
             try:
                 return super(HRAttendanceCard, rec).unlink()
             except IntegrityError:
