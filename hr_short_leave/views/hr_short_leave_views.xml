@@ -143,7 +143,7 @@
         <menuitem id="short_leave_menu" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_root"
                   action="hr_short_leave_action" groups="base.group_system"/>
 
-        <menuitem id="short_leave" name="Short Leaves" parent="short_leave_menu"
+        <menuitem id="short_leave" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_my_leaves"
                   action="hr_short_leave_action" groups="base.group_system"/>
         <menuitem id="my_short_leave_menu" name="My Short Leaves" parent="short_leave_menu"
 				  sequence="5" action="my_short_leave_action" groups="base.group_system"/>
