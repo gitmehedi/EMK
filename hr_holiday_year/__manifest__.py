@@ -6,15 +6,13 @@
     'category': 'Human Resources',
     'summary': """Computes the actual leave days 
                considering rest days and public holidays""",
-    'depends': ['hr_holidays',
-                'date_range',
-                ],
+    'depends': [
+        'hr_holidays',
+        'date_range',
+    ],
     'data': [
-#         'views/hr_holidays_status.xml',
         'views/hr_holidays_view.xml',
         'views/date_range_view.xml',
-#         'security/ir.model.access.csv',
-#         'security/ir_rule.xml',
     ],
     'installable': True,
     'application': True,
