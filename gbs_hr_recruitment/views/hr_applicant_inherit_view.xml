@@ -10,7 +10,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,gm_approve,cxo_approve,approved"/>
                 </xpath>
                 <xpath expr="//field[@name='department_id']" position="after">
-                    <field name="manager_id"/>
+                    <field name="manager_id" options="{'no_create':True,'no_open':True}"/>
                 </xpath>
                 <xpath expr="//field[@name='type_id']" position="after">
                     <field name="gender" options="{'no_create':True,'no_open':True}" />

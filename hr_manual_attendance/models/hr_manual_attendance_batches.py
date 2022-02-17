@@ -25,7 +25,7 @@ class HrManualAttendance(models.Model):
                 default_approver = employee.sudo().holidays_approvers[0].approver.id
         return default_approver
 
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, default=_default_employee)
+    employee_id = fields.Many2one('hr.employee', string="Employee", domain=[('state', '!=', 'relieved')], required=True, default=_default_employee)
     reason = fields.Text(string='Reason')
     department_id = fields.Many2one('hr.department', related='employee_id.department_id',
                                     string='Department', store=True)

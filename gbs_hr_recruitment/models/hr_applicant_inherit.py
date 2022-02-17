@@ -6,8 +6,8 @@ from odoo.addons.opa_utility.helper.utility import Utility,Message
 class HrApplicantInherit(models.Model):
     _inherit = ['hr.applicant']
 
-    manager_id = fields.Many2one('hr.employee', string='Manager', related='department_id.manager_id',
-                                 readonly=True, copy=False)
+    manager_id = fields.Many2one('hr.employee', domain=[('state', '!=', 'relieved')], string='Manager', related='department_id.manager_id',
+                                 readonly=False, copy=False)
     gender = fields.Many2one('res.gender', string='Gender', track_visibility='onchange')
     marital_status = fields.Selection([('single', 'Single'),('married', 'Married'),('other','Other')],
                                string='Marital Status')
