@@ -13,6 +13,7 @@
         'account',
         'hr',
         'hr_attendance',
+        'hr_manual_attendance',
     ],
     "data": [
         # "data/ir_cron.xml",

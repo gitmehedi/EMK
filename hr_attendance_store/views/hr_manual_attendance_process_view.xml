@@ -9,18 +9,31 @@
                 <form string="Bulk / Manual Journal" delete="0" duplicate="0">
                     <header>
                         <button name="%(hr_attendance_store.action_hr_manual_attendance_process_wizard)d"
-                                groups="hr_attendance.group_hr_attendance_manager"
-                                type="action" string="Upload" class="oe_highlight"/>
+                                groups="hr_attendance.group_hr_attendance_manager" states="draft"
+                                type="action" string="Attendance Import" class="oe_highlight"/>
+                        <button name="act_filter" string="Filter Attendance" states="draft" type="object"
+                                class="oe_highlight"/>
+                        <button name="act_approve" string="Approve" states="filter" type="object" class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="filter" type="object"/>
+                        <button name="act_done" string="Done" states="approve" type="object"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done,reject"/>
                     </header>
                     <sheet>
                         <group>
                             <group>
                                 <field name="date"/>
-                                <field name="code"/>
+                            </group>
+                            <group>
+                                <field name="attendance_filename" invisible="True"/>
+                                <field name="attendance_file" filename="attendance_filename"
+                                       attr="{'invisible':[('','','')]}"/>
+                                <field name="error_filename" invisible="True"/>
+                                <field name="error_file" filename="error_filename"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Attendance Data">
+                            <page string="Attendance Data" states="draft">
                                 <field name="line_ids">
                                     <tree>
                                         <field name="date"/>
@@ -31,6 +44,18 @@
                                         <field name="mode"/>
                                         <field name="card_serial_id"/>
                                         <field name="result"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Attendance Data" states="filter,approve,done,reject">
+                                <field name="filter_ids">
+                                    <tree>
+                                        <field name="date"/>
+                                        <field name="employee_id"/>
+                                        <field name="terminal_id"/>
+                                        <field name="entry_time"/>
+                                        <field name="exit_time"/>
+                                        <field name="duration"/>
                                     </tree>
                                 </field>
                             </page>
@@ -48,9 +73,12 @@
             <field name="name">hr.manual.attendance.process.tree</field>
             <field name="model">hr.manual.attendance.process</field>
             <field name="arch" type="xml">
-                <tree>
-                    <field name="code"/>
+                <tree decoration-info="state=='draft'"
+                      decoration-success="state in ('draft','filter','approve','migrate',)"
+                      decoration-muted="state=='reject'"
+                      decoration-bf="state in ('filter','approve','migrate',)">
                     <field name="date"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -60,7 +88,8 @@
             <field name="model">hr.manual.attendance.process</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Bulk / Manual Journal">
+                <search>
+                    <field name="date"/>
                     <field name="date"/>
                 </search>
             </field>
@@ -73,7 +102,7 @@
         </record>
 
         <menuitem id="menu_hr_manual_attendance_process" name="Manual Attendance Process"
-                  parent="hr_attendance.menu_hr_attendance_settings"
+                  parent="hr_manual_attendance.menu_hr_manual_attendance"
                   sequence="10" groups="hr_attendance.group_hr_attendance_manager"
                   action="action_hr_manual_attendance_process"/>
     </data>

@@ -161,7 +161,8 @@ class HrManualAttendanceProcess(models.TransientModel):
 
     @api.multi
     def get_existing_data(self):
-        terminal = {val.code: val.id for val in self.env['hr.attendance.terminal'].search([('active', '=', True)])}
+        terminal = {val.code: val.id for val in
+                    self.env['hr.attendance.terminal'].search([('active', '=', True), ('is_attendance', '=', True)])}
         employee = {val.employee_number: val.id for val in self.env['hr.employee'].search([('active', '=', True)])}
         card = {val.code: val.id for val in self.env['hr.attendance.card'].search([('active', '=', True)])}
 
@@ -176,13 +177,10 @@ class HrManualAttendanceProcess(models.TransientModel):
         index = 0
 
         self._err_log = ''
-        manual_attendance = self.env[context['active_model']].browse(context['active_id'])
         lines, header = self._remove_leading_lines(self.lines)
         header_fields = csv.reader(StringIO.StringIO(header), dialect=self.dialect).next()
         self._header_fields = self._process_header(header_fields)
         reader = csv.DictReader(StringIO.StringIO(lines), fieldnames=self._header_fields, dialect=self.dialect)
-        allow_header = ['date', 'time', 'terminal id', 'user id', 'mode ', 'card serial no', 'result']
-
         terminal, employee, card = self.get_existing_data()
 
         errors, record_entry = "", ""
@@ -192,6 +190,7 @@ class HrManualAttendanceProcess(models.TransientModel):
             #     raise ValidationError(_(
             #         "** Header of uploaed file does not match with expected one. \n Please check header of the file."))
 
+            process = self.env[context['active_model']].browse(context['active_id'])
             index += 1
             line_no = index + 1
             is_valid = True
@@ -207,18 +206,16 @@ class HrManualAttendanceProcess(models.TransientModel):
             result = line['result'].strip()
             type = line['type'].strip()
 
-            # if terminal_id not in terminal.keys():
-            #     is_valid = False
-            #     errors += self.format_error(line_no, 'Terminal [{0}] invalid value'.format(terminal_id))
             # if employee_id not in employee.keys():
-            #     is_valid = False
-            #     errors += self.format_error(line_no, 'Employee [{0}] invalid value'.format(employee_id))
+            #     if len(employee_id) < 7:
+            #         is_valid = False
+            #         errors += self.format_error(line_no, 'Employee [{0}] invalid value'.format(employee_id))
 
-            if is_valid:
+            if (terminal_id in terminal.keys()) and (employee_id in employee.keys()):
                 val['date'] = date_str
                 val['time'] = time
                 val['terminal_id'] = terminal[terminal_id] if terminal_id else 'null'
-                val['card_serial_id'] = card[card_id] if card_id else 'null'
+                val['card_serial_id'] = 'null'
                 val['employee_id'] = employee[employee_id] if employee_id else 'null'
                 val['result'] = result
                 val['mode'] = mode
@@ -233,7 +230,19 @@ class HrManualAttendanceProcess(models.TransientModel):
             (date, time,result, mode, type, card_serial_id,terminal_id, employee_id, line_id)  
             VALUES %s""" % record_entry[:-1]
             self.env.cr.execute(query)
+
+            process.write({
+                'attendance_filename': self.aml_fname,
+                'attendance_file': self.aml_data})
+
         else:
             file_path = os.path.join(os.path.expanduser("~"), "GL_ERR_" + fields.Datetime.now())
             with open(file_path, "w+") as file:
                 file.write(errors)
+
+            # process.write({
+            #     'attendance_filename': self.aml_fname,
+            #     'attendance_file': self.aml_data,
+            #     'error_file': base64.b64encode(self.file),
+            #     'error_filename': self.aml_fname,
+            # })
