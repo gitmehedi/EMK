@@ -121,6 +121,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
         # Get move lines base on sql query and Calculate the total balance of move lines
         sql = ('''SELECT 
                         m.id AS move_id
+                        ,l.id as line_id
                         ,m.narration
                         ,m.date
                         ,j.code AS journal_name
@@ -137,6 +138,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                         ,COALESCE(l.debit,0) AS debit
                         ,COALESCE(l.credit,0) AS credit
                         ,COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance
+                        ,CASE WHEN acc.id=%s THEN 1 ELSE 2 END AS sorting_col
                 FROM account_move_line l
                     JOIN account_move m ON (l.move_id=m.id)
                     JOIN account_journal j ON (l.journal_id=j.id)
@@ -153,6 +155,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                     ''' + sql_filters + '''
                 GROUP BY 
                      m.id
+                     ,l.id
                      ,m.narration
                     ,m.date
                     ,j.code
@@ -169,9 +172,9 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                     ,l.debit
                     ,l.credit
                 ORDER BY 
-                    m.id, m.date''')
+                    m.id, m.date, sorting_col''')
 
-        params = (accounts.id,) + tuple(where_params)
+        params = (accounts.id, accounts.id) + tuple(where_params)
         cr.execute(sql, params)
 
         for row in cr.dictfetchall():
@@ -315,6 +318,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                     sheet.write(row, col + 12, rec['credit'], no_format_color)
 
                     if rec['account_code'] == docs.code:
+
                         balance += rec['balance']
                         sheet.write(row, col + 13, balance, no_format_color)
                     else:
@@ -322,6 +326,8 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                     row += 1
 
                     is_last_line = True
+
+
 
                 else:
                     sheet.write(row, col, '', td_cell_center)
@@ -347,8 +353,12 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
 
                     is_last_line = True
 
+
                 if len(accounts_result) - 1 == index:
                     sheet.merge_range(row, col, row, col + 13, 'Narration: ' + narration, narration_format)
+
+
+
 
 
 AccountGeneralLedgerDetailsXLSX('report.samuda_account_reports.account_general_ledger_details_xlsx', 'account.general.ledger.details.wizard', parser=report_sxw.rml_parse)
