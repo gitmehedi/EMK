@@ -138,6 +138,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                         ,COALESCE(l.debit,0) AS debit
                         ,COALESCE(l.credit,0) AS credit
                         ,COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance
+                        ,CASE WHEN acc.id=%s THEN 1 ELSE 2 END AS sorting_col
                 FROM account_move_line l
                     JOIN account_move m ON (l.move_id=m.id)
                     JOIN account_journal j ON (l.journal_id=j.id)
@@ -171,9 +172,9 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                     ,l.debit
                     ,l.credit
                 ORDER BY 
-                    m.id, m.date''')
+                    m.id, m.date, sorting_col''')
 
-        params = (accounts.id,) + tuple(where_params)
+        params = (accounts.id, accounts.id) + tuple(where_params)
         cr.execute(sql, params)
 
         for row in cr.dictfetchall():
