@@ -17,10 +17,10 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         # vendor advance aged payable
         periods = {}
         start = datetime.strptime(date_from, "%Y-%m-%d")
-        for i in range(5)[::-1]:
+        for i in range(7)[::-1]:
             stop = start - relativedelta(days=period_length)
             periods[str(i)] = {
-                'name': (i!=0 and (str((5-(i+1)) * period_length) + '-' + str((5-i) * period_length)) or ('+'+str(4 * period_length))),
+                'name': (i!=0 and (str((7-(i+1)) * period_length) + '-' + str((7-i) * period_length)) or ('+'+str(6 * period_length))),
                 'stop': start.strftime('%Y-%m-%d'),
                 'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
             }
@@ -62,7 +62,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
         partners = cr.dictfetchall()
         # put a total of 0
-        for i in range(7):
+        for i in range(9):
             total.append(0)
 
         # Build a string like (1,2,3) for easy use in SQL query
@@ -103,13 +103,13 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 lines[partner_id].append({
                     'line': line,
                     'amount': line_amount,
-                    'period': 6,
+                    'period': 8,
                 })
 
         # Use one query per period and store results in history (a list variable)
         # Each history will contain: history[1] = {'<partner_id>': <partner_debit-credit>}
         history = []
-        for i in range(5):
+        for i in range(7):
             args_list = (tuple(move_state), tuple(account_type), tuple(partner_ids),)
             dates_query = '(COALESCE(l.date_maturity,l.date)'
 
@@ -169,12 +169,12 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             if partner['partner_id'] in undue_amounts:  # Making sure this partner actually was found by the query
                 undue_amt = undue_amounts[partner['partner_id']]
 
-            total[6] = total[6] + undue_amt
+            total[8] = total[8] + undue_amt
             values['direction'] = undue_amt
             if not float_is_zero(values['direction'], precision_rounding=self.env.user.company_id.currency_id.rounding):
                 at_least_one_amount = True
 
-            for i in range(5):
+            for i in range(7):
                 during = False
                 if partner['partner_id'] in history[i]:
                     during = [history[i][partner['partner_id']]]
@@ -183,7 +183,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 values[str(i)] = during and during[0] or 0.0
                 if not float_is_zero(values[str(i)], precision_rounding=self.env.user.company_id.currency_id.rounding):
                     at_least_one_amount = True
-            values['total'] = sum([values['direction']] + [values[str(i)] for i in range(5)])
+            values['total'] = sum([values['direction']] + [values[str(i)] for i in range(7)])
             ## Add for total
             total[(i + 1)] += values['total']
             values['partner_id'] = partner['partner_id']
