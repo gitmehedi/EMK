@@ -8,7 +8,7 @@ class InheritedLetterCredit(models.Model):
     @api.constrains('title')
     @api.one
     def _check_title(self):
-        if len(self.title) > 16 and self.type == 'import':
+        if self.type == 'import' and len(self.title) > 16:
             raise ValidationError('Description must not exceed 16 characters!')
 
     @api.multi
