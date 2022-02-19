@@ -2,7 +2,9 @@ import datetime
 import time
 
 from datetime import date
-from odoo import fields, models, api,exceptions
+from odoo import fields, models, api,exceptions,_
+from odoo.addons.opa_utility.helper.utility import Utility,Message
+from odoo.exceptions import UserError, ValidationError
 
 
 class HrPublicHolidays(models.Model):
@@ -88,6 +90,13 @@ class HrPublicHolidays(models.Model):
                     chd_obj.create(vals)
 
         return True
+
+    @api.constrains('name')
+    def _check_name(self):
+        name = self.search(
+            [('name', '=ilike', self.name.strip())])
+        if len(name) > 1:
+            raise ValidationError(_(Message.UNIQUE_WARNING))
 
     # @api.one
     # @api.constrains('year_id', 'country_id')

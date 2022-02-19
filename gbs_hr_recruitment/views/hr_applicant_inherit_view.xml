@@ -84,7 +84,7 @@
 
 
         <record id="hr_recruitment.crm_case_categ0_act_job" model="ir.actions.act_window">
-             <field name="view_mode">tree,form,pivot,graph,calendar,kanban</field>
+             <field name="view_mode">tree,form,pivot,graph,calendar</field>
         </record>
 
         <menuitem
