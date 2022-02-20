@@ -82,6 +82,9 @@
 <!--                <xpath expr="//field[@name='gender_id']" position="replace">-->
 <!--                    <field name="gender" options="{'no_quick_create':True,'no_create_edit':True,'no_open':True}"></field>-->
 <!--                </xpath>-->
+                <xpath expr="//field[@name='category_ids']" position="attributes">
+                    <attribute name="string">Employee Tag</attribute>
+                </xpath>
             </field>
         </record>
 
