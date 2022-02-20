@@ -321,7 +321,7 @@ class IndentIndent(models.Model):
                         'location_id': location_id,
                         'location_dest_id': self.stock_location_id.id,
                         'company_id': self.company_id.id,
-                        # 'operating_unit_id': self.operating_unit_id.id
+                        'operating_unit_id': self.warehouse_id.operating_unit_id.id
                     }
                     picking = picking_obj.create(vals)
                     picking.action_done()
