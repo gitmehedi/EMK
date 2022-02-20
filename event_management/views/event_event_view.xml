@@ -133,7 +133,7 @@
                         <group>
                             <field name="target_audience_group"/>
                             <field name="target_age"/>
-                            <field name="event_share_name"/>
+                            <field name="event_share_name" invisible="True"/>
                             <field name="event_share" filename="event_share_name"/>
                         </group>
                         <group>
