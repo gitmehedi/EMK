@@ -30,6 +30,8 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
             'authorize_districts': authorize_districts,
             'degree': degree,
             'gender': gender,
+
+
         })
 
     def get_religion(self):
