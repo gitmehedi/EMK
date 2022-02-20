@@ -26,7 +26,7 @@
 
     <record id="account_asset.action_account_asset_asset_form" model="ir.actions.act_window">
         <field name="name">Fixed Assets</field>
-        <field name="sequence">26</field>
+        <field name="sequence">1</field>
     </record>
 
     <record id="account_asset.menu_action_account_asset_asset_list_normal_purchase" model="ir.ui.menu">
