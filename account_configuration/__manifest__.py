@@ -5,10 +5,11 @@
     'website': 'http://www.genweb2.com',
     'depends': [
         'mail_send',
-        'base'
+        'base',
+        'point_of_sale',
     ],
     'data': [
-        # 'views/account_journal_view.xml',
+
         'views/inherit_account_journal.xml',
     ],
     'installable': True,
