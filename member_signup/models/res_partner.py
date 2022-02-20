@@ -98,18 +98,13 @@ class ResPartner(models.Model):
     @api.onchange('email')
     def validate_email(self):
         if self.email:
-            utility.valid_email(self.email)
-
-    # @api.constrains('email')
-    # def check_email(self):
-    #     if self.email:
-    #         utility.valid_email(self.email)
+            Utility.valid_email(self.email)
 
     @api.one
     @api.constrains('mobile')
     def valid_mobile(self):
         if self.mobile:
-            if not utility.valid_mobile(self.mobile):
+            if not Utility.valid_mobile(self.mobile):
                 raise ValidationError('Mobile no should be input a valid')
 
     @api.model

@@ -123,7 +123,7 @@
         </record>
 
         <record id="event_reservation_tree_view" model="ir.ui.view">
-            <field name="name">event.reservation.tree.view</field>
+            <field name="name"> event.reservation.tree.view</field>
             <field name="model">event.reservation</field>
             <field name="arch" type="xml">
                 <tree decoration-bf="state in ['draft','on_process','confirm']"

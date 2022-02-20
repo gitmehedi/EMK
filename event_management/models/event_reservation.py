@@ -236,7 +236,7 @@ class EventReservation(models.Model):
                 'organizer_id': self.poc_id.id,
                 'poc_type_id': self.poc_type_id.id,
                 'facilities_ids': [(4, rec.id) for rec in self.facilities_ids],
-                'user_id': self.org_id.id,
+                'user_id': self.org_id.user_id.id,
                 'event_type_id': self.event_type_id.id,
                 'pillar_id': self.pillar_id.id,
                 'theme_id': self.theme_id.id,

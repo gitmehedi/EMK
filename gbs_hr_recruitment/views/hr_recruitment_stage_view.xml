@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-         <record id="inherit_hr_recruitment_stage_tree_view" model="ir.ui.view">
+        <record id="inherit_hr_recruitment_stage_tree_view" model="ir.ui.view">
             <field name="name">inherit.hr.recruitment.stage.tree.view</field>
             <field name="model">hr.recruitment.stage</field>
             <field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
-                   <field name="state"></field>
+                    <field name="state"></field>
                 </xpath>
             </field>
         </record>
@@ -20,20 +20,21 @@
                 <xpath expr="//form" position="replace">
                     <form string="Stage" duplicate="0">
                         <header>
-                            <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
+                            <button name="act_approve" string="Approve" states="draft" type="object"
+                                    class="oe_highlight"/>
                             <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
                             <button name="act_reject" string="Reject" states="draft" type="object"/>
                             <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
                         </header>
                         <sheet>
-                        <group>
                             <group>
-                                <field name="name"/>
+                                <group>
+                                    <field name="name"/>
+                                </group>
                             </group>
-                        </group>
-                    </sheet>
+                        </sheet>
 
-                   </form>
+                    </form>
                 </xpath>
             </field>
         </record>
@@ -57,10 +58,10 @@
         </record>
 
         <record model="ir.actions.act_window" id="hr_recruitment.hr_recruitment_stage_act">
-        <field name="context">
-            {"search_default_active":'False',"search_default_pending":'True'}
-        </field>
-    </record>
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
+        </record>
 
     </data>
 </odoo>
