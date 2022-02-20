@@ -14,8 +14,12 @@ class Employee(models.Model):
     tax_circle = fields.Char('Tax Circle')
     tax_location = fields.Char('Tax Location')
     bank_account_number = fields.Char('Bank Account Number')
+<<<<<<< HEAD
     mobile_phone = fields.Char('Personal Mobile')
     gender_id = fields.Many2one('res.gender', string='Gender', track_visibility='onchange')
+=======
+    gender = fields.Many2one('res.gender', string='Gender', track_visibility='onchange')
+>>>>>>> c315d03c79fa70bc639f1e77e124bf7160cbfa62
 
     @api.one
     @api.constrains('work_phone')

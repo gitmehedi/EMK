@@ -155,8 +155,16 @@
                                     </div>
                                     <div class="form-group col-md-6 form-field o_website_form_required_custom">
                                         <label class="control-label">Religion / ধর্ম</label>
-                                        <input type="text" class="form-control o_website_form_input input-sm"
-                                               name="religion" required=""/>
+                                       <select class="form-control o_website_form_input input-sm"
+                                                    name="religion"
+                                                    required="">
+                                                <option value="">--Please Select--</option>
+                                                <t t-foreach='authorize_districts' t-as='label'>
+                                                    <option t-att-value="label['name']">
+                                                        <t t-esc="label['name']"/>
+                                                    </option>
+                                                </t>
+                                            </select>
                                     </div>
                                     <div class="form-group col-md-6 form-field ">
                                         <label class="control-label">Occupation / পেশা</label>

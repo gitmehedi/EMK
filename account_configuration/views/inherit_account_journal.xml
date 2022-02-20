@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- Inherited Form view-->
+        <record id="inherit_account_journal_form" model="ir.ui.view">
+            <field name="name">inherit.account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/form/*" position="before">
+                        <header>
+                            <button name="act_approve" string="Approve" states="draft" type="object"
+                                    class="oe_highlight"/>
+                            <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                            <button name="act_reject" string="Reject" states="draft" type="object"/>
+                            <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                        </header>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="inherit_account_journal_tree" model="ir.ui.view">
+            <field name="name">inherit.account.journal.tree</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-info">state == 'draft'</attribute>
+                    <attribute name="decoration-success">state=='approve'</attribute>
+                    <attribute name="decoration-danger">state=='reject'</attribute>
+                    <attribute name="decoration-bf">state in ('approve',)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="state"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="inherit_account_journal_search_view" model="ir.ui.view">
+            <field name="name">inherit.account.journal.search.view</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_search"/>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="point_of_sale.action_account_journal_form">
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+
+            </field>
+            <field name="domain">[]</field>
+        </record>
+
+    </data>
+</odoo>

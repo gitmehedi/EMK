@@ -8,7 +8,8 @@
         'base'
     ],
     'data': [
-        'views/account_journal_view.xml',
+        # 'views/account_journal_view.xml',
+        'views/inherit_account_journal.xml',
     ],
     'installable': True,
     'auto_install': False,
