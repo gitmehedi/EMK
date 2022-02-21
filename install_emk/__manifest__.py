@@ -208,7 +208,6 @@
         "indent_type",
         "install_appointment",
         "install_cafeteria",
-        "install_emk",
         "install_event",
         "install_hr",
         "install_inventory",
