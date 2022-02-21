@@ -9,6 +9,9 @@
                 <xpath expr="//field[@name='type']" position="before">
                     <field name="code"/>
                 </xpath>
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
             </field>
         </record>
     </data>

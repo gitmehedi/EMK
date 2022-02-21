@@ -3,6 +3,6 @@ from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError
 
 class ProductProduct(models.Model):
-    _inherit = 'product.template'
+    _inherit = 'product.product'
 
     # service_type = fields.Selection([('card', 'Card'), ('copy', 'Copy'), ('event_fee', 'Event Fee')], default=False)

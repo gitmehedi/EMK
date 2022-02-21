@@ -21,7 +21,7 @@
         'security/ir.model.access.csv',
         'views/product_views.xml',
         # 'views/inherited_product_template_views.xml',
-        # 'views/inherited_product_category_view.xml',
+        'views/inherited_product_category_view.xml',
     ],
 
 }
