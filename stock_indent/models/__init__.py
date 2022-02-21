@@ -27,3 +27,4 @@ import stock_picking
 from . import stock_picking_type
 import receive_products
 import stock_scrap
+import inherit_res_partner

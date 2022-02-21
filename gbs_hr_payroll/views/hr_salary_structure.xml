@@ -176,7 +176,7 @@
         <record id="inherit_hr_salary_rule_search_view" model="ir.ui.view">
             <field name="name">inherit.hr.salary.rule.search.view</field>
             <field name="model">hr.salary.rule</field>
-            <field name="inherit_id" ref="hr_payroll.view_hr_salary_rule_category_filter"/>
+            <field name="inherit_id" ref="hr_payroll.view_hr_rule_filter"/>
             <field name="arch" type="xml">
                 <search>
                     <field name="state"/>

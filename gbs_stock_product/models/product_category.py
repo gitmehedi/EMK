@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import api, fields, models,_
+from odoo.addons.opa_utility.helper.utility import Utility,Message
+from odoo.exceptions import UserError, ValidationError
 
 
 class ProductCategory(models.Model):
@@ -7,6 +9,15 @@ class ProductCategory(models.Model):
 
     code = fields.Char('Code', required=True, help='This fields Code,...')
     company_id = fields.Many2one('res.company', 'Company')
+
+    @api.constrains('name')
+    def _check_name(self):
+        name = self.search(
+            [('name', '=ilike', self.name.strip())])
+        if len(name) > 1:
+            raise ValidationError(_(Message.UNIQUE_WARNING))
+
+
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid,                                                                                                'product.category',
