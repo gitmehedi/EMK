@@ -5,11 +5,28 @@ from odoo.exceptions import UserError, ValidationError
 class InheritedLetterCredit(models.Model):
     _inherit = "letter.credit"
 
-    @api.constrains('title')
-    @api.one
-    def _check_title(self):
-        if self.type == 'import' and len(self.title) > 16:
-            raise ValidationError('Description must not exceed 16 characters!')
+    @api.model
+    def create(self, values):
+        if 'type' in values and 'title' in values:
+            lc_type = values['type']
+            title = values['title']
+            title_after_trim = " ".join(title.split())
+            if lc_type == 'import' and len(title_after_trim) > 30:
+                raise ValidationError('Description must not exceed 30 characters!')
+            values['title'] = title_after_trim
+        res = super(InheritedLetterCredit, self).create(values)
+        return res
+
+    @api.multi
+    def write(self, values):
+        if 'title' in values:
+            title = values['title']
+            title_after_trim = " ".join(title.split())
+            if self.type == 'import' and len(title_after_trim) > 30:
+                raise ValidationError('Description must not exceed 30 characters!')
+            values['title'] = title_after_trim
+        res = super(InheritedLetterCredit, self).write(values)
+        return res
 
     @api.multi
     def action_update_lc_number_import(self):
