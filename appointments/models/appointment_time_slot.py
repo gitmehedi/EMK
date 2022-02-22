@@ -50,7 +50,6 @@ class AppointmentTimeSlot(models.Model):
         if len(name) > 1:
             raise ValidationError(_(Message.UNIQUE_WARNING))
 
-
     @api.constrains('start_time', 'end_time')
     def _check_max_min(self):
         for rec in self:
