@@ -56,19 +56,19 @@ class Property(models.Model):
             if operating_unit_id:
                 # Modify existing records if exist, else create new records
                 for product_id, cost in values.items():
-                    product_standard_price = self.env['product.standard.price'].search(
-                        [('product_id', '=', product_id),
-                         ('operating_unit_id', '=', operating_unit_id)]
-                    )
-
+                    product = self.env['product.product'].browse(product_id)
+                    product_standard_price = product.product_standard_price_ids.search([
+                        ('operating_unit_id', '=', operating_unit_id),
+                        ('product_id', '=', product_id)
+                    ])
                     if product_standard_price:
                         if product_standard_price.cost != cost:
-                            product_standard_price.write({'cost': cost})
+                            product.write({
+                                'product_standard_price_ids': [[1, product_standard_price.id, {'cost': cost}]]
+                            })
                     else:
-                        self.env['product.standard.price'].create({
-                            'product_id': product_id,
-                            'operating_unit_id': operating_unit_id,
-                            'cost': cost
+                        product.write({
+                            'product_standard_price_ids': [[0, False, {'operating_unit_id': operating_unit_id, 'cost': cost}]]
                         })
             else:
                 _logger.info("SAMUDA-CUSTOM-ERROR: [CREATE, UPDATE] operating unit not found in the context")

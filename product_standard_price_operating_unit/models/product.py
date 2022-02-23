@@ -14,6 +14,10 @@ class ProductProduct(models.Model):
 
     @api.multi
     def _set_standard_price(self, value):
+        pass
+
+    @api.multi
+    def _set_product_standard_price(self, value):
         operating_unit_id = self.env.context.get('operating_unit_id')
         if operating_unit_id:
             PriceHistory = self.env['product.price.history']
@@ -30,6 +34,14 @@ class ProductProduct(models.Model):
             # for testing purpose
             # raise ValidationError(_('Operating Unit Not Found in the context.'))
 
+    @api.model
+    def create(self, vals):
+        product = super(ProductProduct, self).create(vals)
+        for line in product.product_standard_price_ids:
+            product.with_context(operating_unit_id=line.operating_unit_id.id)._set_product_standard_price(line.cost)
+
+        return product
+
     @api.multi
     def write(self, values):
         res = super(ProductProduct, self).write(values)
@@ -38,12 +50,12 @@ class ProductProduct(models.Model):
                 if val[0] == 0:
                     # create
                     operating_unit_id = val[2]['operating_unit_id']
-                    self.with_context(operating_unit_id=operating_unit_id)._set_standard_price(val[2]['cost'])
+                    self.with_context(operating_unit_id=operating_unit_id)._set_product_standard_price(val[2]['cost'])
                 elif val[0] == 1:
                     # edit
                     product_standard_price = self.product_standard_price_ids.browse(val[1])
                     operating_unit_id = product_standard_price.operating_unit_id.id
-                    self.with_context(operating_unit_id=operating_unit_id)._set_standard_price(val[2]['cost'])
+                    self.with_context(operating_unit_id=operating_unit_id)._set_product_standard_price(val[2]['cost'])
                 else:
                     pass
 
