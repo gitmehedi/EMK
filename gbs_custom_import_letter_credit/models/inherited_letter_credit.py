@@ -10,18 +10,18 @@ class InheritedLetterCredit(models.Model):
         if 'type' in values and 'title' in values:
             lc_type = values['type']
             title = values['title']
-            title_after_trim = " ".join(title.split())
-            if lc_type == 'import' and len(title_after_trim) > 30:
-                raise ValidationError('Description must not exceed 30 characters!')
-            values['title'] = title_after_trim
+            if title:
+                title_after_trim = " ".join(title.split())
+                if lc_type == 'import' and len(title_after_trim) > 30:
+                    raise ValidationError('Description must not exceed 30 characters!')
+                values['title'] = title_after_trim
         res = super(InheritedLetterCredit, self).create(values)
         return res
 
     @api.multi
     def write(self, values):
-        if 'title' in values:
-            title = values['title']
-            title_after_trim = " ".join(title.split())
+        if 'title' in values and values['title']:
+            title_after_trim = " ".join(values['title'].split())
             if self.type == 'import' and len(title_after_trim) > 30:
                 raise ValidationError('Description must not exceed 30 characters!')
             values['title'] = title_after_trim
