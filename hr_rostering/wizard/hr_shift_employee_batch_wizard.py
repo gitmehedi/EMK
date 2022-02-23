@@ -9,7 +9,7 @@ class HrShiftBatchEmployees(models.TransientModel):
     effective_from = fields.Date(string='Effective Start Date', required=True)
     effective_end = fields.Date(string='Effective End Date', required=True)
     employee_ids = fields.Many2many('hr.employee', 'hr_shift_employee_group_rel',
-                                    'shift_id', 'employee_id', string='Employees')
+                                    'shift_id', 'employee_id', string='Employees', domain=[('state', '!=', 'relieved')])
     shift_id = fields.Many2one("resource.calendar", string="Shift Name", required=True,
                                domain="[('state', '=','approved' )]")
     @api.multi
@@ -30,6 +30,7 @@ class HrShiftBatchEmployees(models.TransientModel):
                 'effective_from': effective_from,
                 'effective_end': effective_end,
                 'rel_exception_leave_id': active_id,
+                'shift_batch_id': active_id,
             }
             pool_shift_emp += self.env['hr.shifting.history'].create(res)
         query = """ UPDATE hr_shift_employee_batch SET effective_from = %s,effective_end=%s,shift_id=%s WHERE id = %s"""

@@ -18,13 +18,12 @@ class HrShiftingHistory(models.Model):
     shift_id = fields.Many2one("resource.calendar", string="Shift Name", required=True ,domain="[('state', '=','approved' )]")
 
     """Shift Batch Relational Fields """
-    shift_batch_id =fields.Many2one('hr.shift.employee.batch', string='Shift Batch')
+    shift_batch_id = fields.Many2one('hr.shift.employee.batch', string='Shift Batch')
 
     @api.constrains('effective_end')
     def _check_effective_end_validation(self):
         if self.effective_end < self.effective_from:
             raise ValidationError(_("Effective End date can not less then Effective From date!!"))
-
 
     @api.constrains('effective_from')
     def _check_effective_from_validation(self):
