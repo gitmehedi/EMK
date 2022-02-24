@@ -2,4 +2,6 @@ from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _name = 'res.partner'
+    _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
+    _order = 'id desc'

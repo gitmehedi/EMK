@@ -11,8 +11,8 @@
                     <group>
                         <field name="father_name"/>
                         <field name="mother_name"/>
-                        <field name="national_id"/>
-                        <field name="birth_registration_no"/>
+<!--                        <field name="national_id"/>-->
+<!--                        <field name="birth_registration_no"/>-->
                         <field name="birth_date"/>
                     </group>
                     <group>
@@ -41,27 +41,27 @@
                         <field name="per_district"/>
                     </group>
                 </group>
-                <group>
-                    <group>
-                        <field name="treasury_challan"/>
-                        <field name="treasury_date"/>
-                        <field name="bank_branch_name"/>
-                    </group>
-                    <group>
-                        <field name="quota"/>
-                        <field name="divisional_candiate"/>
-                        <field name="ex_service_personnel"/>
-                    </group>
-                </group>
-                <group>
-                    <group>
-                       <field name="experience_remarks"/>
-                       <field name="authorize_district"/>
-                    </group>
-                    <group>
-                        <field name="curriculam_activities"/>
-                    </group>
-                </group>
+<!--                <group>-->
+<!--                    <group>-->
+<!--                        <field name="treasury_challan"/>-->
+<!--                        <field name="treasury_date"/>-->
+<!--                        <field name="bank_branch_name"/>-->
+<!--                    </group>-->
+<!--                    <group>-->
+<!--                        <field name="quota"/>-->
+<!--                        <field name="divisional_candiate"/>-->
+<!--                        <field name="ex_service_personnel"/>-->
+<!--                    </group>-->
+<!--                </group>-->
+<!--                <group>-->
+<!--                    <group>-->
+<!--                       <field name="experience_remarks"/>-->
+<!--                       <field name="authorize_district"/>-->
+<!--                    </group>-->
+<!--                    <group>-->
+<!--                        <field name="curriculam_activities"/>-->
+<!--                    </group>-->
+<!--                </group>-->
             </xpath>
         </field>
     </record>

@@ -4,23 +4,15 @@
         <record id="view_stock_res_partner_tree_inherit" model="ir.ui.view">
             <field name="name">view.stock.res.partner.tree.inherit</field>
             <field name="model">res.partner</field>
-<!--            <field name="inherit_id" ref="account_fam_vendor_bills.view_vendor_tree" />-->
+            <field name="inherit_id" ref="account_fam_vendor_bills.view_vendor_tree" />
+            <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="display_name" string="Name"/>
-                    <field name="function" invisible="1"/>
-                    <field name="phone"/>
-                    <field name="email"/>
-                    <field name="current_employee"/>
-                    <field name="gender"/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="is_company" invisible="1"/>
-                    <field name="country_id" invisible="1"/>
-                    <field name="parent_id" invisible="1"/>
-                    <field name="active" invisible="1"/>
+
                 </tree>
             </field>
         </record>
+
         <record id="view_stock_res_partner_form_inherit" model="ir.ui.view">
             <field name="name">view.stock.res.partner.form.inherit</field>
             <field name="model">res.partner</field>
@@ -33,7 +25,7 @@
         </record>
 
 
-        <record model="ir.actions.act_window" id="action_vendor_setup">
+        <record id="action_vendor_setup" model="ir.actions.act_window" >
            <field name="name">Vendor Setup</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
@@ -44,6 +36,19 @@
              <field name="context">
                {"search_default_active":'False',"search_default_pending":'True',"search_default_type":1}
             </field>
+        </record>
+
+        <record id="action_stock_vendor_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_stock_res_partner_tree_inherit"/>
+            <field name="act_window_id" ref="action_vendor_setup"/>
+        </record>
+         <record id="action_stock_vendor_form_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_stock_res_partner_form_inherit"/>
+            <field name="act_window_id" ref="action_vendor_setup"/>
         </record>
 
         <menuitem id="purchase_vendor_setup" name="Vendor" parent="stock_indent_menu.menu_stock_purchase"

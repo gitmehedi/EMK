@@ -10,10 +10,10 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
         default = {}
         districts = sorted(self.get_districts())
         # authorize_districts = request.env['bd.district'].sudo().browse(job.authorize_district.ids)
-        authorize_districts = request.env['bd.district'].sudo().search([])
-        degree = request.env['hr.recruitment.degree'].sudo().search([])
+        # authorize_districts = request.env['bd.district'].sudo().search([])
+        # degree = request.env['hr.recruitment.degree'].sudo().search([])
         gender = self.generateGender()
-        quota = self.get_quota()
+        # quota = self.get_quota()
         religion = self.get_religion()
         department = request.env['hr.job'].sudo().search([])
         if 'website_hr_recruitment_error' in request.session:
@@ -25,10 +25,10 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
             'default': default,
             'department': department,
             'districts': districts,
-            'quota': quota,
+            # 'quota': quota,
             'religion': religion,
-            'authorize_districts': authorize_districts,
-            'degree': degree,
+            # 'authorize_districts': authorize_districts,
+            # 'degree': degree,
             'gender': gender,
 
 
