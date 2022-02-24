@@ -1,1 +1,1 @@
-import inherited_hr_applicant
+# import inherited_hr_applicant
