@@ -65,7 +65,7 @@ class HrShortLeave(models.Model):
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
         ('validate', 'Approved')
-    ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
+    ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='draft',
         help="The status is set to 'To Submit', when a holiday request is created." +
              "\nThe status is 'To Approve', when holiday request is confirmed by user." +
              "\nThe status is 'Refused', when holiday request is refused by manager." +

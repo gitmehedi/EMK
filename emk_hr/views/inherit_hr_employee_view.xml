@@ -317,7 +317,17 @@
                 </xpath>
             </field>
         </record>
+    <record model="ir.ui.view" id="wizard_employee_form_inherit">
+            <field name="name">wizard.employee.form.inherit</field>
+            <field name="model">wizard.employee.stage</field>
+            <field name="inherit_id" ref="employee_stages.wizard_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='related_user']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
 
+            </field>
+        </record>
 
     </data>
 </odoo>
