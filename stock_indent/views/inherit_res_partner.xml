@@ -51,7 +51,7 @@
             <field name="act_window_id" ref="action_vendor_setup"/>
         </record>
 
-        <menuitem id="purchase_vendor_setup" name="Vendor" parent="stock_indent_menu.menu_stock_purchase"
+        <menuitem id="purchase_vendor_setup" name="Vendor" parent="stock.menu_stock_config_settings"
                   sequence="30" action="action_vendor_setup"/>
     </data>
 </odoo>

@@ -32,6 +32,9 @@ class EventRoom(models.Model):
         for rec in self:
             if rec.min_seat > rec.max_seat:
                 raise ValidationError(_("Min Seat should not be greater than Max Seat."))
+            if rec.min_seat <= 0 or rec.max_seat <= 0:
+                raise ValidationError(_("Min Seat and Max Seat should not be 0 ."))
+
 
     @api.constrains('name')
     def _check_name(self):

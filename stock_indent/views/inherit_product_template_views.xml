@@ -32,7 +32,7 @@
             </field>
         </record>
 
-        <menuitem id="purchase_product_setup" name="Product" parent="stock_indent_menu.menu_stock_purchase"
+        <menuitem id="purchase_product_setup" name="Product" parent="stock.menu_product_in_config_stock"
                   sequence="25" action="action_product_setup_tree"/>
     </data>
 </odoo>

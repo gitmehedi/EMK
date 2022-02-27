@@ -18,7 +18,7 @@ class AppointmentTimeSlot(models.Model):
     _name = 'appointment.timeslot'
     _description = "Appointment Time Slot"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _order = "id desc"
+    _order = "day asc"
     _rec_name = "name"
 
     name = fields.Char(string="Time Slot", readonly=True, copy=False, track_visibility='onchange',
@@ -61,6 +61,10 @@ class AppointmentTimeSlot(models.Model):
         if Utility.float_to_time(self.start_time) < '00:00' or Utility.float_to_time(self.start_time) > '23:59':
             raise ValidationError(_("Start Time should be valid date time"))
         if Utility.float_to_time(self.end_time) < '00:00' or Utility.float_to_time(self.end_time) > '23:59':
+            raise ValidationError(_("End Time should be valid date time"))
+        if self.start_time < 0 or self.start_time > 24:
+            raise ValidationError(_("Start Time should be valid date time"))
+        if self.end_time < 0 or self.end_time > 24:
             raise ValidationError(_("End Time should be valid date time"))
 
     @api.constrains('start_time', 'end_time', 'day')
