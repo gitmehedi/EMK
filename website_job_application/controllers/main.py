@@ -133,3 +133,11 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
             'Thakurgaon': "Thakurgaon",
 
         }
+
+    # def authorized_fields(self):
+    #     return (
+    #         'id',
+    #         'department',
+    #         'religion',
+    #         'gender'
+    #     )

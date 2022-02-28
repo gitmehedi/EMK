@@ -33,6 +33,11 @@ class EventTaskList(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('assign', 'Assigned'), ('start', 'Start'), ('finish', 'Finish')],
                              default='draft', track_visibility='onchange')
 
+    @api.constrains('task_duration')
+    def _check_valid_duration(self):
+        if self.task_duration <= 0:
+            raise ValidationError(_("Duration should be valid"))
+
     @api.one
     def act_draft(self):
         if self.state == 'assign':

@@ -151,7 +151,7 @@ class EventReservation(models.Model):
             if start_date < dt_now:
                 raise ValidationError(_("Event start date cannot be past date from current date."))
             if self.start_date > self.end_date:
-                raise ValidationError(_("Event end date must greater than event end date."))
+                raise ValidationError(_("Event end date must greater than event start date."))
         if self.end_date and not self.start_date:
             self.end_date = ''
 
