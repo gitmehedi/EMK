@@ -55,14 +55,15 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr_experience.view_employee_form_inherit"/>
             <field name="arch" type="xml">
-                <xpath expr="//form/sheet/notebook/page/field[@name='academic_ids']" position="attributes">
-                    <attribute name="readonly">1</attribute>
+
+                <xpath expr="//form/sheet/notebook/page/field[@name='academic_ids']" position="replace">
+                    <field name="academic_ids"></field>
                 </xpath>
-                <xpath expr="//form/sheet/notebook/page/field[@name='experience_ids']" position="attributes">
-                    <attribute name="readonly">1</attribute>
+                <xpath expr="//form/sheet/notebook/page/field[@name='experience_ids']" position="replace">
+                     <field name="experience_ids"></field>
                 </xpath>
-                <xpath expr="//form/sheet/notebook/page/field[@name='certification_ids']" position="attributes">
-                    <attribute name="readonly">1</attribute>
+                <xpath expr="//form/sheet/notebook/page/field[@name='certification_ids']" position="replace">
+                     <field name="certification_ids"></field>
                 </xpath>
             </field>
         </record>
