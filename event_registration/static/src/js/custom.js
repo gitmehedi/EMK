@@ -26,9 +26,10 @@ $(function () {
     $('#end_date').change(function(){
     var endDate = $(this).val();
     var startDate = $('#start_date').val();
-    if (start_date > endDate)
+    if (start_date > endDate){
         $(this).val('');
         alert('Start Date should not greater than End date.');
+    }
     });
 
 
