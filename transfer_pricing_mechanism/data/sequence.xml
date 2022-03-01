@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_tpm_product_request" model="ir.sequence">
+            <field name="name">TPM Product Request Code</field>
+            <field name="code">tpm.product.change.request.code</field>
+            <field name="prefix">TPM/PR/</field>
+            <field name="padding">6</field>
+            <field name="number_increment" eval="1"/>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>
