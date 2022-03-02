@@ -45,15 +45,13 @@ $(function () {
     if(lastDate){
       var lastTime =new Date(lastDate).getTime();
       var startTime =new Date(startDate).getTime();
-      if (startTime > lastTime){
+      if (lastTime > startTime){
           $(this).val('');
            alert('Last Registration Date should not greater than Start Date.');
         }
 
     }
     });
-
-
 
     $('input[name="paid_attendee"]').change(function(){
     var val = $("input:checked[name=paid_attendee]:checked").val()
