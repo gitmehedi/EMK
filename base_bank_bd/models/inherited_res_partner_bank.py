@@ -6,7 +6,7 @@ class InheritedResPartner(models.Model):
 
     """ Relational Fields """
 
-    bank_swift_code = fields.Char(string='Routing Number')
+    bank_swift_code = fields.Char(string='Bank Routing Number')
     branch_code = fields.Char(string='Branch Code')
     street = fields.Char()
     street2 = fields.Char()
