@@ -47,6 +47,9 @@
                 <xpath expr="//form/sheet/notebook/page[2]/group/group[2]" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+                 <xpath expr="//field[@name='country_id']" position="before">
+                    <field name="pre_email"/>
+                </xpath>
 
             </field>
         </record>
@@ -64,6 +67,41 @@
                 </xpath>
                 <xpath expr="//form/sheet/notebook/page/field[@name='certification_ids']" position="replace">
                     <field name="certification_ids"></field>
+                </xpath>
+                <xpath expr="//page[@name='hr_settings']" position="after">
+                    <page string="Contact &amp; Address">
+                            <group>
+                                <group>
+                                <label for="per_street" string="Permanent Address"/>
+                                    <div class="o_address_format" name="div_address">
+                                        <field name="per_street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="per_street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="per_city" placeholder="City" class="o_address_city"/>
+                                        <field name="per_state_id" class="o_address_state" placeholder="State"
+                                               options='{"no_open": True, "no_create": True}'
+                                               context="{'country_id': country_id}"/>
+                                        <field name="per_zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="per_country_id" placeholder="Country" class="o_address_country"
+                                               options='{"no_open": True, "no_create": True}'/>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="pre_street" string="Present Address"/>
+                                    <div class="o_address_format" name="div_address">
+                                        <field name="pre_street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="pre_street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="pre_city" placeholder="City" class="o_address_city"/>
+                                        <field name="pre_state_id" class="o_address_state" placeholder="State"
+                                               options='{"no_open": True, "no_create": True}'
+                                               context="{'country_id': country_id}"/>
+                                        <field name="pre_zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="pre_country_id" placeholder="Country" class="o_address_country"
+                                               options='{"no_open": True, "no_create": True}'/>
+                                    </div>
+                                </group>
+                            </group>
+
+                    </page>
                 </xpath>
             </field>
         </record>
@@ -298,7 +336,7 @@
             <field name="model">hr.job</field>
             <field name="inherit_id" ref="hr.view_hr_job_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='department_id']" position="attributes">
+                <xpath expr="//field[@name='department_ids']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
 
