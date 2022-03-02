@@ -125,9 +125,7 @@
                                    t-att-value="occupation_other" id="occupation_other"
                                    class="form-control input-sm reqfield"/>
                         </div>
-
                     </div>
-
 
                     <div class="col-md-6">
                         <div class="form-group form-field">

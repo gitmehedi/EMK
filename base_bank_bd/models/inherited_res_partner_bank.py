@@ -4,10 +4,9 @@ from odoo import fields, api, models
 class InheritedResPartner(models.Model):
     _inherit = 'res.partner.bank'
 
-
     """ Relational Fields """
 
-    bank_swift_code = fields.Char(string='Bank Swift Code')
+    bank_swift_code = fields.Char(string='Routing Number')
     branch_code = fields.Char(string='Branch Code')
     street = fields.Char()
     street2 = fields.Char()
@@ -23,6 +22,6 @@ class InheritedResPartner(models.Model):
         for record in self:
             name = record.acc_number
             if record.bank_id and record.currency_id:
-                name = name + ' ('+record.bank_id.bic+' - ' + record.currency_id.name + ')'
+                name = name + ' (' + record.bank_id.bic + ' - ' + record.currency_id.name + ')'
             result.append((record.id, name))
         return result

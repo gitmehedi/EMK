@@ -297,7 +297,7 @@
             <field name="model">hr.job</field>
             <field name="inherit_id" ref="hr.view_hr_job_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="//field[@name='department_ids']" position="attributes">
+                 <xpath expr="//field[@name='department_id']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
 
@@ -317,7 +317,5 @@
                 </xpath>
             </field>
         </record>
-
-
     </data>
 </odoo>
