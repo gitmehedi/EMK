@@ -230,3 +230,4 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
             'image',
             'signature_image',
         )
+

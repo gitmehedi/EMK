@@ -3,6 +3,7 @@ import logging
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from psycopg2 import IntegrityError
+from odoo.addons.opa_utility.helper.utility import Utility,Message
 
 _logger = logging.getLogger(__name__)
 
@@ -30,6 +31,13 @@ class EventManagementPOC(models.Model):
         action['context'] = {}
         action['domain'] = [('organizer_id', '=', self.id)]
         return action
+
+    @api.one
+    @api.constrains('email')
+    def validate_mail(self):
+        if self.email:
+            if not Utility.valid_email(self.email):
+                raise ValidationError('Email should be input a valid')
 
     @api.model
     def event_mailsend(self, vals):

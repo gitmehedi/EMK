@@ -242,6 +242,7 @@
                                                 <input type="file" name="Resume" required="required"
                                                        accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"
                                                 />
+                                                <input type="file" name="Resume" required="required"/>
                                                 <p class="help-block">Upload resume in any format.</p>
                                             </div>
                                         </div>

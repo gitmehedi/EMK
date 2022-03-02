@@ -42,7 +42,7 @@
                 </xpath>
                 <xpath expr="//field[@name='email']" position="after">
                     <field name="date_of_birth" required="True" attrs="{'readonly' : [('state','=','done')]}"/>
-                    <field name="gender" attrs="{'readonly' : [('state','=','done')]}"/>
+                    <field name="gender" attrs="{'readonly' : [('state','=','done')]}" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     <field name="profession_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"
                            attrs="{'readonly' : [('state','=','done')]}"/>
                     <field name="card_number" attrs="{'readonly' : [('state','=','done')]}"/>

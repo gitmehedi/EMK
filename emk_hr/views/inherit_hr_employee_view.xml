@@ -55,14 +55,15 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr_experience.view_employee_form_inherit"/>
             <field name="arch" type="xml">
-                <xpath expr="//form/sheet/notebook/page/field[@name='academic_ids']" position="attributes">
-                    <attribute name="readonly">1</attribute>
+
+                <xpath expr="//form/sheet/notebook/page/field[@name='academic_ids']" position="replace">
+                    <field name="academic_ids"></field>
                 </xpath>
-                <xpath expr="//form/sheet/notebook/page/field[@name='experience_ids']" position="attributes">
-                    <attribute name="readonly">1</attribute>
+                <xpath expr="//form/sheet/notebook/page/field[@name='experience_ids']" position="replace">
+                    <field name="experience_ids"></field>
                 </xpath>
-                <xpath expr="//form/sheet/notebook/page/field[@name='certification_ids']" position="attributes">
-                    <attribute name="readonly">1</attribute>
+                <xpath expr="//form/sheet/notebook/page/field[@name='certification_ids']" position="replace">
+                    <field name="certification_ids"></field>
                 </xpath>
             </field>
         </record>
@@ -297,7 +298,7 @@
             <field name="model">hr.job</field>
             <field name="inherit_id" ref="hr.view_hr_job_form"/>
             <field name="arch" type="xml">
-                 <xpath expr="//field[@name='department_id']" position="attributes">
+                <xpath expr="//field[@name='department_id']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
 
@@ -313,6 +314,17 @@
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='template_id']" position="attributes">
+                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="wizard_employee_form_inherit">
+            <field name="name">wizard.employee.form.inherit</field>
+            <field name="model">wizard.employee.stage</field>
+            <field name="inherit_id" ref="employee_stages.wizard_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='related_user']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>
             </field>

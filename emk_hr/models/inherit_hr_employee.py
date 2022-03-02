@@ -17,6 +17,19 @@ class Employee(models.Model):
     mobile_phone = fields.Char('Personal Mobile')
     gender = fields.Many2one('res.gender', string='Gender', track_visibility='onchange')
 
+    # academic_ids = fields.One2many('hr.academic',
+    #                                'employee_id',
+    #                                'Academic experiences',
+    #                                help="Academic experiences")
+    # certification_ids = fields.One2many('hr.certification',
+    #                                     'employee_id',
+    #                                     'Certifications',
+    #                                     help="Certifications")
+    # experience_ids = fields.One2many('hr.experience',
+    #                                  'employee_id',
+    #                                  ' Professional Experiences',
+    #                                  help='Professional Experiences')
+
     @api.one
     @api.constrains('work_phone')
     def valid_work_phone(self):

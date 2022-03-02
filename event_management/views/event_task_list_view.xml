@@ -24,7 +24,7 @@
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="task_id"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                <field name="assign_emp_id"
+                                <field name="assign_emp_id" domain="[('partner_share', '=', False)]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
 
                             </group>

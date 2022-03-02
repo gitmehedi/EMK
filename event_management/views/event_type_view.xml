@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="event.view_event_type_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="replace">
-                    <form String="Event Type" delete="0" duplicate="0">
+                    <form String="Event Type" duplicate="0">
                         <header>
                         <button name="act_approve" string="Approve" states="draft" type="object" class="oe_highlight"/>
                         <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
