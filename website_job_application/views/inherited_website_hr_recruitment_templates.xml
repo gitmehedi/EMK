@@ -42,19 +42,9 @@
                       t-att-data-form_field_department_id="job and job.department_id.id or False"
                       t-att-data-form_field_job_id="job and job.id or False" style="font-size: 12px;">
 
-                    <div class="col-md-12" style="margin-bottom:10px">
-                        <div class="img__wrap" id="img_wrap">
-                            <input id="profile-image-upload" class="hidden" type="file" required="True">
-                                <img id="uploaded_image"/>
-                            </input>
-                            <div class="img__description_layer">
-                                <p class="img__description">Click here to upload image.</p>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-md-12">
                         <div class="panel panel-success">
-                            <div class="panel-heading">
+                            <div class="panel-heading odoobg">
                                 <h3 class="panel-title">Basic Information</h3>
                             </div>
                             <div class="panel-body">
@@ -63,43 +53,36 @@
                                         <label class="control-label">First Name
                                         </label>
                                         <input type="text" class="form-control o_website_form_input input-sm"
-                                               name="partner_name" required=""/>
+                                               t-att-value="partner_name"
+                                               name="partner_name" required="" minlength="2" maxlength="100"/>
                                     </div>
                                     <div class="form-group col-md-6 form-field o_website_form_required_custom ">
                                         <label class="control-label">Last Name</label>
                                         <input type="text" class="form-control o_website_form_input input-sm"
-                                               name="partner_last_name" required=""/>
+                                               t-att-value="partner_name"
+                                               name="partner_last_name" required="" minlength="2" maxlength="100"/>
                                     </div>
 
                                     <div class="form-group col-md-6 form-field o_website_form_required_custom ">
                                         <label class="control-label">Father Name</label>
                                         <input type="text" class="form-control o_website_form_input input-sm"
-                                               name="father_name" required=""/>
+                                               t-att-value="partner_name"
+                                               name="father_name" required="" minlength="2" maxlength="100"/>
                                     </div>
                                     <div class="form-group col-md-6 form-field o_website_form_required_custom ">
                                         <label class="control-label">Birth Date</label>
                                         <input type="text" class="form-control o_website_form_input input-sm"
-                                               id="datepicker"
-                                               name="birth_date" required=""/>
+                                               t-att-value="partner_name"
+                                               id="datepicker" name="birth_date" required=""/>
                                     </div>
 
 
                                     <div class="form-group col-md-6 form-field o_website_form_required_custom">
                                         <label class="control-label">Mother Name</label>
                                         <input type="text" class="form-control o_website_form_input input-sm"
-                                               name="mother_name" required=""/>
-                                    </div>
-                                    <div class="form-group col-md-6 form-field o_website_form_required_custom  ">
-                                        <label class="control-label">Birth Location</label>
-                                        <select class="form-control o_website_form_input input-sm" name="birth_city"
-                                                required="">
-                                            <option value="">--Please Select--</option>
-                                            <t t-foreach='districts' t-as='label'>
-                                                <option t-att-value="label">
-                                                    <t t-esc="label_value"/>
-                                                </option>
-                                            </t>
-                                        </select>
+                                               minlength="2" maxlength="100"
+                                               t-att-value="partner_name"
+                                               name="mother_name" required="" pattern="(880)([0-9]{10})"/>
                                     </div>
                                 </div>
 
@@ -109,6 +92,7 @@
                                         <input type="text" class="form-control o_website_form_input input-sm"
                                                placeholder="8801900000000" minlength="13" maxlength="13"
                                                pattern="(880)([0-9]{10})"
+                                               t-att-value="partner_name"
                                                data-minlength="13" data-maxlength="13"
                                                name="partner_phone" required=""/>
                                     </div>
@@ -116,17 +100,20 @@
                                         <label class="control-label">Email</label>
                                         <input type="email" class="form-control input-sm"
                                                name="email_from" required=""
+                                               t-att-value="partner_name"
                                                placeholder="johnodh@gmail.com"/>
                                     </div>
                                     <div class="form-group col-md-6 form-field o_website_form_required_custom">
                                         <label class="control-label">Nationality</label>
                                         <input type="text" class="form-control o_website_form_input input-sm"
+                                               t-att-value="partner_name"
                                                name="nationality" required=""/>
                                     </div>
 
                                     <div class="form-group col-md-6 form-field o_website_form_required_custom  ">
                                         <label class="control-label">Gender</label>
-                                        <select class="form-control o_website_form_input input-sm" name="gender" id="gender"
+                                        <select class="form-control o_website_form_input input-sm" name="gender"
+                                                id="gender"
                                                 required="">
                                             <option value="">--Please Select--</option>
                                             <t t-foreach="gender" t-as='label'>
@@ -138,32 +125,13 @@
 
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-6 form-field o_website_form_required_custom">
-                                        <label class="control-label">Religion</label>
-                                       <select class="form-control o_website_form_input input-sm"
-                                                    name="religion"
-                                                    required="">
-                                                <t t-foreach='religion' t-as='label'>
-                                                <option t-att-value="label">
-                                                    <t t-esc="label_value"/>
-                                                </option>
-                                            </t>
-                                            </select>
-                                    </div>
-                                    <div class="form-group col-md-6 form-field ">
-                                        <label class="control-label">Occupation</label>
-                                        <input type="text" class="form-control o_website_form_input input-sm "
-                                               name="occupation"/>
-                                    </div>
-
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="panel panel-success">
-                            <div class="panel-heading">
+                            <div class="panel-heading  odoobg">
                                 <h3 class="panel-title">Present Address and Permanent Address
                                 </h3>
                             </div>
@@ -175,6 +143,7 @@
                                             </label>
                                             <input id="pre_address_1" name="pre_address_1" type="text"
                                                    class="form-control o_website_form_input input-sm"
+                                                   t-att-value="partner_name"
                                                    required="required"/>
                                         </div>
                                         <div class="form-group form-field o_website_form_required_custom">
@@ -182,39 +151,30 @@
                                             </label>
                                             <input id="pre_address_2" name="pre_address_2" type="text"
                                                    class="form-control o_website_form_input input-sm"
+                                                   t-att-value="partner_name"
                                                    required="required"/>
                                         </div>
                                         <div class="row">
                                             <div class="form-group form-field col-md-6  o_website_form_required_custom">
-                                                <label class="control-label">Union/Ward</label>
-                                                <input id="pre_city_town" name="pre_city_town" type="text"
-                                                       class="form-control o_website_form_input input-sm"
-                                                       required="required"/>
-                                            </div>
-                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
                                                 <label class="control-label">Postal Code</label>
                                                 <input id="pre_zip_postal" name="pre_zip_postal" type="text"
                                                        class="form-control o_website_form_input input-sm"
+                                                       t-att-value="partner_name"
                                                        required="required"/>
                                             </div>
-                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
-                                                <label class="control-label">Sub-District</label>
-                                                <input name="pre_state_province"
-                                                       class="form-control o_website_form_input input-sm"
-                                                       required="required"/>
-                                            </div>
-                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
-                                                <label class="control-label">Districts</label>
-                                                <select class="form-control o_website_form_input input-sm"
-                                                        name="pre_zip_postal"
-                                                        required="required">
-                                                    <option value="">--Please Select--</option>
-                                                    <t t-foreach='districts' t-as='label'>
-                                                        <option t-att-value="label">
-                                                            <t t-esc="label_value"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
+                                            <div class="col-md-12">
+                                                <div class="form-group form-field">
+                                                    <select class="form-control input-sm reqfield"
+                                                            name="country_id">
+                                                        <option value="">--Please Select--</option>
+                                                        <t t-foreach="country_ids" t-as='label'>
+                                                            <option t-att-value="label_value[0]"
+                                                                    t-att-selected="'selected' if country_id==label_value[0] else None">
+                                                                <t t-esc="label_value[1]"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -224,6 +184,7 @@
                                             </label>
                                             <input id="per_address_1" name="per_address_1" type="text"
                                                    class="form-control o_website_form_input input-sm"
+                                                   t-att-value="per_address_1"
                                                    required="required"/>
                                         </div>
                                         <div class="form-group form-field o_website_form_required_custom">
@@ -231,40 +192,33 @@
                                             </label>
                                             <input id="per_address_2" name="per_address_2" type="text"
                                                    class="form-control o_website_form_input input-sm"
+                                                   t-att-value="per_address_2"
                                                    required="required"/>
                                         </div>
 
                                         <div class="row">
-                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
-                                                <label class="control-label">Union/Ward</label>
-                                                <input id="per_city_town" name="per_city_town" type="text"
-                                                       class="form-control o_website_form_input input-sm"
-                                                       required="required"/>
-                                            </div>
+
                                             <div class="form-group form-field col-md-6  o_website_form_required_custom">
                                                 <label class="control-label">Postal Code</label>
                                                 <input id="pre_zip_postal" name="per_zip_postal" type="text"
                                                        class="form-control o_website_form_input input-sm"
+                                                       t-att-value="per_zip_postal"
                                                        required="required"/>
                                             </div>
-                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
-                                                <label class="control-label">Sub-District</label>
-                                                <input name="per_state_province"
-                                                       class="form-control o_website_form_input input-sm"
-                                                       required="required"/>
-                                            </div>
-                                            <div class="form-group form-field col-md-6  o_website_form_required_custom">
-                                                <label class="control-label">Districts</label>
-                                                <select class="form-control o_website_form_input input-sm"
-                                                        name="per_district"
-                                                        required="">
-                                                    <option value="">--Please Select--</option>
-                                                    <t t-foreach='districts' t-as='label'>
-                                                        <option t-att-value="label">
-                                                            <t t-esc="label_value"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
+
+                                            <div class="col-md-12">
+                                                <div class="form-group form-field">
+                                                    <select class="form-control input-sm reqfield"
+                                                            name="country_id">
+                                                        <option value="">--Please Select--</option>
+                                                        <t t-foreach="country_ids" t-as='label'>
+                                                            <option t-att-value="label_value[0]"
+                                                                    t-att-selected="'selected' if country_id==label_value[0] else None">
+                                                                <t t-esc="label_value[1]"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -272,44 +226,50 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-12">
                         <div class="panel panel-success">
-                            <div class="panel-heading">
+                            <div class="panel-heading odoobg">
                                 <h3 class="panel-title">Additional Information</h3>
                             </div>
                             <div class="panel-body">
-                                <div class="clearfix margin-top-10">
+                                <div class="col-md-6">
+                                    <div class="clearfix margin-top-10">
                                         <div class="form-group form-field col-md-12 o_website_form_required_custom"
                                              style="width:100%; padding:0; margin:0">
                                             <div class="form-group col-md-6 form-field o_website_form_required_custom">
                                                 <label class="control-label" for="exampleInputFile">Resume
                                                 </label>
                                                 <input type="file" name="Resume" required="required"
-                                                accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"
+                                                       accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"
                                                 />
                                                 <p class="help-block">Upload resume in any format.</p>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="row">
-                                        <hr/>
-                                    </div>
-
-                                    <div class="form-group col-md-4 col-md-offset-4 form-field o_website_form_required_custom">
-                                        <div class="text-center">
-                                            <span class="btn btn-success btn-lg btn-block o_website_form_send">Submit
-                                            </span>
-                                            <span id="o_website_form_result"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-12" style="margin-bottom:10px">
+                                        <div class="img__wrap" id="img_wrap">
+                                            <input id="profile-image-upload" class="hidden" type="file" required="True">
+                                                <img id="uploaded_image"/>
+                                            </input>
+                                            <div class="img__description_layer">
+                                                <p class="img__description">Click here to upload image.</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
-
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-4 form-field o_website_form_required_custom">
+                        <div class="text-center">
+                            <span class="btn btn-info btn-lg btn-block o_website_form_send">Submit</span>
+                            <span id="o_website_form_result"></span>
+                        </div>
+                    </div>
                 </form>
-
             </xpath>
         </template>
     </data>
