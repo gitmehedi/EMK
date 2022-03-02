@@ -38,6 +38,32 @@ $(function () {
     }
     });
 
+    $('#last_date_reg').change(function(){
+    var lastDate = $(this).val();
+    var startDate = $('#start_date').val();
+
+    if(lastDate){
+      var lastTime =new Date(lastDate).getTime();
+      var startTime =new Date(startDate).getTime();
+      if (startTime > lastTime){
+          $(this).val('');
+           alert('Last Registration Date should not greater than Start Date.');
+        }
+
+    }
+    });
+
+
+
+    $('input[name="paid_attendee"]').change(function(){
+    var val = $("input:checked[name=paid_attendee]:checked").val()
+    if(val=='yes') {
+       $('#participating_amount').attr('required','required').addClass('reqfield').parent().show();
+    } else {
+          $('#participating_amount').removeAttr('required').removeClass('reqfield').val('').parent().hide();
+    }
+
+    });
 
     $("#email").change(function(){
         var email = $(this).val();
