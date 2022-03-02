@@ -151,7 +151,7 @@ class PurchaseRequisition(models.Model):
                     if indent_product_line.product_id:
                         req_lines = self.env['purchase.requisition.line'].search(
                             [('requisition_id.operating_unit_id', '=', self.operating_unit_id.id),
-                             ('product_id', '=', indent_product_line.product_id.id), ('requisition_id.state', '=', 'done')]).sorted(
+                             ('product_id', '=', indent_product_line.product_id.id)]).sorted(
                             key=lambda l: l.create_date, reverse=True)
                         if req_lines:
                             last_requisition_date = req_lines[:1].requisition_id.requisition_date
@@ -289,7 +289,7 @@ class PurchaseRequisitionLine(models.Model):
             if rec.product_id:
                 lines = self.env['purchase.requisition.line'].search(
                     [('requisition_id.operating_unit_id', '=', rec.requisition_id.operating_unit_id.id),
-                     ('product_id', '=', rec.product_id.id), ('requisition_id.state', '=', 'done')]).sorted(
+                     ('product_id', '=', rec.product_id.id)]).sorted(
                     key=lambda l: l.requisition_id.create_date, reverse=True)
                 if lines:
                     rec.last_requisition_no = lines[:1].requisition_id.name
@@ -302,7 +302,7 @@ class PurchaseRequisitionLine(models.Model):
             if rec.product_id:
                 lines = self.env['purchase.requisition.line'].search(
                     [('requisition_id.operating_unit_id', '=', rec.requisition_id.operating_unit_id.id),
-                     ('product_id', '=', rec.product_id.id), ('requisition_id.state', '=', 'done')]).sorted(
+                     ('product_id', '=', rec.product_id.id)]).sorted(
                     key=lambda l: l.requisition_id.create_date, reverse=True)
                 if lines:
                     rec.last_requisition_date = lines[:1].requisition_id.requisition_date
@@ -315,7 +315,7 @@ class PurchaseRequisitionLine(models.Model):
             if rec.product_id:
                 lines = self.env['purchase.requisition.line'].search(
                     [('requisition_id.operating_unit_id', '=', rec.requisition_id.operating_unit_id.id),
-                     ('product_id', '=', rec.product_id.id), ('requisition_id.state', '=', 'done')]).sorted(
+                     ('product_id', '=', rec.product_id.id)]).sorted(
                     key=lambda l: l.requisition_id.create_date, reverse=True)
                 if lines:
                     rec.last_requisition_qty = lines[:1].product_ordered_qty
