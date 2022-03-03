@@ -146,7 +146,7 @@ class PurchaseRequisition(models.Model):
                 indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
                 for indent_product_line in indent_product_line_obj:
                     if indent_product_line.product_id:
-                        req_lines = self.env['purchase.requisition.line'].search(
+                        req_lines = self.env['purchase.requisition.line'].suspend_security().search(
                             [('requisition_id.operating_unit_id', '=', self.operating_unit_id.id),
                              ('requisition_id.state', '!=', 'cancel'),
                              ('product_id', '=', indent_product_line.product_id.id)]).sorted(
@@ -285,7 +285,7 @@ class PurchaseRequisitionLine(models.Model):
         if self.product_id:
 
             if type(self.requisition_id.id) == int:
-                lines = self.env['purchase.requisition.line'].search(
+                lines = self.env['purchase.requisition.line'].suspend_security().search(
                     [('requisition_id.operating_unit_id', '=', self.requisition_id.operating_unit_id.id),
                      ('requisition_id.state', '!=', 'cancel'),
                      ('product_id', '=', self.product_id.id),
@@ -299,7 +299,7 @@ class PurchaseRequisitionLine(models.Model):
                     self.last_requisition_id = False
             else:
 
-                lines = self.env['purchase.requisition.line'].search(
+                lines = self.env['purchase.requisition.line'].suspend_security().search(
                     [('requisition_id.operating_unit_id', '=', self.requisition_id.operating_unit_id.id),
                      ('requisition_id.state', '!=', 'cancel'),
                      ('product_id', '=', self.product_id.id)
@@ -326,7 +326,7 @@ class PurchaseRequisitionLine(models.Model):
     def _get_last_requisition_no(self):
         for rec in self:
             if rec.last_requisition_id:
-                rec.last_requisition_no = rec.last_requisition_id.requisition_id.name
+                rec.last_requisition_no = rec.last_requisition_id.suspend_security().requisition_id.name
             else:
                 rec.last_requisition_no = False
 
@@ -334,7 +334,7 @@ class PurchaseRequisitionLine(models.Model):
     def _get_last_requisition_date(self):
         for rec in self:
             if rec.last_requisition_id:
-                rec.last_requisition_date = rec.last_requisition_id.requisition_id.requisition_date
+                rec.last_requisition_date = rec.last_requisition_id.suspend_security().requisition_id.requisition_date
             else:
                 rec.last_requisition_date = False
 
