@@ -293,18 +293,6 @@
             </field>
         </record>
 
-        <record id="view_hr_job_inherit" model="ir.ui.view">
-            <field name="name">hr.job.form.inherit</field>
-            <field name="model">hr.job</field>
-            <field name="inherit_id" ref="hr.view_hr_job_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='department_id']" position="attributes">
-                    <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
-                </xpath>
-
-            </field>
-        </record>
-
         <record id="hr_recruitment_stage_form_inherit" model="ir.ui.view">
             <field name="name">hr.recruitment.stage</field>
             <field name="model">hr.recruitment.stage</field>
