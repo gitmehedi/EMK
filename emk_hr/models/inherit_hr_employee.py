@@ -16,19 +16,30 @@ class Employee(models.Model):
     bank_account_number = fields.Char('Bank Account Number')
     mobile_phone = fields.Char('Personal Mobile')
     gender = fields.Many2one('res.gender', string='Gender', track_visibility='onchange')
+    pre_email = fields.Char(string="Present Email", required=True, track_visibility='onchange')
 
-    # academic_ids = fields.One2many('hr.academic',
-    #                                'employee_id',
-    #                                'Academic experiences',
-    #                                help="Academic experiences")
-    # certification_ids = fields.One2many('hr.certification',
-    #                                     'employee_id',
-    #                                     'Certifications',
-    #                                     help="Certifications")
-    # experience_ids = fields.One2many('hr.experience',
-    #                                  'employee_id',
-    #                                  ' Professional Experiences',
-    #                                  help='Professional Experiences')
+    per_street = fields.Char(string='Street',required=True, track_visibility='onchange')
+    per_street2 = fields.Char(string='ETC', track_visibility='onchange')
+    per_zip = fields.Char(track_visibility='onchange')
+    per_city = fields.Char(string='City', track_visibility='onchange')
+    per_state_id = fields.Many2one('res.country.state', track_visibility='onchange')
+    per_country_id = fields.Many2one('res.country',required=True, track_visibility='onchange',
+                                 default=lambda self: self.env.user.company_id.country_id.id)
+
+    pre_street = fields.Char(string='Street',required=True, track_visibility='onchange')
+    pre_street2 = fields.Char(string='ETC', track_visibility='onchange')
+    pre_zip = fields.Char(track_visibility='onchange')
+    pre_city = fields.Char(string='City', track_visibility='onchange')
+    pre_state_id = fields.Many2one('res.country.state',track_visibility='onchange')
+    pre_country_id = fields.Many2one('res.country', required=True,track_visibility='onchange',
+                                     default=lambda self: self.env.user.company_id.country_id.id)
+
+    @api.one
+    @api.constrains('pre_email')
+    def validate_mail(self):
+        if self.pre_email:
+            if not Utility.valid_email(self.pre_email):
+                raise ValidationError('Present email should be input a valid')
 
     @api.one
     @api.constrains('work_phone')

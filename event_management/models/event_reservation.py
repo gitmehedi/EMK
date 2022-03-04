@@ -143,7 +143,7 @@ class EventReservation(models.Model):
                                           'approve': [('readonly', False), ('required', True)]})
     state = fields.Selection(helper.reservation_state, string="State", default="draft", track_visibility='onchange')
 
-    @api.constrains('start_date', 'end_date')
+    @api.constrains('start_date', 'end_date', 'last_date_reg')
     def _check_start_date(self):
         if self.start_date:
             dt_now = fields.datetime.now()
@@ -152,6 +152,8 @@ class EventReservation(models.Model):
                 raise ValidationError(_("Event start date cannot be past date from current date."))
             if self.start_date > self.end_date:
                 raise ValidationError(_("Event end date must be greater than event start date."))
+            if self.last_date_reg > self.start_date:
+                raise ValidationError(_("Event last registration date should not greater than start date."))
         if self.end_date and not self.start_date:
             self.end_date = ''
 

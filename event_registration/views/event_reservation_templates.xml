@@ -283,7 +283,7 @@
                                                 <input type="text" name="participating_amount"
                                                        t-att-value="participating_amount" id="participating_amount"
                                                        class="form-control input-sm reqfield number "
-                                                       required="required"/>
+                                                       />
                                             </div>
                                         </div>
                                     </div>
