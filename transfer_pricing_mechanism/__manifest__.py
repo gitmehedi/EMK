@@ -23,7 +23,8 @@
         'views/res_tpm_product_view.xml',
         'views/tpm_product_change_request_view.xml',
         'views/res_tpm_config_settings_views.xml',
-        'views/tpm_calculation_view.xml'
+        'views/tpm_calculation_view.xml',
+        'views/res_tpm_view.xml',
     ],
     'installable': True,
     'application': True,
