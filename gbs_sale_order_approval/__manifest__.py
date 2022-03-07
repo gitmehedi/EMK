@@ -37,6 +37,7 @@
         'report/inherit_sale_order_report.xml',
         'data/sale_order_sequence.xml',
         'wizards/sale_order_cancel_confirmation.xml',
+        'wizards/sale_order_credit_limit_cross_message_wizard_views.xml'
 
     ],
     'installable': True,
