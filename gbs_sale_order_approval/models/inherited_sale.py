@@ -560,7 +560,7 @@ class SaleOrder(models.Model):
         if returned_list[1] != 0:
             message_id = self.env['sale.order.credit.limit.cross.wizard'].create(
                 {'zero_credit_limit': False, 'customer_credit_limit': customer_credit_limit,
-                 'limit_crossed_amount': limit_crossed_amount})
+                 'limit_crossed_amount_1': limit_crossed_amount,'limit_crossed_amount_2': limit_crossed_amount})
 
             return {
                 'name': _('Customer Crossed His Credit Limit'),
@@ -574,7 +574,7 @@ class SaleOrder(models.Model):
         else:
             message_id = self.env['sale.order.credit.limit.cross.wizard'].create(
                 {'zero_credit_limit': True, 'customer_credit_limit': customer_credit_limit,
-                 'limit_crossed_amount': limit_crossed_amount})
+                 'limit_crossed_amount_1': limit_crossed_amount,'limit_crossed_amount_2': limit_crossed_amount})
             return {
                 'name': _('Customer Crossed His Credit Limit'),
                 'type': 'ir.actions.act_window',

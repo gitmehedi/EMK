@@ -7,8 +7,8 @@ class SaleOrderCreditLimitCrossMessageWizard(models.TransientModel):
     zero_credit_limit = fields.Boolean()
 
     customer_credit_limit = fields.Char(string="Credit Limit")
-    limit_crossed_amount = fields.Char(string="Limit Crossed Amount")
+    limit_crossed_amount_1 = fields.Char(string="Limit Crossed Amount")
 
-
+    limit_crossed_amount_2 = fields.Char(string="Limit Crossed Amount")
     def action_no(self):
         return {'type': 'ir.actions.act_window_close'}

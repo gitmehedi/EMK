@@ -16,10 +16,10 @@
                     <field name="zero_credit_limit" invisible="1"/>
 
                      <div attrs="{'invisible':[('zero_credit_limit','=',True)]}">
-                        You can't submit this Sale Order for further process. Customer have been crossing his credit limit with <span style="font-weight:bolder;"><field name="limit_crossed_amount" readonly="1"/></span>, whereas This customer approved credit limit is <span style="font-weight:bolder;"><field name="customer_credit_limit" readonly="1"/></span>
+                        You can't submit this Sale Order for further process. Customer have been crossing his credit limit with <span style="font-weight:bolder;"><field name="limit_crossed_amount_1" readonly="1"/></span>, whereas This customer approved credit limit is <span style="font-weight:bolder;"><field name="customer_credit_limit" readonly="1"/></span>
                     </div>
                     <div attrs="{'invisible':[('zero_credit_limit','=',False)]}">
-                        You can't submit this Sale Order for further process. Customer have been crossing his credit limit with <span style="font-weight:bolder;"><field name="limit_crossed_amount" readonly="1"/></span>, whereas this customer doesn't have any credit limit.
+                        You can't submit this Sale Order for further process. Customer have been crossing his credit limit with <span style="font-weight:bolder;"><field name="limit_crossed_amount_2" readonly="1"/></span>, whereas this customer doesn't have any credit limit.
                     </div>
 
                     <p>Please communicate with concern department.</p>
