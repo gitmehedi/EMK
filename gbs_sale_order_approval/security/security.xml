@@ -3,7 +3,7 @@
     <data noupdate="0">
 
         <record id="group_so_cancellation" model="res.groups">
-            <field name="name">SO Cancellation</field>
+            <field name="name">SO/DC Cancellation</field>
             <field name="category_id" ref="gbs_samuda_sales_access.module_category_sales"/>
             <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
             <field name="sequence">100</field>
