@@ -12,7 +12,7 @@
                     <footer>
                         <button name="process" string="Create Backorder" type="object" class="oe_highlight"/>
                         <button name="process_cancel_backorder" string="No Backorder"
-                                groups="gbs_sale_order_approval.group_so_cancellation"
+                                groups="gbs_sale_order_approval.group_so_cancellation,stock.group_stock_user,stock.group_stock_manager"
                                 type="object"
                                 class="btn-primary"/>
                         <button string="_Cancel" class="btn-default" special="cancel"/>
