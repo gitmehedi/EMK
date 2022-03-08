@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_backorder_confirmation_form_inherit" model="ir.ui.view">
+            <field name="name">stock_backorder_confirmation.inherit</field>
+            <field name="model">stock.backorder.confirmation</field>
+            <field name="inherit_id" ref="stock.view_backorder_confirmation"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/footer" position="replace">
+                    <footer>
+                        <button name="process" string="Create Backorder" type="object" class="oe_highlight"/>
+                        <button name="process_cancel_backorder" string="No Backorder"
+                                groups="gbs_sale_order_approval.group_so_cancellation"
+                                type="object"
+                                class="btn-primary"/>
+                        <button string="_Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
