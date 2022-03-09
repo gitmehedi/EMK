@@ -135,6 +135,6 @@
             id="menu_action_currency_rate"
             action="action_res_currency_rate"
             name="Currency Rates" sequence="21"
-            parent="account.menu_config_multi_currency"
+            parent="account_fx_revaluation.account_fx_revaluation_configuration"
             groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
 </odoo>

@@ -24,10 +24,23 @@ class TPMProductChangeRequest(models.Model):
         return tpm_config.expense_rate
 
     @api.model
-    def _get_domain(self):
+    def _get_local_account(self):
+        currency = self.env.user.company_id.currency_id.id
         query = """SELECT id,name,code FROM account_account 
-                    WHERE level_id=6 and code ~ '^[1234].*' 
-                    ORDER BY code DESC;"""
+                    WHERE level_id=6 AND code ~ '^[1234].*' 
+                          AND currency_id=%s
+                    ORDER BY code DESC;""" % currency
+        self.env.cr.execute(query)
+        ids = [val[2] for val in self.env.cr.fetchall()]
+        return [('code', 'in', tuple(ids))]
+
+    @api.model
+    def _get_fc_account(self):
+        currency = self.env.user.company_id.currency_id.id
+        query = """SELECT id,name,code FROM account_account 
+                    WHERE level_id=6 AND code ~ '^[1234].*' 
+                          AND currency_id!=%s
+                    ORDER BY code DESC;""" % currency
         self.env.cr.execute(query)
         ids = [val[2] for val in self.env.cr.fetchall()]
         return [('code', 'in', tuple(ids))]
@@ -35,20 +48,26 @@ class TPMProductChangeRequest(models.Model):
     name = fields.Char(string='Serial No', readonly=True, default='New', track_visibility='onchange')
     branch_ids = fields.Many2many('operating.unit', string='Branch', required=True, readonly=True,
                                   track_visibility='onchange', states={'draft': [('readonly', False)]})
-    account_ids = fields.Many2many('account.account', string='Chart of Account', required=True, readonly=True,
+    account_ids = fields.Many2many('account.account', 'tpm_account_rel', 'tpm_id', 'account_id',
+                                   string='Chart of Account', readonly=True,
                                    track_visibility='onchange', states={'draft': [('readonly', False)]},
-                                   domain=lambda self: self._get_domain())
+                                   domain=lambda self: self._get_local_account())
+    account_fc_ids = fields.Many2many('account.account', 'tpm_account_fc_rel', 'tpm_id', 'account_id',
+                                      string='Chart of Account', readonly=True,
+                                      track_visibility='onchange', states={'draft': [('readonly', False)]},
+                                      domain=lambda self: self._get_fc_account())
     narration = fields.Char('Narration', readonly=True, size=50, track_visibility='onchange',
                             states={'draft': [('readonly', False)]})
-    income_rate = fields.Float('Income Rate', readonly=True, default=_get_income_rate, track_visibility='onchange',
-                               states={'draft': [('readonly', False)]})
-    expense_rate = fields.Float('Expense Rate', readonly=True, default=_get_expense_rate, track_visibility='onchange',
-                                states={'draft': [('readonly', False)]})
+    income_rate = fields.Float('Income Rate', required=True, default=_get_income_rate, track_visibility='onchange',
+                               readonly=True, states={'draft': [('readonly', False)]})
+    expense_rate = fields.Float('Expense Rate', required=True, default=_get_expense_rate, track_visibility='onchange',
+                                readonly=True, states={'draft': [('readonly', False)]})
     date = fields.Date('Date', readonly=True, track_visibility='onchange', default=fields.Date.today, required=True,
                        states={'draft': [('readonly', False)]})
     count = fields.Char(string='Total Products')
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, track_visibility='onchange',
                                   domain=[('name', 'in', ['USD', 'BDT'])],
+                                  default=lambda self: self.env.user.company_id.currency_id.id,
                                   readonly=True, states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
@@ -128,7 +147,7 @@ class TPMProductChangeRequest(models.Model):
 
                     insert = ''
                     ex_ids = []
-                    for rec in self.account_ids:
+                    for rec in self.account_fc_ids:
                         datetime = fields.Datetime.now()
                         user_id = self.env.user.id
                         line = exist_branch.id
@@ -160,6 +179,11 @@ class TPMProductChangeRequest(models.Model):
                         self.env.cr.execute(update_query)
 
                 exist_branch.write({'state': 'confirm'})
+
+        if self.currency_id.code == 'BDT':
+            self.account_fc_ids = []
+        else:
+            self.account_ids = []
 
         self.write({
             'state': 'approve',

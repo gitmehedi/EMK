@@ -37,6 +37,7 @@ class Branch(models.Model):
     obu = fields.Boolean(default=False)
     currency_id = fields.Many2one('res.currency', string='Currency')
 
+
     @api.constrains('name', 'code')
     def _check_unique_constrain(self):
         if self.name or self.code:

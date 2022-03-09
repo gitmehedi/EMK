@@ -1,4 +1,3 @@
-import time
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _, SUPERUSER_ID
@@ -9,15 +8,15 @@ from psycopg2 import IntegrityError
 class ResTPM(models.Model):
     _name = 'res.tpm'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = 'TPM Management'
+    _description = 'Transfer Pricing Mechanism'
     _order = 'id desc'
 
     def _default_from_date(self):
         return self.env.user.company_id.batch_date
 
     name = fields.Char('Name', size=200, track_visibility='onchange', readonly=True)
-    branch_id = fields.Many2one('operating.unit', string='Branch', readonly=True,
-                                states={'draft': [('readonly', False)]},)
+    branch_id = fields.Many2one('operating.unit', string='Branch', readonly=True, required=True,
+                                states={'draft': [('readonly', False)]})
     date = fields.Date(string='From Date', default=_default_from_date, required=True, readonly=True,
                        states={'draft': [('readonly', False)]})
     to_date = fields.Date(string='To Date', required=True, readonly=True,
@@ -59,8 +58,8 @@ class ResTPM(models.Model):
                 'state': 'draft',
             })
 
-    def get_tpm_rate(self, rate_type='local'):
-        tpm_config = self.env['res.tpm.config.settings'].search([])
+    def get_tpm_rate(self):
+        tpm_config = self.env['res.tpm.config.settings'].search([], order='id desc', limit=1)
         if not tpm_config:
             raise Warning(_("Please configure proper settings for TPM"))
         days = tpm_config.days_in_fy
@@ -108,8 +107,12 @@ class ResTPM(models.Model):
 
             local_rate = self.get_tpm_rate()
 
-            branch = self.env['operating.unit'].sudo().search([('active', '=', True),
-                                                               ('pending', '=', False)])
+            branch_all = self.env['operating.unit'].sudo().search([('active', '=', True), ('pending', '=', False)])
+            setting = self.env['res.tpm.config.settings'].search([], order='id desc', limit=1)
+            if not setting:
+                raise ValidationError(_("Please configure settings data"))
+
+            branch = branch_all - setting.excl_br_ids
             branch_lines = {}
             for val in branch:
                 branch_lines[val.id] = {}
@@ -171,15 +174,18 @@ class ResTPM(models.Model):
                                             AML.ACCOUNT_ID,
                                             AML.CURRENCY_ID ) AS TPM
                             LEFT JOIN ACCOUNT_ACCOUNT AA ON (AA.ID = TPM.ACCOUNT)
+                            WHERE TPM.BRANCH NOT IN %s
                             GROUP BY TPM.BRANCH,
                                 TPM.ACCOUNT,
                                 TPM.CURRENCY,
                                 AA.CODE
-                            ORDER BY TPM.BRANCH DESC""" % (fy_start_date, end_date, start_date, end_date)
+                            ORDER BY TPM.BRANCH DESC""" % (
+                    fy_start_date, end_date, start_date, end_date, tuple(setting.excl_br_ids.ids))
 
                 self.env.cr.execute(query)
                 for bal in self.env.cr.fetchall():
                     branch_id = bal[0]
+
                     if tpm_date not in branch_lines[branch_id]:
                         branch_lines[branch_id][tpm_date] = []
 
@@ -219,7 +225,7 @@ class ResTPM(models.Model):
                     }
                     branch_lines[branch_id][tpm_date].append(line)
 
-            local_rate,foreign_rate = '',''
+            local_rate, foreign_rate = '', ''
             cr_dt = fields.Datetime.now()
             user_id = self.env.user.id
 
@@ -295,7 +301,7 @@ class ResTPM(models.Model):
     @api.multi
     def act_confirm(self):
         if self.state == 'calculate':
-            name = self.env['ir.sequence'].next_by_code('tpm.calculation') or ''
+            name = self.env['ir.sequence'].next_by_code('res.tpm') or ''
             self.write({
                 'name': name,
                 'state': 'confirm',
@@ -306,16 +312,20 @@ class ResTPM(models.Model):
     def act_approve(self):
         if self.env.user.id == self.maker_id.id and self.env.user.id != SUPERUSER_ID:
             raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
+
         if self.state == 'confirm':
             lines = []
             date = self.env.user.company_id.batch_date
             journal_entry = ""
-            tpm_config = self.env['account.app.config'].search([('config_type', '=', 'tpm')])
+            tpm_config = self.env['res.tpm.config.settings'].search([], order='id desc', limit=1)
             if not tpm_config:
                 raise Warning(_("Please configure proper settings for TPM"))
+
             company = self.env.user.company_id
             journal = tpm_config.journal_id.id
             current_currency = company.currency_id.id
+            general_account = tpm_config.tpm_general_account_id.id
+            general_seq = tpm_config.tpm_general_seq_id.id
             income_account = tpm_config.tpm_income_account_id.id
             income_seq = tpm_config.tpm_income_seq_id.id
             expense_account = tpm_config.tpm_expense_account_id.id
@@ -324,75 +334,159 @@ class ResTPM(models.Model):
                 'ref': 'TPM in [{0}] with ref {1}'.format(self.date, self.name),
                 'date': date,
                 'journal_id': journal,
-                'operating_unit_id': self.branch_id.id,
-                'is_cr': True,
+                'is_cr': True
             })
+
             for rec in self.line_ids:
                 branch = rec.sudo().branch_id
                 if rec.income == 0 and rec.expense == 0:
                     continue
 
+                income, expense = {}, {}
                 if rec.income > 0:
-                    credit_account_id = income_account
-                    credit_seq_id = income_seq
-                    debit_account_id = expense_account
-                    debit_seq_id = expense_seq
-                    income_cr_cr = rec.income
-                    income_cr_dr = 0
-                    income_dr_cr = 0
-                    income_dr_dr = rec.income
-                    credit_branch_id = branch.id
-                    debit_branch_id = self.branch_id.id
-                    credit_nar = "%s of %s" % ('Income', branch.display_name.replace("'", ""))
-                    debit_nar = "%s of %s" % ('Income', branch.display_name.replace("'", ""))
-                else:
-                    credit_account_id = income_account
-                    credit_seq_id = income_seq
-                    debit_account_id = expense_account
-                    debit_seq_id = expense_seq
-                    income_cr_cr = rec.expense
-                    income_cr_dr = 0
-                    income_dr_cr = 0
-                    income_dr_dr = rec.expense
-                    credit_branch_id = self.branch_id.id
-                    debit_branch_id = branch.id
-                    credit_nar = "%s of %s" % ('Expense', branch.display_name.replace("'", ""))
-                    debit_nar = "%s of %s" % ('Expense', branch.display_name.replace("'", ""))
+                    inc_br_nar = "FTP Income Jan, 2022, Treasury Dept"
+                    inc_tr_nar = "FTP Expense Jan, 2022, Corporate Head Office"
 
-                credit = {
-                    'name': credit_nar,
-                    'date': date,
-                    'date_maturity': date,
-                    'account_id': credit_account_id,
-                    'sub_operating_unit_id': credit_seq_id,
-                    'credit': income_cr_cr,
-                    'debit': income_cr_dr,
-                    'journal_id': journal,
-                    'operating_unit_id': credit_branch_id,
-                    'currency_id': current_currency,
-                    'amount_currency': 0.0,
-                    'move_id': move.id,
-                    'company_id': company.id,
-                    'is_bgl': 'not_check',
-                }
-                debit = {
-                    'name': debit_nar,
-                    'date': date,
-                    'date_maturity': date,
-                    'account_id': debit_account_id,
-                    'sub_operating_unit_id': debit_seq_id,
-                    'credit': income_dr_cr,
-                    'debit': income_dr_dr,
-                    'journal_id': journal,
-                    'operating_unit_id': debit_branch_id,
-                    'currency_id': current_currency,
-                    'amount_currency': 0.0,
-                    'move_id': move.id,
-                    'company_id': company.id,
-                    'is_bgl': 'not_check',
-                }
-                journal_entry += self.format_journal(credit)
-                journal_entry += self.format_journal(debit)
+                    income['inc_br_cr'] = {
+                        'name': inc_br_nar,
+                        'date': date,
+                        'date_maturity': date,
+                        'account_id': income_account,
+                        'sub_operating_unit_id': income_seq,
+                        'credit': rec.income,
+                        'debit': 0.0,
+                        'amount_currency': 0.0,
+                        'journal_id': journal,
+                        'operating_unit_id': branch.id,
+                        'currency_id': current_currency,
+                        'move_id': move.id,
+                        'company_id': company.id,
+                        'is_bgl': 'not_check',
+                    }
+                    income['inc_br_dr'] = {
+                        'name': inc_br_nar,
+                        'date': date,
+                        'date_maturity': date,
+                        'account_id': general_account,
+                        'sub_operating_unit_id': general_seq,
+                        'credit': 0.0,
+                        'amount_currency': 0.0,
+                        'debit': rec.income,
+                        'journal_id': journal,
+                        'operating_unit_id': branch.id,
+                        'currency_id': current_currency,
+                        'move_id': move.id,
+                        'company_id': company.id,
+                        'is_bgl': 'not_check',
+                    }
+                    income['inc_tr_cr'] = {
+                        'name': inc_tr_nar,
+                        'date': date,
+                        'date_maturity': date,
+                        'account_id': expense_account,
+                        'sub_operating_unit_id': expense_seq,
+                        'credit': 0.0,
+                        'debit': rec.income,
+                        'amount_currency': 0.0,
+                        'journal_id': journal,
+                        'operating_unit_id': self.branch_id.id,
+                        'currency_id': current_currency,
+                        'move_id': move.id,
+                        'company_id': company.id,
+                        'is_bgl': 'not_check',
+                    }
+                    income['inc_tr_dr'] = {
+                        'name': inc_tr_nar,
+                        'date': date,
+                        'date_maturity': date,
+                        'account_id': general_account,
+                        'sub_operating_unit_id': general_seq,
+                        'credit': rec.income,
+                        'debit': 0.0,
+                        'amount_currency': 0.0,
+                        'journal_id': journal,
+                        'operating_unit_id': self.branch_id.id,
+                        'currency_id': current_currency,
+                        'move_id': move.id,
+                        'company_id': company.id,
+                        'is_bgl': 'not_check',
+                    }
+                    journal_entry += self.format_journal(income['inc_br_cr'])
+                    journal_entry += self.format_journal(income['inc_br_dr'])
+                    journal_entry += self.format_journal(income['inc_tr_cr'])
+                    journal_entry += self.format_journal(income['inc_tr_dr'])
+                else:
+                    exp_br_nar = "FTP Expense Jan, 2022, Treasury Dept"
+                    exp_tr_nar = "FTP Income Jan, 2022, Principal Branch"
+
+                    expense['exp_br_dr'] = {
+                        'name': exp_br_nar,
+                        'date': date,
+                        'date_maturity': date,
+                        'account_id': expense_account,
+                        'sub_operating_unit_id': expense_seq,
+                        'credit': 0.0,
+                        'debit': rec.expense,
+                        'amount_currency': 0.0,
+                        'journal_id': journal,
+                        'operating_unit_id': branch.id,
+                        'currency_id': current_currency,
+                        'move_id': move.id,
+                        'company_id': company.id,
+                        'is_bgl': 'not_check',
+                    }
+                    expense['exp_br_cr'] = {
+                        'name': exp_br_nar,
+                        'date': date,
+                        'date_maturity': date,
+                        'account_id': general_account,
+                        'sub_operating_unit_id': general_seq,
+                        'credit': rec.expense,
+                        'debit': 0.0,
+                        'amount_currency': 0.0,
+                        'journal_id': journal,
+                        'operating_unit_id': branch.id,
+                        'currency_id': current_currency,
+                        'move_id': move.id,
+                        'company_id': company.id,
+                        'is_bgl': 'not_check',
+                    }
+                    expense['exp_tr_cr'] = {
+                        'name': exp_tr_nar,
+                        'date': date,
+                        'date_maturity': date,
+                        'account_id': income_account,
+                        'sub_operating_unit_id': income_seq,
+                        'credit': rec.expense,
+                        'debit': 0.0,
+                        'amount_currency': 0.0,
+                        'journal_id': journal,
+                        'operating_unit_id': self.branch_id.id,
+                        'currency_id': current_currency,
+                        'move_id': move.id,
+                        'company_id': company.id,
+                        'is_bgl': 'not_check',
+                    }
+                    expense['exp_tr_dr'] = {
+                        'name': exp_tr_nar,
+                        'date': date,
+                        'date_maturity': date,
+                        'account_id': general_account,
+                        'sub_operating_unit_id': general_seq,
+                        'credit': 0.0,
+                        'debit': rec.expense,
+                        'amount_currency': 0.0,
+                        'journal_id': journal,
+                        'operating_unit_id': branch.id,
+                        'currency_id': current_currency,
+                        'move_id': move.id,
+                        'company_id': company.id,
+                        'is_bgl': 'not_check',
+                    }
+                    journal_entry += self.format_journal(expense['exp_br_dr'])
+                    journal_entry += self.format_journal(expense['exp_br_cr'])
+                    journal_entry += self.format_journal(expense['exp_tr_cr'])
+                    journal_entry += self.format_journal(expense['exp_tr_dr'])
 
             if not journal_entry:
                 raise ValidationError(_("Credit/Debit should not be empty."))
@@ -443,7 +537,7 @@ class ResTPM(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ('calculate', 'confirm'))]
+        return [('state', 'in', ('draft', 'calculate', 'confirm'))]
 
     @api.multi
     def unlink(self):

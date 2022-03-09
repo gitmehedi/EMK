@@ -94,6 +94,7 @@
                         <field name="name" string="Branch"/>
                         <field name="pending" string="Pending"/>
                         <field name="code" string="Code"/>
+                        <field name="branch_type" string="Location of Branch"/>
                         <group string="Group By">
                             <filter name="branch_type" string="Location of Branch"
                                     context="{'group_by': 'branch_type'}"/>

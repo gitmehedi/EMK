@@ -119,15 +119,6 @@
             </field>
         </record>
 
-        <record id="seq_res_tpm_product" model="ir.sequence">
-            <field name="name">TPM Calculation</field>
-            <field name="code">res.tpm.product</field>
-            <field name="prefix">TPM/</field>
-            <field name="padding">4</field>
-            <field name="number_increment" eval="1"/>
-            <field name="company_id" eval="False"/>
-        </record>
-
         <record id="action_res_tpm_product" model="ir.actions.act_window">
             <field name="name">TPM Product</field>
             <field name="res_model">res.tpm.product</field>

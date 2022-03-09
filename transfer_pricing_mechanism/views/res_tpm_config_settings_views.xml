@@ -1,60 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_res_tpm_config_settings" model="ir.ui.view">
-            <field name="name">Configure Recruitment</field>
+        <record id="view_res_tpm_config_settings_form" model="ir.ui.view">
+            <field name="name">view.res.tpm.config.settings.form</field>
             <field name="model">res.tpm.config.settings</field>
             <field name="arch" type="xml">
-                <form string="TPM Config Settings" class="oe_form_configuration">
-                    <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
-                    </header>
+                <form string="App Config" duplicate="0">
                     <sheet>
-                        <group string="TPM Settings">
-                            <group>
-                                <field name="journal_id"
+                        <div class="oe_title pull-left">
+                            <h1>
+                                <field name="config_type"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <label for="id" string="TPM Journal" groups="tpm_management.grp_tpm_system_settings"/>
+                                <div name="journal_id" groups="tpm_management.grp_tpm_system_settings">
+                                    <div>
+                                        <field name="journal_id"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                </div>
+
+                                <label for="id" string="General Account"/>
+                                <div name="tpm_general_account_id">
+                                    <div>
+                                        <field name="tpm_general_account_id" class="oe_inline"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                    <div>
+                                        <field name="tpm_general_seq_id" class="oe_inline"
+                                               domain="[('account_id', 'in', [tpm_general_account_id])]"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                </div>
+                                <label for="id" string="Income Account"/>
+                                <div name="tpm_income_account_id">
+                                    <div>
+                                        <field name="tpm_income_account_id" class="oe_inline"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                    <div>
+                                        <field name="tpm_income_seq_id" class="oe_inline"
+                                               domain="[('account_id', 'in', [tpm_income_account_id])]"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                </div>
+                                <label for="id" string="Expense Account"/>
+                                <div name="tpm_expense_account_id">
+                                    <div>
+                                        <field name="tpm_expense_account_id" class="oe_inline"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                    <div>
+                                        <field name="tpm_expense_seq_id" class="oe_inline"
+                                               domain="[('account_id', 'in', [tpm_expense_account_id])]"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                </div>
+                            </group>
+                            <group>
                                 <field name="income_rate"/>
                                 <field name="expense_rate"/>
                                 <field name="days_in_fy"/>
-                            </group>
-                            <group>
-                                <field name="tpm_general_account_id"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="tpm_income_account_id"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="tpm_income_seq_id"
-                                       domain="[('account_id', 'in', [tpm_income_account_id])]"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="tpm_expense_account_id"
-                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
-                                <field name="tpm_expense_seq_id"
-                                       domain="[('account_id', 'in', [tpm_expense_account_id])]"
+                                <field name="excl_br_ids" widget="many2many_tags"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </group>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
 
-        <record id="action_tpm_config_settings" model="ir.actions.act_window">
-            <field name="name">Configure TPM</field>
+        <record id="view_res_tpm_config_settings_tree" model="ir.ui.view">
+            <field name="name">view.res.tpm.config.settings.tree</field>
+            <field name="model">res.tpm.config.settings</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="journal_id"/>
+                    <field name="config_type"/>
+                    <field name="tpm_general_account_id"/>
+                    <field name="tpm_income_account_id"/>
+                    <field name="tpm_expense_account_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_res_tpm_config_settings_search" model="ir.ui.view">
+            <field name="name">res.tpm.config.settings.search</field>
+            <field name="model">res.tpm.config.settings</field>
+            <field name="arch" type="xml">
+                <search string="Branch">
+                    <field name="income_rate"/>
+                    <field name="expense_rate"/>
+                    <field name="days_in_fy"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="seq_res_tpm_config_settings" model="ir.sequence">
+            <field name="name">Res TPM Config Settings Config</field>
+            <field name="code">res.tpm.config.settings</field>
+            <field name="prefix">TPM/SETTINGS/</field>
+            <field name="padding">4</field>
+            <field name="number_increment" eval="1"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="action_res_tpm_config_settings" model="ir.actions.act_window">
+            <field name="name">TPM Configuration</field>
             <field name="res_model">res.tpm.config.settings</field>
-            <field name="view_mode">form</field>
-            <field name="target">inline</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new App Config.
+                </p>
+            </field>
         </record>
 
-        <record id="action_tpm_config_settings_tree" model="ir.actions.act_window.view">
-            <field name="sequence" eval="5"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_res_tpm_config_settings"/>
-            <field name="act_window_id" ref="action_tpm_config_settings"/>
-        </record>
-
-        <menuitem id="menu_tpm_config_settings" name="Settings"
-                  parent="menu_tpm_configuration" sequence="0" action="action_tpm_config_settings"
-                  groups="base.group_system"/>
+        <menuitem id="menu_res_tpm_config_settings" parent="menu_tpm_configuration"
+                  action="action_res_tpm_config_settings" sequence="100" name="Settings"/>
     </data>
 </odoo>

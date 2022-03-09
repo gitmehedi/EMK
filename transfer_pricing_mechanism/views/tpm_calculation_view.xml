@@ -135,7 +135,7 @@
         </record>
 
         <record id="seq_tpm_calculation" model="ir.sequence">
-            <field name="name">TPM Calculation</field>
+            <field name="name">Transfer Pricing Mechanism</field>
             <field name="code">tpm.calculation</field>
             <field name="prefix">TPM/</field>
             <field name="padding">4</field>
@@ -150,7 +150,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to start a new TPM Calculation.
+                    Click to start a new Transfer Pricing Mechanism.
                 </p>
             </field>
         </record>

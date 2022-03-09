@@ -98,7 +98,7 @@
               groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
 
     <menuitem id="account.menu_action_currency_form" action="base.action_currency_form" name="Currencies"
-              parent="account.menu_config_multi_currency" sequence="20"
+              parent="account_fx_revaluation.account_fx_revaluation_configuration" sequence="20"
               groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
 
     <menuitem action="account.action_account_journal_form" id="account.menu_action_account_journal_form"

@@ -25,6 +25,8 @@
                         </div>
                         <group>
                             <group>
+                                <field name="branch_id"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                 <field name="date"/>
                                 <field name="to_date"/>
                             </group>
@@ -40,6 +42,7 @@
                                 <field name="line_ids">
                                     <tree decoration-success="pl_status=='income'"
                                           decoration-danger="pl_status=='expense'">
+                                        <field name="branch_id"/>
                                         <field name="pl_status"/>
                                         <field name="income" sum="income"/>
                                         <field name="expense" sum="expense"/>
@@ -169,6 +172,7 @@
                       decoration-danger="state=='reject'"
                       decoration-bf="state in ('calculate','confirm')">
                     <field name="name"/>
+                    <field name="branch_id"/>
                     <field name="date"/>
                     <field name="to_date"/>
                     <field name="total_income" sum="total_income"/>
@@ -190,27 +194,50 @@
             </field>
         </record>
 
-        <record id="seq_res_tpm" model="ir.sequence">
-            <field name="name">TPM Calculation</field>
-            <field name="code">res.tpm</field>
-            <field name="prefix">TPM/</field>
-            <field name="padding">4</field>
-            <field name="number_increment" eval="1"/>
-            <field name="company_id" eval="False"/>
-        </record>
 
-        <record id="action_res_tpm" model="ir.actions.act_window">
-            <field name="name">TPM Management</field>
+        <record id="action_res_tpm_draft" model="ir.actions.act_window">
+            <field name="name">TPM (Draft)</field>
             <field name="res_model">res.tpm</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',['draft','calculate'])]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to start a new TPM Calculation.
+                    Click to start a new Transfer Pricing Mechanism.
                 </p>
             </field>
         </record>
 
-        <menuitem id="menu_res_tpm" parent="menu_tpm_sub" action="action_res_tpm" sequence="1"/>
+        <menuitem id="menu_res_tpm_draft" parent="menu_tpm_sub" action="action_res_tpm_draft" sequence="10"/>
+
+        <record id="action_res_tpm_approve" model="ir.actions.act_window">
+            <field name="name">TPM (Approve)</field>
+            <field name="res_model">res.tpm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',['approve','confirm'])]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Transfer Pricing Mechanism.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_res_tpm_approve" parent="menu_tpm_sub" action="action_res_tpm_approve" sequence="20"/>
+
+        <record id="action_res_tpm_reject" model="ir.actions.act_window">
+            <field name="name">TPM (Reject)</field>
+            <field name="res_model">res.tpm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',['reject'])]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Transfer Pricing Mechanism.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_res_tpm_reject" parent="menu_tpm_sub" action="action_res_tpm_reject" sequence="20"/>
     </data>
 </odoo>

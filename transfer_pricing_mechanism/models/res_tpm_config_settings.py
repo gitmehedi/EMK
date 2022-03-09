@@ -1,160 +1,42 @@
 from odoo import api, fields, models
 
 
-class ResCompany(models.Model):
-    _inherit = "res.company"
-
-    journal_id = fields.Many2one('account.journal', string='TPM Journal', required=True)
-    tpm_general_account_id = fields.Many2one('account.account', string='General Journal', required=True)
-    tpm_general_seq_id = fields.Many2one('sub.operating.unit', string='General Journal Sequence', required=True)
-    tpm_income_account_id = fields.Many2one('account.account', string='Income Journal', required=True)
-    tpm_income_seq_id = fields.Many2one('sub.operating.unit', string='Income Journal Sequence', required=True)
-    tpm_expense_account_id = fields.Many2one('account.account', string='Expense Journal', required=True)
-    tpm_expense_seq_id = fields.Many2one('sub.operating.unit', string='Expense Journal Sequence', required=True)
-    impact_count = fields.Integer(string='Expense Journal', required=True)
-    impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], required=True)
-    impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], required=True)
-    income_rate = fields.Float(string='Income Rate', required=True)
-    expense_rate = fields.Float(string='Expense Rate', required=True)
-    days_in_fy = fields.Integer(string='Days in Year', size=3, required=True)
-
-
-class ResTPMConfigSettings(models.TransientModel):
+class ResTPMConfigSettings(models.Model):
     _name = 'res.tpm.config.settings'
-    _inherit = 'res.config.settings'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'TPM Management'
+    _rec_name = 'journal_id'
+    _order = 'id desc'
 
-    def _get_default_journal_id(self):
-        return self.env.user.company_id.journal_id
-
-    def _get_default_tpm_general_account_id(self):
-        return self.env.user.company_id.tpm_general_account_id
-
-    def _get_default_tpm_general_seq_id(self):
-        return self.env.user.company_id.tpm_general_seq_id
-
-    def _get_default_tpm_income_account_id(self):
-        return self.env.user.company_id.tpm_income_account_id
-
-    def _get_default_tpm_income_seq_id(self):
-        return self.env.user.company_id.tpm_income_seq_id
-
-    def _get_default_tpm_expense_account_id(self):
-        return self.env.user.company_id.tpm_expense_account_id
-
-    def _get_default_tpm_expense_seq_id(self):
-        return self.env.user.company_id.tpm_expense_seq_id
-
-    def _get_default_impact_count(self):
-        return self.env.user.company_id.impact_count
-
-    def _get_default_impact_unit(self):
-        return self.env.user.company_id.impact_unit
-
-    journal_id = fields.Many2one('account.journal', string='TPM Journal', required=True,
-                                 default=lambda self: self._get_default_journal_id())
-    company_id = fields.Many2one('res.company', string='Company', required=True,
-                                 default=lambda self: self.env.user.company_id)
+    journal_id = fields.Many2one('account.journal', string='TPM Journal', required=True, track_visibility='onchange')
     tpm_general_account_id = fields.Many2one('account.account', string='General Account', required=True,
-                                             default=lambda self: self._get_default_tpm_general_account_id(),
-                                             domain="[('level_id.name','=','Layer 5')]")
+                                             track_visibility='onchange', domain="[('level_id.name','=','Layer 5')]")
     tpm_general_seq_id = fields.Many2one('sub.operating.unit', string='General Account Sequence', required=True,
-                                         default=lambda self: self._get_default_tpm_general_seq_id())
-
+                                        track_visibility='onchange')
     tpm_income_account_id = fields.Many2one('account.account', string='Income Account', required=True,
-                                            default=lambda self: self._get_default_tpm_income_account_id(),
-                                            domain="[('level_id.name','=','Layer 5')]")
+                                            track_visibility='onchange', domain="[('level_id.name','=','Layer 5')]")
     tpm_income_seq_id = fields.Many2one('sub.operating.unit', string='Income Account Sequence', required=True,
-                                        default=lambda self: self._get_default_tpm_income_seq_id())
-
+                                        track_visibility='onchange')
     tpm_expense_account_id = fields.Many2one('account.account', string='Expense Account', required=True,
-                                             default=lambda self: self._get_default_tpm_expense_account_id(),
-                                             domain="[('level_id.name','=','Layer 5')]")
-
+                                             track_visibility='onchange', domain="[('level_id.name','=','Layer 5')]")
     tpm_expense_seq_id = fields.Many2one('sub.operating.unit', string='Expense Account Sequence', required=True,
-                                         default=lambda self: self._get_default_tpm_expense_seq_id())
+                                         track_visibility='onchange')
 
     impact_count = fields.Integer(string='Expense Journal', default=1, required=True)
     impact_unit = fields.Selection([('days', 'Days'), ('month', 'Month')], default='days', required=True)
-    income_rate = fields.Float(string='Income Rate', required=True)
-    expense_rate = fields.Float(string='Expense Rate', required=True)
-    days_in_fy = fields.Integer(string='Days in Year', size=3, required=True, default=360)
+    income_rate = fields.Float(string='Income Rate', required=True, track_visibility='onchange')
+    expense_rate = fields.Float(string='Expense Rate', required=True, track_visibility='onchange')
+    days_in_fy = fields.Integer(string='Days in Year', size=3, required=True, default=360, track_visibility='onchange')
+    state = fields.Selection([('draft', 'Draft')], track_visibility='onchange')
+    config_type = fields.Selection([('tpm', 'TPM Configuration')], default='tpm', required=True,
+                                   track_visibility='onchange', readonly=True)
+    excl_br_ids = fields.Many2many('operating.unit', 'tpm_config_rel', 'tpm_id', 'branch_id',
+                                   track_visibility='onchange', string='Exclude Branch')
 
-    @api.multi
-    def set_journal_id(self):
-        if self.journal_id:
-            self.company_id.write({'journal_id': self.journal_id.id})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'journal_id',
-                                                        self.journal_id.id)
-
-    @api.multi
-    def set_tpm_general_account_id(self):
-        if self.tpm_general_account_id:
-            self.company_id.write({'tpm_general_account_id': self.tpm_general_account_id.id})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'tpm_general_account_id',
-                                                        self.tpm_general_account_id.id)
-
-    @api.multi
-    def set_tpm_general_seq_id(self):
-        if self.tpm_general_seq_id:
-            self.company_id.write({'tpm_general_seq_id': self.tpm_general_seq_id.id})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'tpm_general_seq_id',
-                                                        self.tpm_general_seq_id.id)
-
-    @api.multi
-    def set_tpm_income_account_id(self):
-        if self.tpm_income_account_id:
-            self.company_id.write({'tpm_income_account_id': self.tpm_income_account_id.id})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'tpm_income_account_id',
-                                                        self.tpm_income_account_id.id)
-
-    @api.multi
-    def set_tpm_income_seq_id(self):
-        if self.tpm_income_seq_id:
-            self.company_id.write({'tpm_income_seq_id': self.tpm_income_seq_id.id})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'tpm_income_seq_id',
-                                                        self.tpm_income_seq_id.id)
-
-    @api.multi
-    def set_tpm_expense_account_id(self):
-        if self.tpm_expense_account_id:
-            self.company_id.write({'tpm_expense_account_id': self.tpm_expense_account_id.id})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'tpm_expense_account_id',
-                                                        self.tpm_expense_account_id.id)
-
-    @api.multi
-    def set_tpm_expense_seq_id(self):
-        if self.tpm_expense_seq_id:
-            self.company_id.write({'tpm_expense_seq_id': self.tpm_expense_seq_id.id})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'tpm_expense_seq_id',
-                                                        self.tpm_expense_seq_id.id)
-
-    @api.multi
-    def set_impact_count(self):
-        if self.impact_count:
-            self.company_id.write({'impact_count': self.impact_count})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'impact_count', self.impact_count)
-
-    @api.multi
-    def set_impact_unit(self):
-        if self.impact_unit:
-            self.company_id.write({'impact_unit': self.impact_unit})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'impact_unit', self.impact_unit)
-
-    @api.multi
-    def set_income_rate(self):
-        if self.income_rate:
-            self.company_id.write({'income_rate': self.income_rate})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'income_rate', self.income_rate)
-
-    @api.multi
-    def set_expense_rate(self):
-        if self.expense_rate:
-            self.company_id.write({'expense_rate': self.expense_rate})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'expense_rate', self.expense_rate)
-
-    @api.multi
-    def set_days_in_fy(self):
-        if self.days_in_fy:
-            self.company_id.write({'days_in_fy': self.days_in_fy})
-        return self.env['ir.values'].sudo().set_default('res.tpm.config.settings', 'days_in_fy', self.days_in_fy)
+    @api.constrains('config_type')
+    def _check_unique_constrain(self):
+        if self.config_type:
+            name = self.search([('config_type', '=', self.config_type)])
+            if len(name) > 1:
+                raise Warning('[Unique Error] Can\'t  create same configuration name multiple times!')
 

@@ -24,7 +24,8 @@
         'mtbl_access',
         'gbs_res_partner',
         'account_currency_wrapper',
-        'account_tax_challan'
+        'account_tax_challan',
+        'account_fx_revaluation'
         # 'account_tds'
     ],
     "data": [
