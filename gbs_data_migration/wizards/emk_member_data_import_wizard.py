@@ -13,6 +13,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 from odoo.exceptions import ValidationError, Warning
+
 from odoo.addons.opa_utility.helper.utility import Utility,Message
 
 
@@ -138,14 +139,17 @@ class EMKMemberDataImportWizard(models.TransientModel):
 
     @api.multi
     def get_existing_data(self):
-        mc = {val.name: val.id for val in self.env['membership.membership_category'].search([('status', '=', True)])}
-        product = {val.name: val.id for val in self.env['product.template'].search([('active', '=', True)])}
-        occupation = {val.name: val.id for val in self.env['member.occupation'].search([('status', '=', True)])}
-        msi = {val.name: val.id for val in self.env['member.subject.interest'].search([('status', '=', True)])}
-        mcer = {val.name: val.id for val in self.env['member.certification'].search([('status', '=', True)])}
+        query_str=[('active','=',True),('state','=','approve'),('pending','=',False)]
+        mc = {val.name: val.id for val in self.env['membership.membership_category'].search(query_str)}
+        product = {val.name: val.id for val in self.env['product.template'].search(query_str)}
+        occupation = {val.name: val.id for val in self.env['member.occupation'].search(query_str)}
+        msi = {val.name: val.id for val in self.env['member.subject.interest'].search(query_str)}
+        mcer = {val.name: val.id for val in self.env['member.certification'].search(query_str)}
+        gen = {val.name: val.id for val in self.env['res.gender'].search(query_str)}
         partner = {val.email: val.id for val in self.env['res.partner'].search([])}
 
-        return mc, product, occupation, msi, mcer, partner
+
+        return mc, product, occupation, msi, mcer,gen, partner
 
     @api.multi
     def data_import(self):
@@ -187,7 +191,7 @@ class EMKMemberDataImportWizard(models.TransientModel):
                         ]
 
         # retrieve existing data from database
-        mc, product, moc, msi, mcer, partner = self.get_existing_data()
+        mc, product, moc, msi, mcer,gen, partner = self.get_existing_data()
 
         for line in reader:
             if set(line.keys()) != set(allow_header) or len(line.keys()) != len(allow_header):
@@ -205,12 +209,12 @@ class EMKMemberDataImportWizard(models.TransientModel):
             id_number = line['id number'].strip()
             membership_categories = line['membership categories'].strip()
             membership_status = line['membership status'].strip()
-            joining_date = Utility.date_format(line['joining date'].strip())
-            membership_expire = Utility.date_format(line['membership expire'].strip())
+            joining_date = line['joining date'].strip()
+            membership_expire = line['membership expire'].strip()
             first_name = line['first name'].strip()
             middle_name = line['middle name'].strip()
             last_name = line['last name'].strip()
-            date_of_birth = Utility.date_format(line['date of birth'].strip())
+            date_of_birth = line['date of birth'].strip()
             gender = line['gender'].strip()
             phone = line['phone'].strip()
             address = line['address'].strip()
@@ -227,20 +231,28 @@ class EMKMemberDataImportWizard(models.TransientModel):
             current_employer = line['current employer'].strip()
 
 
-            mc, product, moc, msi, mcer, partner
+            mc, product, moc, msi, mcer,gen,partner
             if not id_number:
                 errors += self.format_error(line_no, 'ID [{0}] invalid value'.format(id_number))
 
             if membership_categories not in mc.keys():
                 errors += self.format_error(line_no,
                                             'Membership Category [{0}] invalid value'.format(membership_categories))
+            else:
+                membership_categories = mc[membership_categories]
+
+            if gender not in gen.keys():
+                errors += self.format_error(line_no,
+                                            'Gender [{0}] invalid value'.format(gender))
+            else:
+                gender = gen[gender]
 
             if occupation not in moc.keys():
                 occupation = ''
                 occupation_other = occupation
 
             if hca not in mcer.keys():
-                hca = mcer['Other']
+                hca = ''
             else:
                 hca = mcer[hca]
 
@@ -255,7 +267,8 @@ class EMKMemberDataImportWizard(models.TransientModel):
                 val['city'] = city
                 val['zip'] = zip
                 val['mobile'] = mobile
-                val['gender'] = gender.lower()
+                # val['gender'] = gender.lower()
+                val['gender'] = gender
                 val['email'] = email
                 val['occupation'] = moc[occupation] if occupation else ''
                 val['occupation_other'] = occupation_other
@@ -276,7 +289,7 @@ class EMKMemberDataImportWizard(models.TransientModel):
                     state = 'free'
 
                 member_cat = self.env['product.template'].search(
-                    [('membership_category_id', '=', mc[membership_categories]), ('active', '=', True)])
+                    [('membership_category_id', '=', membership_categories), ('active', '=', True)])
                 member_line = {
                     'date': joining_date,
                     'date_from': joining_date,
