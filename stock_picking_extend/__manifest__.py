@@ -15,7 +15,6 @@
         'account',
         'gbs_product',
         'gbs_sale_order_approval',
-        'stock'
     ],
     'data': [
         'security/ir.model.access.csv',
