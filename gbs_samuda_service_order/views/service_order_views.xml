@@ -3,9 +3,11 @@
     <data>
         <menuitem name="Services"
                   id="menu_service_root"
+                  groups="gbs_samuda_service_order.group_service_order_user,gbs_samuda_service_order.group_service_order_manager"
                   web_icon="purchase,static/description/icon.png"
                   sequence="26"/>
         <menuitem id="menu_service_management" name="Service"
+                  groups="gbs_samuda_service_order.group_service_order_user,gbs_samuda_service_order.group_service_order_manager"
                   parent="menu_service_root" sequence="1"/>
 
         <!--service_order_form-->

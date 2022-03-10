@@ -16,22 +16,12 @@
         <!--Invisible Menus from Inventory Control-->
 
         <record model="ir.ui.menu" id="stock.menu_product_variant_config_stock">
-            <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('gbs_application_group.make_invisible')])]"/>
         </record>
 
         <record model="ir.ui.menu" id="stock.product_product_menu">
-            <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('gbs_application_group.make_invisible')])]"/>
         </record>
-
-<!--        <menuitem id="stock.menu_product_variant_config_stock" name="Products"-->
-<!--                  action="stock.product_template_action_product"-->
-<!--                  parent="stock.menu_stock_inventory_control"-->
-<!--                  groups="gbs_samuda_inventory_product.make_invisible"-->
-<!--                  sequence="1"/>-->
-<!--        <menuitem id="stock.product_product_menu" name="Product Variants"-->
-<!--                  action="product.product_normal_action"-->
-<!--                  parent="stock.menu_stock_inventory_control" sequence="2"-->
-<!--                  groups="gbs_samuda_inventory_product.make_invisible"/>-->
 
     </data>
 </odoo>
