@@ -118,9 +118,11 @@
                     <field name="bank_account_number"></field>
                 </xpath>
 
-                <xpath expr="//field[@name='category_ids']" position="attributes">
-                    <attribute name="string">Employee Tag</attribute>
+                <xpath expr="//field[@name='category_ids']" position="replace">
+                     <label for="category_ids" string="Employee Tags"/>
+                    <field name="category_ids" placeholder="e.g. Part Time" widget="many2many_tags" options="{'no_create_edit':True,'no_open':True}"></field>
                 </xpath>
+
                 <xpath expr="//field[@name='gender']" position="attributes">
                     <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
                 </xpath>

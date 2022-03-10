@@ -267,7 +267,6 @@ class EMKMemberDataImportWizard(models.TransientModel):
                 val['city'] = city
                 val['zip'] = zip
                 val['mobile'] = mobile
-                # val['gender'] = gender.lower()
                 val['gender'] = gender
                 val['email'] = email
                 val['occupation'] = moc[occupation] if occupation else ''
