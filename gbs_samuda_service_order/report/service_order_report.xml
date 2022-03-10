@@ -119,8 +119,6 @@
                                         <th class="text-center">Sl#</th>
                                         <th class="text-center">Description/Specification/Origin</th>
                                         <th class="text-center">Quantity</th>
-                                        <th class="text-center">Unit</th>
-                                        <th class="text-center">Unit Rate</th>
                                         <th class="text-center">Total Price</th>
                                     </tr>
                                 </thead>
@@ -130,8 +128,6 @@
                                             <td><span t-esc="l_index+1"/></td>
                                             <td><span t-esc="l['product_id']"/></td>
                                             <td class="text-right"><span t-esc="l['product_qty']"/></td>
-                                            <td class="text-right"><span t-esc="l['product_uom']"/></td>
-                                            <td class="text-right"><span t-esc="l['price_unit']"/></td>
                                             <td class="text-right"><span t-esc="l['price_subtotal_price']"/></td>
                                         </tr>
                                     </t>

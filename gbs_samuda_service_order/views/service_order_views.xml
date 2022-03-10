@@ -44,7 +44,7 @@
                         <button name="button_done" type="object" string="Lock" groups="gbs_samuda_service_order.group_service_order_manager" states="purchase"/>
                         <button name="button_unlock" type="object" string="Unlock" groups="gbs_samuda_service_order.group_service_order_manager" states="done"/>
 
-                        <button name="print_service_order" type="object" attrs="{'invisible':[('partner_id','=',False)]}" string="Print Service Order"/>
+                        <button name="print_service_order" style="background-color: #39B05F;color:white;" type="object" attrs="{'invisible':[('partner_id','=',False)]}" string="Print"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
 
 
@@ -119,7 +119,7 @@
                                         <field name="product_qty"/>
                                         <field name="qty_received" invisible="not context.get('show_purchase', False)"/>
                                         <field name="qty_invoiced" invisible="not context.get('show_purchase', False)"/>
-                                        <field name="product_uom" groups="product.group_uom"
+                                        <field name="product_uom" invisible="1" groups="product.group_uom"
                                                attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
                                         <field name="price_unit"/>
                                         <field name="taxes_id" widget="many2many_tags"

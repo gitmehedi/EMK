@@ -60,7 +60,7 @@
                                 states='to approve' groups="purchase.group_purchase_manager,commercial.group_commercial_manager"/>
                     </xpath>
                     <xpath expr="//button[@name='button_approve']" position="after">
-                        <button name="print_purchase_order" type="object" attrs="{'invisible':[('partner_id','=',False)]}" string="Print Purchase Order"/>
+                        <button name="print_purchase_order" style="background-color: #39B05F;color:white;" type="object" attrs="{'invisible':[('partner_id','=',False)]}" string="Print"/>
 
                     </xpath>
 
