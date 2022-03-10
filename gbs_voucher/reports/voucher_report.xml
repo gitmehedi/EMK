@@ -56,7 +56,7 @@
                                 <thead>
                                     <tr class="odo-bg-gray">
                                         <th class="text-center" style="width:32%;">Account</th>
-                                        <th class="text-center" style="width:20%;">Vendor</th>
+                                        <th class="text-center" style="width:20%;">Partner</th>
                                         <th class="text-center" style="width:28%;">Particulars</th>
                                         <th class="text-right" style="width:10%;">Debit</th>
                                         <th class="text-right" style="width:10%;">Credit</th>
@@ -104,15 +104,37 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <table class="table_word_amount">
+                                <div>
+                                    <td class="text-left">
+                                        <span>In Words : </span> BDT <strong t-esc="data['word_amount']"/> <strong>Only</strong>
+                                    </td>
+                                </div>
+                            </table>
+                            <table>
+                                <div></div>
+                            </table>
+                            <table class="table_word_amount">
+                                <div t-if="data['sum_of_credit']>0">
+                                    <td class="text-left">
+                                        <span>In Words (Bank Payment) : </span> BDT <strong t-esc="data['bank_word_amount']"/> <strong>Only</strong>
+                                    </td>
+                                </div>
+                            </table>
 
-                            <table class="table" style="margin-top:50px;">
+                            <table class="table" style="margin-top:20px;">
                                 <tr>
                                     <td class="text-center">Prepared By</td>
                                     <td class="text-center">Checked By</td>
                                     <td class="text-center">Verified By</td>
                                     <td class="text-center">Authorised By</td>
+                                    <td class="text-center">Received By</td>
+
                                 </tr>
                                 <tr>
+                                    <td class="text-center" style="padding-top:1cm">
+                                        ....................
+                                    </td>
                                     <td class="text-center" style="padding-top:1cm">
                                         ....................
                                     </td>

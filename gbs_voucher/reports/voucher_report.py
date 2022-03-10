@@ -11,9 +11,9 @@ class GBSVoucherReport(models.AbstractModel):
         am_obj = self.env['account.move'].browse(docids[0])
         # set report title
         if am_obj.journal_id.type == 'cash':
-            report_title = 'Cash Payment Voucher'
+            report_title = 'Cash Voucher'
         elif am_obj.journal_id.type == 'bank':
-            report_title = 'Bank Payment Voucher'
+            report_title = 'Bank Voucher'
         elif am_obj.journal_id.type == 'general':
             report_title = 'Miscellaneous Voucher'
         else:
@@ -25,8 +25,13 @@ class GBSVoucherReport(models.AbstractModel):
         report_data['date'] = am_obj.date
         report_data['narration'] = am_obj.narration
         report_data['amount'] = am_obj.amount
+        report_data['word_amount'] = self.env['res.currency'].amount_to_word(float(am_obj.amount))
+
+        # report_data['bank_word_amount'] = self.env['res.currency'].amount_to_word(float(am_obj.line_ids.total_credit))
+        account_type_obj = self.env['account.account.type'].suspend_security().search([('is_bank_type','=',True)], limit=1, order="id asc")
         report_data['lines'] = []
 
+        sum_of_credit = 0
         for line in am_obj.line_ids:
             dict_obj = {}
             dict_obj['account_name'] = line.account_id.display_name
@@ -41,7 +46,13 @@ class GBSVoucherReport(models.AbstractModel):
             dict_obj['particulars'] = line.name
             dict_obj['debit'] = line.debit
             dict_obj['credit'] = line.credit
+            if line.account_id.user_type_id.id == account_type_obj.id:
+                sum_of_credit = sum_of_credit + line.credit
+
             report_data['lines'].append(dict_obj)
+
+        report_data['sum_of_credit'] = sum_of_credit
+        report_data['bank_word_amount'] = self.env['res.currency'].amount_to_word(float(sum_of_credit))
 
         docargs = {
             'data': report_data,

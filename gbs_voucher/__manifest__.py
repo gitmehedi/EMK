@@ -5,7 +5,7 @@
     'website': 'www.genweb2.com',
     'category': 'Accounting',
     'version': '10.0.0.1',
-    'depends': ['account'],
+    'depends': ['account','account_type_extend'],
     'data': [
         'reports/voucher_report.xml',
     ],
