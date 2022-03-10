@@ -2,16 +2,13 @@ from odoo import api, exceptions, fields, models
 from odoo.tools.misc import formatLang
 
 
-class GbsPurchaseOrder(models.AbstractModel):
-    _name = 'report.gbs_purchase_order.report_purchase_order'
+class GbsServiceOrderReport(models.AbstractModel):
+    _name = 'report.gbs_samuda_service_order.report_service_order'
 
     @api.multi
     def render_html(self, docids, data=None):
         po_run_pool = self.env['purchase.order']
-        if data.get('active_id'):
-            docs = po_run_pool.browse(data.get('active_id'))
-        else:
-            docs = po_run_pool.browse(docids[0])
+        docs = po_run_pool.browse(data.get('active_id'))
         report_utility_pool = self.env['report.utility']
         order_list = []
         total_amount = []
@@ -95,4 +92,4 @@ class GbsPurchaseOrder(models.AbstractModel):
             'order_date': order_date
         }
 
-        return self.env['report'].render('gbs_purchase_order.report_purchase_order', docargs)
+        return self.env['report'].render('gbs_samuda_service_order.report_service_order', docargs)

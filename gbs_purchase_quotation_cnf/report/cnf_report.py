@@ -2,26 +2,24 @@ from odoo import api, exceptions, fields, models
 from odoo.tools.misc import formatLang
 
 
-class GbsPurchaseOrder(models.AbstractModel):
-    _name = 'report.gbs_purchase_order.report_purchase_order'
+class GbsCnfQuotationReport(models.AbstractModel):
+    _name = 'report.gbs_purchase_quotation_cnf.report_cnf'
 
     @api.multi
     def render_html(self, docids, data=None):
         po_run_pool = self.env['purchase.order']
-        if data.get('active_id'):
-            docs = po_run_pool.browse(data.get('active_id'))
-        else:
-            docs = po_run_pool.browse(docids[0])
+        docs = po_run_pool.browse(data.get('active_id'))
         report_utility_pool = self.env['report.utility']
         order_list = []
         total_amount = []
-
         data = {}
         data['name'] = docs.name
         data['date_order'] = docs.date_order
         order_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(data['date_order']))
         requisition_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(docs.requisition_id.requisition_date))
         data['partner_id'] = docs.partner_id.name
+        data['shipment_id'] = docs.shipment_id.name
+        data['lc_id'] = docs.lc_id.name
         data['cus_address'] = report_utility_pool.getCoustomerAddress(docs.partner_id)
         data['partner_ref'] = docs.partner_ref
         data['requisition_id'] = docs.requisition_id.name
@@ -95,4 +93,4 @@ class GbsPurchaseOrder(models.AbstractModel):
             'order_date': order_date
         }
 
-        return self.env['report'].render('gbs_purchase_order.report_purchase_order', docargs)
+        return self.env['report'].render('gbs_purchase_quotation_cnf.report_cnf', docargs)

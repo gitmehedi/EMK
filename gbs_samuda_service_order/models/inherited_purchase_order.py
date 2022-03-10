@@ -1,0 +1,78 @@
+# -*- coding: utf-8 -*-
+from datetime import datetime
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError, UserError
+
+
+class InheritedPurchaseOrder(models.Model):
+    _name = 'purchase.order'
+    _inherit = ['purchase.order', 'ir.needaction_mixin']
+    _description = 'Inherited Purchase Order'
+
+    is_service_order = fields.Boolean(string='Service Order',
+                                      default=lambda self: self.env.context.get('is_service_order') or False)
+
+    service_order_creator = fields.Many2one('res.users', 'Creator', default=lambda self: self.env.user.id, track_visibility='onchange')
+
+    @api.model
+    def create(self, vals):
+        operating_unit_id = self.env['operating.unit'].browse(vals['operating_unit_id'])
+        if vals.get('is_service_order'):
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('service.order', datetime.today(),
+                                                                    operating_unit_id) or '/'
+
+        return super(InheritedPurchaseOrder, self).create(vals)
+
+    @api.constrains('operating_unit_id', 'picking_type_id')
+    def _check_warehouse_operating_unit(self):
+        for record in self:
+            if not record.is_service_order:
+                picking_type = record.picking_type_id
+                if not record.picking_type_id:
+                    continue
+                warehouse = picking_type.warehouse_id
+                if (picking_type.warehouse_id and
+                        picking_type.warehouse_id.operating_unit_id and
+                        record.operating_unit_id and
+                        warehouse.operating_unit_id != record.operating_unit_id):
+                    raise ValidationError(
+                        _('Configuration error\nThe Quotation / Purchase Order '
+                          'and the Warehouse of picking type must belong to the '
+                          'same Operating Unit.')
+                    )
+
+    @api.multi
+    def button_confirm(self):
+        if self.is_service_order:
+            self.write({'region_type':'local','purchase_by': 'credit','operating_unit_id': self.operating_unit_id.id,'state':'done'})
+        else:
+            res_wizard_view = self.env.ref('gbs_purchase_order.purchase_order_type_wizard')
+            res = {
+                'name': _('Please Select LC Region Type and Purchase By before approve'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': res_wizard_view and res_wizard_view.id or False,
+                'res_model': 'purchase.order.type.wizard',
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'context': {'region_type': self.region_type or False,
+                            'purchase_by': self.purchase_by or False,
+                            'operating_unit_id': self.operating_unit_id.id},
+                'target': 'new',
+            }
+
+            # res['return_original_method'] = super(PurchaseOrder, self).button_confirm()
+            return res
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'draft')]
+
+    @api.multi
+    def print_service_order(self):
+        data = {}
+        data['active_id'] = self.id
+        return self.env['report'].get_action(self, 'gbs_samuda_service_order.report_service_order', data)
+
+
+

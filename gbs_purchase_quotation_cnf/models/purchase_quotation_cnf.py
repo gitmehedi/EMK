@@ -46,3 +46,9 @@ class PurchaseCNFQuotation(models.Model):
         if self.shipment_id.state in ['done','cancel']:
             raise UserError(_('Sorry! Unable to reverse this C&F because the shipment is done.'))
         self.write({'state': 'draft'})
+
+    def print_cnf(self):
+        data = {}
+        data['active_id'] = self.id
+        return self.env['report'].get_action(self, 'gbs_purchase_quotation_cnf.report_cnf', data)
+

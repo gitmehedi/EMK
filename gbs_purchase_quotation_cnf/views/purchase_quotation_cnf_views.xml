@@ -17,9 +17,20 @@
                         <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                         <button name="button_cancel" states="draft,to approve,sent" string="Cancel" type="object" />
                         <button name="action_reset_cnf" type="object" string="Reset to Quotation" states="purchase,done" groups="commercial.group_commercial_manager"/>
+                        <button name="print_cnf" type="object" attrs="{'invisible':[('shipment_id','=',False)]}" string="Print C&amp;F Quotation"/>
+
                         <field name="state" widget="statusbar" statusbar_visible="draft,purchase"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+
+                            <button type="object" name="action_view_invoice"
+                                    class="oe_stat_button"
+                                    icon="fa-pencil-square-o">
+                                <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
+                                <field name='invoice_ids' invisible="1"/>
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="shipment_id" attrs="{'required':[('cnf_quotation','=',True)],'readonly':[('state', 'in', ['purchase','done'])]}"

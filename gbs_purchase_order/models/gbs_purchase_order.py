@@ -323,6 +323,11 @@ class PurchaseOrder(models.Model):
             context.update({'operating_unit_id': operating_unit_id})
             self.env.context = frozendict(context)
 
+    def print_purchase_order(self):
+        data = {}
+        data['active_id'] = self.id
+        return self.env['report'].get_action(self, 'gbs_purchase_order.report_purchase_order', data)
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
