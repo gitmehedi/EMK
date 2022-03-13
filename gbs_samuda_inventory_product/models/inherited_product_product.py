@@ -17,7 +17,6 @@ class InheritedProductProduct(models.Model):
 
         if no_create_edit_button:
             if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
-                print('entered into action', view_type)
                 for node_form in doc.xpath("//kanban"):
                     node_form.set("create", 'false')
                     node_form.set("edit", 'false')
