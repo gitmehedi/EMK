@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="before">
-                    <field name="applicant_image" widget="image" class="oe_avatar"/>
+                    <field name="applicant_image" widget="image" hieght="150px" width="150px" />
                 </xpath>
                 <xpath expr="//field[@name='stage_id']" position="replace">
                     <field name="state" widget="statusbar" statusbar_visible="draft,gm_approve,cxo_approve,approved"/>
@@ -22,7 +22,7 @@
                 <xpath expr="//field[@name='marital_status']" position="after">
                     <field name="father_name"/>
                     <field name="mother_name"/>
-                    <separator string="Permanent Details " colspan="4" />
+                    <separator string="Present Details " colspan="4" />
                         <field name="pre_address_1"/>
                         <field name="pre_address_2"/>
                         <field name="pre_zip_postal"/>
@@ -38,7 +38,7 @@
                  <xpath expr="//field[@name='stage_id']" position="after">
                      <field name="birth_date"/>
                     <field name="nationality"/>
-                      <separator string="Present Details " colspan="4" />
+                      <separator string="Permanent Details " colspan="4" />
                      <field name="per_address_1"/>
                         <field name="per_address_2"/>
                         <field name="per_zip_postal"/>

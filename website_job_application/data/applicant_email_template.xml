@@ -3,7 +3,7 @@
     <data>
         <record id="applicant_email_confirm_template" model="mail.template">
             <field name="name">Application Submit Confirmation</field>
-            <field name="model_id" ref="gbs_hr_recruitment.model_hr_applicant"/>
+            <field name="model_id" ref="base.model_res_partner"/>
             <field name="subject">Thank you for your application</field>
             <field name="email_from">
                 <![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
@@ -18,9 +18,9 @@
                 </table>
             </div>
             <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-            <p>Dear ${ctx['name']},</p>
+            <p>Dear ${ctx['firstname']},</p>
                 <p>
-                Thank you for applying to the ${ctx['name']} position at ${object.company_id.name}.
+                Thank you for applying to the ${ctx['job_name']} position at ${object.company_id.name}.
                 I’d like to inform you that we received your resume. Our hiring team is currently reviewing all applications and we are planning to schedule interviews within short time.
                 If you are among qualified candidates, you will receive [e.g. a call/email] from our one of our recruiters to schedule interview.
                 In any case, we will keep you posted on the status of your application.
