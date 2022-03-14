@@ -22,11 +22,15 @@
                 <xpath expr="//field[@name='marital_status']" position="after">
                     <field name="father_name"/>
                     <field name="mother_name"/>
-                    <field name="pre_address_1"/>
-                    <field name="pre_address_2"/>
-                    <field name="pre_zip_postal"/>
-                    <field name="pre_country_id"/>
+                    <separator string="Permanent Details " colspan="4" />
+                        <field name="pre_address_1"/>
+                        <field name="pre_address_2"/>
+                        <field name="pre_zip_postal"/>
+                        <field name="pre_country_id" options="{'no_create':True,'no_open':True}"/>
+
                 </xpath>
+                <xpath expr="/form/sheet/group" position="inside">
+                         </xpath>
 
                 <xpath expr="//field[@name='reference']" position="after">
                     <field name="stage_id" options="{'no_create':True,'no_open':True}" />
@@ -34,11 +38,14 @@
                  <xpath expr="//field[@name='stage_id']" position="after">
                      <field name="birth_date"/>
                     <field name="nationality"/>
-                    <field name="per_address_1"/>
-                    <field name="per_address_2"/>
-                    <field name="per_zip_postal"/>
-                    <field name="pre_country_id"/>
+                      <separator string="Present Details " colspan="4" />
+                     <field name="per_address_1"/>
+                        <field name="per_address_2"/>
+                        <field name="per_zip_postal"/>
+                        <field name="per_country_id" options="{'no_create':True,'no_open':True}"/>
+
                 </xpath>
+
 
                 <xpath expr="//button[@name='archive_applicant']" position="before">
                     <button name="action_confirm" string="Confirm"  type="object"
