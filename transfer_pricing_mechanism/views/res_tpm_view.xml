@@ -82,7 +82,7 @@
                                                         </group>
                                                     </group>
                                                     <notebook>
-                                                        <page string="Product (BDT)">
+                                                        <page string="Products (Local)">
                                                             <field name="line_local_ids">
                                                                 <tree decoration-success="pl_status=='income'"
                                                                       decoration-danger="pl_status=='expense'">
@@ -90,10 +90,10 @@
                                                                     <field name="currency_id"/>
                                                                     <field name="balance"/>
                                                                     <field name="pl_status"/>
-                                                                    <field name="income" sum="income"/>
                                                                     <field name="income_rate"/>
-                                                                    <field name="expense" sum="expense"/>
+                                                                    <field name="income" sum="income"/>
                                                                     <field name="expense_rate"/>
+                                                                    <field name="expense" sum="expense"/>
                                                                 </tree>
                                                                 <form>
                                                                     <group>
@@ -113,7 +113,7 @@
                                                                 </form>
                                                             </field>
                                                         </page>
-                                                        <page string="Product (USD)">
+                                                        <page string="Products (Foreign)">
                                                             <field name="line_foreign_ids">
                                                                 <tree decoration-success="pl_status=='income'"
                                                                       decoration-danger="pl_status=='expense'">
@@ -121,10 +121,10 @@
                                                                     <field name="currency_id"/>
                                                                     <field name="balance"/>
                                                                     <field name="pl_status"/>
-                                                                    <field name="income" sum="income"/>
                                                                     <field name="income_rate"/>
-                                                                    <field name="expense" sum="expense"/>
+                                                                    <field name="income" sum="income"/>
                                                                     <field name="expense_rate"/>
+                                                                    <field name="expense" sum="expense"/>
                                                                 </tree>
                                                                 <form>
                                                                     <group>
@@ -145,7 +145,6 @@
                                                             </field>
                                                         </page>
                                                     </notebook>
-
                                                 </form>
                                             </field>
                                         </sheet>

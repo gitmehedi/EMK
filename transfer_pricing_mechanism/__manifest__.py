@@ -14,6 +14,7 @@
         'account',
         'operating_unit',
         'mtbl_access',
+        'account_mtbl',
     ],
     'data': [
         # 'security/security.xml',

@@ -23,6 +23,14 @@
                                     </div>
                                 </div>
 
+                                <label for="id" string="TPM Branch" groups="tpm_management.grp_tpm_system_settings"/>
+                                <div name="tpm_branch_id" groups="tpm_management.grp_tpm_system_settings">
+                                    <div>
+                                        <field name="tpm_branch_id"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                </div>
+
                                 <label for="id" string="General Account"/>
                                 <div name="tpm_general_account_id">
                                     <div>

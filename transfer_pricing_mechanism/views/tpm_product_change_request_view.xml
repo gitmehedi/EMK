@@ -27,6 +27,7 @@
                         <group>
                             <field name="date"/>
                             <field name="currency_id" options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
+                            <field name="narration"/>
                         </group>
                         <group>
                             <field name="income_rate"/>
@@ -39,22 +40,22 @@
                                    options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
                         </page>
                         <page string="Chart of Account">
-                            <field name="account_ids" attrs="{'invisible':[('currency_id','!=',56)]}">
+                            <field name="account_ids" attrs="{'invisible':[('currency_id','=','fc')]}">
                                 <tree>
                                     <field name="name"/>
                                     <field name="code"/>
-                                    <field name="currency_id"/>
+                                    <field name="tpm_currency_id" string="Currency"/>
                                     <field name="user_type_id"/>
                                     <field name="reconcile"/>
                                     <field name="revaluation"/>
                                     <field name="state"/>
                                 </tree>
                             </field>
-                            <field name="account_fc_ids" attrs="{'invisible':[('currency_id','=',56)]}">
+                            <field name="account_fc_ids" attrs="{'invisible':[('currency_id','=','lc')]}">
                                 <tree>
                                     <field name="name"/>
                                     <field name="code"/>
-                                    <field name="currency_id"/>
+                                    <field name="tpm_currency_id" string="Currency"/>
                                     <field name="user_type_id"/>
                                     <field name="reconcile"/>
                                     <field name="revaluation"/>

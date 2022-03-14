@@ -28,7 +28,7 @@ class TPMProductChangeRequest(models.Model):
         currency = self.env.user.company_id.currency_id.id
         query = """SELECT id,name,code FROM account_account 
                     WHERE level_id=6 AND code ~ '^[1234].*' 
-                          AND currency_id=%s
+                          AND tpm_currency_id=%s
                     ORDER BY code DESC;""" % currency
         self.env.cr.execute(query)
         ids = [val[2] for val in self.env.cr.fetchall()]
@@ -39,14 +39,22 @@ class TPMProductChangeRequest(models.Model):
         currency = self.env.user.company_id.currency_id.id
         query = """SELECT id,name,code FROM account_account 
                     WHERE level_id=6 AND code ~ '^[1234].*' 
-                          AND currency_id!=%s
+                          AND tpm_currency_id!=%s
                     ORDER BY code DESC;""" % currency
         self.env.cr.execute(query)
         ids = [val[2] for val in self.env.cr.fetchall()]
         return [('code', 'in', tuple(ids))]
 
+    @api.model
+    def _get_branch(self):
+        all_branch = self.env['operating.unit'].search([])
+        settings = self.env['res.tpm.config.settings'].search([], order='id desc', limit=1)
+        branch = all_branch - settings.excl_br_ids
+        return [('id', 'in', tuple(branch.ids))]
+
     name = fields.Char(string='Serial No', readonly=True, default='New', track_visibility='onchange')
     branch_ids = fields.Many2many('operating.unit', string='Branch', required=True, readonly=True,
+                                  domain=lambda self: self._get_branch(),
                                   track_visibility='onchange', states={'draft': [('readonly', False)]})
     account_ids = fields.Many2many('account.account', 'tpm_account_rel', 'tpm_id', 'account_id',
                                    string='Chart of Account', readonly=True,
@@ -64,11 +72,12 @@ class TPMProductChangeRequest(models.Model):
                                 readonly=True, states={'draft': [('readonly', False)]})
     date = fields.Date('Date', readonly=True, track_visibility='onchange', default=fields.Date.today, required=True,
                        states={'draft': [('readonly', False)]})
+    narration = fields.Text('Narration', readonly=True, track_visibility='onchange', required=True,
+                            states={'draft': [('readonly', False)]})
     count = fields.Char(string='Total Products')
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True, track_visibility='onchange',
-                                  domain=[('name', 'in', ['USD', 'BDT'])],
-                                  default=lambda self: self.env.user.company_id.currency_id.id,
-                                  readonly=True, states={'draft': [('readonly', False)]})
+    currency_id = fields.Selection([('lc', 'Local Currency'), ('fc', 'Foreign Currency')],
+                                   string='Currency', required=True, track_visibility='onchange', default='lc',
+                                   readonly=True, states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
     approve_date = fields.Datetime('Approve Date', track_visibility='onchange')
@@ -107,7 +116,7 @@ class TPMProductChangeRequest(models.Model):
                                                                        'date': self.date,
                                                                        'state': 'draft'})
 
-                if self.currency_id.name == 'BDT':
+                if self.currency_id == 'lc':
                     line_account_ids = dict([(val.account_id.id, val.id) for val in exist_branch.line_ids])
 
                     insert = ''
@@ -122,7 +131,7 @@ class TPMProductChangeRequest(models.Model):
                                                                                                 self.income_rate,
                                                                                                 self.expense_rate,
                                                                                                 self.date, line,
-                                                                                                self.currency_id.id,
+                                                                                                rec.tpm_currency_id.id,
                                                                                                 user_id, user_id,
                                                                                                 datetime, datetime)
                         else:
@@ -157,7 +166,7 @@ class TPMProductChangeRequest(models.Model):
                                                                                                 self.income_rate,
                                                                                                 self.expense_rate,
                                                                                                 self.date, line,
-                                                                                                self.currency_id.id,
+                                                                                                rec.tpm_currency_id.id,
                                                                                                 user_id, user_id,
                                                                                                 datetime, datetime)
                         else:
@@ -180,7 +189,7 @@ class TPMProductChangeRequest(models.Model):
 
                 exist_branch.write({'state': 'confirm'})
 
-        if self.currency_id.code == 'BDT':
+        if self.currency_id == 'fc':
             self.account_fc_ids = []
         else:
             self.account_ids = []

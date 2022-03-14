@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _, SUPERUSER_ID
@@ -14,8 +15,14 @@ class ResTPM(models.Model):
     def _default_from_date(self):
         return self.env.user.company_id.batch_date
 
+    def _default_branch(self):
+        branch = self.env['res.tpm.config.settings'].search([], order='id desc', limit=1)
+        if branch:
+            return branch.tpm_branch_id
+
     name = fields.Char('Name', size=200, track_visibility='onchange', readonly=True)
     branch_id = fields.Many2one('operating.unit', string='Branch', readonly=True, required=True,
+                                default=_default_branch,
                                 states={'draft': [('readonly', False)]})
     date = fields.Date(string='From Date', default=_default_from_date, required=True, readonly=True,
                        states={'draft': [('readonly', False)]})
@@ -67,8 +74,8 @@ class ResTPM(models.Model):
         query = """SELECT RATE.BRANCH_ID,
                         RATE.ACCOUNT_ID,
                         RATE.CURRENCY_ID,
-                        RATE.INCOME_RATE,
-                        RATE.EXPENSE_RATE
+                        COALESCE(RATE.INCOME_RATE,0),
+	                    COALESCE(RATE.EXPENSE_RATE,0)
                     FROM
                         (SELECT RTP.BRANCH_ID,
                                 RTPL.ACCOUNT_ID,
@@ -107,15 +114,15 @@ class ResTPM(models.Model):
 
             local_rate = self.get_tpm_rate()
 
-            branch_all = self.env['operating.unit'].sudo().search([('active', '=', True), ('pending', '=', False)])
+            branch_all = self.env['res.tpm.product'].sudo().search([('state', '=', 'confirm')])
             setting = self.env['res.tpm.config.settings'].search([], order='id desc', limit=1)
             if not setting:
                 raise ValidationError(_("Please configure settings data"))
 
-            branch = branch_all - setting.excl_br_ids
+            branch = list(set([val.branch_id.id for val in branch_all]) - set(setting.excl_br_ids.ids))
             branch_lines = {}
             for val in branch:
-                branch_lines[val.id] = {}
+                branch_lines[val] = {}
 
             cur_date = fields.Date.today()
             fy = self.env['date.range'].search([('date_end', '>=', cur_date), ('date_start', '<=', cur_date),
@@ -136,9 +143,10 @@ class ResTPM(models.Model):
                                 TPM.ACCOUNT,
                                 TPM.CURRENCY,
                                 AA.CODE,
-                                COALESCE(SUM(TPM.BALANCE),0) AS BALANCE,
+                                COALESCE(SUM(TPM.BALANCE),0) AS INIT_BAL,
                                 COALESCE(SUM(TPM.DEBIT),0) AS DEBIT,
-                                COALESCE(SUM(TPM.CREDIT),0) AS CREDIT
+                                COALESCE(SUM(TPM.CREDIT),0) AS CREDIT,
+                                COALESCE(SUM(TPM.BALANCE),0) - COALESCE(SUM(TPM.DEBIT),0) + COALESCE(SUM(TPM.CREDIT),0) AS CUR_BAL
                             FROM
                                 (SELECT AML.OPERATING_UNIT_ID AS BRANCH,
                                         AML.ACCOUNT_ID AS ACCOUNT,
@@ -174,13 +182,13 @@ class ResTPM(models.Model):
                                             AML.ACCOUNT_ID,
                                             AML.CURRENCY_ID ) AS TPM
                             LEFT JOIN ACCOUNT_ACCOUNT AA ON (AA.ID = TPM.ACCOUNT)
-                            WHERE TPM.BRANCH NOT IN %s
+                            WHERE TPM.BRANCH IN %s
                             GROUP BY TPM.BRANCH,
                                 TPM.ACCOUNT,
                                 TPM.CURRENCY,
                                 AA.CODE
                             ORDER BY TPM.BRANCH DESC""" % (
-                    fy_start_date, end_date, start_date, end_date, tuple(setting.excl_br_ids.ids))
+                    fy_start_date, end_date, start_date, end_date, tuple(branch))
 
                 self.env.cr.execute(query)
                 for bal in self.env.cr.fetchall():
@@ -203,27 +211,30 @@ class ResTPM(models.Model):
                     else:
                         income_acc = 'expense'
 
-                    balance = bal[6] - bal[5] + bal[4]
+                    init_bal = bal[4]
+                    cur_bal = bal[7]
 
-                    if income_acc == 'income':
-                        debit_amount = round(abs(balance * income_ratio), 2)
-                        credit_amount = 0.0
-                    else:
-                        debit_amount = 0.0
-                        credit_amount = round(abs(balance) * expense_ratio, 2)
+                    if cur_bal != 0:
+                        if income_acc == 'income':
+                            income_amount = round(cur_bal * income_ratio, 2)
+                            expense_amount = 0.0
+                        else:
+                            income_amount = 0.0
+                            expense_amount = round(cur_bal * expense_ratio, 2)
 
-                    line = {
-                        'account_id': bal[1],
-                        'income': credit_amount,
-                        'expense': debit_amount,
-                        'balance': balance,
-                        'pl_status': income_acc,
-                        'date': start_date,
-                        'income_rate': income,
-                        'expense_rate': expense,
-                        'currency': bal[2],
-                    }
-                    branch_lines[branch_id][tpm_date].append(line)
+                        line = {
+                            'account_id': bal[1],
+                            'income': income_amount,
+                            'expense': expense_amount,
+                            'init_bal': init_bal,
+                            'cur_bal': cur_bal,
+                            'pl_status': income_acc,
+                            'date': start_date,
+                            'income_rate': income,
+                            'expense_rate': expense,
+                            'currency': bal[2],
+                        }
+                        branch_lines[branch_id][tpm_date].append(line)
 
             local_rate, foreign_rate = '', ''
             cr_dt = fields.Datetime.now()
@@ -245,16 +256,17 @@ class ResTPM(models.Model):
                     income, expense, balance = 0, 0, 0
                     for rate in val_key:
                         if rate['pl_status'] == 'income':
-                            income += (rate['income'] - rate['expense'])
+                            income += rate['income']
                         if rate['pl_status'] == 'expense':
-                            expense += (rate['income'] - rate['expense'])
+                            expense += rate['expense']
 
+                        # if rate['income'] > 0 or rate['expense'] > 0:
                         if rate['currency'] == 56:
                             local_rate += "({0},{1},{2},{3},'{4}',{5},{6},'{7}',{8},{9},{10},{11},'{12}','{13}'),".format(
                                 rate['account_id'],
                                 rate['income'],
                                 rate['expense'],
-                                rate['balance'],
+                                rate['init_bal'],
                                 rate['date'],
                                 rate['income_rate'],
                                 rate['expense_rate'],
@@ -268,7 +280,7 @@ class ResTPM(models.Model):
                                 rate['account_id'],
                                 rate['income'],
                                 rate['expense'],
-                                rate['balance'],
+                                rate['init_bal'],
                                 rate['date'],
                                 rate['income_rate'],
                                 rate['expense_rate'],
@@ -279,10 +291,20 @@ class ResTPM(models.Model):
                                 cr_dt, cr_dt)
 
                     balance = abs(income) - abs(expense)
-                    pl_status = 'income' if balance > 0 else 'expense'
-                    date_entry.write({'income': abs(income),
-                                      'expense': abs(expense),
-                                      'balance': abs(balance),
+                    if balance > 0:
+                        income = balance
+                        expense = 0
+                        pl_status = 'income'
+                        balance = balance
+                    else:
+                        income = 0
+                        expense = balance
+                        pl_status = 'expense'
+                        balance = balance
+
+                    date_entry.write({'income': income,
+                                      'expense': expense,
+                                      'balance': balance,
                                       'pl_status': pl_status})
 
             if local_rate:
@@ -316,6 +338,7 @@ class ResTPM(models.Model):
         if self.state == 'confirm':
             lines = []
             date = self.env.user.company_id.batch_date
+            date_narr = datetime.strptime(date, "%Y-%m-%d").strftime("%b, %Y")
             journal_entry = ""
             tpm_config = self.env['res.tpm.config.settings'].search([], order='id desc', limit=1)
             if not tpm_config:
@@ -331,10 +354,11 @@ class ResTPM(models.Model):
             expense_account = tpm_config.tpm_expense_account_id.id
             expense_seq = tpm_config.tpm_expense_seq_id.id
             move = self.env['account.move'].create({
-                'ref': 'TPM in [{0}] with ref {1}'.format(self.date, self.name),
+                'ref': 'TPM FOR [{0}] BETWEEN [{1}] AND [{2}]'.format(self.name, self.date, self.to_date),
                 'date': date,
                 'journal_id': journal,
-                'is_cr': True
+                'is_cr': True,
+                'is_sync': False,
             })
 
             for rec in self.line_ids:
@@ -343,9 +367,11 @@ class ResTPM(models.Model):
                     continue
 
                 income, expense = {}, {}
+                br_nar = re.sub(r'[|\n||\r|?|$|.|!|\'|]', r' ', branch.display_name)
+                tr_nar = re.sub(r'[|\n||\r|?|$|.|!|\'|]', r' ', self.branch_id.display_name)
                 if rec.income > 0:
-                    inc_br_nar = "FTP Income Jan, 2022, Treasury Dept"
-                    inc_tr_nar = "FTP Expense Jan, 2022, Corporate Head Office"
+                    inc_br_nar = "FTP Income %s, %s" % (date_narr, br_nar)
+                    inc_tr_nar = "FTP Expense %s, %s" % (date_narr, tr_nar)
 
                     income['inc_br_cr'] = {
                         'name': inc_br_nar,
@@ -416,8 +442,8 @@ class ResTPM(models.Model):
                     journal_entry += self.format_journal(income['inc_tr_cr'])
                     journal_entry += self.format_journal(income['inc_tr_dr'])
                 else:
-                    exp_br_nar = "FTP Expense Jan, 2022, Treasury Dept"
-                    exp_tr_nar = "FTP Income Jan, 2022, Principal Branch"
+                    exp_br_nar = "FTP Expense %s, %s" % (date_narr, tr_nar)
+                    exp_tr_nar = "FTP Income %s, %s" % (date_narr, br_nar)
 
                     expense['exp_br_dr'] = {
                         'name': exp_br_nar,
@@ -573,15 +599,17 @@ class ResTPMBranch(models.Model):
         for rec in self:
             income = sum([val.income for val in rec.line_ids])
             expense = sum([val.expense for val in rec.line_ids])
-            balance = income - expense
+            balance = abs(income) - abs(expense)
+
             if balance > 0:
                 rec.income = abs(balance)
-                rec.expense = 0
+                rec.expense = 0.0
                 rec.pl_status = 'income'
             else:
-                rec.income = 0
+                rec.income = 0.0
                 rec.expense = abs(balance)
                 rec.pl_status = 'expense'
+
 
 
 class ResTPMBranchDaily(models.Model):
@@ -590,7 +618,7 @@ class ResTPMBranchDaily(models.Model):
 
     income = fields.Float(string='Income Amount', digits=(14, 2))
     expense = fields.Float(string='Expense Amount', digits=(14, 2))
-    balance = fields.Float(string='Balance', digits=(14, 2))
+    balance = fields.Float(string='Amount', digits=(14, 2))
     date = fields.Date(string='Date', required=True)
     pl_status = fields.Selection([('income', 'Income'), ('expense', 'Expense')], string='Income/Expense')
     line_id = fields.Many2one('res.tpm.branch', ondelete='cascade')

@@ -12,7 +12,7 @@ class ResTPMConfigSettings(models.Model):
     tpm_general_account_id = fields.Many2one('account.account', string='General Account', required=True,
                                              track_visibility='onchange', domain="[('level_id.name','=','Layer 5')]")
     tpm_general_seq_id = fields.Many2one('sub.operating.unit', string='General Account Sequence', required=True,
-                                        track_visibility='onchange')
+                                         track_visibility='onchange')
     tpm_income_account_id = fields.Many2one('account.account', string='Income Account', required=True,
                                             track_visibility='onchange', domain="[('level_id.name','=','Layer 5')]")
     tpm_income_seq_id = fields.Many2one('sub.operating.unit', string='Income Account Sequence', required=True,
@@ -32,6 +32,7 @@ class ResTPMConfigSettings(models.Model):
                                    track_visibility='onchange', readonly=True)
     excl_br_ids = fields.Many2many('operating.unit', 'tpm_config_rel', 'tpm_id', 'branch_id',
                                    track_visibility='onchange', string='Exclude Branch')
+    tpm_branch_id = fields.Many2one('operating.unit', required=True, track_visibility='onchange')
 
     @api.constrains('config_type')
     def _check_unique_constrain(self):
@@ -39,4 +40,3 @@ class ResTPMConfigSettings(models.Model):
             name = self.search([('config_type', '=', self.config_type)])
             if len(name) > 1:
                 raise Warning('[Unique Error] Can\'t  create same configuration name multiple times!')
-
