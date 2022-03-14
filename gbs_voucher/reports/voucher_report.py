@@ -54,6 +54,34 @@ class GBSVoucherReport(models.AbstractModel):
         report_data['sum_of_credit'] = sum_of_credit
         report_data['bank_word_amount'] = self.env['res.currency'].amount_to_word(float(sum_of_credit))
 
+        mail_message_ids = self.env['mail.message'].search(
+            [('model', '=', 'account.move'), ('res_id', '=', am_obj.id)], order="id asc").ids
+        checked_by_user_name = ''
+        checked_by_user_department = ''
+        prepared_by_user_name = ''
+        prepared_by_user_department = ''
+        if mail_message_ids:
+            mail_tracking_value_obj = self.env['mail.tracking.value'].search(
+                [('mail_message_id', 'in', tuple(mail_message_ids))], order="id desc")
+            prepared_by_user_info = self.env['employee.information.from.user'].get_prepared_by(mail_message_ids)
+
+            if prepared_by_user_info:
+                prepared_by_user_name = prepared_by_user_info[0]
+                prepared_by_user_department = prepared_by_user_info[1]
+
+            if am_obj.state == 'posted':
+                checked_by_user_info = self.env['employee.information.from.user'].get_checked_by(mail_tracking_value_obj)
+                if checked_by_user_info:
+                    checked_by_user_name = checked_by_user_info[0]
+                    checked_by_user_department = checked_by_user_info[1]
+
+
+        report_data['prepared_user_name'] = prepared_by_user_name
+        report_data['prepared_department_name'] = prepared_by_user_department
+        report_data['checked_user_name'] = checked_by_user_name
+        report_data['checked_department_name'] = checked_by_user_department
+
+
         docargs = {
             'data': report_data,
             'title': report_title,

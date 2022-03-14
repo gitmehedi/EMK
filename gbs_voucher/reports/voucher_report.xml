@@ -121,7 +121,6 @@
                                     </td>
                                 </div>
                             </table>
-
                             <table class="table" style="margin-top:20px;">
                                 <tr>
                                     <td class="text-center">Prepared By</td>
@@ -132,23 +131,41 @@
 
                                 </tr>
                                 <tr>
-                                    <td class="text-center" style="padding-top:1cm">
+                                    <td class="text-center" style="padding-top:2cm">
                                         ....................
                                     </td>
-                                    <td class="text-center" style="padding-top:1cm">
+                                    <td class="text-center" style="padding-top:2cm">
                                         ....................
                                     </td>
-                                    <td class="text-center" style="padding-top:1cm">
+                                    <td class="text-center" style="padding-top:2cm">
                                         ....................
                                     </td>
-                                    <td class="text-center" style="padding-top:1cm">
+                                    <td class="text-center" style="padding-top:2cm">
                                         ....................
                                     </td>
-                                    <td class="text-center" style="padding-top:1cm">
+                                    <td class="text-center" style="padding-top:2cm">
                                         ....................
                                     </td>
                                 </tr>
+
+                                <tr>
+                                    <td style="text-align:center; width:20%; ">
+                                        <br><span style="text-align:center; font-weight:bold;" t-esc="data['prepared_user_name']"/>
+                                        </br><br><span t-esc="data['prepared_department_name']"/></br>
+                                    </td>
+                                    <td style="text-align:center; width:20%; ">
+                                        <br><span style="text-align:center; font-weight:bold;" t-esc="data['checked_user_name']"/>
+                                        </br><br><span t-esc="data['checked_department_name']"/></br>
+                                        <br><span ></span></br>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+
                             </table>
+
                         </div>
                     </div>
                 </t>
