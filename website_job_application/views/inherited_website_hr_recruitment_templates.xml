@@ -103,9 +103,9 @@
                                         <input type="text" class="form-control o_website_form_input input-sm"
                                                placeholder="8801900000000" minlength="13" maxlength="13"
                                                pattern="(880)([0-9]{10})"
-                                               t-att-value="partner_phone" id="partner_phone"
+                                               t-att-value="partner_mobile" id="partner_mobile"
                                                data-minlength="13" data-maxlength="13"
-                                               name="partner_phone" required=""/>
+                                               name="partner_mobile" required=""/>
                                     </div>
                                     <div class="form-group col-md-6 form-field ">
                                         <label class="control-label">Email</label>
@@ -176,8 +176,9 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group form-field">
+                                                    <label class="control-label">Country</label>
                                                     <select class="form-control input-sm reqfield"
-                                                            name="country_id">
+                                                            name="pre_country_id">
                                                         <option value="">--Please Select--</option>
                                                         <t t-foreach="country_ids" t-as='label'>
                                                             <option t-att-value="label_value[0]"
@@ -220,8 +221,9 @@
 
                                             <div class="col-md-12">
                                                 <div class="form-group form-field">
+                                                    <label class="control-label">Country</label>
                                                     <select class="form-control input-sm reqfield"
-                                                            name="country_id">
+                                                            name="per_country_id">
                                                         <option value="">--Please Select--</option>
                                                         <t t-foreach="country_ids" t-as='label'>
                                                             <option t-att-value="label_value[0]"
@@ -255,7 +257,7 @@
                                                        accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"
                                                 />
 
-                                                <p class="help-block">Upload resume in any format.</p>
+<!--                                                <p class="help-block">Upload resume in any format.</p>-->
                                             </div>
                                         </div>
                                     </div>

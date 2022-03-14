@@ -10,6 +10,7 @@
                 'gbs_bd_district'
                 ],
     'data': [
+        'data/applicant_email_template.xml',
         'report/report_paperformat1.xml',
         'report/applicant_form_report.xml',
         'report/applicant_form_report_template.xml',

@@ -27,14 +27,14 @@ class HrApplicantInherit(models.Model):
     pre_address_2 = fields.Char(string='Vill/Para/Moholla', track_visibility='onchange')
     pre_zip_postal = fields.Char(string='Post Code', track_visibility='onchange')
     pre_district = fields.Char(string='District', track_visibility='onchange')
-    pre_country_id = fields.Char(string='Country', track_visibility='onchange')
+    pre_country_id = fields.Many2one('res.country', string="Country",  track_visibility='onchange')
 
     """Permanent Address"""
     per_address_1 = fields.Char(string='House and Road(Name/No)', track_visibility='onchange')
     per_address_2 = fields.Char(string='Vill/Para/Moholla', track_visibility='onchange')
     per_zip_postal = fields.Char(string='Post Code', track_visibility='onchange')
     per_district = fields.Char(string='District', track_visibility='onchange')
-    pre_country_id = fields.Char(string='Country', track_visibility='onchange')
+    per_country_id = fields.Many2one('res.country', string="Country", track_visibility='onchange')
     applicant_image = fields.Binary("Image", attachment=True,
                           help="This field holds the image used as image for the event, limited to 1080x720px.")
 

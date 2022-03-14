@@ -15,15 +15,12 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
                 auth_data = self.apply_for_job(context,job)
                 return request.render('website_hr_recruitment.success', {'firstname': auth_data['firstname']})
 
-
             except (ExtendWebsiteHrRecruitment, AssertionError) as e:
                 context['error'] = _("Could not create a new account.")
         else:
             context = self.validate_form_data(context)
 
-
         return request.render('website_hr_recruitment.apply', context)
-
 
     def validate_form_data(self, qcontext):
 
@@ -86,8 +83,8 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
                     error_fields.append(field_name)
 
         data['name'] = '%s\'s Application' % data['firstname']
-        data['partner_name'] = data['firstname']
-        data['partner_mobile'] = data['partner_phone']
+        data['partner_name'] = data['firstname'] + ' ' + data['partner_last_name']
+        # data['partner_mobile'] = data['partner_mobile']
         data['job_id'] = job.id
         applicant = request.env['hr.applicant'].sudo().post_applicant_data(data, values.get('token'))
 
@@ -133,8 +130,8 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
             'per_address_1',
             'per_address_2',
             'per_zip_postal',
-            'pre_country_id',
-            'partner_phone',
+            'per_country_id',
+            # 'partner_phone',
             'partner_mobile',
             'email_from',
             'job_id',
