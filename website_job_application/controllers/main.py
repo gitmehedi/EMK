@@ -13,7 +13,22 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
         if request.httprequest.method == 'POST' and ('error' not in context):
             try:
                 auth_data = self.apply_for_job(context,job)
-                return request.render('website_hr_recruitment.success', {'firstname': auth_data['firstname']})
+                if auth_data:
+                    mail_ins = request.env['res.partner'].sudo()
+                    mail_applicant = {
+                        'template': 'website_job_application.applicant_email_confirm_template',
+                        'email_to': auth_data['email_from'],
+                        'context': auth_data,
+                    }
+
+                    try:
+                        mail_ins.mailsend(mail_applicant)
+
+                        return request.render('website_hr_recruitment.success', {'firstname': auth_data['firstname']})
+                    except Exception, e:
+                        print(e)
+                        return request.render('website_hr_recruitment.success', {'firstname': auth_data['firstname']})
+                # return request.render('website_hr_recruitment.success', {'firstname': auth_data['firstname']})
 
             except (ExtendWebsiteHrRecruitment, AssertionError) as e:
                 context['error'] = _("Could not create a new account.")
@@ -86,11 +101,13 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
         data['partner_name'] = data['firstname'] + ' ' + data['partner_last_name']
         # data['partner_mobile'] = data['partner_mobile']
         data['job_id'] = job.id
+        data['job_name'] = job.name
+        print(data['job_name'])
         applicant = request.env['hr.applicant'].sudo().post_applicant_data(data, values.get('token'))
 
         files = request.httprequest.files.getlist('Resume')
         self.upload_attachment(files, applicant.id)
-        return applicant
+        return data
 
     def upload_attachment(self, files, id):
         Attachments = request.env['ir.attachment']
