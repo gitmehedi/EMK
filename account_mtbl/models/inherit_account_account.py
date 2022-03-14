@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from psycopg2 import IntegrityError
-
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import Warning, ValidationError
-from odoo.osv import expression
+from psycopg2 import IntegrityError
 
 
 class AccountAccount(models.Model):
@@ -33,10 +31,15 @@ class AccountAccount(models.Model):
                                states={'draft': [('readonly', False)]})
     maker_id = fields.Many2one('res.users', 'Maker', default=lambda self: self.env.user.id, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', 'Checker', track_visibility='onchange')
-    gl_type = fields.Selection([('online', 'Online')], string='GL Type')
+    gl_type = fields.Selection([('online', 'Online')], string='GL Type', readonly=True,
+                               states={'draft': [('readonly', False)]})
     originating_type = fields.Selection([('debit', 'Originating Debit'), ('credit', 'Originating Credit')],
-                                        string='Originating Type')
-    tb_filter = fields.Boolean(string="TB Filter", default=False)
+                                        string='Originating Type', readonly=True,
+                                        states={'draft': [('readonly', False)]})
+    tb_filter = fields.Boolean(string="TB Filter", default=False, readonly=True,
+                               states={'draft': [('readonly', False)]})
+    tpm_currency_id = fields.Many2one('res.currency', string='TPM Currency', readonly=True,
+                                      states={'draft': [('readonly', False)]})
 
     @api.constrains('code')
     def _check_numeric_constrain(self):
@@ -83,13 +86,6 @@ class AccountAccount(models.Model):
     def onchange_strips(self):
         if self.parent_id:
             self.code = self.parent_id.code
-            # filter = str(self.code.strip()).upper()
-            # if self.level_size == 1:
-            #     code = filter[:self.level_size]
-            # elif self.parent_id:
-            #     code = self.parent_id.code + filter
-            # if code:
-            #     self.code = code[:self.level_id.size]
 
     @api.model
     def name_search(self, name, args=None, operator='=ilike', limit=100):
@@ -172,6 +168,8 @@ class AccountAccount(models.Model):
                     change_val['user_type_id'] = requested.user_type_id.id
                 if requested.currency_id:
                     change_val['currency_id'] = requested.currency_id.id
+                if requested.tpm_currency_id:
+                    change_val['tpm_currency_id'] = requested.tpm_currency_id.id
                 if self.reconcile != requested.reconcile:
                     change_val['reconcile'] = requested.reconcile
                 if self.originating_type != requested.originating_type:
@@ -223,6 +221,7 @@ class HistoryAccountAccount(models.Model):
     line_id = fields.Many2one('account.account', ondelete='restrict')
     user_type_id = fields.Many2one('account.account.type', string='Type')
     currency_id = fields.Many2one('res.currency', string='Account Currency')
+    tpm_currency_id = fields.Many2one('res.currency', string='TPM Currency')
     reconcile = fields.Boolean(string='Allow Reconciliation')
     state = fields.Selection([('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected')],
                              default='pending', string='Status')

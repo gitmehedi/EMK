@@ -70,6 +70,10 @@
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                     <attribute name="groups">base.group_system,base.group_multi_currency</attribute>
                 </xpath>
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="tpm_currency_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                           required="True"/>
+                </xpath>
 
                 <xpath expr="//sheet" position="inside">
                     <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
@@ -79,6 +83,7 @@
                             <field name="change_name"/>
                             <field name="user_type_id"/>
                             <field name="currency_id"/>
+                            <field name="tpm_currency_id"/>
                             <field name="reconcile"/>
                             <field name="status"/>
                             <field name="request_date"/>
@@ -121,6 +126,7 @@
                         <field name="code"/>
                         <field name="level_id"/>
                         <field name="user_type_id"/>
+                        <field name="tpm_currency_id"/>
                         <field name="reconcile"/>
                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"
                                invisible="True"/>
@@ -142,6 +148,7 @@
                                string="Account"/>
                         <filter string="Receivable Accounts" domain="[('internal_type','=','receivable')]"/>
                         <filter string="Payable Accounts" domain="[('internal_type','=','payable')]"/>
+                        <field name="tpm_currency_id"/>
                         <field name="user_type_id"/>
                         <group string="Group By">
                             <filter string="Account Type" domain="" context="{'group_by':'user_type_id'}"/>

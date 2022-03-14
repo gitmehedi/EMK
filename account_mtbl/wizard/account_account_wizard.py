@@ -41,6 +41,7 @@ class AccountAccountWizard(models.TransientModel):
     name = fields.Char(string='Requested Name')
     user_type_id = fields.Many2one('account.account.type', string='Type')
     currency_id = fields.Many2one('res.currency', string='Account Currency')
+    tpm_currency_id = fields.Many2one('res.currency', string='TPM Currency')
     reconcile = fields.Boolean(string='Allow Reconciliation', default=default_reconcile)
     originating_type = fields.Selection([('debit', 'Originating Debit'), ('credit', 'Originating Credit')],
                                         string='Originating Type', default=default_originating_type)
@@ -78,6 +79,7 @@ class AccountAccountWizard(models.TransientModel):
 
         self.env['history.account.account'].create({'change_name': self.name,
                                                     'currency_id': self.currency_id.id,
+                                                    'tpm_currency_id': self.tpm_currency_id.id,
                                                     'user_type_id': self.user_type_id.id,
                                                     'status': self.status,
                                                     'request_date': fields.Datetime.now(),
