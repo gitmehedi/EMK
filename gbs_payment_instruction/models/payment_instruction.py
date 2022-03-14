@@ -60,6 +60,18 @@ class PaymentInstruction(models.Model):
                 self.invoice_id.write({'payment_approver': self.env.user.name})
             return self.write({'state': 'draft'})
 
+    @api.multi
+    def action_hot_fix(self):
+        if self.state == 'draft':
+            if self.invoice_id:
+                query = """UPDATE account_invoice
+                            SET residual=0,
+                                residual_company_signed=0,
+                                residual_signed=0
+                            WHERE id=%s""" % self.invoice_id.id
+                self.env.cr.execute(query)
+                return self.write({'state': 'approved'})
+
     @api.model
     def _needaction_domain_get(self):
         return [('state', '=', 'draft')]

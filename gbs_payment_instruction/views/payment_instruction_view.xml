@@ -13,6 +13,10 @@
                     <button name="action_reject" string="Cancel" type="object"
                             attrs="{'invisible': [('state', 'in', ('approved','cancel'))]}"
                             groups="gbs_payment_instruction.group_payment_approver"/>
+                    <button name="action_hot_fix" string="Fix Payment Instruction" type="object"
+                            class="oe_highlight"
+                            groups="gbs_payment_instruction.group_payment_admin"
+                            attrs="{'invisible': [('state', 'in', ('approved','cancel'))]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
                 </header>
                 <sheet>
@@ -113,7 +117,7 @@
         <field name="arch" type="xml">
             <search string="Search Move">
                 <field name="code" filter_domain="[('code', 'ilike', self)]"
-                           string="Payment Instruction"/>
+                       string="Payment Instruction"/>
                 <field name="invoice_id" filter_domain="[('invoice_id.number', 'ilike', self)]"/>
                 <field name="partner_id"/>
                 <field name="instruction_date"/>
@@ -139,8 +143,11 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="payment_instruction_bill_search"/>
-        <field name="domain">['|', '&amp;', ('invoice_id', '!=', False), '&amp;', ('invoice_id.is_asset', '=', False), ('invoice_id.vbg_batch_id', '=', False)
-            ,'|', '&amp;', ('advance_id', '!=', False), ('advance_id.type', '!=', 'multi'), ('security_return_id', '!=', False)]</field>
+        <field name="domain">['|', '&amp;', ('invoice_id', '!=', False), '&amp;', ('invoice_id.is_asset', '=', False),
+            ('invoice_id.vbg_batch_id', '=', False)
+            ,'|', '&amp;', ('advance_id', '!=', False), ('advance_id.type', '!=', 'multi'), ('security_return_id', '!=',
+            False)]
+        </field>
         <field name="context">{'search_default_draft':1}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
