@@ -23,10 +23,8 @@ class ExtendWebsiteHrRecruitment(WebsiteHrRecruitment):
 
                     try:
                         mail_ins.mailsend(mail_applicant)
-
                         return request.render('website_hr_recruitment.success', {'firstname': auth_data['firstname']})
-                    except Exception, e:
-                        print(e)
+                    except:
                         return request.render('website_hr_recruitment.success', {'firstname': auth_data['firstname']})
                 # return request.render('website_hr_recruitment.success', {'firstname': auth_data['firstname']})
 

@@ -18,7 +18,7 @@
                 </table>
             </div>
             <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-            <p>Dear ${ctx['firstname']},</p>
+            <p>Dear ${ctx['partner_name']},</p>
                 <p>
                 Thank you for applying to the ${ctx['job_name']} position at ${object.company_id.name}.
                 I’d like to inform you that we received your resume. Our hiring team is currently reviewing all applications and we are planning to schedule interviews within short time.
