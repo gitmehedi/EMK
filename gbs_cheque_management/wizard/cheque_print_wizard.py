@@ -42,12 +42,13 @@ class ChequePrintWizard(models.TransientModel):
         docs = self.env[model].browse(self.env.context.get('active_id', []))
         account_type_obj = self.env['account.account.type'].suspend_security().search([('is_bank_type', '=', True)],
                                                                                       limit=1, order="id asc")
-        credit_amount = 0
 
         for line in docs.line_ids:
-            if line.account_id.user_type_id == account_type_obj.id:
-                credit_amount = line.credit
-        return credit_amount
+            if line.account_id.user_type_id.id == account_type_obj.id:
+                if line.credit > 0:
+                    credit_amount = line.credit
+                    return credit_amount
+
 
     pay_to = fields.Char("Pay To", required=True, default=_default_pay_to)
     is_cross_cheque = fields.Boolean(string='Is Cross Cheque')
