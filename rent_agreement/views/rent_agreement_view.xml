@@ -275,7 +275,7 @@
             <field name="act_window_id" ref="rent_agreement_action"/>
         </record>
         <menuitem id="menu_rent_operations_main" name="Rental Operations"
-                  groups="base.group_rental_operation_user" sequence="101"/>
+                  groups="base.group_rental_operation_user" sequence="40"/>
         <menuitem id="menu_rent_operations" name="Rental Operations" sequence="5"
                   parent="menu_rent_operations_main" groups="base.group_rental_operation_user"/>
         <menuitem id="rent_agreement_menu" action="rent_agreement_action"

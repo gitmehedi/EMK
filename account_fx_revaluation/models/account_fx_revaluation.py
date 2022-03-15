@@ -1,5 +1,4 @@
 import logging
-import time
 from itertools import groupby
 
 from odoo import api, fields, models, _
@@ -20,7 +19,8 @@ class AccountFxRevaluation(models.Model):
                        states={'draft': [('readonly', False)]}, track_visibility='onchange')
     total_revaluation_amount = fields.Float(string='Profit/Loss Amount', readonly=True,
                                             states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    description = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]})
+    description = fields.Text(string='Narration', required='True', readonly=True,
+                              states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', 'Draft'), ('revaluate', 'Revaluated'), ('confirmed', 'Confirmed')],
                              default='draft', string="Status", copy=False, track_visibility='onchange')
 
@@ -143,18 +143,23 @@ class AccountFxRevaluation(models.Model):
         fxr_check = self.env['account.move'].search([('ref', '=', self.name)])
         if fxr_check:
             raise ValidationError(_("[Validation Error] Fx Revaluation already processing."))
+        journal = self.env.user.company_id.fx_revaluation_journal_id.id
+        company = self.env.user.company_id
+        amount = 0.0
 
-        move_vals = {
-            'journal_id': self.env.user.company_id.fx_revaluation_journal_id.id,
+        move = self.env['account.move'].create({
+            'journal_id': journal,
             'date': self.date,
             'state': 'draft',
             'is_cbs': True,
             'name': self.name,
             'ref': self.name,
-            'company_id': self.env.user.company_id.id,
-        }
+            'company_id': company.id,
+        })
 
         move_lines = []
+        journal_entry = ''
+        date = self.date or fields.date.today()
 
         for line in self.account_fx_revaluation_line_ids:
             for detail in line.account_fx_revaluation_line_details_ids:
@@ -167,19 +172,26 @@ class AccountFxRevaluation(models.Model):
                 else:
                     debit = abs(round(detail.profit_loss_amount, 2))
 
-                move_line_vals = {
+                line1 = {
                     'name': self.description or 'FX Revaluation',
                     'ref': self.name,
-                    'date': self.date or fields.date.today(),
+                    'date': date,
                     'account_id': detail.account_id.id,
                     'currency_id': detail.currency_id.id,
                     'operating_unit_id': detail.operating_unit_id.id,
                     'amount_currency': 0.0,
                     'debit': debit,
                     'credit': credit,
-                    'company_id': self.env.user.company_id.id
+                    'company_id': company.id,
+                    'date_maturity': date,
+                    'sub_operating_unit_id': 'NULL',
+                    'amount_currency': 0.0,
+                    'journal_id': journal,
+                    'move_id': move.id,
+                    'is_bgl': 'not_check'
                 }
-                move_lines.append((0, 0, move_line_vals))
+
+                journal_entry += self.format_journal(line1)
 
             # branch wise debit or credit line
             debit2, credit2 = 0.0, 0.0
@@ -190,27 +202,39 @@ class AccountFxRevaluation(models.Model):
             else:
                 credit2 = abs(round(line.revaluation_amount, 2))
 
-            move_line_vals2 = {
+            line2 = {
                 'name': self.description or 'FX Revaluation',
                 'ref': self.name,
-                'date': self.date or fields.date.today(),
+                'date': date,
                 'account_id': self.env.user.company_id.fx_revaluation_account_id.id,
                 'currency_id': self.env.user.company_id.currency_id.id,
                 'operating_unit_id': line.operating_unit_id.id,
                 'amount_currency': 0.0,
                 'debit': debit2,
                 'credit': credit2,
-                'company_id': self.env.user.company_id.id
+                'company_id': company.id,
+                'date_maturity': date,
+                'sub_operating_unit_id': 'NULL',
+                'journal_id': journal,
+                'move_id': move.id,
+                'is_bgl': 'not_check'
             }
-            move_lines.append((0, 0, move_line_vals2))
+            amount += debit2 if debit2 > 0 else credit2
+            journal_entry += self.format_journal(line2)
 
-        move_vals['line_ids'] = move_lines
+        if not journal_entry:
+            raise ValidationError(_("Credit/Debit should not be empty."))
 
-        move = self.env['account.move'].create(move_vals)
+        query = """INSERT INTO account_move_line 
+                                (move_id, date,date_maturity, operating_unit_id, account_id, name,ref, currency_id, journal_id,
+                                credit,debit,amount_currency,company_id,is_bgl,sub_operating_unit_id)  
+                                VALUES %s""" % journal_entry[:-1]
+        self.env.cr.execute(query)
         if move:
+            move.write({'amount': amount})
             move.sudo().post()
             self.write({'state': 'confirmed',
-                        'move_id': move.id,
+                        'move_id': move.id
                         })
 
     @api.multi
@@ -312,7 +336,27 @@ class AccountFxRevaluation(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', '=', 'confirmed')]
+        return [('state', 'in', ('draft', 'revaluate', 'confirmed'))]
+
+    @staticmethod
+    def format_journal(line):
+        return "({0},'{1}','{2}',{3},{4},'{5}','{6}',{7},{8},{9},{10},{11},{12},'{13}',{14}),".format(
+            line['move_id'],
+            line['date'],
+            line['date_maturity'],
+            line['operating_unit_id'],
+            line['account_id'],
+            line['name'],
+            line['name'],
+            line['currency_id'],
+            line['journal_id'],
+            line['credit'],
+            line['debit'],
+            line['amount_currency'],
+            line['company_id'],
+            line['is_bgl'],
+            line['sub_operating_unit_id'],
+        )
 
 
 class AccountFxRevaluationLine(models.Model):

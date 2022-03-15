@@ -131,20 +131,29 @@
         </record>
 
         <!-- Action for Tree and Form View -->
-        <record id="account_fx_revaluation_action" model="ir.actions.act_window">
+        <record id="account_fx_revaluation_draft_action" model="ir.actions.act_window">
             <field name="name">FX Revaluation</field>
             <field name="res_model">account.fx.revaluation</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',('draft','revaluate'))]</field>
         </record>
 
-        <!-- Menu -->
-        <menuitem id="account_fx_revaluation_main" sequence="24"
-                  parent="account.menu_finance" name="Fx Revaluation"
-                  groups="base.group_fx_revaluation_user"/>
+        <menuitem id="account_fx_revaluation_menu_draft" action="account_fx_revaluation_draft_action"
+                  name="Revaluation (Draft)" sequence="10" groups="base.group_fx_revaluation_user"
+                  parent="account_fx_revaluation_main"/>
 
-        <menuitem id="account_fx_revaluation_menu" action="account_fx_revaluation_action"
-                  name="Fx Revaluations" sequence="50" groups="base.group_fx_revaluation_user"
+        <!-- Action for Tree and Form View -->
+        <record id="account_fx_revaluation_confirm_action" model="ir.actions.act_window">
+            <field name="name">FX Revaluation</field>
+            <field name="res_model">account.fx.revaluation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','confirmed')]</field>
+        </record>
+
+        <menuitem id="account_fx_revaluation_menu_confirm" action="account_fx_revaluation_confirm_action"
+                  name="Revaluation (Confirmed)" sequence="20" groups="base.group_fx_revaluation_user"
                   parent="account_fx_revaluation_main"/>
 
         <!-- Pivot View -->

@@ -18,6 +18,8 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/sequence_data.xml',
+        'views/menu_view.xml',
+        'views/inherit_account_currency_view.xml',
         'views/inherit_account_config_view.xml',
         'views/account_fx_revaluation_view.xml',
         'views/inherit_account_account_view.xml'
