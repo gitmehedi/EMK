@@ -1,7 +1,10 @@
-from odoo import api, fields, models, _, sql_db
-from odoo.service import db
-import subprocess, os, base64
+import base64
 import logging
+import os
+import subprocess
+
+from odoo import api, fields, models, sql_db
+from odoo.service import db
 
 _logger = logging.getLogger(__name__)
 
@@ -68,39 +71,10 @@ class DBOperationManage(models.Model):
                 _logger.info("Exception raise in backend", exc_info=True)
 
             if os.path.isfile(filepath):
-                term_query = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname=\'MTBL_REPORT\';"
-                term_str = "PGPASSWORD=\"{0}\" psql -h {1} -p {2} -d {3} -c \"{4}\" -U {5} >/dev/null 2>&1".format(
-                    self.dest_db_pass,
-                    self.dest_ip,
-                    self.dest_port,
-                    'postgres',
-                    term_query,
-                    'postgres', )
-                try:
-                    os.system(term_str)
-                except OSError as e:
-                    _logger.info("Exception raise in terminate", exc_info=True)
-
-                drop_query = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname=\'MTBL_REPORT\';"
-                drop_str = "PGPASSWORD=\"{0}\" psql -h {1} -p {2} -d {3} -c \"{4}\" -U {5} >/dev/null 2>&1".format(
-                    self.dest_db_pass,
-                    self.dest_ip,
-                    self.dest_port,
-                    self.destination_db,
-                    drop_query,
-                    self.dest_db_user)
-                try:
-                    os.system(drop_str)
-                except OSError as e:
-                    _logger.info("Exception raise in drop database", exc_info=True)
+                self._terminate_active_conn()
 
                 dest_cmd = "PGPASSWORD=\"{0}\" pg_restore -h {1} -p {2} -d {3} -c {4} -U {5} -w >/dev/null 2>&1".format(
-                    self.dest_db_pass,
-                    self.dest_ip,
-                    self.dest_port,
-                    self.destination_db,
-                    filepath,
-                    self.dest_db_user)
+                    self.dest_db_pass, self.dest_ip, self.dest_port, self.destination_db, filepath, self.dest_db_user)
 
                 os.system(dest_cmd)
                 try:
@@ -110,11 +84,7 @@ class DBOperationManage(models.Model):
 
                 try:
                     query_str = "PGPASSWORD=\"{0}\" psql -h {1} -p {2} -d {3} -c \"{4}\" -U {5}".format(
-                        self.dest_db_pass,
-                        self.dest_ip,
-                        self.dest_port,
-                        self.destination_db,
-                        self.query,
+                        self.dest_db_pass, self.dest_ip, self.dest_port, self.destination_db, self.query,
                         self.dest_db_user)
                     output = subprocess.check_output(query_str, shell=True)
                     self.line_ids.create({
@@ -129,6 +99,21 @@ class DBOperationManage(models.Model):
     @api.multi
     def _delete_db_result_line(self):
         self.line_ids.search([]).unlink()
+
+    def _terminate_active_conn(self):
+        drop_query = """SELECT pg_terminate_backend(pid)
+                         FROM pg_stat_activity
+                         WHERE datname='{0}' AND client_addr='{1}';""".format(self.destination_db, self.source_ip)
+
+        drop_str = "PGPASSWORD=\"{0}\" psql -h {1} -p {2} -d {3} -c \"{4}\" -U {5} >/dev/null 2>&1".format(
+            self.dest_db_pass, self.dest_ip, self.dest_port, self.destination_db, drop_query, self.dest_db_user)
+        try:
+            os.system(drop_str)
+        except OSError as e:
+            _logger.info("Exception raise in drop database", exc_info=True)
+
+
+
 
 
 class DBOperationManageLine(models.Model):

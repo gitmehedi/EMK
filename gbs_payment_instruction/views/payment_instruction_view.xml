@@ -13,8 +13,8 @@
                     <button name="action_reject" string="Cancel" type="object"
                             attrs="{'invisible': [('state', 'in', ('approved','cancel'))]}"
                             groups="gbs_payment_instruction.group_payment_approver"/>
-                    <button name="action_hot_fix" string="Fix Payment Instruction" type="object"
-                            class="oe_highlight"
+                    <button name="action_hot_fix" string="  Fix Payment Instruction" type="object"
+                            class="oe_highlight" confirm="Please Re-check Payment Instruction No and Invoice No and Submit"
                             groups="gbs_payment_instruction.group_payment_admin"
                             attrs="{'invisible': [('state', 'in', ('approved','cancel'))]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
