@@ -17,8 +17,8 @@
         'account_mtbl',
     ],
     'data': [
-        # 'security/security.xml',
-        # 'security/ir.model.access.csv',
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'data/sequence.xml',
         'views/menu_view.xml',
         'views/res_tpm_product_view.xml',

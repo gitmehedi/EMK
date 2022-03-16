@@ -205,20 +205,6 @@ class TPMProductChangeRequest(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'confirm')]
 
-    # @api.multi
-    # def open_entries(self):
-    #     move_ids = self.env['account.asset.asset'].search(
-    #         [('asset_type_id', '=', self.asset_cat_id.id), ('allocation_status', '=', True)]).ids
-    #     return {
-    #         'name': _(self.asset_cat_id.name),
-    #         'view_type': 'form',
-    #         'view_mode': 'tree,form',
-    #         'res_model': 'account.asset.asset',
-    #         'view_id': False,
-    #         'type': 'ir.actions.act_window',
-    #         'domain': [('id', 'in', move_ids)],
-    #     }
-
     @api.multi
     def unlink(self):
         for rec in self:
