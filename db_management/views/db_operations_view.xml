@@ -51,6 +51,7 @@
                                         <field name="date"/>
                                         <field name="name"/>
                                         <field name="query_result" filename="name"/>
+                                        <field name="process_time"/>
                                     </tree>
                                 </field>
                             </page>

@@ -113,9 +113,6 @@ class DBOperationManage(models.Model):
             _logger.info("Exception raise in drop database", exc_info=True)
 
 
-
-
-
 class DBOperationManageLine(models.Model):
     _name = 'db.operation.manage.line'
     _rec_name = "name"
@@ -123,5 +120,6 @@ class DBOperationManageLine(models.Model):
 
     name = fields.Char(string="Name", required=True)
     date = fields.Date(string='Date', required=True)
+    process_time = fields.Datetime(String='Process Time', default=fields.Datetime.now, required=True)
     query_result = fields.Binary(string="Result", attachment=True)
     line_id = fields.Many2one('db.operation.manage')
