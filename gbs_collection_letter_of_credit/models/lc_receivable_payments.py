@@ -222,6 +222,9 @@ class LCReceivablePayment(models.Model):
 
     @api.multi
     def action_approve(self):
+        if self.state == 'approve':
+            return
+
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
         move_obj = self.env['account.move']
         move = self._generate_move(move_obj, self.journal_id)
