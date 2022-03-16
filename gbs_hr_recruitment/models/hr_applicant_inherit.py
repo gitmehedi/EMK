@@ -12,6 +12,32 @@ class HrApplicantInherit(models.Model):
     marital_status = fields.Selection([('single', 'Single'),('married', 'Married'),('other','Other')],
                                string='Marital Status')
 
+    firstname = fields.Char(string='First Name', size=60, track_visibility='onchange')
+    # last_name = fields.Char(string='Last Name', size=60, track_visibility='onchange')
+    father_name = fields.Char(string='Father Name', size=60, track_visibility='onchange')
+    mother_name = fields.Char(string='Mother Name', size=60, track_visibility='onchange')
+    partner_last_name = fields.Char(string='Partner Last Name', size=60, track_visibility='onchange')
+    birth_date = fields.Char(string='Date of Birth', track_visibility='onchange')
+    birth_city = fields.Char(string='Home District', track_visibility='onchange')
+    nationality = fields.Char(string='Nationality', size=60, track_visibility='onchange')
+    # religion = fields.Char('res.religion', string='Religion', track_visibility='onchange')
+
+    """Present Address"""
+    pre_address_1 = fields.Char(string='House and Road(Name/No)', track_visibility='onchange')
+    pre_address_2 = fields.Char(string='Vill/Para/Moholla', track_visibility='onchange')
+    pre_zip_postal = fields.Char(string='Post Code', track_visibility='onchange')
+    pre_district = fields.Char(string='District', track_visibility='onchange')
+    pre_country_id = fields.Many2one('res.country', string="Country",  track_visibility='onchange')
+
+    """Permanent Address"""
+    per_address_1 = fields.Char(string='House and Road(Name/No)', track_visibility='onchange')
+    per_address_2 = fields.Char(string='Vill/Para/Moholla', track_visibility='onchange')
+    per_zip_postal = fields.Char(string='Post Code', track_visibility='onchange')
+    per_district = fields.Char(string='District', track_visibility='onchange')
+    per_country_id = fields.Many2one('res.country', string="Country", track_visibility='onchange')
+    applicant_image = fields.Binary("Image", attachment=True,
+                          help="This field holds the image used as image for the event, limited to 1080x720px.")
+
     state = fields.Selection([
         ('draft', 'Draft'),
         ('gm_approve', 'Confirmed'),
@@ -108,3 +134,8 @@ class HrApplicantInherit(models.Model):
                 raise UserError(_('You can not delete in this state!!'))
             else:
                 return super(HrApplicantInherit, self).unlink()
+
+    @api.model
+    def post_applicant_data(self, vals, token=None):
+        res = self.create(vals)
+        return res

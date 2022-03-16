@@ -33,6 +33,8 @@ class Employee(models.Model):
     pre_state_id = fields.Many2one('res.country.state',track_visibility='onchange')
     pre_country_id = fields.Many2one('res.country', required=True,track_visibility='onchange',
                                      default=lambda self: self.env.user.company_id.country_id.id)
+    category_ids = fields.Many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id',
+                                    string='Employee Tags')
 
     @api.one
     @api.constrains('pre_email')
