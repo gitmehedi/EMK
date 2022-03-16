@@ -21,11 +21,13 @@
         'sale',
         'sale_order_type',
         'stock_operating_unit',
+        'mail',
     ],
 
     # always loaded
     'data': [
         'security/ir_rule.xml',
+        'security/ir.model.access.csv',
         'views/stock_menu.xml',
     ],
 }

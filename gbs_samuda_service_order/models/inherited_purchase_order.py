@@ -23,23 +23,7 @@ class InheritedPurchaseOrder(models.Model):
 
         return super(InheritedPurchaseOrder, self).create(vals)
 
-    @api.constrains('operating_unit_id', 'picking_type_id')
-    def _check_warehouse_operating_unit(self):
-        for record in self:
-            if not record.is_service_order:
-                picking_type = record.picking_type_id
-                if not record.picking_type_id:
-                    continue
-                warehouse = picking_type.warehouse_id
-                if (picking_type.warehouse_id and
-                        picking_type.warehouse_id.operating_unit_id and
-                        record.operating_unit_id and
-                        warehouse.operating_unit_id != record.operating_unit_id):
-                    raise ValidationError(
-                        _('Configuration error\nThe Quotation / Purchase Order '
-                          'and the Warehouse of picking type must belong to the '
-                          'same Operating Unit.')
-                    )
+
 
     @api.multi
     def button_confirm(self):
@@ -74,5 +58,14 @@ class InheritedPurchaseOrder(models.Model):
         data['active_id'] = self.id
         return self.env['report'].get_action(self, 'gbs_samuda_service_order.report_service_order', data)
 
+    @api.multi
+    @api.constrains('order_line')
+    def _check_exist_product_in_line(self):
+        for purchase in self:
+            exist_product_list = []
+            for line in purchase.order_line:
+                if line.product_id.id in exist_product_list:
+                    raise ValidationError(_('Product should be one per line.'))
+                exist_product_list.append(line.product_id.id)
 
 

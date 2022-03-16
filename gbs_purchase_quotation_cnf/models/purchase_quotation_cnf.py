@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError,UserError
 
 class PurchaseCNFQuotation(models.Model):
     _name = 'purchase.order'
-    _inherit = ['purchase.order']
+    _inherit = ['purchase.order', 'ir.needaction_mixin']
 
     cnf_quotation = fields.Boolean(string='C&F',default=lambda self: self.env.context.get('cnf_quotation') or False)
     shipment_id = fields.Many2one('purchase.shipment',string='Shipment',

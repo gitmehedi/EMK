@@ -132,7 +132,7 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="4" rowspan="5"><strong>Amount in words : </strong><span t-esc="amt_to_word"/> Only</td>
+                                        <td colspan="2" rowspan="5"><strong>Amount in words : </strong><span t-esc="amt_to_word"/> Only</td>
                                         <td><strong>Sub Total</strong></td><td class="text-right"><span t-esc="total_amount" /></td>
                                     </tr>
                                      <t t-if="data['amount_tax']">
