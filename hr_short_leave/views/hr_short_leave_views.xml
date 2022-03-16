@@ -141,13 +141,13 @@
 		</record>
 
         <menuitem id="short_leave_menu" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_root"
-                  action="hr_short_leave_action" />
+                  action="hr_short_leave_action" groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
         <!--groups="base.group_system"-->
         <menuitem id="short_leave" name="Short Leaves" parent="hr_holidays.menu_hr_holidays_my_leaves"
-                  action="hr_short_leave_action" />
+                  action="hr_short_leave_action" groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
 <!--        groups="base.group_system"-->
         <menuitem id="my_short_leave_menu" name="My Short Leaves" parent="short_leave_menu"
-				  sequence="5" action="my_short_leave_action" />
+				  sequence="5" action="my_short_leave_action" groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user,gbs_application_group.group_dept_manager"/>
 <!--        groups="base.group_system"-->
 
     </data>
