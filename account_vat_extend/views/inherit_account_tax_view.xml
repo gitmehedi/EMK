@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="inherited_view_tax_form_2" model="ir.ui.view">
+            <field name="name">inherited.account.tax.form</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="l10n_bd_account_tax.inherited_view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/notebook/page/group/group/div" position="after">
+                    <label for="mushok_amount" attrs="{'invisible':['|', ('amount_type','not in', ('fixed', 'percent')), ('is_tds', '=', True)]}"/>
+                    <div attrs="{'invisible':['|', ('amount_type','not in', ('fixed', 'percent')), ('is_tds', '=', True)]}">
+                        <field name="raw_mushok_amount" class="oe_inline"/>
+                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                    </div>
+                    <label for="vds_amount" attrs="{'invisible':['|', ('amount_type','not in', ('fixed', 'percent')), ('is_tds', '=', True)]}"/>
+                    <div attrs="{'invisible':['|', ('amount_type','not in', ('fixed', 'percent')), ('is_tds', '=', True)]}">
+                        <field name="raw_vds_amount" class="oe_inline"/>
+                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                    </div>
+
+                    <label for="mushok_amount" invisible="1"/>
+                    <div invisible="1">
+                        <field name="mushok_amount" class="oe_inline"/>
+                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                    </div>
+                    <label for="vds_amount" invisible="1"/>
+                    <div invisible="1">
+                        <field name="vds_amount" class="oe_inline"/>
+                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

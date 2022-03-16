@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_agreement_history_user,access_agreement_history_user,model_agreement_history,base.group_vendor_advance_user,1,1,1,1
+access_vendor_bill_generation_user,access_vendor_bill_generation_user,model_vendor_bill_generation,account.group_account_user,1,1,1,1
+access_vendor_bill_generation_line_user,access_vendor_bill_generation_line_user,model_vendor_bill_generation_line,account.group_account_user,1,1,1,1
+
+access_advance_rent_manager,access_advance_rent_manager,model_vendor_advance,base.group_rental_operation_manager,1,1,1,1
+access_advance_rent_user,access_advance_rent_user,model_vendor_advance,base.group_rental_operation_user,1,1,1,0

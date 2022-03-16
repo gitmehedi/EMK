@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="vendor_security_deposit_form" model="ir.ui.view">
+            <field name="name">vendor.security.deposit.form</field>
+            <field name="model">vendor.security.deposit</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form name="Vendor Security Deposits">
+                    <header>
+	                    <button string="Confirm" name="action_confirm" states="draft"
+                                type="object" class="oe_highlight"/>
+						<button string="Approve" name="action_approve" type="object" class="oe_highlight"
+								attrs="{'invisible': [('state', '!=', 'confirm')]}" groups="base.vendor_advance_approver"/>
+                    	<field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done" readonly="1"/>
+                	</header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box" states="approve,done">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                       options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="pull-left">
+                            <h1>
+                                <field name="name" readonly="1" nolabel="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id"
+                                       options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
+                                <field name="account_id"
+                                       options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
+                                <field name="description" string="Narration" required="1"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="amount"/>
+                                <field name="adjusted_amount"/>
+                                <field name="outstanding_amount"/>
+                                <field name="maker_id" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Details" attrs="{'invisible': [('return_line_ids', '=', [])]}">
+                                <field name="return_line_ids" nolabel="1" readonly="True" mode="tree">
+                                    <tree string="Return Line" create="0" edit="0" editable="bottom" options="{'no_open': True}">
+                                        <field name="return_id" readonly="1"/>
+                                        <field name="vsd_id" readonly="1"/>
+                                        <field name="date" readonly="1"/>
+                                        <field name="amount" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <div class="oe_chatter">
+							<field name="message_follower_ids" widget="mail_followers"/>
+							<field name="message_ids" widget="mail_thread"/>
+	                	</div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="vendor_security_deposit_tree" model="ir.ui.view">
+            <field name="name">vendor.security.deposit.tree</field>
+            <field name="model">vendor.security.deposit</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Vendor Security Deposit" duplicate="0"
+                      decoration-primary="state=='draft'" decoration-info="state=='confirm'" decoration-success="state=='approve'"
+                      decoration-bf="state in ('confirm', 'approve', 'done')" decoration-muted="state in ('inactive', 'done')">
+                    <field name="name" string="REF #"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="account_id"/>
+                    <field name="amount" sum="amount"/>
+                    <field name="adjusted_amount" sum="adjusted_amount"/>
+                    <field name="outstanding_amount" sum="outstanding_amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="vendor_security_deposit_search" model="ir.ui.view">
+            <field name="name">vendor.security.deposit.search</field>
+            <field name="model">vendor.security.deposit</field>
+            <field name="arch" type="xml">
+                <search string="Search Vendor Security Deposit">
+                    <field name="name" filter_domain="[('name', 'ilike', self)]"
+                           string="Deposit No"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="state" string="Status"/>
+                    <separator/>
+                    <filter name="inactive" string="Inactive" domain="[('active','=', False)]"/>
+                    <separator/>
+                    <group name="groupby">
+                        <filter string="By Vendor" name="partner_groupby" domain=""
+                                context="{'group_by': 'partner_id'}"/>
+                        <filter string="By Status" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="vendor_security_deposit_action" model="ir.actions.act_window">
+            <field name="name">Vendor Security Deposit</field>
+            <field name="res_model">vendor.security.deposit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_state':0}</field>
+            <field name="search_view_id" ref="vendor_security_deposit_search"/>
+        </record>
+
+        <menuitem id="Vendor_security_deposit_menu" action="vendor_security_deposit_action"
+                  name="Vendor Security Deposits" sequence="110" groups="base.group_vendor_advance_user"
+                  parent="account.menu_finance_payables"/>
+    </data>
+</odoo>

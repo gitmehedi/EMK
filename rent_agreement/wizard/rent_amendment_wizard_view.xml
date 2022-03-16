@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_amendment_agreement_form_wizard" model="ir.ui.view">
+            <field name="name">amendment.agreement.wizard.form</field>
+            <field name="model">amendment.agreement.wizard</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Agreement Amendment">
+                    <group>
+                        <group>
+                            <field name="change_date"/>
+                            <field name="end_date" attrs="{'invisible': [('change_date', '=', False)]}"/>
+                            <field name="change_adjustment_value"/>
+                            <field name="adjustment_value" attrs="{'invisible': [('change_adjustment_value', '=', False)]}"/>
+                            <field name="change_service_value"/>
+                            <field name="area" attrs="{'invisible': [('change_service_value', '=', False)]}"/>
+                            <field name="rate" attrs="{'invisible': [('change_service_value', '=', False)]}"/>
+                            <field name="service_value" attrs="{'invisible': [('change_service_value', '=', False)]}"/>
+                            <field name="account_id" invisible="1"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        </group>
+                        <group>
+                            <field name="change_status"/>
+                            <field name="status" attrs="{'invisible': [('change_status', '=', False)]}"/>
+                            <field name="advance_amount_add"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Amendment Request" name="generate" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="amendment_agreement_wizard_action_view" model="ir.actions.act_window">
+            <field name="name">Agreement Amendment</field>
+            <field name="res_model">amendment.agreement.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

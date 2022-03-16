@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fx_revaluation_account_config" model="ir.ui.view">
+        <field name="name">view.fx.revaluation.account.config</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting']" position="after">
+                <group string="FX Revaluation" name="fx_revaluation_journal">
+                    <label for="fx_revaluation_journal_id" string="FX Revaluation Journal"
+                           groups="account.group_account_user"/>
+                    <div name="fx_revaluation_journal">
+                        <div>
+                            <field name="fx_revaluation_journal_id"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                   class="oe_inline"/>
+                        </div>
+                    </div>
+                    <label for="fx_revaluation_account_id" string="FX Revaluation Account"
+                           groups="account.group_account_user"/>
+                    <div name="fx_revaluation_account">
+                        <div>
+                            <field name="fx_revaluation_account_id"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                   class="oe_inline"/>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
