@@ -10,6 +10,7 @@
     """,
 
     'author': "Genweb2",
+    'sequence': 5000,
     'category': 'Tools',
     'version': '10.0.1.0.0',
 

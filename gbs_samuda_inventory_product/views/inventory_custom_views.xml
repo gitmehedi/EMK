@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem id="menu_stock_product_control" groups="group_stock_advisor" name="Products" parent="stock.menu_stock_root" sequence="3"/>
+        <menuitem id="menu_stock_product_control" groups="group_stock_advisor" name="Products"
+                  parent="stock.menu_stock_root" sequence="3"/>
 
 
         <menuitem id="menu_product_variant_config_stock_custom" name="Products"
@@ -15,18 +16,24 @@
 
         <!--Invisible Menus from Inventory Control-->
 
+
+
         <record model="ir.ui.menu" id="stock.menu_product_variant_config_stock">
             <field name="groups_id" eval="[(6,0,[ref('gbs_application_group.make_invisible')])]"/>
         </record>
+
+
+
 
         <record model="ir.ui.menu" id="stock.product_product_menu">
             <field name="groups_id" eval="[(6,0,[ref('gbs_application_group.make_invisible')])]"/>
         </record>
 
+
+        <!--Configuration Menu-->
         <record model="ir.ui.menu" id="stock.menu_stock_config_settings">
             <field name="groups_id" eval="[(6,0,[ref('gbs_samuda_inventory_product.group_stock_advisor')])]"/>
         </record>
-
 
 
     </data>
