@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tpm_product_change_request_form" model="ir.ui.view">
+        <field name="name">tpm.product.change.request.form</field>
+        <field name="model">tpm.product.change.request</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="TPM  Product Change Request">
+                <header>
+                    <button string="Confirm" name="action_confirm" states="draft"
+                            type="object" class="oe_highlight"
+                            groups=""/>
+                    <button string="Approve" name="action_approve" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'confirm')]}"
+                            groups=""/>
+                    <button string="Cancel" name="action_cancel" states="confirm"
+                            groups="" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
+                </header>
+                <sheet>
+                    <div class="pull-left">
+                        <h1>
+                            <field name="name" readonly="1" nolabel="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="currency_id" options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
+                            <field name="narration"/>
+                        </group>
+                        <group>
+                            <field name="income_rate"/>
+                            <field name="expense_rate"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Branch">
+                            <field name="branch_ids"
+                                   options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
+                        </page>
+                        <page string="Chart of Account">
+                            <field name="account_ids" attrs="{'invisible':[('currency_id','=','fc')]}">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="tpm_currency_id" string="Currency"/>
+                                    <field name="user_type_id"/>
+                                    <field name="reconcile"/>
+                                    <field name="revaluation"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                            <field name="account_fc_ids" attrs="{'invisible':[('currency_id','=','lc')]}">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="tpm_currency_id" string="Currency"/>
+                                    <field name="user_type_id"/>
+                                    <field name="reconcile"/>
+                                    <field name="revaluation"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="tpm_product_change_request_tree" model="ir.ui.view">
+        <field name="name">tpm.product.change.request.tree</field>
+        <field name="model">tpm.product.change.request</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="TPM Product Change Request" decoration-success="state=='confirm'"
+                  decoration-muted="state=='approve'"
+                  decoration-bf="state in ('draft','confirm')" duplicate="0">
+                <field name="name"/>
+                <field name="currency_id"/>
+                <field name="date"/>
+                <field name="income_rate"/>
+                <field name="expense_rate"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tpm_product_change_request_search" model="ir.ui.view">
+        <field name="name">tpm.product.change.request.filter</field>
+        <field name="model">tpm.product.change.request</field>
+        <field name="arch" type="xml">
+            <search string="Search TPM  Product Change Request">
+                <filter name="draft_sd" string="Pending" domain="[('state','=','confirm')]"/>
+                <separator/>
+                <filter name="confirm_sd" string="Confirmed" domain="[('state','=','confirm')]"/>
+                <separator/>
+                <filter name="approved_sd" string="Approved" domain="[('state','=','approve')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_tpm_product_change_request" model="ir.actions.act_window">
+        <field name="name">TPM Rate Change</field>
+        <field name="res_model">tpm.product.change.request</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="tpm_product_change_request_search"/>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="menu_tpm_product_change_request"
+              parent="menu_tpm_operations"
+              groups=""
+              action="action_tpm_product_change_request" sequence="60"/>
+
+</odoo>

@@ -1,17 +1,18 @@
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, Warning
+from odoo import api, fields, models
 
 
-class AccountTPMConfig(models.Model):
-    _name = 'account.app.config'
+class ResTPMConfigSettings(models.Model):
+    _name = 'res.tpm.config.settings'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'TPM Management'
-    _rec_name = 'config_type'
+    _rec_name = 'journal_id'
     _order = 'id desc'
 
     journal_id = fields.Many2one('account.journal', string='TPM Journal', required=True, track_visibility='onchange')
     tpm_general_account_id = fields.Many2one('account.account', string='General Account', required=True,
                                              track_visibility='onchange', domain="[('level_id.name','=','Layer 5')]")
+    tpm_general_seq_id = fields.Many2one('sub.operating.unit', string='General Account Sequence', required=True,
+                                         track_visibility='onchange')
     tpm_income_account_id = fields.Many2one('account.account', string='Income Account', required=True,
                                             track_visibility='onchange', domain="[('level_id.name','=','Layer 5')]")
     tpm_income_seq_id = fields.Many2one('sub.operating.unit', string='Income Account Sequence', required=True,
@@ -29,8 +30,9 @@ class AccountTPMConfig(models.Model):
     state = fields.Selection([('draft', 'Draft')], track_visibility='onchange')
     config_type = fields.Selection([('tpm', 'TPM Configuration')], default='tpm', required=True,
                                    track_visibility='onchange', readonly=True)
-    excl_br_ids = fields.Many2many('operating.unit', 'tpm_branch_rel', 'tpm_id', 'branch_id',
+    excl_br_ids = fields.Many2many('operating.unit', 'tpm_config_rel', 'tpm_id', 'branch_id',
                                    track_visibility='onchange', string='Exclude Branch')
+    tpm_branch_id = fields.Many2one('operating.unit', required=True, track_visibility='onchange')
 
     @api.constrains('config_type')
     def _check_unique_constrain(self):

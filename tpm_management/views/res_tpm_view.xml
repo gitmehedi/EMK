@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_res_tpm_form" model="ir.ui.view">
+            <field name="name">view.tpm.calculation.form</field>
+            <field name="model">res.tpm</field>
+            <field name="arch" type="xml">
+                <form string="TPM Management" duplicate="0">
+                    <header>
+                        <button name="calculate_tpm" string="Calculate TPM" type="object" states="draft"
+                                class="oe_highlight" groups="account.group_account_manager"/>
+                        <button name="act_confirm" string="Confirm" type="object" states="calculate"
+                                class="oe_highlight" groups="account.group_account_manager"/>
+                        <button name="act_draft" string="Set to Re-Calculate" type="object" states="calculate"
+                                groups="mtbl_access.group_mtbl_sys_admin"/>
+                        <button name="act_approve" string="Approve" type="object" states="confirm"
+                                class="oe_highlight" groups="account.group_account_manager"/>
+                        <field name="state" widget="statusbar" statusbar_visible="calculate,confirm,approve"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title pull-left">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="branch_id"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="date"/>
+                                <field name="to_date"/>
+                            </group>
+                            <group>
+                                <field name="total_income"/>
+                                <field name="total_expense"/>
+                                <field name="journal_id" attrs="{'invisible':[('journal_id','=',False)]}"
+                                       options="{'no_create':True,'no_create_edit':True}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Transfer Pricing (Branch Wise)">
+                                <field name="line_ids">
+                                    <tree decoration-success="pl_status=='income'"
+                                          decoration-danger="pl_status=='expense'">
+                                        <field name="branch_id"/>
+                                        <field name="pl_status"/>
+                                        <field name="income" sum="income"/>
+                                        <field name="expense" sum="expense"/>
+                                    </tree>
+                                    <form>
+                                        <sheet>
+                                            <group>
+                                                <group>
+                                                    <field name="branch_id"/>
+                                                    <field name="from_date"/>
+                                                    <field name="to_date"/>
+                                                </group>
+                                                <group>
+                                                    <field name="pl_status"/>
+                                                    <field name="income" sum="income"/>
+                                                    <field name="expense" sum="expense"/>
+                                                </group>
+                                            </group>
+                                            <field name="line_ids">
+                                                <tree decoration-success="pl_status=='income'"
+                                                      decoration-danger="pl_status=='expense'">
+                                                    <field name="date"/>
+                                                    <field name="pl_status"/>
+                                                    <field name="income" sum="income"/>
+                                                    <field name="expense" sum="expense"/>
+                                                </tree>
+                                                <form>
+                                                    <group>
+                                                        <group>
+                                                            <field name="date"/>
+                                                            <field name="pl_status"/>
+                                                        </group>
+                                                        <group>
+                                                            <field name="income"/>
+                                                            <field name="expense"/>
+                                                            <field name="balance"/>
+                                                        </group>
+                                                    </group>
+                                                    <notebook>
+                                                        <page string="Products (Local)">
+                                                            <field name="line_local_ids">
+                                                                <tree decoration-success="pl_status=='income'"
+                                                                      decoration-danger="pl_status=='expense'">
+                                                                    <field name="account_id"/>
+                                                                    <field name="currency_id"/>
+                                                                    <field name="balance"/>
+                                                                    <field name="pl_status"/>
+                                                                    <field name="income_rate"/>
+                                                                    <field name="income" sum="income"/>
+                                                                    <field name="expense_rate"/>
+                                                                    <field name="expense" sum="expense"/>
+                                                                </tree>
+                                                                <form>
+                                                                    <group>
+                                                                        <group>
+                                                                            <field name="account_id"/>
+                                                                            <field name="date"/>
+                                                                            <field name="pl_status"/>
+                                                                        </group>
+                                                                        <group>
+                                                                            <field name="balance"/>
+                                                                            <field name="income_rate"/>
+                                                                            <field name="income"/>
+                                                                            <field name="expense_rate"/>
+                                                                            <field name="expense"/>
+                                                                        </group>
+                                                                    </group>
+                                                                </form>
+                                                            </field>
+                                                        </page>
+                                                        <page string="Products (Foreign)">
+                                                            <field name="line_foreign_ids">
+                                                                <tree decoration-success="pl_status=='income'"
+                                                                      decoration-danger="pl_status=='expense'">
+                                                                    <field name="account_id"/>
+                                                                    <field name="currency_id"/>
+                                                                    <field name="balance"/>
+                                                                    <field name="pl_status"/>
+                                                                    <field name="income_rate"/>
+                                                                    <field name="income" sum="income"/>
+                                                                    <field name="expense_rate"/>
+                                                                    <field name="expense" sum="expense"/>
+                                                                </tree>
+                                                                <form>
+                                                                    <group>
+                                                                        <group>
+                                                                            <field name="account_id"/>
+                                                                            <field name="date"/>
+                                                                            <field name="pl_status"/>
+                                                                        </group>
+                                                                        <group>
+                                                                            <field name="balance"/>
+                                                                            <field name="income_rate"/>
+                                                                            <field name="income"/>
+                                                                            <field name="expense_rate"/>
+                                                                            <field name="expense"/>
+                                                                        </group>
+                                                                    </group>
+                                                                </form>
+                                                            </field>
+                                                        </page>
+                                                    </notebook>
+                                                </form>
+                                            </field>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_res_tpm_tree" model="ir.ui.view">
+            <field name="name">view.res.tpm.tree</field>
+            <field name="model">res.tpm</field>
+            <field name="arch" type="xml">
+                <tree string="TPM Management" decoration-info="state=='draft'"
+                      decoration-success="state in ('calculate','confirm')"
+                      decoration-muted="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('calculate','confirm')">
+                    <field name="name"/>
+                    <field name="journal_id"/>
+                    <field name="branch_id"/>
+                    <field name="date"/>
+                    <field name="to_date"/>
+                    <field name="total_income" sum="total_income"/>
+                    <field name="total_expense" sum="total_expense"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_res_tpm_search" model="ir.ui.view">
+            <field name="name">res.tpm.search</field>
+            <field name="model">res.tpm</field>
+            <field name="arch" type="xml">
+                <search string="Branch">
+                    <field name="name"/>
+                    <field name="branch_id"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_res_tpm_draft" model="ir.actions.act_window">
+            <field name="name">TPM (Draft)</field>
+            <field name="res_model">res.tpm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',['draft','calculate'])]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Transfer Pricing Mechanism.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_res_tpm_draft" parent="menu_tpm_sub" action="action_res_tpm_draft" sequence="10"/>
+
+        <record id="action_res_tpm_approve" model="ir.actions.act_window">
+            <field name="name">TPM (Approve)</field>
+            <field name="res_model">res.tpm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',['approve','confirm'])]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Transfer Pricing Mechanism.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_res_tpm_approve" parent="menu_tpm_sub" action="action_res_tpm_approve" sequence="20"/>
+
+        <record id="action_res_tpm_reject" model="ir.actions.act_window">
+            <field name="name">TPM (Reject)</field>
+            <field name="res_model">res.tpm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',['reject'])]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Transfer Pricing Mechanism.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_res_tpm_reject" parent="menu_tpm_sub" action="action_res_tpm_reject" sequence="20"/>
+    </data>
+</odoo>

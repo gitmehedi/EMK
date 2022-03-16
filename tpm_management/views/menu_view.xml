@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="main_menu_tpm" name="TPM Operations" parent="account.menu_finance" sequence="13"
-              />
+    <menuitem id="main_menu_tpm" name="TPM Operations" parent="account.menu_finance" sequence="13" />
+    <menuitem id="menu_tpm" name="TPM Operations" sequence="50"/>
+    <menuitem id="menu_tpm_sub" name="Transfer Pricing Mechanism" parent="menu_tpm" sequence="10"/>
+    <menuitem id="menu_tpm_operations" name="Operations" parent="menu_tpm" sequence="20"/>
+    <menuitem id="menu_tpm_configuration" name="Configuration" parent="menu_tpm" sequence="30"/>
 </odoo>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_account_app_config_form" model="ir.ui.view">
-            <field name="name">view.account.app.config.form</field>
-            <field name="model">account.app.config</field>
+        <record id="view_res_tpm_config_settings_form" model="ir.ui.view">
+            <field name="name">view.res.tpm.config.settings.form</field>
+            <field name="model">res.tpm.config.settings</field>
             <field name="arch" type="xml">
                 <form string="App Config" duplicate="0">
                     <sheet>
@@ -23,10 +23,23 @@
                                     </div>
                                 </div>
 
+                                <label for="id" string="TPM Branch" groups="tpm_management.grp_tpm_system_settings"/>
+                                <div name="tpm_branch_id" groups="tpm_management.grp_tpm_system_settings">
+                                    <div>
+                                        <field name="tpm_branch_id"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                </div>
+
                                 <label for="id" string="General Account"/>
                                 <div name="tpm_general_account_id">
                                     <div>
                                         <field name="tpm_general_account_id" class="oe_inline"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                    <div>
+                                        <field name="tpm_general_seq_id" class="oe_inline"
+                                               domain="[('account_id', 'in', [tpm_general_account_id])]"
                                                options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                                     </div>
                                 </div>
@@ -72,19 +85,23 @@
             </field>
         </record>
 
-        <record id="view_account_app_config_tree" model="ir.ui.view">
-            <field name="name">view.account.app.config.tree</field>
-            <field name="model">account.app.config</field>
+        <record id="view_res_tpm_config_settings_tree" model="ir.ui.view">
+            <field name="name">view.res.tpm.config.settings.tree</field>
+            <field name="model">res.tpm.config.settings</field>
             <field name="arch" type="xml">
                 <tree>
+                    <field name="journal_id"/>
                     <field name="config_type"/>
+                    <field name="tpm_general_account_id"/>
+                    <field name="tpm_income_account_id"/>
+                    <field name="tpm_expense_account_id"/>
                 </tree>
             </field>
         </record>
 
-        <record id="view_account_app_config_search" model="ir.ui.view">
-            <field name="name">account.app.config.search</field>
-            <field name="model">account.app.config</field>
+        <record id="view_res_tpm_config_settings_search" model="ir.ui.view">
+            <field name="name">res.tpm.config.settings.search</field>
+            <field name="model">res.tpm.config.settings</field>
             <field name="arch" type="xml">
                 <search string="Branch">
                     <field name="income_rate"/>
@@ -94,18 +111,18 @@
             </field>
         </record>
 
-        <record id="seq_account_app_config" model="ir.sequence">
-            <field name="name">App Config</field>
-            <field name="code">account.app.config</field>
-            <field name="prefix">App/</field>
+        <record id="seq_res_tpm_config_settings" model="ir.sequence">
+            <field name="name">Res TPM Config Settings Config</field>
+            <field name="code">res.tpm.config.settings</field>
+            <field name="prefix">TPM/SETTINGS/</field>
             <field name="padding">4</field>
             <field name="number_increment" eval="1"/>
             <field name="company_id" eval="False"/>
         </record>
 
-        <record id="action_account_app_config" model="ir.actions.act_window">
+        <record id="action_res_tpm_config_settings" model="ir.actions.act_window">
             <field name="name">TPM Configuration</field>
-            <field name="res_model">account.app.config</field>
+            <field name="res_model">res.tpm.config.settings</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
@@ -115,7 +132,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_account_app_config" parent="account.account_account_menu" action="action_account_app_config"
-                  sequence="100"/>
+        <menuitem id="menu_res_tpm_config_settings" parent="menu_tpm_configuration"
+                  action="action_res_tpm_config_settings" sequence="100" name="Settings"/>
     </data>
 </odoo>
