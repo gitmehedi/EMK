@@ -11,7 +11,7 @@
                 <data>
                     <div name="button_box" position="inside">
                         <button name="%(action_po_stock_picking_mrr)d" type="action" class="oe_stat_button" icon="fa-list-alt"
-                                attrs="{'invisible': [('state', 'not in', ('purchase','done'))]}"
+                                attrs="{'invisible': ['|',('state', 'not in', ('purchase','done')),('purchase_by', 'in', ['lc'])]}"
                                 context="{'name': name}" string="MRR">
                         </button>
                     </div>

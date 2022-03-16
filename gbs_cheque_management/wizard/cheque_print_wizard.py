@@ -40,7 +40,15 @@ class ChequePrintWizard(models.TransientModel):
     def _default_amount(self):
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id', []))
-        return docs.amount
+        account_type_obj = self.env['account.account.type'].suspend_security().search([('is_bank_type', '=', True)],
+                                                                                      limit=1, order="id asc")
+
+        for line in docs.line_ids:
+            if line.account_id.user_type_id.id == account_type_obj.id:
+                if line.credit > 0:
+                    credit_amount = line.credit
+                    return credit_amount
+
 
     pay_to = fields.Char("Pay To", required=True, default=_default_pay_to)
     is_cross_cheque = fields.Boolean(string='Is Cross Cheque')
@@ -70,6 +78,7 @@ class ChequePrintWizard(models.TransientModel):
         data['amount_in_word'] = self.amount_in_word
         data['company_name'] = self.env.user.company_id.name
         data['is_cross_cheque'] = self.is_cross_cheque
+
 
         return self.env['report'].get_action(self, 'gbs_cheque_management.report_cheque_print', data=data)
 

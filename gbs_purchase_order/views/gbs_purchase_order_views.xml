@@ -30,7 +30,7 @@
                     <xpath expr="//form" position="attributes">
                         <attribute name="duplicate">0</attribute>
                     </xpath>
-                    <xpath expr="//form/sheet/div[@name='button_box']" position="attributes">
+                    <xpath expr="//form/sheet/div[@name='button_box']/button[@name='action_view_picking']" position="attributes">
                         <attribute name="attrs">{'invisible': [('purchase_by', 'in', ['lc'])]}</attribute>
                     </xpath>
                     <xpath expr="//form/header/button[1]" position="replace">
@@ -59,6 +59,11 @@
                         <button name="button_approve" string="Approve Order" type="object" class="oe_highlight"
                                 states='to approve' groups="purchase.group_purchase_manager,commercial.group_commercial_manager"/>
                     </xpath>
+                    <xpath expr="//button[@name='button_approve']" position="after">
+                        <button name="print_purchase_order" style="background-color: #39B05F;color:white;" type="object" attrs="{'invisible':[('partner_id','=',False)]}" string="Print"/>
+
+                    </xpath>
+
                     <!--<xpath expr="//field[@name='company_id']" position="after">-->
                     <!--<field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"-->
                     <!--options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>-->

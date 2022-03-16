@@ -13,7 +13,8 @@
     'depends': [
         'stock_operating_unit_extend',
         'account',
-        'gbs_product'
+        'gbs_product',
+        'gbs_sale_order_approval',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -23,5 +24,6 @@
         'wizard/inherit_pack_operation_details_form.xml',
         'wizard/stock_date_of_transfer_wizard.xml',
         'views/stock_picking_views.xml',
+        'views/inherited_stock_backorder_confirmation.xml',
     ],
 }

@@ -1,1 +1,2 @@
-import sale_order_cancel_confirmation
+from . import sale_order_cancel_confirmation
+from . import sale_order_credit_limit_cross_message_wizard

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sale_order_credit_limit_cross_message_wizard_form" model="ir.ui.view">
+            <field name="name">sale.order.credit.limit.cross.wizard.form</field>
+            <field name="model">sale.order.credit.limit.cross.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <script>
+                        $(document).ready(function(){
+                            $('.modal-header').css({'color': 'red'});
+                        });
+                    </script>
+
+                    <field name="zero_credit_limit" invisible="1"/>
+
+                     <div attrs="{'invisible':[('zero_credit_limit','=',True)]}">
+                        You can't submit this Sale Order for further process. Customer have been crossing his credit limit with <span style="font-weight:bolder;"><field name="limit_crossed_amount_1" readonly="1"/></span>, whereas This customer approved credit limit is <span style="font-weight:bolder;"><field name="customer_credit_limit" readonly="1"/></span>
+                    </div>
+                    <div attrs="{'invisible':[('zero_credit_limit','=',False)]}">
+                        You can't submit this Sale Order for further process. Customer have been crossing his credit limit with <span style="font-weight:bolder;"><field name="limit_crossed_amount_2" readonly="1"/></span>, whereas this customer doesn't have any credit limit.
+                    </div>
+
+                    <p>Please communicate with concern department.</p>
+
+
+                    <footer>
+                        <button name="action_no" string="OK" type="object" default_focus="1" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
