@@ -361,10 +361,10 @@ class SaleOrder(models.Model):
         tot_undelivered_amt = 0
         for stock in self:
             # picking_type_id.code "outgoing" means: Customer
-            stock_pick_pool = stock.env['stock.picking'].search([('picking_type_id.code', '=', 'outgoing'),
+            stock_pick_pool = stock.env['stock.picking'].suspend_security().search([('picking_type_id.code', '=', 'outgoing'),
                                                                  ('picking_type_id.name', '=', 'Delivery Orders'),
                                                                  ('partner_id', '=', stock.partner_id.id),
-                                                                 ('state', 'not in', ['cancel', 'done'])])
+                                                                 ('state', 'not in', ['cancel','done'])])
 
             stock_amt_list = []
             for stock_picking in stock_pick_pool:
