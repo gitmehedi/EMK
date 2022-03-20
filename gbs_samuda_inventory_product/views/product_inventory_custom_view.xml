@@ -15,8 +15,8 @@
             </field>
         </record>
 
-        <menuitem name="Products" sequence="1" id="inventory_custom_product_menu"
-                  parent="stock.menu_stock_inventory_control"
+        <menuitem name="Products List" sequence="1" id="inventory_custom_product_menu"
+                  parent="stock.menu_stock_inventory_control" groups="stock.group_stock_user"
                   action="product_template_custom_action"/>
 
 

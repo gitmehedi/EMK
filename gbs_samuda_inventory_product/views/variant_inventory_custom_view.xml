@@ -16,8 +16,8 @@
             </field>
         </record>
 
-        <menuitem name="Product Variants" sequence="2" id="inventory_custom_variant_menu"
-                  parent="stock.menu_stock_inventory_control"
+        <menuitem name="Product Variants List" sequence="2" id="inventory_custom_variant_menu"
+                  parent="stock.menu_stock_inventory_control" groups="stock.group_stock_user"
                   action="product_product_custom_action"/>
 
 
