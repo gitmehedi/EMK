@@ -11,6 +11,12 @@
                 id="stock.product_product_menu"
                 name="Product Variants" action="product.product_normal_action"
                 parent="stock.menu_stock_inventory_control"
+                sequence="2" groups="-product.group_product_variant"/>
+
+        <menuitem
+                id="stock.product_product_menu"
+                name="Product Variants" action="product.product_normal_action"
+                parent="stock.menu_stock_inventory_control"
                 sequence="2" groups="gbs_application_group.make_invisible"/>
 
         <menuitem
