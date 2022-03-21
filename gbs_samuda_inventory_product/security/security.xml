@@ -5,7 +5,7 @@
         <record id="group_stock_advisor" model="res.groups">
             <field name="name">Advisor</field>
             <field name="category_id" ref="base.module_category_warehouse_management"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('stock.group_stock_manager'))]"/>
         </record>
 
 
