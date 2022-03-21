@@ -277,6 +277,7 @@
         "calendar",
         "event_registration",
         "website_event",
+        "emk_point_of_sale",
     ],
     'installable': True,
     'application': True,
