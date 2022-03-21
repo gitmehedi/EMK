@@ -80,6 +80,22 @@ class FinalSettlement(models.Model):
                 }))
         self.emp_payslip_ids = vals
         self.state = 'validate'
+        # -----------------------------Loan Deduction---------------
+
+        vals_loan = []
+        emp_loan = self.env['hr.employee.loan'].search([
+            ('employee_id', '=', self.employee_id.id),
+            ('state', '=', 'disbursed')])
+        for loan in emp_loan:
+            if loan:
+                vals_loan.append({
+                    'name':'Loan',
+                    'amount': loan.remaining_loan_amount
+                })
+            self.deduction_ids = vals_loan
+
+        # ------------------------------
+
         self.payment_ids.write({'state': 'validate'})
         self.deduction_ids.write({'state': 'validate'})
         self.emp_payslip_ids.write({'state': 'validate'})
@@ -135,10 +151,11 @@ class Payments(models.Model):
         ('done', ' Done'),
     ], string='Status', default='draft', track_visibility='onchange')
 
+
 class Diductions(models.Model):
     _name = "final.settlement.deduction"
 
-    name = fields.Char(string='Discription')
+    name = fields.Char(string='Description')
     amount = fields.Float(string='Amount')
     deduction_id = fields.Many2one('final.settlement', 'Final Settlement')
 
