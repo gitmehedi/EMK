@@ -517,17 +517,20 @@ class ProductReportUtility(models.TransientModel):
         return datewise_other_adjustment_received
 
     def get_loss_adjustment_issued(self, start_date, end_date, operating_unit_id, product_param):
+        location_id = self.env['stock.location'].search(
+            [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
+            limit=1).id
+
         sql = '''
-                SELECT COALESCE(SUM(product_qty), 0) as adjustment_qty FROM stock_move sm WHERE sm.state = 'done' 
-                        AND sm.date BETWEEN DATE('%s')+TIME '00:00:01' AND DATE('%s')+TIME '23:59:59'
-                        AND sm.location_id IN (
-    						SELECT id FROM stock_location WHERE operating_unit_id = %s
-                        )
-                        AND sm.location_dest_id IN (
-    						SELECT id FROM stock_location  WHERE usage = 'inventory'  AND  scrap_location != FALSE 
-    						)
-                        AND sm.product_id IN (%s)
-            ''' % (start_date, end_date, operating_unit_id, product_param)
+                SELECT COALESCE(SUM(product_qty), 0) as adjustment_qty 
+                        FROM stock_move sm 
+                            WHERE sm.state = 'done' 
+                            AND sm.date BETWEEN DATE('%s')+TIME '00:00:01' AND DATE('%s')+TIME '23:59:59'
+                            AND sm.location_id IN (SELECT id FROM stock_location WHERE id IN (%s))
+                            AND sm.location_dest_id IN (
+                                                    SELECT id FROM stock_location  WHERE usage = 'inventory')
+                            AND sm.product_id IN (%s)
+            ''' % (start_date, end_date, location_id, product_param)
 
         self.env.cr.execute(sql)
         datewise_loss_adjustment_issued = []
