@@ -16,7 +16,7 @@ class Employee(models.Model):
     bank_account_number = fields.Char('Bank Account Number')
     mobile_phone = fields.Char('Personal Mobile')
     gender = fields.Many2one('res.gender', string='Gender', track_visibility='onchange')
-    pre_email = fields.Char(string="Present Email", required=True, track_visibility='onchange')
+    pre_email = fields.Char(string="Personal Email", required=True, track_visibility='onchange')
 
     per_street = fields.Char(string='Street',required=True, track_visibility='onchange')
     per_street2 = fields.Char(string='ETC', track_visibility='onchange')

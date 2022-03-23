@@ -34,6 +34,9 @@ class EventReservation(models.Model):
     event_type_id = fields.Many2one('event.type', string='Event Type', track_visibility='onchange', readonly=True,
                                     states={'draft': [('readonly', False)],
                                             'approve': [('readonly', False), ('required', True)]})
+    event_category_id = fields.Many2one('event.category', string='Event Category', track_visibility='onchange', readonly=True,
+                                    states={'draft': [('readonly', False)],
+                                            'approve': [('readonly', False), ('required', True)]})
     event_id = fields.Many2one('event.event', string='Event', track_visibility='onchange', readonly=True)
     poc_type_id = fields.Many2one('event.poc.type', string="PoC Type", track_visibility='onchange', readonly=True,
                                   states={'draft': [('readonly', False)],

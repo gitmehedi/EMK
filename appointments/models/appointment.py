@@ -21,7 +21,7 @@ class Appointment(models.Model):
 
     name = fields.Char(string="Reference", readonly=True, copy=False, track_visibility='onchange')
     topic_id = fields.Many2one('appointment.topics', string="Topics", required=True, track_visibility='onchange')
-    contact_id = fields.Many2one('appointment.contact', string="Appointer", required=True, track_visibility='onchange')
+    contact_id = fields.Many2one('appointment.contact', string="Employee", required=True, track_visibility='onchange')
     timeslot_id = fields.Many2one('appointment.timeslot', string="Time", required=True, track_visibility='onchange')
     type_id = fields.Many2one('appointment.type', string="Appointment Type", required=True, track_visibility='onchange')
     meeting_room_id = fields.Many2one('appointment.meeting.room', string="Meeting Room", track_visibility='onchange')

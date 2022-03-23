@@ -51,6 +51,8 @@
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="pillar_id" domain="[('state','=','approve')]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                 <field name="event_category_id" domain="[('state','=','approve')]"
+                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="theme_id" domain="[('state','=','approve')]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="space_id" widget="radio"
