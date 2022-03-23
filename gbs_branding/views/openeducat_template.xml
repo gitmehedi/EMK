@@ -9,10 +9,7 @@
                 <script type="text/javascript"
                         src="/gbs_branding/static/src/js/custom_create_edit.js"></script>
                 <script type="text/javascript"
-                        src="/gbs_branding/static/src/js/hide_create_button.js"></script>
-
-<!--                <script type="text/javascript"-->
-<!--                        src="/gbs_branding/static/src/js/custom_js.js"></script>-->
+                        src="/gbs_branding/static/src/js/custom_js.js"></script>
 
             </xpath>
         </template>
