@@ -72,11 +72,15 @@ odoo.define("gbs_branding.custom_js", function (require) {
                 var buttons = [
                     {text: _t("Cancel"), classes: "btn-default o_form_button_cancel", close: true}
                 ];
+                // [Start] Genweb2: custom change for removing create button
+
     //            if(!self.options.no_create) {
     //                buttons.splice(0, 0, {text: _t("Create"), classes: "btn-primary", click: function() {
     //                    self.create_edit_record();
     //                }});
     //            }
+
+                // [End] Genweb2:
                 if(!self.options.disable_multiple_selection) {
                     buttons.splice(0, 0, {text: _t("Select"), classes: "btn-primary o_selectcreatepopup_search_select", disabled: true, close: true, click: function() {
                         self.on_selected(self.selected_ids);

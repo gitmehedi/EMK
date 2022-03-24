@@ -44,7 +44,7 @@
                         <button name="button_unlock" type="object" string="Unlock" groups="gbs_samuda_service_order.group_service_order_manager" states="done"/>
 
                         <button name="print_service_order" style="background-color: #39B05F;color:white;" type="object" attrs="{'invisible':[('partner_id','=',False)]}" string="Print"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" readonly="1"/>
 
 
                     </header>
