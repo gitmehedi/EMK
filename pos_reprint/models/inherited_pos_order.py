@@ -1,4 +1,4 @@
-from odoo import models, fields, api,_
+from odoo import models, fields, api, _
 from odoo.exceptions import Warning
 
 
@@ -61,7 +61,8 @@ class InheritedPosOrderLine(models.Model):
                 return False
         return True
 
-    # _constraints = [
-    #     (_check_return_prouduct_qty, "You cann't return product which didn't sold in last order!", ['qty']),
-    #
-    # ]
+
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
+
+    available_in_pos = fields.Boolean(default=False)
