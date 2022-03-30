@@ -9,7 +9,7 @@ class emp_roster(http.Controller):
 
     def getDateFromStr(self, dateStr):
         if dateStr:
-            return datetime.datetime.strptime(dateStr, "%m/%d/%Y")
+            return datetime.datetime.strptime(dateStr, "%d/%m/%Y")
         else:
             return datetime.datetime.now()
 
