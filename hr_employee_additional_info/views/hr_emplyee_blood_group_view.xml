@@ -14,12 +14,12 @@
                     </xpath>
                     <xpath expr="//field[@name='address_home_id']" position="replace">
                         <field name="address_home_id"
-                               context="{'form_view_ref':'hr_employee_blood_group.home_address_partner_form', 'default_customer':False,'default_supplier':False,'default_is_cnf':False }"
+                               context="{'form_view_ref':'hr_employee_additional_info.home_address_partner_form', 'default_customer':False,'default_supplier':False,'default_is_cnf':False }"
                                options='{"always_reload": True, "highlight_first_line": True}'/>
                     </xpath>
                     <xpath expr="//field[@name='address_id']" position="replace">
                         <field name="address_id"
-                               context="{'form_view_ref':'hr_employee_blood_group.working_address_partner_form', 'default_customer':False,'default_supplier':False,'default_is_cnf':False }"
+                               context="{'form_view_ref':'hr_employee_additional_info.working_address_partner_form', 'default_customer':False,'default_supplier':False,'default_is_cnf':False }"
                                options='{"always_reload": True, "highlight_first_line": True}'/>
                     </xpath>
                 </data>
