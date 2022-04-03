@@ -57,7 +57,8 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
 
         drawVisualization: function (fromDate, dataList) {
             var dateArray = fromDate.split('/');
-            var startDate = new Date(dateArray[2], dateArray[0] - 1, dateArray[1]);
+            var reformat_date = dateArray[1] + "/" + dateArray[0] + '/' + dateArray[2]
+            var startDate = new Date(reformat_date);
 
             var data = [], timeline = undefined;
 
@@ -135,7 +136,6 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
 
             // Set a customized visible range
             var endDate = new Date(startDate.getTime() + 10 * 24 * 60 * 60 * 1000);
-
             timeline.setVisibleChartRange(startDate, endDate);
         },
 
