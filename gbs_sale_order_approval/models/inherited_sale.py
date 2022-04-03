@@ -223,7 +223,7 @@ class SaleOrder(models.Model):
         self.state = 'sent'
 
     def get_customer_credit_limit(self, partner_pool, orders):
-        account_receivable = abs(partner_pool.credit)
+        account_receivable = partner_pool.credit
         sales_order_amount_total = orders.amount_total
 
         unpaid_tot_inv_amt = orders.unpaid_total_invoiced_amount()
