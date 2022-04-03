@@ -130,7 +130,7 @@
         </template>
         <report
                 id="report_individual_paslips"
-                string="Payslip Summary"
+                string="Monthly Salary Sheet"
                 model="hr.payslip.run"
                 report_type="qweb-pdf"
                 file="gbs_hr_payroll.report_individual_payslip"

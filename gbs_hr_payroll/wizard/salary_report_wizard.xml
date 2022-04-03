@@ -8,7 +8,7 @@
 			<form>
 				<group>
 					<group>
-						<button string="Payslip Summary" name="process_payslip_summary_print" type="object" class="oe_highlight"/>
+						<button string="Monthly Salary Sheet" name="process_payslip_summary_print" type="object" class="oe_highlight"/>
 					</group>
 					<group>
 						<button string="Top Sheet(Department)" name="process_top_sheet_print" type="object" class="oe_highlight"/>
