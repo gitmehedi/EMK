@@ -85,7 +85,7 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
                 var endDutyTime = new Date(obj.endDutyTime);
                 if (obj.dutyTime > 0){
                     group = "available";
-                    content = obj.dutyTime.toString() + " Hrs";
+                    content = obj.dutyTime.toFixed(2) + " Hrs";
                     data.addRow([startDutyTime, endDutyTime, content, name, group]);
                 }
 
