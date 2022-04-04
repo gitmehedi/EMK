@@ -29,5 +29,13 @@ class InheritedProductTemplate(models.Model):
         res['arch'] = etree.tostring(doc)
         return res
 
+    def toggle_active(self):
+        if self.active:
+            self.message_post(body="Product Template Archived")
+        else:
+            self.message_post(body="Product Template Activated")
+        res = super(InheritedProductTemplate, self).toggle_active()
+        return res
+
 
 

@@ -13,11 +13,11 @@
                   action="product.product_normal_action"
                   parent="menu_stock_product_control" sequence="2" groups="group_stock_advisor"/>
 
-
         <!--Configuration Menu-->
         <record model="ir.ui.menu" id="stock.menu_stock_config_settings">
             <field name="groups_id" eval="[(6,0,[ref('gbs_samuda_inventory_product.group_stock_advisor')])]"/>
         </record>
+
 
 
 

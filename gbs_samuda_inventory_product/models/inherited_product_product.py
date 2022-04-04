@@ -32,3 +32,12 @@ class InheritedProductProduct(models.Model):
 
 
 
+    def toggle_active(self):
+        if self.active:
+            self.message_post(body="Product Archived")
+        else:
+            self.message_post(body="Product Activated")
+        res = super(InheritedProductProduct, self).toggle_active()
+        return res
+
+

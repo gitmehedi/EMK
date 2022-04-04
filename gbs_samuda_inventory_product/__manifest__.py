@@ -22,5 +22,6 @@
         'views/variant_inventory_custom_view.xml',
         'views/product_inventory_custom_view.xml',
         'views/inventory_custom_views.xml',
+        'views/inherited_product_toggle_active.xml',
     ],
 }
