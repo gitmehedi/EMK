@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="loyality_custom_template" inherit_id="point_of_sale.template">
+
+    <t t-name="Paymentline">
+        <div t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
+            <div class='paymentline-name'>
+                <t t-esc="line.name"/>
+            </div>
+
+            <input t-attf-class="paymentline-input #{line.is_redemption ? 'is_redemption' : ''}"
+                   t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
+                   t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
+                   step="0.01" t-att-value="line.get_amount_str()" t-attf-r_check="#{line.is_redemption}"/>
+            <span class='paymentline-delete'>
+                <img src="/point_of_sale/static/src/img/search_reset.gif"/>
+            </span>
+        </div>
+    </t>
+
+    <t t-name="OrderWidget">
+        <div class="order-container">
+            <div class="order-scroller touch-scrollable">
+                <div class="order">
+                    <ul class="orderlines">
+                        <t t-if="orderlines.length === 0">
+                            <li class="orderline empty">
+                                Your shopping cart is empty
+                            </li>
+                        </t>
+                    </ul>
+                    <div t-attf-class=" #{orderlines.length === 0 ? 'empty' : ''}">
+                        <div class='qty' style="margin-top:27px; float: left; background-color: #ccc7f9;">
+                            <strong class="quantity">Total Products:
+                                <span class="value">0.00</span>
+                            </strong>
+                            <div class='discount'>Discount:
+                                <span class="value">0.00 €</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary clearfix">
+                        <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
+                            <div class='entry total' style="text-align: right;">
+                                <span class="label">Total:</span>
+                                <span class="value">0.00 €</span>
+                                <div class='subentry'>Taxes:
+                                    <span class="value">0.00 €</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+
+    <t t-extend='ClientLine'>
+        <t t-jquery='.client-line td:nth-child(3)' t-operation='after'>
+            <td>
+                <t t-esc='partner.point_loyalty or ""'/>
+            </td>
+
+        </t>
+    </t>
+    <t t-extend='ClientListScreenWidget'>
+        <t t-jquery='.subwindow .subwindow-container .client-list tr th:nth-child(3)' t-operation='after'>
+            <th>Point</th>
+        </t>
+    </t>
+
+    <t t-extend='ClientDetails'>
+        <t t-jquery='section .client-details-box .client-details-right' t-operation='append'>
+            <div class='client-detail'>
+                <span class='label'>Point</span>
+                <t t-if='partner.point_loyalty'>
+
+                    <span class='detail client-phone'>
+                        <t t-esc='partner.point_loyalty'/>
+                    </span>
+
+                </t>
+                <t t-if='!partner.point_loyalty'>
+                    <span class='detail client-phone empty'>N/A</span>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend='ClientDetailsEdit'>
+        <t t-jquery='.client-details .client-details-right ' t-operation='append'>
+            <div class='client-detail'>
+                <span class='label'>Point</span>
+
+                <input class='detail vat' name='point_loyalty' t-att-value='partner.point_loyalty
+					|| ""' placeholder='Point' readonly='1'/>
+
+            </div>
+        </t>
+    </t>
+
+    <t t-extend='PosTicket'>
+        <t t-jquery=".pos-sale-ticket" t-operation='replace'>
+            <div class="pos-sale-ticket" style="font-family: Arial, Helvetica, sans-serif;">
+                <div class="pos-center-align">
+                    <strong>
+                        <t t-esc="widget.pos.opunits.receipt_title"/>
+                    </strong>
+                    <br/>
+                    <t t-if="widget.pos.opunits.receipt_company_title">
+                        <strong>
+                            <t t-esc="widget.pos.opunits.pos_receipt_company_title"/>
+                        </strong>
+                    </t>
+                    <br/>
+                    <t t-esc="widget.pos.opunits.street || ''"/>
+                    <t t-esc="widget.pos.opunits.street2 || ''"/>
+                    <br/>
+                    <t t-esc="widget.pos.opunits.city || ''"/>
+                    <t t-esc="widget.pos.opunits.zip || ''"/>
+                    ,
+                    <t t-esc="widget.pos.opunits.contact_no|| ''"/>
+                    <br/>
+                    VAT Reg. No.
+                    <t t-esc="widget.pos.opunits.vat"/>
+                    <br/>
+                    Mushak-2.3
+                    <br/>
+                    <br/>
+                    Shop:
+                    <t t-esc="widget.pos.config.name"/>
+                    <br/>
+                </div>
+                <br/>
+                <div>
+                    <div>
+                        Invoice#
+                        <t t-esc="order.get('name')"/>
+                        <br/>
+                        Customer:
+                        <t t-esc="order.get_client_name() || 'Unknown'"/>
+                        <br/>
+                        Cashier:
+                        <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/>
+                        <br/>
+                        Date:
+                        <t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate)"/>
+                        <t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.longTime)"/>
+                        <br/>
+                    </div>
+
+                </div>
+                <div style="clear: both;"></div>
+
+                <br/>
+                <t t-if="widget.pos.config.receipt_header">
+                    <div style='text-align:center'>
+                        <t t-esc="widget.pos.config.receipt_header"/>
+                    </div>
+                    <br/>
+                </t>
+                <table>
+                    <colgroup>
+                        <col width='30%'/>
+                        <col width='10%'/>
+                        <col width='20%'/>
+                        <col width='15%'/>
+                        <col width='25%'/>
+                    </colgroup>
+                    <tr>
+                        <th>Product</th>
+                        <th class="pos-right-align">Qty</th>
+                        <th class="pos-right-align">Rate</th>
+                        <th class="pos-right-align">VAT</th>
+                        <th class="pos-right-align">Amount</th>
+                    </tr>
+                    <tr>
+                        <th>-------</th>
+                        <th class="pos-right-align">---</th>
+                        <th class="pos-right-align">----</th>
+                        <th class="pos-right-align">---</th>
+                        <th class="pos-right-align">------</th>
+                    </tr>
+
+                    <tr t-foreach="orderlines" t-as="orderline">
+                        <td>
+                            <t t-esc="orderline.get_product().display_name"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="orderline.get_unit_price()"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="orderline.get_tax().toFixed(2)"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(orderline.get_display_price())"/>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <td>
+                            <strong>Total:</strong>
+                        </td>
+                        <td>
+                            <strong>
+                                <t t-esc="Math.ceil(order.get_total_qty())"/>
+                            </strong>
+                        </td>
+                        <td class="pos-right-align">
+                            <strong>
+                                <t t-esc="widget.format_currency(order.getTotalTaxExcluded())"/>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Discount:</td>
+                        <td></td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
+                        </td>
+                    </tr>
+                    <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
+                        <tr>
+                            <td>VAT</td>
+                            <td></td>
+                            <td class="pos-right-align">
+                                <t t-esc="widget.format_currency(taxdetail.amount)"/>
+                            </td>
+                        </tr>
+                    </t>
+                    <tr>
+                        <td>
+                            <strong>Net Amount:</strong>
+                        </td>
+                        <td></td>
+                        <td class="pos-right-align">
+                            <strong>
+                                <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
+                            </strong>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+
+                <div t-attf-class="earned-point #{order.getPoint() > 0 ? 'display-block' : 'display-none'}">
+                    <table>
+                        <tr>
+                            <td>
+                                <strong>Earn Points:</strong>
+                            </td>
+                            <td class="pos-right-align">
+                                <t t-esc="widget.format_currency(order.getCurrentPoint())"/>
+
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td>
+                                <strong>Total Points:</strong>
+                            </td>
+                            <td class="pos-right-align">
+                                <t t-esc="widget.format_currency(order.getPoint())"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br/>
+
+                <table>
+                    <tr t-foreach="paymentlines" t-as="line">
+                        <td>
+                            <t t-esc="line.name"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(line.get_amount())"/>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr>
+                        <td>Change:</td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(order.getChange())"/>
+                        </td>
+                    </tr>
+                </table>
+
+
+                <t t-if="widget.pos.config.receipt_footer">
+                    <br/>
+                    <div style='text-align:center'>
+                        <t t-esc="widget.pos.config.receipt_footer"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend='PaymentScreenWidget'>
+        <t t-jquery=".payment-screen .pos-payment-container .payment-info .infoline.bigger"
+           t-operation='after'>
+            <div class="infoline bigger">
+                <!--<span class='left-block'>Loyalty Value:</span>-->
+                <span class="right-block payment-loyalty-total">
+                </span>
+            </div>
+        </t>
+
+    </t>
+
+
+</templates>
