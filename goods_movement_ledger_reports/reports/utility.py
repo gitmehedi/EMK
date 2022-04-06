@@ -320,7 +320,11 @@ class ProductReportUtility(models.TransientModel):
             picking_type_id, qc_location_id, location_id, product_param, start_date, end_date)
         self.env.cr.execute(returned_sql)
         total_returned_qty = 0.0
+
+        # remove return qty if found || loan type qty if found || transfer type qty if found
+
         sub_loan_move = 0.0
+        sub_transfer_move = 0.0
         for values in self.env.cr.dictfetchall():
             returned_qty = self.get_total_return_qty_move(values['id'])
             total_returned_qty = total_returned_qty + returned_qty
@@ -331,9 +335,10 @@ class ProductReportUtility(models.TransientModel):
                 [('origin', '=', origin_val), ('location_dest_id', '=', input_location_id)])
             if len(input_stock_move) == 1:
                 move_sql = '''SELECT picking_id,product_qty FROM stock_move WHERE product_id IN %s AND id = %s LIMIT 1''' % (
-                product_param, input_stock_move.id)
+                    product_param, input_stock_move.id)
             else:
-                move_sql = '''SELECT picking_id,product_qty FROM stock_move WHERE product_id IN %s AND id IN %s LIMIT 1''' % (product_param, tuple(input_stock_move.ids))
+                move_sql = '''SELECT picking_id,product_qty FROM stock_move WHERE product_id IN %s AND id IN %s LIMIT 1''' % (
+                product_param, tuple(input_stock_move.ids))
 
             self.env.cr.execute(move_sql)
             for move_val in self.env.cr.dictfetchall():
@@ -342,8 +347,12 @@ class ProductReportUtility(models.TransientModel):
                     if picking_obj.transfer_type == 'loan' and picking_obj.receive_type == 'loan':
                         # found loan type in input move
                         sub_loan_move = sub_loan_move + float(move_val['product_qty'])
+
+                    if picking_obj.location_id.usage == 'transit' and picking_obj.location_id.can_operating_unit_transfer:
+                        # found transfer type in input move
+                        sub_transfer_move = sub_transfer_move + float(move_val['product_qty'])
         datewise_purchase_stocklist = []
-        item = {'purchase_qty': total_received_qty - total_returned_qty - sub_loan_move}
+        item = {'purchase_qty': total_received_qty - total_returned_qty - sub_loan_move - sub_transfer_move}
         datewise_purchase_stocklist.append(item)
         return datewise_purchase_stocklist
 
