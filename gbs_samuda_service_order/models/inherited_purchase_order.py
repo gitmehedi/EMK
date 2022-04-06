@@ -12,7 +12,11 @@ class InheritedPurchaseOrder(models.Model):
     is_service_order = fields.Boolean(string='Service Order',
                                       default=lambda self: self.env.context.get('is_service_order') or False)
 
-    service_order_creator = fields.Many2one('res.users', 'Creator', default=lambda self: self.env.user.id, track_visibility='onchange')
+    service_order_creator = fields.Many2one('res.users', 'Creator', default=lambda self: self.env.user, track_visibility='onchange')
+
+    purchase_from = fields.Selection([('own', 'Own'), ('ho', 'HO')],
+                                     string="Purchase From")
+
 
     @api.model
     def create(self, vals):
