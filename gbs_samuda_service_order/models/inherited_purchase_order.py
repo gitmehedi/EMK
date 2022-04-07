@@ -54,7 +54,12 @@ class InheritedPurchaseOrder(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', '=', 'draft')]
+        domain = [
+            ('state', 'in', ['draft'])]
+        if len(domain) == 0:
+            return False
+        return domain
+
 
     @api.multi
     def print_service_order(self):

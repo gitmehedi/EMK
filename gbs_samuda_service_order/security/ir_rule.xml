@@ -42,6 +42,20 @@
 
 
 
+    <record id="stock_picking_type_rule_service_order_user" model="ir.rule">
+        <field name="model_id" ref="stock.model_stock_picking_type"/>
+        <field name="domain_force">[(1 ,'=', 1)]</field>
+        <field name="name">Service Order User Access for Stock Picking Type</field>
+        <field name="groups" eval="[(4,ref('gbs_samuda_service_order.group_service_order_user_unit')),(4,ref('gbs_samuda_service_order.group_service_order_user_ho'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+
+
+
      <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
             <value eval="[('module', '=', 'purchase_operating_unit'), ('name', '=', 'ir_rule_purchase_order_allowed_operating_units')]"/>

@@ -93,7 +93,8 @@
                                 <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
                                 <field name="company_id" groups="base.group_multi_company"
                                        options="{'no_create': True}"/>
-                                <field name="picking_type_id" options="{'no_create': True}" invisible="1"/>
+
+                                <field name="picking_type_id" options="{'no_create': True}"/>
                             </group>
                         </group>
                         <notebook>
