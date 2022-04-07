@@ -13,7 +13,7 @@
                 'operating_unit',
                 ],
     'data': [
-        "views/pos_template.xml",
+        "views/pos_ticket.xml",
         "views/operating_unit_view.xml",
     ],
     "qweb": [

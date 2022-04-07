@@ -1,0 +1,30 @@
+/* --- Fonts --- */
+
+.pos .order .summary{
+    width:100%;
+    text-align:right;
+    font-weight: bold;
+    margin-top:20px;
+    margin-bottom:10px;
+}
+.pos .order .summary .line{
+    float: right;
+    margin-right:15px;
+    margin-left: 15px;
+    padding-top:5px;
+    border-top: solid 2px;
+    border-color:#777;
+}
+.pos .order .summary .total {
+    font-size: 22px;
+}
+.pos .order .summary .line .subentry{
+    font-size: 16px;
+    font-weight: normal;
+    text-align: right;
+}
+.pos .order .summary .line .charge{
+    font-size: 16px;
+    font-weight: normal;
+    text-align: right;
+}
