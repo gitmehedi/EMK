@@ -246,8 +246,9 @@ class ProductReportUtility(models.TransientModel):
                                  WHERE
                                     sm.state = 'done' 
                                     AND mu.state = 'done' 
-                                    AND sm.date BETWEEN '%s' AND '%s' 
-                                    and mu.product_id = %s 
+                                  
+                                    AND sm.date + interval'6h' BETWEEN DATE('%s') + TIME '00:00:01' AND DATE('%s') + TIME '23:59:59' 
+                                    AND mu.product_id = %s 
                                     AND mu.operating_unit_id = %s
                                  GROUP BY
                                     sm.product_id,
