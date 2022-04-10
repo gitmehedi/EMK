@@ -41,7 +41,7 @@
                         <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel"
                                 type="object"/>
                         <button name="button_done" type="object" string="Lock" groups="gbs_samuda_service_order.group_service_order_manager_ho,gbs_samuda_service_order.group_service_order_manager_unit" states="purchase"/>
-                        <button name="button_unlock" type="object" string="Unlock" groups="gbs_samuda_service_order.group_service_order_manager_ho,gbs_samuda_service_order.group_service_order_manager_unit" states="done"/>
+<!--                        <button name="button_unlock" type="object" string="Unlock" groups="gbs_samuda_service_order.group_service_order_manager_ho,gbs_samuda_service_order.group_service_order_manager_unit" states="done"/>-->
 
                         <button name="print_service_order" style="background-color: #39B05F;color:white;" type="object" attrs="{'invisible':[('partner_id','=',False)]}" string="Print"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done" readonly="1"/>
@@ -128,7 +128,7 @@
                                                context="{'default_type_tax_use': 'purchase'}"/>
                                         <field name="price_subtotal" widget="monetary"/>
                                     </tree>
-                                    <form string="Purchase Order Line">
+                                    <form string="Service Order Line">
                                         <sheet>
                                             <group>
                                                 <group>
@@ -221,7 +221,7 @@
                     <field name="partner_id" string="Supplier"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="date_planned" invisible="context.get('quotation_only', False)"/>
-                    <field name="origin"/>
+                    <field name="origin" invisible="1"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary"/>
                     <field name="amount_total" sum="Total amount" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
