@@ -13,7 +13,6 @@ class InheritedProductTemplate(models.Model):
 
         doc = etree.XML(res['arch'])
         no_create_edit_button = self.env.context.get('no_create_edit_button')
-
         if not self.env.user.has_group('gbs_application_group.group_sales_product_manager'):
             if no_create_edit_button:
                 if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':

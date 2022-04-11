@@ -14,11 +14,12 @@
     'version': '10.0.1.0.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'stock', 'product', 'gbs_application_group', 'purchase'],
+    'depends': ['base', 'stock', 'product', 'gbs_application_group', 'purchase', 'gbs_purchase_requisition'],
 
     # always loaded
     'data': [
         'security/security.xml',
+        'security/ir.model.access.csv',
         'views/variant_inventory_custom_view.xml',
         'views/product_inventory_custom_view.xml',
         'views/inventory_custom_views.xml',
