@@ -109,3 +109,4 @@ class Message:
     UNLINK_INT_WARNING = "The operation cannot be completed, probably due to the following:\n " \
                          "- deletion: you may be trying to delete a record while other records still reference it"
     UNIQUE_WARNING = '[DUPLICATE] Name already exist, choose another.'
+    UNIQUE_CODE_WARNING = '[DUPLICATE] Code already exist, choose another.'

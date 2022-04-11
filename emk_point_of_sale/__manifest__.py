@@ -19,7 +19,10 @@
         'account'
     ],
     'data': [
-        'views/inherit_account_journal_view.xml',
-        'views/inherit_pos_config_view.xml',
+        # 'views/inherit_account_journal_view.xml',
+        # 'views/inherit_pos_config_view.xml',
+        'views/pos_category_view.xml',
+        'views/product_view.xml',
     ],
+    'qweb': ['static/src/xml/pos.xml'],
 }
