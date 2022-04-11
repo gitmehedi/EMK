@@ -14,7 +14,7 @@
     'version': '10.0.1.0.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'stock', 'product', 'gbs_application_group'],
+    'depends': ['base', 'stock', 'product', 'gbs_application_group', 'purchase'],
 
     # always loaded
     'data': [
@@ -22,5 +22,7 @@
         'views/variant_inventory_custom_view.xml',
         'views/product_inventory_custom_view.xml',
         'views/inventory_custom_views.xml',
+        'views/inherited_product_toggle_active.xml',
+        'views/product_no_create_edit_inherit_action_view.xml',
     ],
 }

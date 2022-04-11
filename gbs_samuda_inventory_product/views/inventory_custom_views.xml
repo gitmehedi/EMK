@@ -13,12 +13,20 @@
                   action="product.product_normal_action"
                   parent="menu_stock_product_control" sequence="2" groups="group_stock_advisor"/>
 
-
         <!--Configuration Menu-->
         <record model="ir.ui.menu" id="stock.menu_stock_config_settings">
             <field name="groups_id" eval="[(6,0,[ref('gbs_samuda_inventory_product.group_stock_advisor')])]"/>
         </record>
 
+        <!---->
+
+        <record model="ir.ui.menu" id="stock.menu_product_variant_config_stock">
+            <field name="groups_id" eval="[(6,0,[ref('gbs_application_group.make_invisible')])]"/>
+        </record>
+
+        <record model="ir.ui.menu" id="stock.product_product_menu">
+            <field name="groups_id" eval="[(6,0,[ref('gbs_application_group.make_invisible')])]"/>
+        </record>
 
 
     </data>

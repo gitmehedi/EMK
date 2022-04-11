@@ -12,6 +12,8 @@
     'sequence': 10,
     'data': [
         'security/security.xml',
+        'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'data/service_data.xml',
         'views/service_order_views.xml',
         'views/inherited_purchase_view.xml',

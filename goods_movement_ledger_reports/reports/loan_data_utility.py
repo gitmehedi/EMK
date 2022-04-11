@@ -47,7 +47,7 @@ class LoanDataUtility(models.TransientModel):
                             AND sm.location_dest_id = %s
                             AND sp.picking_type_id = %s
                             AND sp.transfer_type = 'loan'
-                        AND ill.is_transfer = %s
+                        AND (ill.is_transfer = %s OR ill.is_transfer is NULL)
 
                 ''' % (
             start_date, end_date, product_param, location_main_stock.id, customer_location_for_loan_lending,
@@ -154,8 +154,7 @@ class LoanDataUtility(models.TransientModel):
                             AND sm.location_id = %s
                             AND sm.location_dest_id = %s
                             AND sm.picking_type_id = %s
-                            AND ib.is_transfer = %s
-
+                            AND (ib.is_transfer = %s OR ib.is_transfer is NULL)
                 ''' % (
             start_date, end_date, product_param, vendor_location_for_loan_borrowing, input_location_id,
             loan_borrowing_picking_type, is_transfer)
@@ -172,8 +171,11 @@ class LoanDataUtility(models.TransientModel):
                                     AND sm.state = 'done'
                                     AND sm.location_id = %s
                                     AND sm.location_dest_id = %s
+                                    AND sm.product_id IN (%s)
+                                    AND sm.date BETWEEN DATE('%s')+TIME '00:00:01'
+                            AND DATE('%s')+TIME '23:59:59'
 
-                    ''' % (vals['origin'], qc_location_id, location_main_stock.id)
+                    ''' % (vals['origin'], qc_location_id, location_main_stock.id,product_param,start_date, end_date)
                 self.env.cr.execute(to_stock_sql)
                 loan_borrowing_received = 0.0
                 for vals in self.env.cr.dictfetchall():

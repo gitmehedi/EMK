@@ -9,10 +9,33 @@ class InheritedPurchaseOrder(models.Model):
     _inherit = ['purchase.order', 'ir.needaction_mixin']
     _description = 'Inherited Purchase Order'
 
+    READONLY_STATES = {
+        'purchase': [('readonly', True)],
+        'done': [('readonly', True)],
+        'cancel': [('readonly', True)],
+    }
+
     is_service_order = fields.Boolean(string='Service Order',
                                       default=lambda self: self.env.context.get('is_service_order') or False)
 
-    service_order_creator = fields.Many2one('res.users', 'Creator', default=lambda self: self.env.user.id, track_visibility='onchange')
+    service_order_creator = fields.Many2one('res.users', 'Creator', default=lambda self: self.env.user,
+                                            track_visibility='onchange')
+
+    purchase_from = fields.Selection([('own', 'Own'), ('ho', 'HO')],
+                                     string="Purchase From")
+
+    def _get_operating_unit(self):
+        domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
+        return domain
+
+    operating_unit_id = fields.Many2one(
+        comodel_name='operating.unit',
+        string='Operating Unit',
+        states=READONLY_STATES,
+        default=lambda self: (self.env['res.users'].
+                              operating_unit_default_get(self.env.uid)),
+        domain=_get_operating_unit
+    )
 
     @api.model
     def create(self, vals):
@@ -23,12 +46,11 @@ class InheritedPurchaseOrder(models.Model):
 
         return super(InheritedPurchaseOrder, self).create(vals)
 
-
-
     @api.multi
     def button_confirm(self):
         if self.is_service_order:
-            self.write({'region_type':'local','purchase_by': 'credit','operating_unit_id': self.operating_unit_id.id,'state':'done'})
+            self.write({'region_type': 'local', 'purchase_by': 'credit', 'operating_unit_id': self.operating_unit_id.id,
+                        'state': 'done'})
         else:
             res_wizard_view = self.env.ref('gbs_purchase_order.purchase_order_type_wizard')
             res = {
@@ -50,7 +72,11 @@ class InheritedPurchaseOrder(models.Model):
 
     @api.model
     def _needaction_domain_get(self):
-        return [('state', '=', 'draft')]
+        domain = [
+            ('state', 'in', ['draft'])]
+        if len(domain) == 0:
+            return False
+        return domain
 
     @api.multi
     def print_service_order(self):
@@ -69,3 +95,17 @@ class InheritedPurchaseOrder(models.Model):
                 exist_product_list.append(line.product_id.id)
 
 
+class InheritedPurchaseOrderLine(models.Model):
+    _inherit = 'purchase.order.line'
+
+    @api.onchange('product_qty')
+    def onchange_product_qty(self):
+        if self.product_qty:
+            if self.product_qty < 0:
+                raise UserError('Product Quantity cannot be negative!')
+
+    @api.onchange('price_unit')
+    def onchange_price_unit(self):
+        if self.price_unit:
+            if self.price_unit < 0:
+                raise UserError('Product Unit Price cannot be negative!')

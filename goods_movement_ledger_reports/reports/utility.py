@@ -216,7 +216,7 @@ class ProductReportUtility(models.TransientModel):
                               WHERE
                                  mp.product_id = %s 
                                  AND mp.state = 'done' 
-                                 AND mp.date_planned_start + interval'6h' BETWEEN DATE('%s') + TIME '00:00:01' AND DATE('%s') + TIME '23:59:59' 
+                                 AND sm.date + interval'6h' BETWEEN DATE('%s') + TIME '00:00:01' AND DATE('%s') + TIME '23:59:59' 
                                  AND sm.state = 'done' 
                                  AND mp.operating_unit_id = %s
                               GROUP BY
@@ -246,8 +246,9 @@ class ProductReportUtility(models.TransientModel):
                                  WHERE
                                     sm.state = 'done' 
                                     AND mu.state = 'done' 
-                                    AND mu.date_unbuild BETWEEN '%s' AND '%s' 
-                                    and mu.product_id = %s 
+                                  
+                                    AND sm.date + interval'6h' BETWEEN DATE('%s') + TIME '00:00:01' AND DATE('%s') + TIME '23:59:59' 
+                                    AND mu.product_id = %s 
                                     AND mu.operating_unit_id = %s
                                  GROUP BY
                                     sm.product_id,
@@ -271,17 +272,6 @@ class ProductReportUtility(models.TransientModel):
         return production_total_qty
 
     def get_purchase_stock(self, start_date, end_date, operating_unit_id, product_param):
-        stock_warehouse = self.env['stock.warehouse'].search([('operating_unit_id', '=', operating_unit_id)],
-                                                             limit=1)
-        if stock_warehouse.wh_input_stock_loc_id:
-            location_input = stock_warehouse.wh_input_stock_loc_id.id
-
-        if stock_warehouse.wh_qc_stock_loc_id:
-            location_quality_control = stock_warehouse.wh_qc_stock_loc_id.id
-
-        # location_main_stock = self.env['stock.location'].search(
-        #     [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
-        #     limit=1)
         location_id = self.env['stock.location'].search(
             [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
             limit=1).id
@@ -294,77 +284,76 @@ class ProductReportUtility(models.TransientModel):
             [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Quality Control')],
             limit=1).id
 
-        origin_sql = '''
-            SELECT sp.transfer_type, sp.receive_type,sm.origin FROM stock_move sm
-                    LEFT JOIN stock_picking sp ON sm.picking_id = sp.id
-                    LEFT JOIN purchase_order po ON po.name = sp.origin
-                    LEFT JOIN stock_picking_type spt ON sp.picking_type_id = spt.id
-                         WHERE sm.date BETWEEN DATE('%s')+TIME '00:00:01'
-                            AND DATE('%s')+TIME '23:59:59'
-                            AND sm.state ='done'
-                            AND sm.product_id IN (%s)   
-                            AND sp.location_dest_id = %s
-                            AND spt.code = 'incoming'
-                            AND spt.default_location_dest_id = %s
-        
+        picking_type_id = self.env['stock.picking.type'].search(
+            [('code', '=', 'internal'), ('operating_unit_id', '=', operating_unit_id),
+             ('default_location_src_id', '=', location_id), ('default_location_dest_id', '=', location_id)], limit=1).id
+
+        received_sql = '''
+            SELECT COALESCE(sm.product_qty, 0) AS total_product_qty FROM stock_move sm 
+                LEFT JOIN stock_picking sp ON sm.picking_id = sp.id
+                WHERE sp.picking_type_id = %s
+                        AND sp.location_id = %s
+                        AND sp.location_dest_id = %s
+                        AND sp.transfer_type IS NULL
+                        AND sp.receive_type IS NULL
+                        AND sm.product_id IN (%s)
+                        AND sm.date BETWEEN DATE('%s')+TIME '00:00:01' AND DATE('%s')+TIME '23:59:59'
+                        AND sm.state = 'done'
         ''' % (
-            start_date, end_date, product_param, input_location_id, input_location_id)
-
-        self.env.cr.execute(origin_sql)
-
+            picking_type_id, qc_location_id, location_id, product_param, start_date, end_date)
+        self.env.cr.execute(received_sql)
         total_received_qty = 0.0
+        for values in self.env.cr.dictfetchall():
+            total_received_qty = total_received_qty + float(values['total_product_qty'])
+
+        returned_sql = '''
+                    SELECT sm.id,sp.origin FROM stock_move sm 
+                        LEFT JOIN stock_picking sp ON sm.picking_id = sp.id
+                        WHERE sp.picking_type_id = %s
+                                AND sp.location_id = %s
+                                AND sp.location_dest_id = %s
+                                AND sp.transfer_type IS NULL
+                                AND sp.receive_type IS NULL
+                                AND sm.product_id IN (%s)
+                                AND sm.date BETWEEN DATE('%s')+TIME '00:00:01' AND DATE('%s')+TIME '23:59:59'
+                                AND sm.state = 'done'
+                ''' % (
+            picking_type_id, qc_location_id, location_id, product_param, start_date, end_date)
+        self.env.cr.execute(returned_sql)
         total_returned_qty = 0.0
-        for vals in self.env.cr.dictfetchall():
-            origin = vals['origin']
-            if vals['transfer_type'] != 'loan' and vals['receive_type'] != 'loan':
-                received_item_sql = '''
-                                SELECT sm.id,COALESCE(sm.product_qty, 0) as received_item
-                                FROM stock_move sm
-                                LEFT JOIN stock_picking sp ON sm.picking_id = sp.id
-                                WHERE sp.origin = '%s'
-                                        AND sm.state = 'done'
-                                        AND sm.location_id = %s
-                                        AND sm.location_dest_id = %s
-                                            ''' % (origin, qc_location_id, location_main_stock.id)
 
-                self.env.cr.execute(received_item_sql)
-                for values in self.env.cr.dictfetchall():
-                    total_received_qty = total_received_qty + float(values['received_item'])
+        # remove return qty if found || loan type qty if found || transfer type qty if found
 
-            return_sql = '''
-                            SELECT sm.id
-                            FROM stock_move sm
-                            LEFT JOIN stock_picking sp ON sm.picking_id = sp.id
-                            WHERE sp.origin = '%s' AND sm.state = 'done'
-                                        ''' % (origin)
-            self.env.cr.execute(return_sql)
-            return_qty = 0.0
-            for vals in self.env.cr.dictfetchall():
-                returned_qty = self.get_total_return_qty_move(vals['id'])
-                return_qty = return_qty + returned_qty
+        sub_loan_move = 0.0
+        sub_transfer_move = 0.0
+        for values in self.env.cr.dictfetchall():
+            returned_qty = self.get_total_return_qty_move(values['id'])
+            total_returned_qty = total_returned_qty + returned_qty
+            origin_val = values['origin'].encode('ascii')
+            # checking for loan type in input move (lenders -> input move using origin)
 
-            total_returned_qty = total_returned_qty + return_qty
+            input_stock_move = self.env['stock.move'].search(
+                [('origin', '=', origin_val), ('location_dest_id', '=', input_location_id)])
+            if len(input_stock_move) == 1:
+                move_sql = '''SELECT picking_id,product_qty FROM stock_move WHERE product_id IN %s AND id = %s LIMIT 1''' % (
+                    product_param, input_stock_move.id)
+            else:
+                move_sql = '''SELECT picking_id,product_qty FROM stock_move WHERE product_id IN %s AND id IN %s LIMIT 1''' % (
+                product_param, tuple(input_stock_move.ids))
 
-        sql = '''
-                SELECT COALESCE(SUM(sm.product_qty), 0) as purchase_qty 
-                FROM stock_move sm  
-                LEFT JOIN  stock_picking sp ON sm.picking_id = sp.id
-                LEFT JOIN stock_picking_type spt ON sp.picking_type_id = spt.id
-                    WHERE sm.date BETWEEN DATE('%s')+TIME '00:00:01' AND DATE('%s')+TIME '23:59:59'
-                    AND sm.location_id = %s
-                    AND sm.location_dest_id = %s
-                    AND sm.state ='done'
-                    AND spt.code = 'internal'
-                    AND sm.product_id IN %s
-                    AND sp.transfer_type IS NULL
-                    AND sp.receive_type IS NULL
-                    ''' % (start_date, end_date, location_quality_control, location_main_stock.id, product_param)
+            self.env.cr.execute(move_sql)
+            for move_val in self.env.cr.dictfetchall():
+                if move_val['picking_id']:
+                    picking_obj = self.env['stock.picking'].browse(move_val['picking_id'])
+                    if picking_obj.transfer_type == 'loan' and picking_obj.receive_type == 'loan':
+                        # found loan type in input move
+                        sub_loan_move = sub_loan_move + float(move_val['product_qty'])
 
-        # self.env.cr.execute(sql)
+                    if picking_obj.location_id.usage == 'transit' and picking_obj.location_id.can_operating_unit_transfer:
+                        # found transfer type in input move
+                        sub_transfer_move = sub_transfer_move + float(move_val['product_qty'])
         datewise_purchase_stocklist = []
-        # for vals in self.env.cr.dictfetchall():
-        item = {'purchase_qty': total_received_qty - total_returned_qty}
-        # item = {'purchase_qty': vals['purchase_qty']}
+        item = {'purchase_qty': total_received_qty - total_returned_qty - sub_loan_move - sub_transfer_move}
         datewise_purchase_stocklist.append(item)
         return datewise_purchase_stocklist
 
@@ -460,39 +449,69 @@ class ProductReportUtility(models.TransientModel):
         return delivery_done_dict
 
     def get_own_consumption_stock(self, start_date, end_date, operating_unit_id, product_param):
+        location_id = self.env['stock.location'].search(
+            [('operating_unit_id', '=', operating_unit_id), ('name', '=', 'Stock')],
+            limit=1).id
+
+        # through indent
+        indent_location_dest_ids = self.env['stock.location'].search(
+            [('operating_unit_id', '=', operating_unit_id), ('usage', '=', 'departmental')]).ids
+
+        indent_sql = '''
+            SELECT COALESCE(SUM(sm.product_qty), 0) AS total_indent 
+            FROM stock_move sm 
+            LEFT JOIN stock_picking sp ON sm.picking_id = sp.id
+            LEFT JOIN stock_picking_type spt ON sp.picking_type_id = spt.id
+            WHERE 
+            sm.state = 'done'
+            AND sm.product_id IN (%s)
+            AND sm.date + interval'6h' BETWEEN '%s'AND '%s'
+            AND spt.code = 'internal'
+            AND sp.location_id = %s
+            AND sp.location_dest_id IN %s
+        ''' % (product_param, start_date, end_date, location_id, tuple(indent_location_dest_ids))
+        self.env.cr.execute(indent_sql)
+
+        total_indent_qty = 0
+        for vals in self.env.cr.dictfetchall():
+            total_indent_qty = float(vals['total_indent'])
+
         sql = '''
-                SELECT 
-                     COALESCE(COALESCE(total_consumed_for_production, 0)-COALESCE(total_consumed_for_unbuild, 0), 0) AS consumed_qty
-                        FROM (
-                        (
-                            SELECT sm.product_id,COALESCE(SUM(sm.product_qty), 0) AS total_consumed_for_production FROM stock_move sm
-                            LEFT JOIN mrp_production mp ON mp.id = sm.raw_material_production_id
-                            WHERE sm.product_id IN %s
-                            AND sm.state = 'done' 
-                            AND mp.date_planned_start + interval'6h' BETWEEN '%s' AND '%s'
-                            AND mp.operating_unit_id = %s
-                            GROUP BY sm.product_id
-                        ) t1
-                        FULL JOIN
-                        (
-                            SELECT sm.product_id, COALESCE(SUM(sm.product_qty), 0)  AS total_consumed_for_unbuild FROM stock_move sm
-                            LEFT JOIN mrp_unbuild mu ON mu.id = sm.unbuild_id
-                            WHERE sm.product_id IN %s
-                            AND sm.state = 'done' 
-                            AND mu.date_unbuild + interval'6h' BETWEEN '%s' AND '%s'
-                            AND mu.operating_unit_id = %s
-                            GROUP BY sm.product_id
-                        ) t2 ON (t1.product_id = t2.product_id)
-                        ) t3
-            ''' % (
+                        SELECT 
+                             COALESCE(COALESCE(total_consumed_for_production, 0)-COALESCE(total_consumed_for_unbuild, 0), 0) AS consumed_qty
+                                FROM (
+                                (
+                                    SELECT sm.product_id,COALESCE(SUM(sm.product_qty), 0) AS total_consumed_for_production FROM stock_move sm
+                                    LEFT JOIN mrp_production mp ON mp.id = sm.raw_material_production_id
+                                    WHERE sm.product_id IN %s
+                                    AND sm.state = 'done' 
+                                    AND sm.date + interval'6h' BETWEEN '%s' AND '%s'
+                                    AND mp.operating_unit_id = %s
+                                    GROUP BY sm.product_id
+                                ) t1
+                                FULL JOIN
+                                (
+                                    SELECT sm.product_id, COALESCE(SUM(sm.product_qty), 0)  AS total_consumed_for_unbuild FROM stock_move sm
+                                    LEFT JOIN mrp_unbuild mu ON mu.id = sm.unbuild_id
+                                    WHERE sm.product_id IN %s
+                                    AND sm.state = 'done' 
+                                    AND sm.date + interval'6h' BETWEEN '%s' AND '%s'
+                                    AND mu.operating_unit_id = %s
+                                    GROUP BY sm.product_id
+                                ) t2 ON (t1.product_id = t2.product_id)
+                                ) t3
+                    ''' % (
             product_param, start_date, end_date, operating_unit_id, product_param, start_date, end_date,
             operating_unit_id)
 
         self.env.cr.execute(sql)
+
         datewise_own_consumption_stocklist = []
+        consumed_qty = 0
         for vals in self.env.cr.dictfetchall():
-            item = {'consumed_qty': vals['consumed_qty']}
-            datewise_own_consumption_stocklist.append(item)
+            consumed_qty = float(vals['consumed_qty'])
+        item = {'consumed_qty': consumed_qty + total_indent_qty}
+        datewise_own_consumption_stocklist.append(item)
         return datewise_own_consumption_stocklist
 
     def get_other_adjustment_received(self, start_date, end_date, operating_unit_id, product_param):
