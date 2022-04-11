@@ -9,18 +9,29 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//field[@name='department_id']" position="replace">
+                        <field name="department_id" options='{"no_create":False,"no_create_edit":False}'/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='job_id']" position="replace">
+                        <field name="job_id" options='{"no_create":False,"no_create_edit":False}'/>
+                    </xpath>
+
                     <xpath expr="//field[@name='gender']" position="after">
                         <field name="blood"/>
                     </xpath>
+
                     <xpath expr="//field[@name='address_home_id']" position="replace">
                         <field name="address_home_id"
                                context="{'form_view_ref':'hr_employee_additional_info.home_address_partner_form', 'default_customer':False,'default_supplier':False,'default_is_cnf':False }"
-                               options='{"always_reload": True, "highlight_first_line": True}'/>
+                               options='{"always_reload": True, "highlight_first_line": True,
+                               "no_create":False,"no_create_edit":False}'/>
                     </xpath>
                     <xpath expr="//field[@name='address_id']" position="replace">
                         <field name="address_id"
                                context="{'form_view_ref':'hr_employee_additional_info.working_address_partner_form', 'default_customer':False,'default_supplier':False,'default_is_cnf':False }"
-                               options='{"always_reload": True, "highlight_first_line": True}'/>
+                               options='{"always_reload": True, "highlight_first_line": True,
+                               "no_create":False,"no_create_edit":False }'/>
                     </xpath>
                 </data>
             </field>

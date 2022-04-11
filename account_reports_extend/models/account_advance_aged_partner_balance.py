@@ -13,7 +13,7 @@ class report_account_aged_partner(models.AbstractModel):
 
         sign = -1.0 if self.env.context.get('aged_balance') else 1.0
         lines = []
-        results, total, amls = self.env['report.account.report_agedpartnerbalance'].with_context(include_nullified_amount=True)._get_partner_move_lines([self._context['account_type']], self._context['date_to'], 'posted', 30)
+        results, total, amls = self.env['report.account.report_agedpartnerbalance'].with_context(include_nullified_amount=True)._get_partner_move_lines([self._context['account_type']], self._context['date_to'], 'posted', 29)
         for values in results:
             if line_id and values['partner_id'] != line_id:
                 continue

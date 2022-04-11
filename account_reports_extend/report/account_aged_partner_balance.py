@@ -20,7 +20,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         for i in range(7)[::-1]:
             stop = start - relativedelta(days=period_length)
             periods[str(i)] = {
-                'name': (i!=0 and (str((7-(i+1)) * period_length) + '-' + str((7-i) * period_length)) or ('+'+str(6 * period_length))),
+                'name': (i!=0 and (str((7-(i+1)) * period_length + (7-i)) + '-' + str((7-i) * period_length + (7-i))) or ('+'+str(6 * period_length + (7-i)))),
                 'stop': start.strftime('%Y-%m-%d'),
                 'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
             }
