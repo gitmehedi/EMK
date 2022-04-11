@@ -23,7 +23,7 @@ odoo.define('pos_ticket.posticket',function(require){
     var _order_super = models.Order.prototype;
     models.Order = models.Order.extend({
         get_service_charge: function(){
-            var charge = this.pos.config.discount_pc;
+            var charge = this.pos.config.service_charge;
             var service_charge = this.get_total_with_tax() * (charge / 100 );
             return service_charge;
         },
@@ -62,13 +62,10 @@ odoo.define('pos_ticket.posticket',function(require){
 
             this._super();
             var order = this.pos.get_order();
-            var charge     = order ? order.get_service_charge() : 0;
-
-            var total     = order ? order.get_total_with_tax() + charge : 0;
-
+            var charge = order ? order.get_service_charge() : 0;
+            var total  = order ? order.get_total_with_tax() + charge : 0;
 
             this.el.querySelector('.summary .total .charge .value').textContent = this.format_currency(Math.round(charge));
         }
     });
-
 });
