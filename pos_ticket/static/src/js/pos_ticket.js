@@ -24,8 +24,14 @@ odoo.define('pos_ticket.posticket',function(require){
     models.Order = models.Order.extend({
         get_service_charge: function(){
             var charge = this.pos.config.service_charge;
-            var service_charge = this.get_total_with_tax() * (charge / 100 );
+            var service_charge = Math.round(this.get_total_without_tax() * (charge / 100 ));
             return service_charge;
+        },
+        get_total_with_tax: function() {
+            return this.get_total_without_tax() + this.get_total_tax() + this.get_service_charge();
+        },
+        get_total_with_taxes: function() {
+            return this.get_total_without_tax() + this.get_total_tax();
         },
         finalize: function(){
             var client = this.get_client();
@@ -37,6 +43,7 @@ odoo.define('pos_ticket.posticket',function(require){
         },
         export_as_JSON: function(){
             var json = _order_super.export_as_JSON.apply(this, arguments);
+            json['service_charge']= this.get_service_charge();
             return json;
         },
 
@@ -59,13 +66,20 @@ odoo.define('pos_ticket.posticket',function(require){
     }]);
     screens.OrderWidget.include({
         update_summary: function(){
-
             this._super();
             var order = this.pos.get_order();
+            if (!order.get_orderlines().length) {
+                return;
+            }
             var charge = order ? order.get_service_charge() : 0;
-            var total  = order ? order.get_total_with_tax() + charge : 0;
+            var sub_total = order ? order.get_total_with_taxes() : 0;
+            var taxes     = order ? sub_total - order.get_total_without_tax() : 0;
+            var total = order ? order.get_total_with_tax() : 0;
 
-            this.el.querySelector('.summary .total .charge .value').textContent = this.format_currency(Math.round(charge));
+            this.el.querySelector('.summary .total > .sub-value').textContent = this.format_currency(sub_total);
+            this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
+            this.el.querySelector('.summary .total .charge .value').textContent = this.format_currency(charge);
+            this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
         }
     });
 });
