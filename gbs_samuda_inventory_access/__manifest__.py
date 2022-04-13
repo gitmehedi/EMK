@@ -21,7 +21,8 @@
     'depends': [
         'base',
         'stock',
-        'purchase'
+        'purchase',
+        'gbs_application_group'
     ],
 
     # always loaded

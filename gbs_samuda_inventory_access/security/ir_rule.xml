@@ -13,6 +13,8 @@
         <field eval="0" name="perm_write"/>
         <field eval="1" name="perm_read"/>
         <field eval="0" name="perm_create"/>
+        <field name="groups" eval="[(4,ref('gbs_application_group.group_account_expense_unit')),(4,ref('stock.group_stock_user'))]"/>
+
     </record>
 
 </odoo>
