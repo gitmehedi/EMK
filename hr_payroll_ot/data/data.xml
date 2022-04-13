@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <record id="otawl" model="hr.salary.rule.category">
+            <field name="name">OT Allowance</field>
+            <field name="code">OTAWL</field>
+        </record>
+
+        # OT Formula : (Wage + HRA70 + MED30 + TCA + OTA)/208 * OT Hours
+        <record id="ot_salary_rule" model="hr.salary.rule">
+            <field name="name">OT</field>
+            <field name="category_id" ref="hr_payroll_ot.otawl"/>
+            <field name="code">EOTA</field>
+            <field name="sequence" eval="140"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">if payslip.type == '0': result = False
+                elif payslip.type == '1' : result = False
+                elif payslip.type == '2' : result = True
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = ((contract.wage + (contract.wage*70)/100 + (contract.wage*30)/100 + (contract.wage*30)/100 + (contract.wage*20)/100)/208)*worked_days.OT.number_of_hours</field>
+        </record>
+
+    </data>
+</odoo>

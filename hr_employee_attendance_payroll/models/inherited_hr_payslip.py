@@ -50,7 +50,7 @@ class InheritedHrAttendancePayslip(models.Model):
                     'number_of_days': summary_line_data.leave_days,
                     'name': 'Leave Days',
                 })
-            if summary_line_data.cal_ot_hrs:
+            if self.type == '2':
                 worked_days_lines += worked_days_lines.new({
                     'code': 'OT',
                     'contract_id': self.contract_id.id,
