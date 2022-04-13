@@ -119,7 +119,7 @@
                         </t>
                         <tr>
                         <td>Service Charge:</td>
-                        <td class="pos-right-align">
+                            <td class="pos-right-align">
                             <t t-esc="widget.format_currency(order.get_service_charge())"/>
                         </td>
                     </tr>
@@ -186,10 +186,12 @@
                         <div class="summary clearfix">
                             <div class="line">
                                 <div class='entry total'>
-                                    <span class="label">Sub-Total: </span> <span class="sub-value">0.00 €</span>
+                                    <span class="label">Sub-Total: </span>
+                                    <span class="sub-value">0.00 €</span>
                                     <div class='subentry'>VAT: <span class="value">0.00€</span></div>
                                     <div class='charge'>Service Charge: <span class="value">0.00€</span></div>
-                                    <span class="label">Total: </span> <span class="value">0.00 €</span>
+                                    <span class="label">Total: </span>
+                                    <span class="value">0.00 €</span>
                                 </div>
                             </div>
                         </div>
