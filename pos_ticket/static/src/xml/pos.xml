@@ -104,19 +104,25 @@
                     <br/>
                     <table class='receipt-total'>
                     <tr>
-                        <td>Subtotal:</td>
+                        <td>Sub-total:</td>
                         <td class="pos-right-align">
                             <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
                         </td>
                     </tr>
                         <t t-foreach="order.get_tax_details()" t-as="taxdetail">
+                            <tr>
+                                <td><t t-esc="taxdetail.name" /></td>
+                                <td class="pos-right-align">
+                                    <t t-esc="widget.format_currency(taxdetail.amount)"/>
+                                </td>
+                            </tr>
+                        </t>
                         <tr>
-                            <td><t t-esc="taxdetail.name" /></td>
+                        <td>Service Charge:</td>
                             <td class="pos-right-align">
-                                <t t-esc="widget.format_currency(taxdetail.amount)"/>
-                            </td>
-                        </tr>
-                    </t>
+                            <t t-esc="widget.format_currency(order.get_service_charge())"/>
+                        </td>
+                    </tr>
                         <tr>
                         <t t-if="order.get_total_discount() > 0">
                             <td>Discount:</td>
@@ -180,10 +186,12 @@
                         <div class="summary clearfix">
                             <div class="line">
                                 <div class='entry total'>
-                                    <span class="label">Total: </span>
-                                    <span class="value">0.00 €</span>
+                                    <span class="label">Sub-Total: </span>
+                                    <span class="sub-value">0.00 €</span>
                                     <div class='subentry'>VAT: <span class="value">0.00€</span></div>
                                     <div class='charge'>Service Charge: <span class="value">0.00€</span></div>
+                                    <span class="label">Total: </span>
+                                    <span class="value">0.00 €</span>
                                 </div>
                             </div>
                         </div>
