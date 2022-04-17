@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="ot_report_wizard_view" model="ir.ui.view">
+			<field name="name">OT Report Wizard View</field>
+			<field name="model">ot.report.wizard</field>
+			<field name="arch" type="xml">
+			<form>
+				<group>
+					<group>
+						<button string="Monthly OT Sheet" name="button_export_xlsx" type="object" class="oe_highlight"/>
+					</group>
+					<group>
+						<button string="Top Sheet (Department)" name="process_top_sheet_print" type="object" class="oe_highlight"/>
+					</group>
+				</group>
+				<footer>
+					<button name ="process_print" string="Print" type="object" class="oe_highlight"  invisible="1"/>
+                    <button special="cancel" string="Close" />
+				</footer>
+               </form>
+			</field>
+		</record>
+
+		<record id="action_ot_wizard" model="ir.actions.act_window">
+			<field name="name">Monthly OT Reports</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">ot.report.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+	</data>
+</odoo>

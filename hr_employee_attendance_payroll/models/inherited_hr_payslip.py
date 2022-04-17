@@ -57,6 +57,13 @@ class InheritedHrAttendancePayslip(models.Model):
                     'number_of_hours': summary_line_data.cal_ot_hrs,
                     'name': 'OT Hours',
                 })
+            else:
+                worked_days_lines += worked_days_lines.new({
+                    'code': 'OT',
+                    'contract_id': self.contract_id.id,
+                    'number_of_hours': 0,
+                    'name': 'OT Hours',
+                })
 
             ### Late Days
             if summary_line_data.late_days and len(summary_line_data.late_days) >= 0:
