@@ -57,7 +57,8 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
 
         drawVisualization: function (fromDate, dataList) {
             var dateArray = fromDate.split('/');
-            var startDate = new Date(dateArray[2], dateArray[0] - 1, dateArray[1]);
+            var reformat_date = dateArray[1] + "/" + dateArray[0] + '/' + dateArray[2]
+            var startDate = new Date(reformat_date);
 
             var data = [], timeline = undefined;
 
@@ -85,7 +86,7 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
                 var endDutyTime = new Date(obj.endDutyTime);
                 if (obj.dutyTime > 0){
                     group = "available";
-                    content = obj.dutyTime.toString() + " Hrs";
+                    content = obj.dutyTime.toFixed(2) + " Hrs";
                     data.addRow([startDutyTime, endDutyTime, content, name, group]);
                 }
 
@@ -95,7 +96,7 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
                     //var otStartDutyTime = new Date((new Date(obj.otStartDutyTime)).getTime() + 1000 * 60)
                     var otEndDutyTime = new Date(obj.otEndDutyTime);
                     group = "maybe";
-                    content = obj.otDutyTime.toString() + " Hrs OT";
+                    content = obj.otDutyTime.toFixed(2) + " Hrs OT";
                     data.addRow([otStartDutyTime, otEndDutyTime, content, name, group]);
                 }
 
@@ -135,7 +136,6 @@ odoo.define('rnd_hr.custom_timeline', function (require) {
 
             // Set a customized visible range
             var endDate = new Date(startDate.getTime() + 10 * 24 * 60 * 60 * 1000);
-
             timeline.setVisibleChartRange(startDate, endDate);
         },
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_custom_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'no_create_edit_button': True}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Products
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Products List" sequence="1" id="inventory_custom_product_menu"
+                  parent="stock.menu_stock_inventory_control" groups="stock.group_stock_user"
+                  action="product_template_custom_action"/>
+
+
+    </data>
+</odoo>

@@ -28,6 +28,7 @@
         'data/cnf_sequence.xml',
         'views/purchase_quotation_cnf_views.xml',
         'views/inherited_shipment.xml',
+        'report/cnf_report.xml'
     ],
 
 }

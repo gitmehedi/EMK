@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError,UserError
 
 class PurchaseCNFQuotation(models.Model):
     _name = 'purchase.order'
-    _inherit = ['purchase.order']
+    _inherit = ['purchase.order', 'ir.needaction_mixin']
 
     cnf_quotation = fields.Boolean(string='C&F',default=lambda self: self.env.context.get('cnf_quotation') or False)
     shipment_id = fields.Many2one('purchase.shipment',string='Shipment',
@@ -46,3 +46,9 @@ class PurchaseCNFQuotation(models.Model):
         if self.shipment_id.state in ['done','cancel']:
             raise UserError(_('Sorry! Unable to reverse this C&F because the shipment is done.'))
         self.write({'state': 'draft'})
+
+    def print_cnf(self):
+        data = {}
+        data['active_id'] = self.id
+        return self.env['report'].get_action(self, 'gbs_purchase_quotation_cnf.report_cnf', data)
+

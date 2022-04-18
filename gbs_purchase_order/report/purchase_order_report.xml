@@ -19,7 +19,7 @@
                 report_type="qweb-pdf"
                 name="gbs_purchase_order.report_purchase_order"
                 file="gbs_purchase_order.report_purchase_order"
-                menu = "True"
+                menu = "False"
                 paperformat="report_layout.paperformat_po"
         />
 

@@ -37,7 +37,7 @@
         'static/src/xml/base.xml'
     ],
     'js': [
-        'static/src/js/chrome.js'
+        'static/src/js/chrome.js',
     ],
     'images': [
         'static/description/gbs_favicon.png',

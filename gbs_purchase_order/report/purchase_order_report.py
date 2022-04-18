@@ -8,7 +8,10 @@ class GbsPurchaseOrder(models.AbstractModel):
     @api.multi
     def render_html(self, docids, data=None):
         po_run_pool = self.env['purchase.order']
-        docs = po_run_pool.browse(docids[0])
+        if data.get('active_id'):
+            docs = po_run_pool.browse(data.get('active_id'))
+        else:
+            docs = po_run_pool.browse(docids[0])
         report_utility_pool = self.env['report.utility']
         order_list = []
         total_amount = []

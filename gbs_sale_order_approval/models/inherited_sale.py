@@ -7,7 +7,7 @@ import time
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    is_this_so_payment_check = fields.Boolean(string='is_this_so_payment_check',default=False)
+    is_this_so_payment_check = fields.Boolean(string='is_this_so_payment_check', default=False)
 
     def _get_order_type(self):
         return self.env['sale.order.type'].search([], limit=1)
@@ -49,9 +49,9 @@ class SaleOrder(models.Model):
         ('contract_sales', 'Sales Contract'),
     ], string='Sales Type', readonly=True, related='type_id.sale_order_type')
 
-    delivery_mode = fields.Selection([('cnf','C&F'),('fob','FOB')], string='Delivery Mode')
-    vat_mode = fields.Selection([('vat','VAT'),('non_vat','Non VAT')], string='Is VAT Applicable')
-    bonded_mode = fields.Selection([('bonded','Bonded'),('non_bonded','Non Bonded')], string='Is Bonded Applicable')
+    delivery_mode = fields.Selection([('cnf', 'C&F'), ('fob', 'FOB')], string='Delivery Mode')
+    vat_mode = fields.Selection([('vat', 'VAT'), ('non_vat', 'Non VAT')], string='Is VAT Applicable')
+    bonded_mode = fields.Selection([('bonded', 'Bonded'), ('non_bonded', 'Non Bonded')], string='Is Bonded Applicable')
 
     company_id = fields.Many2one('res.company', 'Company', required=True, readonly=True,
                                  states={'to_submit': [('readonly', False)]},
@@ -80,8 +80,6 @@ class SaleOrder(models.Model):
     #     ('c&f', 'C&F')
     # ], string='Freight Mode', default='fob', readonly=True, track_visibility='onchange',
     #                                 states={'to_submit': [('readonly', False)]})
-
-
 
     @api.model
     def _default_note(self):
@@ -224,6 +222,22 @@ class SaleOrder(models.Model):
     def action_validate(self):
         self.state = 'sent'
 
+    def get_customer_credit_limit(self, partner_pool, orders):
+        account_receivable = partner_pool.credit
+        sales_order_amount_total = orders.amount_total
+
+        unpaid_tot_inv_amt = orders.unpaid_total_invoiced_amount()
+        undelivered_tot_do_amt = orders.undelivered_do_qty_amount()
+
+        customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
+        customer_credit_limit = partner_pool.credit_limit
+
+        return_list = []
+        return_list.append(customer_total_credit)
+        return_list.append(customer_credit_limit)
+
+        return return_list
+
     @api.multi
     def action_to_submit(self):
         for orders in self:
@@ -231,6 +245,16 @@ class SaleOrder(models.Model):
             if orders.region_type == False:
                 raise UserError('You Cannot Submit this SO due to Region Type is missing.')
 
+            if orders.credit_sales_or_lc == 'credit_sales':
+
+                partner_pool = orders.partner_id
+                returned_list = self.get_customer_credit_limit(partner_pool, orders)
+
+                if returned_list[0] > returned_list[1]:
+                    if self.env.user.has_group('gbs_sale_order_approval.group_sales_advisor'):
+                        self._is_double_validation_applicable()
+                    else:
+                        return self.action_limit_cross_message(returned_list)
             # Check seq needs to re-generate or not
             if orders.operating_unit_id.name not in orders.name:
                 new_seq = orders.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
@@ -294,7 +318,7 @@ class SaleOrder(models.Model):
                     if orders.lc_id and orders.pi_id:
                         for coms in cust_commission_pool:
                             if lines.commission_rate != coms.commission_rate or \
-                                            lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price:
+                                    lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price:
                                 return True  # Go to two level approval process
                                 break;
 
@@ -307,23 +331,15 @@ class SaleOrder(models.Model):
                 elif orders.credit_sales_or_lc == 'credit_sales':
 
                     partner_pool = orders.partner_id
-
-                    account_receivable = abs(partner_pool.credit)
-                    sales_order_amount_total = orders.amount_total
-
-                    unpaid_tot_inv_amt = orders.unpaid_total_invoiced_amount()
-                    undelivered_tot_do_amt = orders.undelivered_do_qty_amount()
-
-                    customer_total_credit = account_receivable + sales_order_amount_total + unpaid_tot_inv_amt + undelivered_tot_do_amt
-                    customer_credit_limit = partner_pool.credit_limit
+                    returned_list = self.get_customer_credit_limit(partner_pool, orders)
 
                     if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
                         return False  # Single Validation
 
                     for coms in cust_commission_pool:
-                        if (abs(customer_total_credit) > customer_credit_limit
-                            or lines.commission_rate != coms.commission_rate
-                            or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
+                        if (abs(returned_list[0]) > returned_list[1]
+                                or lines.commission_rate != coms.commission_rate
+                                or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
 
                             return True
                             break;
@@ -345,23 +361,21 @@ class SaleOrder(models.Model):
         tot_undelivered_amt = 0
         for stock in self:
             # picking_type_id.code "outgoing" means: Customer
-            stock_pick_pool = stock.env['stock.picking'].search([('picking_type_id.code', '=', 'outgoing'),
+            stock_pick_pool = stock.env['stock.picking'].suspend_security().search([('picking_type_id.code', '=', 'outgoing'),
                                                                  ('picking_type_id.name', '=', 'Delivery Orders'),
                                                                  ('partner_id', '=', stock.partner_id.id),
-                                                                 ('state', '!=', 'done')])
+                                                                 ('state', 'not in', ['cancel','done'])])
 
             stock_amt_list = []
-            for stock_pool in stock_pick_pool:
-                # We assume that delivery_order_id will never be null,
-                # but to avoid garbage data added this extra checking
-                if stock_pool.delivery_order_id:
-                    for so_line in stock.order_line:
-                        for prod_op_ids in stock_pool.pack_operation_product_ids:
-                            unit_price = so_line.price_unit
-                            product_qty = prod_op_ids.product_qty
+            for stock_picking in stock_pick_pool:
+                for move in stock_picking.move_lines:
+                    product_qty = move.ordered_qty
+                    product_id = move.product_id
+                    for sale_order_line in stock_picking.sale_id.order_line:
+                        if sale_order_line.product_id == product_id:
+                            unit_price = sale_order_line.price_unit
                             stock_amt_list.append(unit_price * product_qty)
-
-                tot_undelivered_amt = sum(stock_amt_list)
+                            tot_undelivered_amt = sum(stock_amt_list)
 
         return tot_undelivered_amt
 
@@ -403,28 +417,20 @@ class SaleOrder(models.Model):
                      ('product_package_mode', '=', order.pack_type.id),
                      ('uom_id', '=', lines.product_uom.id)], limit=1)
 
-                is_double_validation = order.check_second_approval(commission_rate , lines, price_change_pool, causes)
+                is_double_validation = order.check_second_approval(commission_rate, lines, price_change_pool, causes)
 
                 if order.credit_sales_or_lc == 'credit_sales':
 
-                    account_receivable = partner_pool.credit
-                    sales_order_amount_total = order.amount_total
-
-                    unpaid_tot_inv_amt = order.unpaid_total_invoiced_amount()
-                    undelivered_tot_do_amt = order.undelivered_do_qty_amount()
-
-                    customer_total_credit = account_receivable + sales_order_amount_total + undelivered_tot_do_amt + unpaid_tot_inv_amt
-                    customer_credit_limit = partner_pool.credit_limit
-
-                    if abs(customer_total_credit) > customer_credit_limit:
-                        causes.append("Customer crossed his Credit Limit. Current Credit Limit is " + str(abs(customer_credit_limit)))
+                    returned_list = self.get_customer_credit_limit(partner_pool, order)
+                    if abs(returned_list[0]) > returned_list[1]:
+                        causes.append("Customer crossed his Credit Limit. Current Credit Limit is " + str(
+                            abs(returned_list[1])))
                         is_double_validation = True
-
 
         if is_double_validation:
             comment_str = "Acceptance needs for " + str(len(causes)) + " cause(s) which are: "
             comment_str += " & ".join(causes)
-            order.write({'state': 'validate', 'comment':comment_str})  # Go to two level approval process
+            order.write({'state': 'validate', 'comment': comment_str})  # Go to two level approval process
 
         else:
             self._automatic_delivery_authorization_creation()
@@ -489,23 +495,24 @@ class SaleOrder(models.Model):
 
         return action
 
-
     def check_second_approval(self, commission_rate, lines, price_change_pool, causes):
 
         is_double_validation = False
 
         if commission_rate == 0 and lines.commission_rate:
-            causes.append("There are no existing commission for this product, but requested commission is "+ str(lines.commission_rate))
+            causes.append("There are no existing commission for this product, but requested commission is " + str(
+                lines.commission_rate))
             is_double_validation = True
 
         if commission_rate > 0 and lines.commission_rate != commission_rate:
             causes.append(
-                "Existing Commission rate is " + str(commission_rate) + ", but requested Commission rate is " + str(lines.commission_rate))
+                "Existing Commission rate is " + str(commission_rate) + ", but requested Commission rate is " + str(
+                    lines.commission_rate))
             is_double_validation = True
 
-
         if len(price_change_pool) == 0 and lines.price_unit:
-            causes.append("There are no existing price for this product, but requested price is "+ str(lines.price_unit))
+            causes.append(
+                "There are no existing price for this product, but requested price is " + str(lines.price_unit))
             is_double_validation = True
 
         for price_history in price_change_pool:
@@ -513,7 +520,8 @@ class SaleOrder(models.Model):
 
             if lines.price_unit not in range(int(discounted_product_price), int(price_history.new_price + 1)):
                 causes.append(
-                    "Existing Approve Price is " + str(price_history.new_price) + ", but requested Price is " + str(lines.price_unit) + ". Which may not cover with discounted price.")
+                    "Existing Approve Price is " + str(price_history.new_price) + ", but requested Price is " + str(
+                        lines.price_unit) + ". Which may not cover with discounted price.")
                 is_double_validation = True
 
         return is_double_validation
@@ -545,6 +553,38 @@ class SaleOrder(models.Model):
     #                 else:
     #                     return False
 
+    @api.multi
+    def action_limit_cross_message(self, returned_list):
+        customer_credit_limit = "{:,.2f}".format(returned_list[1])
+        limit_crossed_amount = "{:,.2f}".format(returned_list[0] - returned_list[1])
+        if returned_list[1] != 0:
+            message_id = self.env['sale.order.credit.limit.cross.wizard'].create(
+                {'zero_credit_limit': False, 'customer_credit_limit': customer_credit_limit,
+                 'limit_crossed_amount_1': limit_crossed_amount,'limit_crossed_amount_2': limit_crossed_amount})
+
+            return {
+                'name': _('Customer Crossed His Credit Limit'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'context': {},
+                'res_model': 'sale.order.credit.limit.cross.wizard',
+                'res_id': message_id.id,
+                'target': 'new'
+            }
+        else:
+            message_id = self.env['sale.order.credit.limit.cross.wizard'].create(
+                {'zero_credit_limit': True, 'customer_credit_limit': customer_credit_limit,
+                 'limit_crossed_amount_1': limit_crossed_amount,'limit_crossed_amount_2': limit_crossed_amount})
+            return {
+                'name': _('Customer Crossed His Credit Limit'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'context': {},
+                'res_model': 'sale.order.credit.limit.cross.wizard',
+                'res_id': message_id.id,
+                'target': 'new'
+            }
+
     # Cancel Button 02/12/2021
     @api.multi
     def action_cancel_custom(self):
@@ -564,8 +604,6 @@ class SaleOrder(models.Model):
             'res_id': message_id.id,
             'target': 'new'
         }
-
-
 
     @api.multi
     def action_create_delivery_order(self):
@@ -655,7 +693,8 @@ class SaleOrder(models.Model):
         return self.env['sales.channel'].search([], limit=1)
 
     sales_channel = fields.Many2one('sales.channel', string='Sales Channel', readonly=True, track_visibility='onchange',
-                                    states={'to_submit': [('readonly', False)]}, required=True, default=_get_sales_channel)
+                                    states={'to_submit': [('readonly', False)]}, required=True,
+                                    default=_get_sales_channel)
 
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse', track_visibility='onchange',
@@ -746,7 +785,6 @@ class InheritedSaleOrderLine(models.Model):
 
     da_qty = fields.Float(string='DA Qty.', default=0)
 
-
     @api.one
     @api.constrains('product_uom_qty', 'commission_rate')
     def _check_order_line_inputs(self):
@@ -765,9 +803,9 @@ class InheritedSaleOrderLine(models.Model):
                 [('product_id', '=', product.id),
                  ('currency_id', '=', self.order_id.currency_id.id),
                  ('product_package_mode', '=', self.order_id.pack_type.id),
-                 #('country_id','=', self.order_id.partner_id.country_id.id),
-                 #('terms_setup_id.days','=',self.order_id.terms_setup_id.days),
-                 #('freight_mode', '=', self.order_id.freight_mode),
+                 # ('country_id','=', self.order_id.partner_id.country_id.id),
+                 # ('terms_setup_id.days','=',self.order_id.terms_setup_id.days),
+                 # ('freight_mode', '=', self.order_id.freight_mode),
                  ('uom_id', '=', self.product_uom.id)])
 
             if not price_change_pool:
@@ -811,7 +849,7 @@ class InheritedSaleOrderLine(models.Model):
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         res = super(InheritedSaleOrderLine, self).product_uom_change()
-        #self.da_qty = self.product_uom_qty
+        # self.da_qty = self.product_uom_qty
 
         vals = {}
         if self.product_id and not self.price_unit:
