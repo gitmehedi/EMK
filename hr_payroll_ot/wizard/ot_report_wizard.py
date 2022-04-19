@@ -8,3 +8,8 @@ class OtReportWizard(models.TransientModel):
     def button_export_xlsx(self):
         self.ensure_one()
         return self.env['report'].get_action(self, report_name='hr_payroll_ot.monthly_ot_sheet_xlsx')
+
+    @api.multi
+    def process_top_sheet_department_export_xlsx(self):
+        self.ensure_one()
+        return self.env['report'].get_action(self, report_name='hr_payroll_ot.top_sheet_department_xlsx')

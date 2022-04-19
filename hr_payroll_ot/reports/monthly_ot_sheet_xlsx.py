@@ -32,14 +32,17 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         normal_format_left = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'size': 8})
         name_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 8})
-        header_name_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 8, 'bg_color': '#4C0099', 'font_color': 'white'})
+        header_name_format_left = workbook.add_format(
+            {'align': 'left', 'bold': True, 'size': 8, 'bg_color': '#4C0099', 'font_color': 'white'})
         header_format_left = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#d7ecfa', 'bold': True, 'size': 8, 'border': 1, 'text_wrap': True})
+            {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#d7ecfa', 'bold': True, 'size': 8, 'border': 1,
+             'text_wrap': True})
 
         # SHEET HEADER
         sheet.merge_range('A1:O1', company_id.name, name_format_left)
         sheet.merge_range('A2:O2', "Operating Unit: " + str(operating_unit_id.name), name_format_left)
-        sheet.merge_range('A3:O3', "Overtime Cycle: " + str(docs.date_start) + ' to ' + str(docs.date_end), name_format_left)
+        sheet.merge_range('A3:O3', "Overtime Cycle: " + str(docs.date_start) + ' to ' + str(docs.date_end),
+                          name_format_left)
         sheet.merge_range('A4:O4', "Report Name: Monthly OT Report", name_format_left)
 
         sheet.write(5, 0, "Sl.No.", header_format_left)
@@ -112,19 +115,20 @@ class MonthlyOtSheetXLSX(ReportXlsx):
                     gross = math.ceil((slip.employee_id.contract_id.wage) * 2.5)
                     payslip['gross'] = formatLang(self.env, gross)
                     payslip['emp_id'] = slip.employee_id.barcode
-                    payslip['basic_40'] = (slip.employee_id.contract_id.wage * 40)/100
-                    payslip['basic_70'] = (slip.employee_id.contract_id.wage * 70)/100
-                    payslip['basic_30'] = (slip.employee_id.contract_id.wage * 30)/100
-                    payslip['basic_20'] = (slip.employee_id.contract_id.wage * 20)/100
+                    payslip['basic_40'] = (slip.employee_id.contract_id.wage * 40) / 100
+                    payslip['basic_70'] = (slip.employee_id.contract_id.wage * 70) / 100
+                    payslip['basic_30'] = (slip.employee_id.contract_id.wage * 30) / 100
+                    payslip['basic_20'] = (slip.employee_id.contract_id.wage * 20) / 100
                     # payslip['number_of_hours'] = slip.worked_days_line_ids.search([('code', '=', 'OT')])
-                    obj_number_of_hours = list(filter(lambda x : x.code == 'OT', slip.worked_days_line_ids))
+                    obj_number_of_hours = list(filter(lambda x: x.code == 'OT', slip.worked_days_line_ids))
                     number_of_hours = 0
                     if obj_number_of_hours:
-                        obj_number_of_hours[0].number_of_hours
+                        number_of_hours = obj_number_of_hours[0].number_of_hours
                     payslip['number_of_hours'] = number_of_hours
 
                     # OT Rate
-                    ot_rate = (slip.employee_id.contract_id.wage + payslip['basic_70'] + payslip['basic_30'] + payslip['basic_30'] + payslip['basic_20'])/208
+                    ot_rate = (slip.employee_id.contract_id.wage + payslip['basic_70'] + payslip['basic_30'] + payslip[
+                        'basic_30'] + payslip['basic_20']) / 208
                     payslip['ot_rate_hour'] = ot_rate
                     payslip['ot_earning_amount'] = (number_of_hours * ot_rate)
                     arrear = 0
@@ -163,15 +167,21 @@ class MonthlyOtSheetXLSX(ReportXlsx):
             dpt_payslips_list.append(dpt_payslips)
 
         # Write on excel
-        row = 7
+        row = 5
         for dpt_emp in dpt_payslips_list:
+            print(dpt_emp)
             dpt_val = dpt_emp.get('val')
+
             if dpt_val:
                 dpt_name = dpt_emp.get('name')
-                sheet.merge_range('A'+str(row)+':O'+str(row)+'', dpt_name, header_name_format_left)
-                # sheet.write(row, 0, str(dpt_name), header_format_left)
+                # sheet.merge_range('A'+str(row)+':O'+str(row)+'', dpt_name, header_name_format_left)
+                sheet.merge_range('A'+str(row)+':S'+str(row)+'', dpt_name, header_name_format_left)
+
+                # sheet.write(row, 0, dpt_name, name_border_format_colored)
+
                 for emp in dpt_val:
-                    sheet.write(row, 0, row, name_border_format_colored)
+                    row += 1
+                    sheet.write(row, 0, row - 6, name_border_format_colored)
                     sheet.write(row, 1, emp.get('emp_name'), name_border_format_colored)
                     sheet.write(row, 2, emp.get('designation'), name_border_format_colored)
                     sheet.write(row, 3, emp.get('doj'), name_border_format_colored)
@@ -190,7 +200,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
                     sheet.write(row, 16, emp.get('deduction'), name_border_format_colored)
                     sheet.write(row, 17, emp.get('total_payable'), name_border_format_colored)
                     sheet.write(row, 18, '', name_border_format_colored)
-                    row += 1
+
 
 MonthlyOtSheetXLSX('report.hr_payroll_ot.monthly_ot_sheet_xlsx',
-                       'ot.report.wizard', parser=report_sxw.rml_parse)
+                   'ot.report.wizard', parser=report_sxw.rml_parse)

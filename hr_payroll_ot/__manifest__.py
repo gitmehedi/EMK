@@ -12,6 +12,7 @@
     'data': [
         'data/data.xml',
         'reports/ot_report_view.xml',
+        'reports/top_sheet_department_view.xml',
         'wizard/ot_report_wizard.xml',
         'views/hr_payslip_run_view.xml',
     ],

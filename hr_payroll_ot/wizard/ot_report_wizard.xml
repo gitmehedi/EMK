@@ -11,7 +11,7 @@
 						<button string="Monthly OT Sheet" name="button_export_xlsx" type="object" class="oe_highlight"/>
 					</group>
 					<group>
-						<button string="Top Sheet (Department)" name="process_top_sheet_print" type="object" class="oe_highlight"/>
+						<button string="Top Sheet (Department)" name="process_top_sheet_department_export_xlsx" type="object" class="oe_highlight"/>
 					</group>
 				</group>
 				<footer>
