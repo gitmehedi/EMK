@@ -2,12 +2,6 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 
 
-class InheritHRPayslipInput(models.Model):
-    _inherit = 'hr.payslip.input'
-
-    ref = fields.Char('Reference')
-
-
 class InheritHRPayslip(models.Model):
     _inherit = "hr.payslip"
 
@@ -18,7 +12,7 @@ class InheritHRPayslip(models.Model):
         od_ids = []
         pay_slip_input = []
         for input in self.input_line_ids:
-            if input.code == 'ODS':
+            if input.code == 'ODSOT':
                 od_ids.append(int(input.ref))
                 pay_slip_input.append(input.id)
 
@@ -43,13 +37,13 @@ class InheritHRPayslip(models.Model):
             """
             od_line_ids = self.input_line_ids
             od_datas = self.env['hr.other.deduction.line'].search([('employee_id', '=', self.employee_id.id),
-                                                              ('state','=','approved'), ('type', '=', 'regular')])
+                                                              ('state','=','approved'), ('type', '=', 'ot')])
 
-            if self.payslip_run_id.type == '0':
+            if self.payslip_run_id.type == '2':
                 for od_data in od_datas:
                     od_line_ids += od_line_ids.new({
-                        'name': 'Other Deduction',
-                        'code': "ODS",
+                        'name': 'Other Deduction (OT)',
+                        'code': "ODSOT",
                         'amount': od_data.other_deduction_amount,
                         'contract_id': self.contract_id.id,
                         'ref': od_data.id,
