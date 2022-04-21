@@ -11,15 +11,6 @@
             <field name="view_id" ref="hr_payroll_arrear.hr_payroll_tree"/>
         </record>
 
-        <record model="ir.actions.act_window" id="hr_arrear_ot_action">
-            <field name="name">Arrear(OT)</field>
-            <field name="res_model">hr.payroll.arrear</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('type', '=', 'ot')]</field>
-            <field name="context">{'default_type': 'ot'}</field>
-            <field name="view_id" ref="hr_payroll_arrear_ot_tree" />
-        </record>
-
         <record id="hr_payroll_arrear_ot_tree" model="ir.ui.view">
             <field name="name">hr.payroll.arrear.ot.tree</field>
             <field name="model">hr.payroll.arrear</field>
@@ -31,6 +22,16 @@
                 </tree>
             </field>
         </record>
+
+        <record model="ir.actions.act_window" id="hr_arrear_ot_action">
+            <field name="name">Arrear(OT)</field>
+            <field name="res_model">hr.payroll.arrear</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type', '=', 'ot')]</field>
+            <field name="context">{'default_type': 'ot'}</field>
+            <field name="view_id" ref="hr_payroll_arrear_ot_tree" />
+        </record>
+
 
         <menuitem id="hr_arrear_ot_submenu" name="Arrear(OT)" parent="hr_payroll_arrear.hr_arrear_menu" groups="gbs_hr_security.group_payroll_user"
                   action="hr_arrear_ot_action"/>
