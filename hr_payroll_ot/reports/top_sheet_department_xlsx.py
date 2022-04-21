@@ -104,9 +104,15 @@ class TopSheetDepartmentXLSX(ReportXlsx):
                         number_of_hours += obj_number_of_hours[0].number_of_hours
                     ot_rate += (basic + basic_70 + basic_30 + basic_30 + basic_20)/208
                     ot_earning_amount += (number_of_hours * ot_rate)
-                    ot_arrear += 0
+                    obj_ot_arrear = list(filter(lambda x: x.code == 'ARSOT', slip.input_line_ids))
+                    ot_arrear = 0
+                    if obj_ot_arrear:
+                        ot_arrear += obj_ot_arrear[0].amount
                     total += ot_earning_amount + ot_arrear
-                    deduction += 0
+                    obj_ot_deduction = list(filter(lambda x: x.code == 'ODSOT', slip.input_line_ids))
+                    deduction = 0
+                    if obj_ot_deduction:
+                        deduction += obj_ot_deduction[0].amount
                     total_payable += total - deduction
 
             footer_employee += emp_count
@@ -141,7 +147,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
 
                 row += 1
 
-        amt_to_word = self.env['res.currency'].amount_to_word(float(footer_total_payable))
+
         # Total
         sheet.write(row, 0, 'Total', name_format_left)
         sheet.write(row, 1, footer_employee, footer_name_format_left)
@@ -166,44 +172,27 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         hr_payslip_runs = self.env['hr.payslip.run'].search([('date_start', '=', prev_month_start), ('operating_unit_id', '=', operating_unit_id.id)])
         for hr_payslip_run in hr_payslip_runs:
             basic=0
-            basic_70=0
-            basic_30=0
-            basic_20=0
-            number_of_hours=0
-            ot_rate=0
-            ot_earning_amount=0
-            ot_arrear=0
-            total=0
-            deduction = 0
             for slip in hr_payslip_run.slip_ids:
                 basic += slip.employee_id.contract_id.wage
-                # basic_70 += (slip.employee_id.contract_id.wage * 70) / 100
-                # basic_30 += (slip.employee_id.contract_id.wage * 30) / 100
-                # basic_20 += (slip.employee_id.contract_id.wage * 20) / 100
-                # obj_number_of_hours = list(filter(lambda x: x.code == 'OT', slip.worked_days_line_ids))
-                # if obj_number_of_hours:
-                #     number_of_hours += obj_number_of_hours[0].number_of_hours
-                # ot_rate += (basic + basic_70 + basic_30 + basic_30 + basic_20) / 208
-                # ot_earning_amount += (number_of_hours * ot_rate)
-                # ot_arrear += 0
-                # total += ot_earning_amount + ot_arrear
-                # deduction += 0
             previous_month_payable += basic
-        prev_amt_to_word = self.env['res.currency'].amount_to_word(float(previous_month_payable))
 
-        row += 3
-        sheet.write(row, 0, 'Cash Payment:', name_format_left)
-        sheet.write(row, 1, footer_total_payable, name_format_left)
-        sheet.merge_range('C'+str(row+1)+':H'+str(row+1)+'', amt_to_word, name_format_left)
-        row += 1
-        sheet.write(row, 0, 'Total fund Required:', name_format_left)
-        sheet.write(row, 1, footer_total_payable, name_format_left)
-        sheet.merge_range('C'+str(row+1)+':H'+str(row+1)+'', amt_to_word, name_format_left)
-        # sheet.write(row, 2, amt_to_word, name_format_left)
+
+        if footer_total_payable > 0:
+            amt_to_word = self.env['res.currency'].amount_to_word(float(footer_total_payable))
+            
+            row += 3
+            sheet.write(row, 0, 'Cash Payment:', name_format_left)
+            sheet.write(row, 1, footer_total_payable, name_format_left)
+            sheet.merge_range('C' + str(row + 1) + ':H' + str(row + 1) + '', amt_to_word, name_format_left)
+            row += 1
+            sheet.write(row, 0, 'Total fund Required:', name_format_left)
+            sheet.write(row, 1, footer_total_payable, name_format_left)
+            sheet.merge_range('C'+str(row+1)+':H'+str(row+1)+'', amt_to_word, name_format_left)
+
         row += 2
         sheet.write(row, 0, 'Previous Month Net Payable was:', name_format_left)
         sheet.write(row, 1, footer_total_payable, name_format_left)
-        sheet.merge_range('C' + str(row + 1) + ':H' + str(row + 1) + '', prev_amt_to_word, name_format_left)
+        sheet.write(row, 1, 'N/A', name_format_left)
         # Signature
         row += 3
         sheet.write(row, 0, 'Prepared by', name_format_left)

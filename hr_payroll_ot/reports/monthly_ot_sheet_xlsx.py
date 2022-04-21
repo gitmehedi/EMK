@@ -121,11 +121,17 @@ class MonthlyOtSheetXLSX(ReportXlsx):
                         'basic_30'] + payslip['basic_20']) / 208
                     payslip['ot_rate_hour'] = ot_rate
                     payslip['ot_earning_amount'] = (number_of_hours * ot_rate)
+                    obj_ot_arrear = list(filter(lambda x: x.code == 'ARSOT', slip.input_line_ids))
                     arrear = 0
+                    if obj_ot_arrear:
+                        arrear = obj_ot_arrear[0].amount
                     payslip['arrear'] = arrear
                     payslip['total'] = payslip['ot_earning_amount'] + payslip['arrear']
 
+                    obj_ot_deduction = list(filter(lambda x: x.code == 'ODSOT', slip.input_line_ids))
                     deduction = 0
+                    if obj_ot_deduction:
+                        deduction = obj_ot_deduction[0].amount
                     payslip['deduction'] = deduction
                     payslip['total_payable'] = payslip['total'] - payslip['deduction']
                     dpt_payslips['val'].append(payslip)
@@ -207,9 +213,10 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         sheet.write(row, 17, footer_total_net_payable, footer_border_format_left)
 
         # In Words
-        amt_to_word = self.env['res.currency'].amount_to_word(float(footer_total_net_payable))
-        row += 2
-        sheet.merge_range('L'+str(row+1)+':R'+str(row+1)+'', 'In Words: ' + amt_to_word, footer_border_format_left)
+        if footer_total_net_payable > 0:
+            amt_to_word = self.env['res.currency'].amount_to_word(float(footer_total_net_payable))
+            row += 2
+            sheet.merge_range('L'+str(row+1)+':R'+str(row+1)+'', 'In Words: ' + amt_to_word, footer_border_format_left)
 
         # Signature
         row += 3
