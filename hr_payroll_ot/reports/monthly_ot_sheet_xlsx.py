@@ -33,8 +33,8 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         name_border_format_colored = workbook.add_format(
             {'num_format': '#,###0.00','align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
 
-        name_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 8,'text_wrap': True})
-        footer_border_format_left = workbook.add_format({'align': 'left', 'bold': False, 'size': 10})
+        name_format_left = workbook.add_format({'align': 'left', 'bold': False, 'size': 10})
+        footer_border_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 10})
 
         header_format_left = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#FFC000', 'bold': True, 'size': 10, 'border': 1,
@@ -209,14 +209,14 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         # In Words
         amt_to_word = self.env['res.currency'].amount_to_word(float(footer_total_net_payable))
         row += 2
-        sheet.merge_range('L'+str(row+1)+':R'+str(row+1)+'', 'In Words: ' + amt_to_word, name_format_left)
+        sheet.merge_range('L'+str(row+1)+':R'+str(row+1)+'', 'In Words: ' + amt_to_word, footer_border_format_left)
 
         # Signature
         row += 3
-        sheet.write(row, 1, 'Checked by', footer_border_format_left)
-        sheet.write(row, 6, 'Recommended by', footer_border_format_left)
-        sheet.write(row, 10, 'Authorized by', footer_border_format_left)
-        sheet.write(row, 15, 'Approved by', footer_border_format_left)
+        sheet.write(row, 1, 'Checked by', name_format_left)
+        sheet.write(row, 6, 'Recommended by', name_format_left)
+        sheet.write(row, 10, 'Authorized by', name_format_left)
+        sheet.write(row, 15, 'Approved by', name_format_left)
 
 
         
