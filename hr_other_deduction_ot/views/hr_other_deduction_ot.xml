@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.actions.act_window" id="hr_other_deduction.hr_other_deduction_action">
+            <field name="name">Other Deduction</field>
+            <field name="res_model">hr.other.deduction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type', '=', 'regular')]</field>
+            <field name="context">{'default_type': 'regular'}</field>
+            <field name="view_id" ref="hr_other_deduction.hr_other_deduction_tree" />
+        </record>
+
+        <record id="hr_other_deduction_ot_tree" model="ir.ui.view">
+            <field name="name">hr.other.deduction.ot.tree</field>
+            <field name="model">hr.other.deduction</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Other Deduction (OT) Information">
+                    <field name="name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="hr_other_deduction_ot_action">
+            <field name="name">Other Deduction(OT)</field>
+            <field name="res_model">hr.other.deduction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type', '=', 'ot')]</field>
+            <field name="context">{'default_type': 'ot'}</field>
+            <field name="view_id" ref="hr_other_deduction_ot.hr_other_deduction_ot_tree" />
+        </record>
+
+        <menuitem id="hr_other_deduction_ot_submenu" name="Other Deduction(OT)" parent="hr_other_deduction.hr_other_deduction_menu"
+                 action="hr_other_deduction_ot_action" groups="gbs_hr_security.group_payroll_user" sequence="12"/>
+
+        <record id="hr_other_deduction_ot_form" model="ir.ui.view">
+            <field name="name">hr.other.deduction.ot</field>
+            <field name="model">hr.other.deduction</field>
+            <field name="inherit_id" ref="hr_other_deduction.hr_other_deduction_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='other_deduction']" position="after">
+                    <group>
+                        <field name="type" readonly='1'/>
+                    </group>
+                </xpath>
+                <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='other_deduction_amount']" position="after">
+                    <field name="type" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -7,7 +7,7 @@
     'category': 'Purchase Order',
     'version': '10.0.0.1',
     'depends': [
-        'purchase', 'ir_sequence_operating_unit', 'gbs_purchase_order', 'purchase_operating_unit'
+        'purchase', 'ir_sequence_operating_unit', 'gbs_purchase_order', 'purchase_operating_unit', 'account'
     ],
     'sequence': 10,
     'data': [
