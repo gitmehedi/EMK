@@ -10,8 +10,8 @@ class TopSheetDepartmentXLSX(ReportXlsx):
     def generate_xlsx_report(self, workbook, data, obj):
         # Report Utility
         ReportUtility = self.env['report.utility']
-        hr_payslip_run_id = obj.hr_payslip_run_id
-        docs = hr_payslip_run_id
+        docs = obj.hr_payslip_run_id
+
         operating_unit_id = docs.operating_unit_id
         company_id = docs.operating_unit_id.company_id
         report_name = "Top Sheet (Department)"
@@ -144,7 +144,6 @@ class TopSheetDepartmentXLSX(ReportXlsx):
                 sheet.write(row, 12, total, name_border_format_colored)
                 sheet.write(row, 13, deduction, name_border_format_colored)
                 sheet.write(row, 14, total_payable, name_border_format_colored)
-
                 row += 1
 
 
@@ -165,18 +164,6 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         sheet.write(row, 13, footer_deduction, footer_name_format_left)
         sheet.write(row, 14, footer_total_payable, footer_name_format_left)
 
-        # Previous month payable value
-        previous_month_payable = 0
-        date_start = datetime.strptime(docs.date_start, "%Y-%m-%d")
-        prev_month_start = date_start - relativedelta(months=1)
-        hr_payslip_runs = self.env['hr.payslip.run'].search([('date_start', '=', prev_month_start), ('operating_unit_id', '=', operating_unit_id.id)])
-        for hr_payslip_run in hr_payslip_runs:
-            basic=0
-            for slip in hr_payslip_run.slip_ids:
-                basic += slip.employee_id.contract_id.wage
-            previous_month_payable += basic
-
-
         if footer_total_payable > 0:
             amt_to_word = self.env['res.currency'].amount_to_word(float(footer_total_payable))
             
@@ -190,9 +177,17 @@ class TopSheetDepartmentXLSX(ReportXlsx):
             sheet.merge_range('C'+str(row+1)+':H'+str(row+1)+'', amt_to_word, name_format_left)
 
         row += 2
+        # Get previous month data
+        previous_month_payable = 0
+        date_start = datetime.strptime(docs.date_start, "%Y-%m-%d")
+        prev_month_start = date_start - relativedelta(months=1)
+        hr_payslip_runs = self.env['hr.payslip.run'].search(
+            [('date_start', '=', prev_month_start), ('operating_unit_id', '=', operating_unit_id.id), ('type', '=', '2')])
+        for paylslip_run in hr_payslip_runs:
+            previous_month_payable += paylslip_run.total_payable
         sheet.write(row, 0, 'Previous Month Net Payable was:', name_format_left)
         sheet.write(row, 1, footer_total_payable, name_format_left)
-        sheet.write(row, 1, 'N/A', name_format_left)
+        sheet.write(row, 1, previous_month_payable, name_format_left)
         # Signature
         row += 3
         sheet.write(row, 0, 'Prepared by', name_format_left)
