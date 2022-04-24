@@ -6,10 +6,11 @@ class EmployeeInformation(models.TransientModel):
 
     def get_employee_information(self, user_id):
         query = '''
-                SELECT rr.name, hd.name department FROM resource_resource rr 
+                SELECT rr.name, hd.name department, hj.name designation FROM resource_resource rr 
                 LEFT JOIN 
                 hr_employee he ON he.resource_id = rr.id 
                 LEFT JOIN hr_department hd ON he.department_id = hd.id
+                LEFT JOIN hr_job hj ON he.job_id = hj.id
                 WHERE rr.user_id = %s
                 LIMIT 1
         ''' % user_id
@@ -19,6 +20,7 @@ class EmployeeInformation(models.TransientModel):
         for vals in self.env.cr.dictfetchall():
             information.append(vals['name'])
             information.append(vals['department'])
+            information.append(vals['designation'])
 
         return information
 

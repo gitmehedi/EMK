@@ -58,8 +58,11 @@ class GBSVoucherReport(models.AbstractModel):
             [('model', '=', 'account.move'), ('res_id', '=', am_obj.id)], order="id asc").ids
         checked_by_user_name = ''
         checked_by_user_department = ''
+        checked_by_user_designation = ''
         prepared_by_user_name = ''
         prepared_by_user_department = ''
+        prepared_by_user_designation = ''
+
         if mail_message_ids:
             mail_tracking_value_obj = self.env['mail.tracking.value'].search(
                 [('mail_message_id', 'in', tuple(mail_message_ids))], order="id desc")
@@ -68,18 +71,21 @@ class GBSVoucherReport(models.AbstractModel):
             if prepared_by_user_info:
                 prepared_by_user_name = prepared_by_user_info[0]
                 prepared_by_user_department = prepared_by_user_info[1]
+                prepared_by_user_designation = prepared_by_user_info[2]
 
             if am_obj.state == 'posted':
                 checked_by_user_info = self.env['employee.information.from.user'].get_checked_by(mail_tracking_value_obj)
                 if checked_by_user_info:
                     checked_by_user_name = checked_by_user_info[0]
                     checked_by_user_department = checked_by_user_info[1]
-
+                    checked_by_user_designation = checked_by_user_info[2]
 
         report_data['prepared_user_name'] = prepared_by_user_name
         report_data['prepared_department_name'] = prepared_by_user_department
+        report_data['prepared_user_designation'] = prepared_by_user_designation
         report_data['checked_user_name'] = checked_by_user_name
         report_data['checked_department_name'] = checked_by_user_department
+        report_data['checked_user_designation'] = checked_by_user_designation
 
 
         docargs = {
