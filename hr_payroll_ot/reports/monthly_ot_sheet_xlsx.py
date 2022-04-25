@@ -37,7 +37,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         footer_border_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 10})
 
         header_format_left = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#FFC000', 'bold': True, 'size': 10, 'border': 1,
+            {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#FFC000', 'bold': False, 'size': 10, 'border': 1,
              'text_wrap': True})
 
         sub_header_format_left = workbook.add_format(

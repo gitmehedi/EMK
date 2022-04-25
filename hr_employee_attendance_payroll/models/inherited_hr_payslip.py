@@ -43,7 +43,7 @@ class InheritedHrAttendancePayslip(models.Model):
                 return
 
             worked_days_lines = self.worked_days_line_ids
-            if summary_line_data.leave_days:
+            if summary_line_data.leave_days and self.type == '0' and self.type == '0':
                 worked_days_lines += worked_days_lines.new({
                     'code': 'LEAVE',
                     'contract_id': self.contract_id.id,
@@ -54,7 +54,7 @@ class InheritedHrAttendancePayslip(models.Model):
                 worked_days_lines += worked_days_lines.new({
                     'code': 'OT',
                     'contract_id': self.contract_id.id,
-                    'number_of_hours': summary_line_data.cal_ot_hrs,
+                    'number_of_hours': summary_line_data.cal_ot_hrs + summary_line_data.extra_ot,
                     'name': 'OT Hours',
                 })
             else:
@@ -66,7 +66,7 @@ class InheritedHrAttendancePayslip(models.Model):
                 })
 
             ### Late Days
-            if summary_line_data.late_days and len(summary_line_data.late_days) >= 0:
+            if summary_line_data.late_days and len(summary_line_data.late_days) >= 0 and self.type == '0':
                 worked_days_lines += worked_days_lines.new({
                     'code': 'LATEDAYS',
                     'contract_id': self.contract_id.id,
@@ -75,7 +75,7 @@ class InheritedHrAttendancePayslip(models.Model):
                 })
 
             ### Late Deduction Days
-            if summary_line_data.deduction_days >= 0:
+            if summary_line_data.deduction_days >= 0 and self.type == '0':
                 worked_days_lines += worked_days_lines.new({
                     'code': 'LDD',
                     'contract_id': self.contract_id.id,
@@ -86,7 +86,7 @@ class InheritedHrAttendancePayslip(models.Model):
             # self.worked_days_line_ids = worked_days_lines
 
             ### ABS Deduction Days
-            if summary_line_data.absent_deduction_days >= 0:
+            if summary_line_data.absent_deduction_days >= 0 and self.type == '0':
                 worked_days_lines += worked_days_lines.new({
                     'code': 'ABS',
                     'contract_id': self.contract_id.id,
@@ -96,7 +96,7 @@ class InheritedHrAttendancePayslip(models.Model):
             # self.worked_days_line_ids = worked_days_lines
 
             ### UNPAID Holidays
-            if summary_line_data.unpaid_holidays >= 0:
+            if summary_line_data.unpaid_holidays >= 0 and self.type == '0':
                 worked_days_lines += worked_days_lines.new({
                     'code': 'UNPH',
                     'contract_id': self.contract_id.id,

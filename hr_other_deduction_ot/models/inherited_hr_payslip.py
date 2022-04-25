@@ -40,13 +40,14 @@ class InheritHRPayslip(models.Model):
                                                               ('state','=','approved'), ('type', '=', 'ot')])
 
             if self.payslip_run_id.type == '2':
-                for od_data in od_datas:
-                    od_line_ids += od_line_ids.new({
-                        'name': 'Other Deduction (OT)',
-                        'code': "ODSOT",
-                        'amount': od_data.other_deduction_amount,
-                        'contract_id': self.contract_id.id,
-                        'ref': od_data.id,
-                    })
+                if od_datas:
+                    for od_data in od_datas:
+                        od_line_ids += od_line_ids.new({
+                            'name': 'Other Deduction (OT)',
+                            'code': "ODSOT",
+                            'amount': od_data.other_deduction_amount,
+                            'contract_id': self.contract_id.id,
+                            'ref': od_data.id,
+                        })
 
                 self.input_line_ids = od_line_ids

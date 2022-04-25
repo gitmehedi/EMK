@@ -17,49 +17,66 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         report_name = "Top Sheet (Department)"
         sheet = workbook.add_worksheet(report_name)
         sheet.set_row(0, 30)
-        sheet.set_row(5, 30)
-        sheet.set_column(0, 0, 22)
+        sheet.set_row(6, 30)
+        sheet.set_column(0, 0, 20)
         # sheet.set_default_row(22)
 
         # Then override any that you want.
 
         title_format_center = workbook.add_format({'align': 'center', 'bold': True, 'size': 22, 'text_wrap': True})
+        title_format_center.set_font_name('Times New Roman')
         subject_format_center = workbook.add_format({'align': 'center', 'bold': True, 'size': 10, 'text_wrap': True})
-        name_format_left = workbook.add_format({'num_format': '#,##0.00','align': 'left', 'bold': False, 'size': 8, 'text_wrap': True})
+        subject_format_center.set_font_name('Times New Roman')
+        name_format_left = workbook.add_format({'num_format': '#,##0.00','align': 'left', 'bold': False, 'size': 10, 'text_wrap': True})
+        name_format_left.set_font_name('Times New Roman')
+        name_format_left_font_11 = workbook.add_format(
+            {'num_format': '#,##0.00', 'align': 'left', 'bold': False, 'size': 11, 'text_wrap': True})
+        name_format_left_font_11.set_font_name('Times New Roman')
         name_format_left_int = workbook.add_format({'align': 'left', 'border': 1, 'bold': False, 'size': 8, 'text_wrap': True})
-        footer_name_format_left = workbook.add_format(
-            {'align': 'left', 'border': 1, 'bold': True, 'size': 8, 'font_color': 'black'})
+        name_format_left_int.set_font_name('Times New Roman')
+
+        footer_name_format_right = workbook.add_format(
+            {'num_format': '#,##0.00', 'align': 'right', 'border': 1, 'bold': True, 'size': 8, 'font_color': 'black'})
+        footer_name_format_right.set_font_name('Times New Roman')
+        footer_name_format_right_without_border = workbook.add_format(
+            {'num_format': '#,##0.00', 'align': 'right', 'bold': True, 'size': 8, 'font_color': 'black'})
+        footer_name_format_right_without_border.set_font_name('Times New Roman')
         header_format_left = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#FFC000', 'bold': False, 'size': 8, 'border': 1,
              'text_wrap': True})
+        header_format_left.set_font_name('Times New Roman')
         name_border_format_colored = workbook.add_format(
-            {'num_format': '#,###0.00','align': 'center', 'border': 1,  'valign': 'vcenter', 'bold': False, 'size': 8})
+            {'num_format': '#,###0.00','align': 'right', 'border': 1,  'valign': 'vcenter', 'bold': False, 'size': 8})
+        name_border_format_colored.set_font_name('Times New Roman')
+        name_border_format_colored_left = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
+        name_border_format_colored_left.set_font_name('Times New Roman')
         # SHEET HEADER
         sheet.merge_range('A1:O1', company_id.name, title_format_center)
         sheet.merge_range('A2:O2', str(docs.date_start), name_format_left)
-        sheet.merge_range('A3:O3', "Initiated by : Human Resources", name_format_left)
+        sheet.merge_range('A3:O3', "Initiated by : Human Resources", name_format_left_font_11)
         sheet.merge_range('A4:O4', "To : Managing Director", name_format_left)
         sheet.merge_range('A5:O5', "Money Requisition for Disbursement of Overtime : " + docs.name + "", subject_format_center)
 
-        sheet.write(5, 0, "Department", header_format_left)
-        sheet.write(5, 1, "No of Employee", header_format_left)
-        sheet.write(5, 2, "Basic", header_format_left)
-        sheet.write(5, 3, "House Rent Allowance (70% of Basic)", header_format_left)
-        sheet.write(5, 4, "Medical Allowance (30% of Basic)", header_format_left)
-        sheet.write(5, 5, "Conveyance Allowance (30% of Basic)", header_format_left)
-        sheet.write(5, 6, "Others (20% of Basic)", header_format_left)
-        sheet.write(5, 7, "Gross", header_format_left)
-        sheet.write(5, 8, "Total Overtime Hour", header_format_left)
-        sheet.write(5, 9, "Overtime Rate/Hour", header_format_left)
-        sheet.write(5, 10, "Total OT Earning Amount", header_format_left)
-        sheet.write(5, 11, "Others/ Arrear", header_format_left)
-        sheet.write(5, 12, "Total", header_format_left)
-        sheet.write(5, 13, "Deduction", header_format_left)
-        sheet.write(5, 14, "Total Payable", header_format_left)
+        sheet.write(6, 0, "Department", header_format_left)
+        sheet.write(6, 1, "No of Employee", header_format_left)
+        sheet.write(6, 2, "Basic", header_format_left)
+        sheet.write(6, 3, "House Rent Allowance (70% of Basic)", header_format_left)
+        sheet.write(6, 4, "Medical Allowance (30% of Basic)", header_format_left)
+        sheet.write(6, 5, "Conveyance Allowance (30% of Basic)", header_format_left)
+        sheet.write(6, 6, "Others (20% of Basic)", header_format_left)
+        sheet.write(6, 7, "Gross", header_format_left)
+        sheet.write(6, 8, "Total Overtime Hour", header_format_left)
+        sheet.write(6, 9, "Overtime Rate/Hour", header_format_left)
+        sheet.write(6, 10, "Total OT Earning Amount", header_format_left)
+        sheet.write(6, 11, "Others/ Arrear", header_format_left)
+        sheet.write(6, 12, "Total", header_format_left)
+        sheet.write(6, 13, "Deduction", header_format_left)
+        sheet.write(6, 14, "Total Payable", header_format_left)
         data['name'] = report_name
 
         dept = self.env['hr.department'].search([])
-        row = 6
+        row = 7
         footer_employee = 0
         footer_basic = 0
         footer_basic_70 = 0
@@ -129,7 +146,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
             footer_deduction += deduction
             footer_total_payable += total_payable
             if emp_count > 0:
-                sheet.write(row, 0, d.name, name_border_format_colored)
+                sheet.write(row, 0, d.name, name_border_format_colored_left)
                 sheet.write(row, 1, emp_count, name_format_left_int)
                 sheet.write(row, 2, basic, name_border_format_colored)
                 sheet.write(row, 3, basic_70, name_border_format_colored)
@@ -148,33 +165,33 @@ class TopSheetDepartmentXLSX(ReportXlsx):
 
 
         # Total
-        sheet.write(row, 0, 'Total', name_format_left)
-        sheet.write(row, 1, footer_employee, footer_name_format_left)
-        sheet.write(row, 2, footer_basic, footer_name_format_left)
-        sheet.write(row, 3, footer_basic_70, footer_name_format_left)
-        sheet.write(row, 4, footer_basic_30, footer_name_format_left)
-        sheet.write(row, 5, footer_basic_30, footer_name_format_left)
-        sheet.write(row, 6, footer_basic_20, footer_name_format_left)
-        sheet.write(row, 7, footer_gross, footer_name_format_left)
-        sheet.write(row, 8, footer_numner_of_hours, footer_name_format_left)
-        sheet.write(row, 9, footer_ot_rate, footer_name_format_left)
-        sheet.write(row, 10, footer_ot_earning_amount, footer_name_format_left)
-        sheet.write(row, 11, footer_arrear, footer_name_format_left)
-        sheet.write(row, 12, footer_total, footer_name_format_left)
-        sheet.write(row, 13, footer_deduction, footer_name_format_left)
-        sheet.write(row, 14, footer_total_payable, footer_name_format_left)
+        sheet.write(row, 0, 'Total', footer_name_format_right)
+        sheet.write(row, 1, footer_employee, footer_name_format_right)
+        sheet.write(row, 2, footer_basic, footer_name_format_right)
+        sheet.write(row, 3, footer_basic_70, footer_name_format_right)
+        sheet.write(row, 4, footer_basic_30, footer_name_format_right)
+        sheet.write(row, 5, footer_basic_30, footer_name_format_right)
+        sheet.write(row, 6, footer_basic_20, footer_name_format_right)
+        sheet.write(row, 7, footer_gross, footer_name_format_right)
+        sheet.write(row, 8, footer_numner_of_hours, footer_name_format_right)
+        sheet.write(row, 9, footer_ot_rate, footer_name_format_right)
+        sheet.write(row, 10, footer_ot_earning_amount, footer_name_format_right)
+        sheet.write(row, 11, footer_arrear, footer_name_format_right)
+        sheet.write(row, 12, footer_total, footer_name_format_right)
+        sheet.write(row, 13, footer_deduction, footer_name_format_right)
+        sheet.write(row, 14, footer_total_payable, footer_name_format_right)
 
         if footer_total_payable > 0:
             amt_to_word = self.env['res.currency'].amount_to_word(float(footer_total_payable))
             
             row += 3
             sheet.write(row, 0, 'Cash Payment:', name_format_left)
-            sheet.write(row, 1, footer_total_payable, name_format_left)
-            sheet.merge_range('C' + str(row + 1) + ':H' + str(row + 1) + '', amt_to_word, name_format_left)
+            sheet.write(row, 1, footer_total_payable, footer_name_format_right_without_border)
+            sheet.merge_range('C' + str(row + 1) + ':H' + str(row + 1) + '', amt_to_word, footer_name_format_right_without_border)
             row += 1
             sheet.write(row, 0, 'Total fund Required:', name_format_left)
-            sheet.write(row, 1, footer_total_payable, name_format_left)
-            sheet.merge_range('C'+str(row+1)+':H'+str(row+1)+'', amt_to_word, name_format_left)
+            sheet.write(row, 1, footer_total_payable, footer_name_format_right_without_border)
+            sheet.merge_range('C'+str(row+1)+':H'+str(row+1)+'', amt_to_word, footer_name_format_right_without_border)
 
         row += 2
         # Get previous month data
@@ -186,8 +203,8 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         for paylslip_run in hr_payslip_runs:
             previous_month_payable += paylslip_run.total_payable
         sheet.write(row, 0, 'Previous Month Net Payable was:', name_format_left)
-        sheet.write(row, 1, footer_total_payable, name_format_left)
-        sheet.write(row, 1, previous_month_payable, name_format_left)
+        sheet.write(row, 1, footer_total_payable, footer_name_format_right_without_border)
+        sheet.write(row, 1, previous_month_payable, footer_name_format_right_without_border)
         # Signature
         row += 3
         sheet.write(row, 0, 'Prepared by', name_format_left)

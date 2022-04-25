@@ -45,13 +45,14 @@ class InheritHRPayslipInput(models.Model):
             """
             Other Allowance Bills
             """
-            for other_data in other_datas:
-                other_line_ids += other_line_ids.new({
-                    'name': 'Other Allowance',
-                    'code': "OAS",
-                    'amount': other_data.other_allowance_amount,
-                    'contract_id': self.contract_id.id,
-                    'ref': other_data.id,
-                })
+            if self.type == '0':
+                for other_data in other_datas:
+                    other_line_ids += other_line_ids.new({
+                        'name': 'Other Allowance',
+                        'code': "OAS",
+                        'amount': other_data.other_allowance_amount,
+                        'contract_id': self.contract_id.id,
+                        'ref': other_data.id,
+                    })
 
-            self.input_line_ids = other_line_ids
+                self.input_line_ids = other_line_ids

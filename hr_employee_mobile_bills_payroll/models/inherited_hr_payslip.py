@@ -48,15 +48,16 @@ class InheritedHrMobilePayslip(models.Model):
             """
             Mobile Bills
             """
-            for mobile_data in mobile_datas:
-               other_line_ids += other_line_ids.new({
-                    'name': 'Mobile Bill',
-                    'code': "MOBILE",
-                    'amount': mobile_data.amount,
-                    'contract_id': self.contract_id.id,
-                    'ref': mobile_data.id,
-            })
-            self.input_line_ids = other_line_ids
+            if self.type == '0':
+                for mobile_data in mobile_datas:
+                   other_line_ids += other_line_ids.new({
+                        'name': 'Mobile Bill',
+                        'code': "MOBILE",
+                        'amount': mobile_data.amount,
+                        'contract_id': self.contract_id.id,
+                        'ref': mobile_data.id,
+                })
+                self.input_line_ids = other_line_ids
 
 
 
