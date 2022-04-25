@@ -22,6 +22,15 @@ class EmployeeInformation(models.TransientModel):
             information.append(vals['department'])
             information.append(vals['designation'])
 
+        user_obj = self.env['res.users'].browse(user_id)
+        name = user_obj.login
+        department = ''
+        designation = ''
+        if information == []:
+            information.append(name)
+            information.append(department)
+            information.append(designation)
+
         return information
 
     def get_checked_by(self, mail_tracking_value_obj):
