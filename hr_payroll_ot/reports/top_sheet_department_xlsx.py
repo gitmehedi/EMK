@@ -18,7 +18,8 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         sheet = workbook.add_worksheet(report_name)
         sheet.set_row(0, 30)
         sheet.set_row(6, 30)
-        sheet.set_column(0, 0, 20)
+        sheet.set_column(0, 0, 18)
+        # sheet.set_column(1, 0, 8)
         # sheet.set_default_row(22)
 
         # Then override any that you want.
@@ -187,11 +188,11 @@ class TopSheetDepartmentXLSX(ReportXlsx):
             row += 3
             sheet.write(row, 0, 'Cash Payment:', name_format_left)
             sheet.write(row, 1, footer_total_payable, footer_name_format_right_without_border)
-            sheet.merge_range('C' + str(row + 1) + ':H' + str(row + 1) + '', amt_to_word, footer_name_format_right_without_border)
+            sheet.merge_range('C' + str(row + 1) + ':H' + str(row + 1) + '', amt_to_word, name_format_left)
             row += 1
             sheet.write(row, 0, 'Total fund Required:', name_format_left)
             sheet.write(row, 1, footer_total_payable, footer_name_format_right_without_border)
-            sheet.merge_range('C'+str(row+1)+':H'+str(row+1)+'', amt_to_word, footer_name_format_right_without_border)
+            sheet.merge_range('C'+str(row+1)+':H'+str(row+1)+'', amt_to_word, name_format_left)
 
         row += 2
         # Get previous month data

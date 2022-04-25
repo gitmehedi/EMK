@@ -19,31 +19,38 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         # Then override any that you want.
         sheet.set_row(0, 30)
         sheet.set_row(4, 35)
+        sheet.set_column(0, 0, 5)
         sheet.set_column(0, 1, 5)
         sheet.set_column(0, 2, 15)
 
         # FORMAT
         title_format_center = workbook.add_format({'align': 'center', 'bold': False, 'size': 22, 'text_wrap': True})
+        title_format_center.set_font_name('Times New Roman')
         subject_format_center = workbook.add_format({'align': 'center', 'bold': False, 'size': 15, 'text_wrap': True})
+        subject_format_center.set_font_name('Times New Roman')
         name_format_left_int = workbook.add_format(
             {'align': 'left', 'border': 1, 'bold': False, 'size': 8, 'text_wrap': True})
+        name_format_left_int.set_font_name('Times New Roman')
         bold = workbook.add_format({'bold': True, 'size': 10})
         name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 8})
 
         name_border_format_colored = workbook.add_format(
             {'num_format': '#,###0.00','align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
-
+        name_border_format_colored.set_font_name('Times New Roman')
         name_format_left = workbook.add_format({'align': 'left', 'bold': False, 'size': 10})
-        footer_border_format_left = workbook.add_format({'align': 'left', 'bold': True, 'size': 10})
+        name_format_left.set_font_name('Times New Roman')
+        footer_border_format_left = workbook.add_format({'num_format': '#,###0.00','align': 'left', 'bold': True, 'size': 10})
+        footer_border_format_left.set_font_name('Times New Roman')
+        footer_border_format_right = workbook.add_format({'num_format': '#,###0.00','align': 'right', 'bold': True, 'size': 8, 'text_wrap': False})
 
         header_format_left = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#FFC000', 'bold': False, 'size': 10, 'border': 1,
              'text_wrap': True})
-
+        header_format_left.set_font_name('Times New Roman')
         sub_header_format_left = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#81d41a', 'bold': False, 'size': 10, 'border': 1,
              'text_wrap': True})
-
+        sub_header_format_left.set_font_name('Times New Roman')
         # SHEET HEADER
         sheet.merge_range('A1:R1', company_id.name, title_format_center)
         sheet.merge_range('A2:R2', "Monthly Overtime Sheet", subject_format_center)
@@ -216,7 +223,8 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         if footer_total_net_payable > 0:
             amt_to_word = self.env['res.currency'].amount_to_word(float(footer_total_net_payable))
             row += 2
-            sheet.merge_range('L'+str(row+1)+':R'+str(row+1)+'', 'In Words: ' + amt_to_word, footer_border_format_left)
+            sheet.write(row, 17, 'In Words:' + amt_to_word, footer_border_format_right)
+            # sheet.merge_range('I'+str(row+1)+':R'+str(row+1)+'', 'In Words: ' + amt_to_word, footer_border_format_left)
 
         # Signature
         row += 3
