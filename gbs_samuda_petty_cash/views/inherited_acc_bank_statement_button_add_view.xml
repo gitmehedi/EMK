@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+      <record id="acc_bank_statement_print_xls_report" model="ir.ui.view">
+        <field name="name">Print Bank Statement</field>
+        <field name="model">account.bank.statement</field>
+        <field name="inherit_id" ref="account.view_bank_statement_form"/>
+        <field name="arch" type="xml">
+          <xpath expr="//button[@name='check_confirm_bank']" position="after">
+              <button string="Export Excel" name="action_statement_print"
+               class="oe_highlight" type="object"/>
+          </xpath>
+        </field>
+      </record>
+    </data>
+</odoo>
