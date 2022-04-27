@@ -38,9 +38,9 @@ class HrMealBillLine(models.Model):
     ], default='draft')
 
     # Show a msg for minus value
-    @api.onchange('bill_amount')
-    def _onchange_bill(self):
+    @api.constrains('arear_amount')
+    def _check_bill_amount(self):
         if self.arear_amount < 0:
-            raise UserError(_('Amount never take negative value!'))
+            raise ValidationError(_('Arrear Amount never take negative value!'))
 
 

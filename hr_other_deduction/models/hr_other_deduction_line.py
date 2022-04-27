@@ -34,9 +34,9 @@ class HrOtherDeductionLine(models.Model):
     ], default='draft')
 
     # Show a msg for minus value
-    @api.onchange('other_deduction_amount')
-    def _onchange_bill(self):
+    @api.constrains('other_deduction_amount')
+    def _check_bill_amount(self):
         if self.other_deduction_amount < 0:
-            raise UserError(_('Amount never take negative value!'))
+            raise ValidationError(_('Other Deduction Amount never take negative value!'))
 
 

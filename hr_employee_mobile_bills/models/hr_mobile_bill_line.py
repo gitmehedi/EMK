@@ -68,7 +68,7 @@ class HrEmpMobileBillLine(models.Model):
                         recode.amount = 0
 
     # Show a msg for minus value
-    @api.onchange('bill_amount', 'amount')
-    def _onchange_bill(self):
+    @api.constrains('bill_amount', 'amount')
+    def _check_bill_amount(self):
         if self.bill_amount < 0 or self.amount < 0:
-            raise UserError(_('Amount or Exceed Amount never take negative value!'))
+            raise ValidationError(_('Amount or Exceed Amount never take negative value!'))
