@@ -56,6 +56,15 @@ class Shipment(models.Model):
     invoice_number = fields.Char(string='Invoice Number')
     invoice_value = fields.Float(string='Invoice Value')
 
+    # done
+    shipment_done_date = fields.Date(string='Shipment Done Date', required=False)
+    ait_amount = fields.Float(string='Amount')
+    payment_rec_date = fields.Date(string='Payment Rec. Date')
+    payment_rec_amount = fields.Float(string='Payment Rec. Amount')
+    payment_charge = fields.Float(string='Payment Charge')
+    discrepancy_amount = fields.Float(string='Discrepancy Amount')
+    discrepancy_details = fields.Char(string='Discrepancy Details')
+
     # @api.multi
     def name_get(self):
         result = []

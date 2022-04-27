@@ -9,6 +9,7 @@ class ShipmentCommon(models.Model):
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
 
     to_sales_date = fields.Date('Dispatch to Sales', track_visibility='onchange')
+    to_first_acceptance_date = fields.Date('1\'st Acceptance Date', track_visibility='onchange')
     to_buyer_date = fields.Date('Dispatch to Party', track_visibility='onchange')
     to_seller_bank_date = fields.Date('Seller Bank Receive', track_visibility='onchange')
     to_buyer_bank_date = fields.Date('Buyer Bank Receive', track_visibility='onchange')
@@ -31,6 +32,7 @@ class ShipmentCommon(models.Model):
          ('add_invoice', "Invoice"),
          ('to_sales',"To Sales"),
          ('to_buyer',"To Buyer"),
+         ('to_first_acceptance',"1'st Acceptance"),
          ('to_seller_bank',"To Seller Bank"),
          ('to_buyer_bank',"To Buyer Bank"),
          ('to_maturity', "To Maturity"),

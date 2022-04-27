@@ -31,11 +31,12 @@
                         <button string="Add Invoice" name="action_add_invoice_export" states="receive_doc" type="object" class="oe_highlight"/>
                         <button string="To Sales" name="action_to_sales_export" states="add_invoice" type="object" class="oe_highlight"/>
                         <button string="To Buyer" name="action_to_buyer_export" states="to_sales" type="object" class="oe_highlight"/>
-                        <button string="To Seller Bank" name="action_to_seller_bank_export" states="to_buyer" type="object" class="oe_highlight"/>
+                        <button string="1'st Acceptance" name="action_to_first_acceptance_export" states="to_buyer" type="object" class="oe_highlight"/>
+                        <button string="To Seller Bank" name="action_to_seller_bank_export" states="to_first_acceptance" type="object" class="oe_highlight"/>
                         <button string="To Buyer Bank" name="action_to_buyer_bank_export" states="to_seller_bank" type="object" class="oe_highlight"/>
                         <button string="To Maturity" name="action_to_maturity_export" states="to_buyer_bank" type="object" class="oe_highlight"/>
                         <button string="Done" name="action_done_export" states="to_maturity" type="object" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,receive_doc,add_invoice,to_sales,to_buyer,to_seller_bank,to_buyer_bank,to_maturity,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,receive_doc,add_invoice,to_sales,to_buyer,to_first_acceptance,to_seller_bank,to_buyer_bank,to_maturity,done"/>
                         <button string="Cancel" name="action_cancel" class="btn-primary btn-danger mr24 pull-right oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
                     </header>
                     <sheet>
@@ -55,6 +56,7 @@
                             <group string="1'st Acceptance">
                                 <field name="to_sales_date" readonly="1"/>
                                 <field name="to_buyer_date" readonly="1"/>
+                                <field name="to_first_acceptance_date" readonly="1"/>
                             </group>
                             <group string="2'nd Acceptance">
                                 <field name="to_seller_bank_date" readonly="1"/>
@@ -66,6 +68,19 @@
                                 </group>
                                 <group>
                                     <field name="bill_id" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Shipment Done Info" colspan="4">
+                                <group>
+                                    <field name="shipment_done_date" readonly="1"/>
+                                    <field name="ait_amount" readonly="1"/>
+                                    <field name="payment_rec_date" readonly="1"/>
+                                    <field name="payment_rec_amount" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="payment_charge" readonly="1"/>
+                                    <field name="discrepancy_amount" readonly="1"/>
+                                    <field name="discrepancy_details" readonly="1"/>
                                 </group>
                             </group>
                             <!---->
