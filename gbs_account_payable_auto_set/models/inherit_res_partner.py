@@ -1,8 +1,20 @@
 from odoo import api, models
+from odoo.exceptions import UserError, ValidationError, Warning
 
 
 class InheritResPartner(models.Model):
     _inherit = 'res.partner'
+
+    @api.onchange('supplier_type')
+    def _onchange_supplier_type(self):
+        if self.supplier_type:
+            if self.supplier and self.supplier_type == 'foreign':
+                foreign_ap_account = self.env['ir.values'].get_default('account.config.settings', 'foreign_ap_account')
+                if not foreign_ap_account:
+                    raise UserError(
+                        ("Foreign Account Payable Account not set. Please contact your system administrator for "
+                         "assistance."))
+                self.property_account_payable_id = foreign_ap_account
 
     @api.multi
     def _get_max_code_for_account_payable(self, company_id, name):

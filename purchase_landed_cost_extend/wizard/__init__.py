@@ -1,1 +1,3 @@
 import picking_import_wizard
+import analytic_account_wizard
+import inherit_picking_import_wizard
