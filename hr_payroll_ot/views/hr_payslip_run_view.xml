@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="ot_hr_payslip_run_view" model="ir.ui.view">
+        <field name="name">OT HR Payslip Run</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//header/button[@name='draft_payslip_run']" position="after">
+                    <button string="Print Report" type="action" context="{'default_hr_payslip_run_id': id}"
+                            name="%(action_ot_wizard)d" attrs="{'invisible':[('type', '!=', '2')]}"/>
+                </xpath>
+        </field>
+    </record>
+</odoo>

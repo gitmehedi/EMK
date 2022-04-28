@@ -42,7 +42,7 @@ class InheritedHrPayslip(models.Model):
             for line in loan_data:
                 if line.parent_id.state=='disbursed':
                     line_amt += line.installment
-            if self.contract_id.id:
+            if self.contract_id.id and self.type == '0':
                 other_line_ids += other_line_ids.new({
                     'name': 'Current Loan',
                     'code': "LOAN",

@@ -40,18 +40,19 @@ class InheritHRPayslipInput(models.Model):
             """
             other_line_ids = self.input_line_ids
             arrear_datas = self.env['hr.payroll.arrear.line'].search([('employee_id', '=', self.employee_id.id),
-                                                              ('state','=','approved')])
+                                                              ('state','=','approved'), ('type', '=', 'regular')])
 
             """
             Arrear Bills
             """
-            for arrear_data in arrear_datas:
-                other_line_ids += other_line_ids.new({
-                    'name': 'Arrear',
-                    'code': "ARS",
-                    'amount': arrear_data.arear_amount,
-                    'contract_id': self.contract_id.id,
-                    'ref': arrear_data.id,
-                })
+            if self.payslip_run_id.type == '0':
+                for arrear_data in arrear_datas:
+                    other_line_ids += other_line_ids.new({
+                        'name': 'Arrear',
+                        'code': "ARS",
+                        'amount': arrear_data.arear_amount,
+                        'contract_id': self.contract_id.id,
+                        'ref': arrear_data.id,
+                    })
 
-            self.input_line_ids = other_line_ids
+                self.input_line_ids = other_line_ids

@@ -21,7 +21,7 @@
                 </xpath>
                  <xpath expr="//header/button[@name='draft_payslip_run']" position="after">
                         <button string="Print Report" type="action" context="{'available_advice':True}"
-                                name="%(action_salary_wizard)d"/>
+                                name="%(action_salary_wizard)d" attrs="{'invisible':[('type', '!=', '0'), ('type', '!=', '1')]}"/>
                     </xpath>
             </field>
         </record>
@@ -33,6 +33,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='credit_note']" position="after">
                     <field name="send_email"/>
+                </xpath>
+                <xpath expr="//field[@name='credit_note']" position="before">
+                    <field name="total_payable"/>
                 </xpath>
             </field>
         </record>

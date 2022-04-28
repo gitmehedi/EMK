@@ -8,6 +8,20 @@
             <field name="arch" type="xml" >
                 <form string="Do you want to done this Shipment?" create="false" edit="false">
                     <!--<p>Would you want to leave a message?</p>-->
+                    <group>
+                        <group>
+                            <field name="region_type" invisible="1"/>
+                            <field name="shipment_done_date" attrs="{'invisible':[('region_type', '=', 'foreign')]}" />
+                            <field name="ait_amount" attrs="{'invisible':[('region_type', '=', 'foreign')]}" />
+                            <field name="payment_rec_date"/>
+                            <field name="payment_rec_amount"/>
+                        </group>
+                        <group>
+                            <field name="payment_charge"/>
+                            <field name="discrepancy_amount"/>
+                            <field name="discrepancy_details"/>
+                        </group>
+                    </group>
                     <group string="Comments">
                         <field name="comments" nolabel="1"/>
                     </group>
