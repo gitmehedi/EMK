@@ -126,6 +126,8 @@ class ShipmentLocal(models.Model):
     # For done_wizard
     @api.multi
     def action_done_export_foreign(self):
+        region_type = self.lc_id.region_type
+
         res = self.env.ref('com_shipment.done_wizard')
         result = {
             'name': _('Do you want to done this shipment?'),
@@ -136,6 +138,7 @@ class ShipmentLocal(models.Model):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
+            'context': {'default_region_type': region_type}
         }
         return result
         # State Change Actions

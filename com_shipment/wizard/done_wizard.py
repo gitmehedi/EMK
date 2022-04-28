@@ -6,13 +6,13 @@ class DoneWizard(models.TransientModel):
 
     comments = fields.Text('Comments', required=True, help="Would you like to leave a message?")
     shipment_done_date = fields.Date(string='Shipment Done Date', required=False)
-    ait_amount = fields.Float(string='Amount')
+    ait_amount = fields.Float(string='AIT Amount')
     payment_rec_date = fields.Date(string='Payment Rec. Date')
     payment_rec_amount = fields.Float(string='Payment Rec. Amount')
     payment_charge = fields.Float(string='Payment Charge')
     discrepancy_amount = fields.Float(string='Discrepancy Amount')
     discrepancy_details = fields.Char(string='Discrepancy Details')
-
+    region_type = fields.Selection([('local', "Local"),('foreign', "Foreign")], readonly=True,)
 
     @api.multi
     def save_done(self):

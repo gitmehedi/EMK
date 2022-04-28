@@ -10,8 +10,9 @@
                     <!--<p>Would you want to leave a message?</p>-->
                     <group>
                         <group>
-                            <field name="shipment_done_date"/>
-                            <field name="ait_amount"/>
+                            <field name="region_type" invisible="1"/>
+                            <field name="shipment_done_date" attrs="{'invisible':[('region_type', '=', 'foreign')]}" />
+                            <field name="ait_amount" attrs="{'invisible':[('region_type', '=', 'foreign')]}" />
                             <field name="payment_rec_date"/>
                             <field name="payment_rec_amount"/>
                         </group>
