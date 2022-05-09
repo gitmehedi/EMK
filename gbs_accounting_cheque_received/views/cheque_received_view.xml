@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <form string="Cheque Received Form">
                 <header>
+                    <button name="action_reset_to_draft" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="received,dishonoured,deposited" string="Reset To Draft" class="oe_highlight"/>
                     <button name="action_received" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="draft" string="Received" class="oe_highlight"/>
                     <button name="action_deposited" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="received" string="Deposited"
                             class="oe_highlight"/>

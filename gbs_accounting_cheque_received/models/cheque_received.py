@@ -198,6 +198,12 @@ class ChequeReceived(models.Model):
 
             cr.state = 'deposited'
 
+
+    @api.multi
+    def action_reset_to_draft(self):
+        for cr in self:
+            cr.state = 'draft'
+
     @api.multi
     def action_dishonoured(self):
         for cr in self:
