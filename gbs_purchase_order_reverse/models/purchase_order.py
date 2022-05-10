@@ -64,8 +64,10 @@ class PurchaseOrder(models.Model):
             # if rfq then update rfq line
             if rfq_line_objs:
                 rfq_line_obj = rfq_line_objs.filtered(lambda r: r.product_id.id == order_line_id.product_id.id)
+
                 if rfq_line_obj:
-                    rfq_line_obj[0].write({'po_receive_qty': rfq_line_obj.po_receive_qty - order_line_id.product_qty})
+                    for rfq_line in rfq_line_obj:
+                        rfq_line[0].write({'po_receive_qty': rfq_line.po_receive_qty - order_line_id.product_qty})
             # update pr line
             pr_line_filter_objs = pr_line_objs.filtered(lambda r: r.product_id.id == order_line_id.product_id.id)
             if pr_line_filter_objs:

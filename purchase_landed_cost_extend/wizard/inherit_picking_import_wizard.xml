@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="purchase_cost_distribution_form_inherit" model="ir.ui.view">
+            <field name="name">picking.import.wizard_form_inherit</field>
+            <field name="model">picking.import.wizard</field>
+            <field name="inherit_id" ref="purchase_landed_cost.picking_import_wizard_view"/>
+
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='supplier']" position="after">
+                        <field name="lc_id" required="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='pickings']" position="replace">
+                        <field name="pickings"
+                                domain="[('partner_id', 'child_of', supplier),
+                               ('location_id.usage', '=', 'supplier'),
+                               ('origin', '=', lc_id.name),
+                               ('state', '=', 'done')]" widget="many2many_tags"/>
+                    </xpath>
+
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>
