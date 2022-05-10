@@ -15,11 +15,12 @@
     'category': 'Commercial',
     'version': '10.0.1',
 
-    'depends': ['lc_sales_product_local'],
+    'depends': ['letter_of_credit', 'lc_sales_product_local'],
 
     'data': [
         # 'security/ir.model.access.csv',
         'wizard/lc_sales_local_wizard_view.xml',
+        'wizard/lc_register_wizard_view.xml',
         'report/local_first_acceptance_report.xml',
         'report/local_second_acceptance_report.xml',
         'report/lc_sales_local_maturity_report.xml',
