@@ -9,7 +9,7 @@
                 <group>
                     <group>
                         <field name="filter_by"/>
-                        <field name="acceptance_default_value" attrs="{'invisible':['|', '|', ('filter_by', '=', False), ('filter_by', '=', 'goods_delivered_doc_not_prepared'), ('filter_by', '=', 'maturated_but_payment_not_done')]}"/>
+                        <field name="acceptance_default_value" attrs="{'invisible':['|', '|', '|', ('filter_by', '=', False), ('filter_by', '=', 'goods_delivered_doc_not_prepared'), ('filter_by', '=', 'maturated_but_amount_not_collect'), ('filter_by', '=', 'goods_delivered_but_lc_not_received')]}"/>
                     </group>
                     <group>
                         <field name="type" attrs="{'invisible': [('is_type_hide', '=', True)]}"/>
