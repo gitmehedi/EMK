@@ -7,6 +7,8 @@ class ShipmentCommon(models.Model):
     _inherit = 'purchase.shipment'
 
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
+    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers')
+    invoice_qty = fields.Float(string='Invoice Qty')
 
     to_sales_date = fields.Date('Dispatch to Sales', track_visibility='onchange')
     to_first_acceptance_date = fields.Date('1\'st Acceptance Date', track_visibility='onchange')
@@ -72,7 +74,7 @@ class ShipmentCommon(models.Model):
 
             self.shipment_product_lines.unlink()
 
-        self.write({'state': 'draft'})
+        self.update({'state': 'draft', 'invoice_ids': False, 'invoice_value': 0})
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):
