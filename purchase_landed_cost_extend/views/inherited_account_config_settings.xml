@@ -11,7 +11,7 @@
                 <xpath expr="//group[3]" position="before">
                     <group string="Foreign Purchase">
                         <field name="lc_pad_account" class="oe_inline" string="LC Goods In Transit Account"/>
-                        <field name="foreign_ap_account" class="oe_inline" string="Export Clearing Account"/>
+                        <field name="foreign_ap_account" class="oe_inline" string="Foreign AP Clearing Account"/>
                     </group>
                 </xpath>
             </field>
