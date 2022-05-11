@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 class HrEmployee(models.Model):
 
@@ -10,7 +11,31 @@ class HrEmployee(models.Model):
 
     employee_sequence = fields.Integer("Employee Sequence")
     total_pf = fields.Float(compute='_compute_total_pf', string='Total PF')
-    
+    bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account Number',
+                                      domain="[]",
+                                      help='Employee bank salary account', groups='hr.group_hr_user')
+
+    @api.model
+    def create(self, vals):
+        res = super(HrEmployee, self).create(vals)
+        bank_account_id = vals['bank_account_id']
+        if bank_account_id:
+            hr_employee = self.env['hr.employee'].search([('bank_account_id', '=', bank_account_id), ('id', '!=', res.id)])
+            if hr_employee:
+                raise UserError('Bank account already assigned')
+            
+        return res
+            
+    def write(self, vals):
+        res = super(HrEmployee, self).write(vals)
+        if 'bank_account_id' in vals:
+            bank_account_id = vals.get('bank_account_id')
+            hr_employee = self.env['hr.employee'].search(
+                [('bank_account_id', '=', bank_account_id), ('id', '!=', self.id)])
+            if hr_employee:
+                raise UserError('Bank account already assigned')
+        return res
+
     @api.multi
     def name_get(self):
         result = []

@@ -27,7 +27,10 @@ class PettyCashReportXLSX(ReportXlsx):
         col = 1
         sheet.set_column(3, 1, 20)
         sheet.write(row, col, "Reference", normal)
-        sheet.write(row, col + 1, obj.name, normal)
+        if obj.name:
+            sheet.write(row, col + 1, obj.name, normal)
+        else:
+            sheet.write(row, col + 1, '', normal)
         sheet.write(row, col + 2, "Starting Balance", normal)
         sheet.write(row, col + 3, obj.balance_start, no_format)
         row = row + 1
@@ -50,7 +53,10 @@ class PettyCashReportXLSX(ReportXlsx):
             col = 1
             sheet.write(row, col, ReportUtility.get_date_from_string(line.date), normal)
             sheet.write(row, col + 1, line.name, normal)
-            sheet.write(row, col + 2, line.ref, normal)
+            if line.ref:
+                sheet.write(row, col + 2, line.ref, normal)
+            else:
+                sheet.write(row, col + 2, '', normal)
             sheet.write(row, col + 3, line.amount, no_format)
 
 
