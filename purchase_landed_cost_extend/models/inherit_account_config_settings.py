@@ -20,7 +20,7 @@ class InheritedAccountConfigSettings(models.TransientModel):
     def _get_default_foreign_ap_account(self):
         return self.env.user.company_id.foreign_ap_account
 
-    foreign_ap_account = fields.Many2one('account.account', 'Export Clearing Account',
+    foreign_ap_account = fields.Many2one('account.account', 'Foreign AP Clearing Account',
                                          default=lambda self: self._get_default_foreign_ap_account())
 
     @api.multi

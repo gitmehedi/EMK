@@ -27,7 +27,8 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='cost_update_type']" position="after">
-                    <field name="operating_unit_id" attrs="{'readonly': [('field_readonly', '=', True)]}" options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
+                    <field name="operating_unit_id" attrs="{'readonly': [('field_readonly', '=', True)]}"
+                           options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
                     <field name="field_readonly" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='cost_lines']" position="attributes">
@@ -39,56 +40,59 @@
                 <xpath expr="//field[@name='expense_lines']" position="attributes">
                     <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
                 </xpath>
-                <xpath expr="//button[@name='%(purchase_landed_cost.action_import_invoice_line_wizard)d']" position="attributes">
+                <xpath expr="//button[@name='%(purchase_landed_cost.action_import_invoice_line_wizard)d']"
+                       position="attributes">
                     <attribute name="class">oe_highlight</attribute>
                 </xpath>
 
 
-                 <xpath expr="//field[@name='type']" position="before">
-                        <field name="account_id"/>
-                    </xpath>
+                <xpath expr="//field[@name='type']" position="before">
+                    <field name="account_id"/>
+                </xpath>
 
-                    <xpath expr="//field[@name='affected_lines']" position="attributes">
-                        <attribute name="invisible">1</attribute>
-                    </xpath>
+                <xpath expr="//field[@name='affected_lines']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
 
-                    <xpath expr="//field[@name='invoice_line']" position="attributes">
-                        <attribute name="invisible">1</attribute>
-                    </xpath>
+                <xpath expr="//field[@name='invoice_line']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
 
 
-                    <xpath expr="//field[@name='currency_id']" position="after">
-                        <field name="debit_account" required="1"/>
-                        <field name="account_move_id" invisible="1"/>
-                    </xpath>
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="debit_account" required="1"/>
+                    <field name="account_move_id" invisible="1"/>
+                </xpath>
 
-                    <xpath expr="//field[@name='name']" position="before">
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="get_journal_entry"
-                                   attrs="{'invisible':['|',('state','=','draft'),('account_move_id','=',False)]}"  string="Journal Entry" icon="fa-book">
-                            </button>
-                        </div>
-                    </xpath>
+                <xpath expr="//field[@name='name']" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="get_journal_entry"
+                                attrs="{'invisible':['|',('state','=','draft'),('account_move_id','=',False)]}"
+                                string="Journal Entry" icon="fa-book">
+                        </button>
+                    </div>
+                </xpath>
 
-                    <xpath expr="//header/button[@name='action_calculate']" position="after">
-                        <button name="post_journal_entry"
-                                string="Post Journal Entry"
-                                type="object"
-                                states="calculated"
-                                attrs="{'invisible':[('account_move_id','!=',False)]}"
-                                class="oe_highlight"/>
-                    </xpath>
+                <xpath expr="//header/button[@name='action_calculate']" position="after">
+                    <button name="post_journal_entry"
+                            string="Post Journal Entry"
+                            type="object"
+                            attrs="{'invisible':['|',('account_move_id','!=',False),('state','!=','calculated')]}"
+                            class="oe_highlight"/>
+                </xpath>
 
-                    <xpath expr="//button[@name='%(purchase_landed_cost.action_import_invoice_line_wizard)d']" position="after">
-                        <button style="margin-left:5px;" name="action_import_using_analytic_account"
-                                string="Import Using Analytic Account" states="draft" type="object"
-                                class="btn-primary"/>
-                    </xpath>
+                <xpath expr="//button[@name='%(purchase_landed_cost.action_import_invoice_line_wizard)d']"
+                       position="after">
+                    <button style="margin-left:5px;" name="action_import_using_analytic_account"
+                            string="Import Using Analytic Account" states="draft" type="object"
+                            class="btn-primary"/>
+                </xpath>
 
-                    <xpath expr="//button[@name='%(purchase_landed_cost.action_import_invoice_line_wizard)d']"
-                           position="attributes">
-                          <attribute name="groups">base.group_no_one</attribute>
-                    </xpath>
+
+                <xpath expr="//button[@name='%(purchase_landed_cost.action_import_invoice_line_wizard)d']"
+                       position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
 
             </field>
         </record>
@@ -98,12 +102,12 @@
         </record>
 
         <menuitem id="purchase_landed_cost.menu_purchase_cost_control"
-              name="Landed Costs"
-              parent="purchase.menu_purchase_root"/>
+                  name="Landed Costs"
+                  parent="purchase.menu_purchase_root"/>
 
         <menuitem id="purchase_landed_cost.menu_purchase_cost_distribution"
-                name="Landed Costs"
-                parent="purchase_landed_cost.menu_purchase_cost_control"
+                  name="Landed Costs"
+                  parent="purchase_landed_cost.menu_purchase_cost_control"
         />
 
     </data>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-<!--        Tree View-->
+        <!--        Tree View-->
         <record id="purchase_expense_type_tree" model="ir.ui.view">
             <field name="model">purchase.expense.type</field>
             <field name="inherit_id" ref="purchase_landed_cost.purchase_expense_type_tree"/>
@@ -12,7 +12,7 @@
             </field>
         </record>
 
-<!--        Form View-->
+        <!--        Form View-->
         <record id="view_purchase_expense_type_form" model="ir.ui.view">
             <field name="model">purchase.expense.type</field>
             <field name="arch" type="xml">
@@ -41,11 +41,13 @@
             </field>
         </record>
 
-<!--        <menuitem id="menu_purchase_expense_type"-->
-<!--                  action="action_purchase_expense_type"-->
-<!--                  parent="menu_purchase_cost_control"-->
-<!--                  sequence="30"-->
-<!--        />-->
+
+        <menuitem id="purchase_landed_cost.menu_purchase_expense_type"
+                  action="purchase_landed_cost.action_purchase_expense_type"
+                  parent="account.menu_finance_configuration"
+                  sequence="30"
+        />
+
 
     </data>
 </odoo>
