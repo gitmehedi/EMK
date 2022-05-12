@@ -27,7 +27,7 @@ class PurchaseCostDistribution(models.Model):
     def action_done(self):
         context = dict(self.env.context)
         context.update({
-            'datetime_of_price_history': self.date + ' ' + datetime.datetime.now().strftime("%H:%M:%S"),
+            'datetime_of_price_history': self.date + ' ' + datetime.now().strftime("%H:%M:%S"),
             'operating_unit_id': self.cost_lines[0].picking_id.operating_unit_id.id
         })
         self.env.context = frozendict(context)

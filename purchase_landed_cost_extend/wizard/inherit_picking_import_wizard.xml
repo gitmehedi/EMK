@@ -12,13 +12,7 @@
                     <xpath expr="//field[@name='supplier']" position="after">
                         <field name="lc_id" required="1"/>
                     </xpath>
-                    <xpath expr="//field[@name='pickings']" position="replace">
-                        <field name="pickings"
-                                domain="[('partner_id', 'child_of', supplier),
-                               ('location_id.usage', '=', 'supplier'),
-                               ('origin', '=', lc_id.name),
-                               ('state', '=', 'done')]" widget="many2many_tags"/>
-                    </xpath>
+
 
                 </data>
             </field>
