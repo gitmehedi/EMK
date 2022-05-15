@@ -15,6 +15,10 @@ class PurchaseCostDistribution(models.Model):
                                         default=lambda self: self.env.user.default_operating_unit_id)
     field_readonly = fields.Boolean(string='Field Readonly')
 
+    total_purchase = fields.Float(string='Total Product Cost')
+
+    total_expense = fields.Float(string='Total Landed Cost')
+
     @api.multi
     def action_calculate(self):
         # validation
@@ -159,3 +163,9 @@ class PurchaseCostDistributionLine(models.Model):
     _inherit = 'purchase.cost.distribution.line'
 
     date_done = fields.Datetime(string='Date of Transfer', related='move_id.picking_id.date_done')
+
+    cost_ratio = fields.Float(string="Landed Cost Per Unit")
+
+    expense_amount = fields.Float(string='Landed Cost')
+
+    total_amount = fields.Float(string='Product Cost')
