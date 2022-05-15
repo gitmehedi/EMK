@@ -7,7 +7,7 @@ class ResPartner(models.Model):
     supplier_type = fields.Selection([
         ('local', 'Local'),
         ('foreign', 'Foreign'),
-    ], string='Supplier Type')
+    ], string='Supplier Type', track_visibility='always')
 
     is_cnf = fields.Boolean(string='Is a C&F Agent')
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="purchase_landed_cost.menu_purchase_cost_control"
+              name="Landed Costs"
+              parent="account.menu_finance_payables"
+              sequence="9"/>
+
+</odoo>

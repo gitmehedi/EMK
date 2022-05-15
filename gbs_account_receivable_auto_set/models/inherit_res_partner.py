@@ -40,10 +40,14 @@ class InheritResPartner(models.Model):
                 receivable_id = self._get_max_code_for_account_receivable(vals['company_id'], vals['name'])
                 vals['property_account_receivable_id'] = receivable_id
 
-            elif vals['supplier']:
-                payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
-                vals['property_account_payable_id'] = payable_id
-
+            elif vals['supplier'] and not vals['supplier_type'] == 'foreign':
+                if 'supplier_type' in vals:
+                    if not vals['supplier_type'] == 'foreign':
+                        payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
+                        vals['property_account_payable_id'] = payable_id
+                else:
+                    payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
+                    vals['property_account_payable_id'] = payable_id
             elif vals['is_cnf']:
                 payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
                 vals['property_account_payable_id'] = payable_id

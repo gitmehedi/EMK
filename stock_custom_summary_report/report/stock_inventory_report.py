@@ -6,7 +6,7 @@ class StockInventoryReport(models.AbstractModel):
     _name = 'report.stock_custom_summary_report.stock_report_template'
 
     @api.multi
-    def render_html(self,docids, data=None):
+    def render_html(self, docids, data=None):
 
         get_data = self.get_report_data(data)
         report_utility_pool = self.env['report.utility']
@@ -26,7 +26,7 @@ class StockInventoryReport(models.AbstractModel):
 
     def get_report_data(self, data):
         date_from = data['date_from']
-        date_start =date_from + ' 00:00:00'
+        date_start = date_from + ' 00:00:00'
         date_to = data['date_to']
         date_end = date_to + ' 23:59:59'
         location_outsource = data['location_id']
@@ -209,9 +209,9 @@ class StockInventoryReport(models.AbstractModel):
                               cost_val,
                               uom_name,
                               category
-                 
-                 ''' % (date_start, date_start, location_outsource, location_outsource, category_param,product_param,
-                        date_start, date_start, location_outsource, location_outsource, category_param,product_param)
+
+                 ''' % (date_start, date_start, location_outsource, location_outsource, category_param, product_param,
+                        date_start, date_start, location_outsource, location_outsource, category_param, product_param)
 
         sql_in_tk = '''
                             SELECT product_id, 
@@ -268,7 +268,8 @@ class StockInventoryReport(models.AbstractModel):
                                       uom_name,
                                       category,
                                       cost_val 
-                        ''' % (date_end,date_end,date_start, date_end, location_outsource, location_outsource, category_param,product_param)
+                        ''' % (
+        date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param, product_param)
 
         sql_out_tk = '''SELECT product_id,
                            name,
@@ -322,7 +323,8 @@ class StockInventoryReport(models.AbstractModel):
                               uom_name,
                               category,
                               list_price
-                        ''' % (date_end,date_end,date_start, date_end, location_outsource, location_outsource, category_param,product_param)
+                        ''' % (
+        date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param, product_param)
 
         sql_ck = '''
                   SELECT product_id,
@@ -417,8 +419,9 @@ class StockInventoryReport(models.AbstractModel):
                       uom_name,
                       category,
                       cost_val 
-                        ''' % (date_end, date_end, location_outsource, location_outsource, category_param,product_param,
-                               date_end, date_end, location_outsource, location_outsource, category_param,product_param)
+                        ''' % (
+        date_end, date_end, location_outsource, location_outsource, category_param, product_param,
+        date_end, date_end, location_outsource, location_outsource, category_param, product_param)
 
         sql = '''
                             SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
@@ -457,22 +460,22 @@ class StockInventoryReport(models.AbstractModel):
                 total['name'] = vals['category']
 
                 if total['total_in_val']:
-                    total['total_in_val'] = float(total['total_in_val'].replace(',','')) + vals['val_in_tk']
+                    total['total_in_val'] = float(total['total_in_val'].replace(',', '')) + vals['val_in_tk']
                 else:
                     total['total_in_val'] = total['total_in_val'] + vals['val_in_tk']
 
                 if total['total_dk_val']:
-                    total['total_dk_val'] = float(total['total_dk_val'].replace(',','')) + vals['val_dk']
+                    total['total_dk_val'] = float(total['total_dk_val'].replace(',', '')) + vals['val_dk']
                 else:
                     total['total_dk_val'] = total['total_dk_val'] + vals['val_dk']
 
                 if total['total_out_val']:
-                    total['total_out_val'] = float(total['total_out_val'].replace(',','')) + vals['val_out_tk']
+                    total['total_out_val'] = float(total['total_out_val'].replace(',', '')) + vals['val_out_tk']
                 else:
                     total['total_out_val'] = total['total_out_val'] + vals['val_out_tk']
 
                 if total['total_ck_val']:
-                    total['total_ck_val'] = float(total['total_ck_val'].replace(',','')) + vals['val_ck']
+                    total['total_ck_val'] = float(total['total_ck_val'].replace(',', '')) + vals['val_ck']
                 else:
                     total['total_ck_val'] = total['total_ck_val'] + vals['val_ck']
 
@@ -505,9 +508,8 @@ class StockInventoryReport(models.AbstractModel):
                 vals['rate_out'] = formatLang(self.env, vals['rate_out'])
                 vals['rate_ck'] = formatLang(self.env, vals['rate_ck'])
 
-
-        grand_total['total_dk_val'] = formatLang(self.env,grand_total['total_dk_val'])
-        grand_total['total_in_val'] = formatLang(self.env,grand_total['total_in_val'])
-        grand_total['total_out_val'] = formatLang(self.env,grand_total['total_out_val'])
-        grand_total['total_ck_val'] = formatLang(self.env,grand_total['total_ck_val'])
+        grand_total['total_dk_val'] = formatLang(self.env, grand_total['total_dk_val'])
+        grand_total['total_in_val'] = formatLang(self.env, grand_total['total_in_val'])
+        grand_total['total_out_val'] = formatLang(self.env, grand_total['total_out_val'])
+        grand_total['total_ck_val'] = formatLang(self.env, grand_total['total_ck_val'])
         return {'category': category, 'total': grand_total}
