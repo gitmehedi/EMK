@@ -18,6 +18,7 @@ class PettyCashReportXLSX(ReportXlsx):
             {'font_size': 12, 'align': 'center', 'valign': 'vcenter', 'bg_color': '#FFE0E3', 'bold': True, 'border': 1, 'size':10})
         no_format = workbook.add_format({'font_size': 12,'border': 1,'num_format': '#,###0.00' })
         normal = workbook.add_format({'font_size': 12,'border': 1 })
+        no_format_bold = workbook.add_format({'font_size': 12,'border': 1, 'bold': True, 'num_format': '#,###0.00' })
 
         # bg_normal_bordered = workbook.add_format({'font_size': 8, 'bg_color': '#78B0DE', 'border': 1})
         # no_format = workbook.add_format({'num_format': '#,###0.00', 'font_size': 8})
@@ -48,6 +49,7 @@ class PettyCashReportXLSX(ReportXlsx):
         sheet.write(row, col + 1, "Label", normal)
         sheet.write(row, col + 2, "Reference", normal)
         sheet.write(row, col + 3, "Amount", normal)
+
         for line in obj.line_ids:
             row = row + 1
             col = 1
@@ -58,6 +60,12 @@ class PettyCashReportXLSX(ReportXlsx):
             else:
                 sheet.write(row, col + 2, '', normal)
             sheet.write(row, col + 3, line.amount, no_format)
+
+        row = row + 1
+        col = 3
+        sheet.write(row, col, "Total", no_format_bold)
+        sheet.write(row, col + 1, obj.balance_end, no_format_bold)
+
 
 
 PettyCashReportXLSX('report.gbs_samuda_petty_cash.petty_cash_report_xlsx',

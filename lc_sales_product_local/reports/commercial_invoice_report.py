@@ -23,7 +23,14 @@ class CommercialInvoice(models.AbstractModel):
         data['buyer'] = shipment_obj.lc_id.second_party_applicant.name
         data['buyer_address'] = report_utility_pool.getCoustomerAddress(shipment_obj.lc_id.second_party_applicant)
         data['invoice_id'] = "" if shipment_obj.invoice_id.id == False else shipment_obj.invoice_id.display_name
-        data['invoice_date'] = "" if shipment_obj.invoice_id.id == False else report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
+        data['invoice_date'] = "" if shipment_obj.invoice_id.id == False else report_utility_pool.getERPDateFormat(
+            report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
+        if data['invoice_id'] == "":
+            account_invoice = self.env['account.invoice'].search([('id', 'in', shipment_obj.invoice_ids.ids)], order="date_invoice desc")[0]
+            data['invoice_id'] = account_invoice.display_name
+            data['invoice_date'] = report_utility_pool.getERPDateFormat(
+                report_utility_pool.getDateFromStr(account_invoice.date_invoice))
+
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
         data['lc_id'] = shipment_obj.lc_id.unrevisioned_name
         data['lc_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))

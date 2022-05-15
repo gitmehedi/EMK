@@ -21,7 +21,13 @@ class BankTopSheet(models.AbstractModel):
         data['lc_date'] = report_utility_pool.getERPDateFormat(
             report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
         data['company'] = shipment_obj.company_id.name
+
         data['invoice_date'] = "" if shipment_obj.invoice_id.id == False else report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.invoice_id.date_invoice))
+        if data['invoice_date'] == "":
+            account_invoice = self.env['account.invoice'].search([('id', 'in', shipment_obj.invoice_ids.ids)], order="date_invoice desc")[0]
+            data['invoice_date'] = report_utility_pool.getERPDateFormat(
+                report_utility_pool.getDateFromStr(account_invoice.date_invoice))
+
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
         data['invoice_value'] = formatLang(self.env,shipment_obj.invoice_value)
         data['issue_date'] = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(shipment_obj.lc_id.issue_date))
