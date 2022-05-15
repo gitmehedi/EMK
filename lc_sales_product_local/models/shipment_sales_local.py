@@ -65,6 +65,7 @@ class ShipmentLocal(models.Model):
             'view_id': res and res.id or False,
             'res_model': 'done.wizard',
             'type': 'ir.actions.act_window',
+            'context': {'default_region_type': 'local'},
             'nodestroy': True,
             'target': 'new',
         }
