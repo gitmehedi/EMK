@@ -63,7 +63,6 @@ class Shipment(models.Model):
     payment_rec_amount = fields.Float(string='Payment Rec. Amount')
     payment_charge = fields.Float(string='Payment Charge')
     discrepancy_amount = fields.Float(string='Discrepancy Amount')
-    discrepancy_details = fields.Char(string='Discrepancy Details')
 
     # @api.multi
     def name_get(self):
