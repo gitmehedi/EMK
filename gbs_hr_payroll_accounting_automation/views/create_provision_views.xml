@@ -31,33 +31,48 @@
                             <group string="Payable Accounts">
 
                                 <field name="payable_account"
-                                       options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                                       options="{'no_quick_create': True, 'no_create_edit' : True}"
+                                       attrs="{'required': [('salary_type','!=', '2')],'invisible': [('salary_type','=','2')]}"
+                                />
+
+                                <field name="payable_account_ot"
+                                       options="{'no_quick_create': True, 'no_create_edit' : True}"
+                                attrs="{'required': [('salary_type','=', '2')],'invisible': [('salary_type','!=','2')]}"
+                                />
                                 <field name="tds_payable_account" readonly="True"
-                                       options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                                       options="{'no_quick_create': True, 'no_create_edit' : True}"
+                                       attrs="{'required': [('salary_type','!=', '2')],'invisible': [('salary_type','=','2')]}"/>
                                 <field name="telephone_bill_account" readonly="True"
-                                       options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                                       options="{'no_quick_create': True, 'no_create_edit' : True}"
+                                       attrs="{'required': [('salary_type','!=', '2')],'invisible': [('salary_type','=','2')]}"/>
                                 <field name="employee_pf_contribution_account"
                                        readonly="True"
-                                       options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                                       options="{'no_quick_create': True, 'no_create_edit' : True}"
+                                       attrs="{'required': [('salary_type','!=', '2')],'invisible': [('salary_type','=','2')]}"/>
                                 <field name="company_pf_contribution_account"
                                        readonly="True"
-                                       options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                                       options="{'no_quick_create': True, 'no_create_edit' : True}"
+                                       attrs="{'required': [('salary_type','!=', '2')],'invisible': [('salary_type','=','2')]}"/>
 
 
                             </group>
                             <group string="Debit Account">
 
                                 <field name="default_debit_account" readonly="True"
-                                       attrs="{'required': [('debit_account_ids','=', False)]}"
+                                       attrs="{'required': [('debit_account_ids','=', False),('salary_type','!=', '2')],'invisible': [('salary_type','=','2')]}"
+                                       options="{'no_quick_create': True, 'no_create_edit' : True}" />
+
+                                <field name="default_debit_account_ot" readonly="True"
+                                       attrs="{'required': [('salary_type','=', '2')],'invisible': [('salary_type','!=','2')]}"
                                        options="{'no_quick_create': True, 'no_create_edit' : True}"/>
 
                                 <field name="default_festival_debit_account" readonly="True"
-                                       attrs="{'required': [('debit_account_ids','=', False)]}"
+                                       attrs="{'required': [('debit_account_ids','=', False),('salary_type','!=', '2')], 'invisible': [('salary_type','=','2')]}"
                                        options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                             </group>
 
                         </group>
-                        <notebook>
+                        <notebook attrs="{'invisible': [('salary_type','=','2')]}">
                             <page string="Salary Debit Accounts">
                                 <field name="debit_account_ids"
                                        attrs="{'required': [('default_debit_account','=', False)]}" readonly="True">
@@ -73,7 +88,8 @@
                             </page>
                             <page string="Festival Debit Accounts">
                                 <field name="festival_debit_account_ids"
-                                       attrs="{'required': [('default_festival_debit_account','=', False)]}" readonly="True">
+                                       attrs="{'required': [('default_festival_debit_account','=', False)]}"
+                                       readonly="True">
                                     <tree>
                                         <field name="department_id"
                                                options="{'no_quick_create': True, 'no_create_edit' : True}"/>
