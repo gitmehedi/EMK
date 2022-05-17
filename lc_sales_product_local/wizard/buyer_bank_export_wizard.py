@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from datetime import datetime
 
 
 class BuyerBankExportWizard(models.TransientModel):
@@ -14,7 +15,7 @@ class BuyerBankExportWizard(models.TransientModel):
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
         if shipment_obj:
             shipment_obj.write({'to_buyer_bank_date': self.to_buyer_bank_date,
-                                'state': 'to_buyer_bank'})
+                                'state': 'to_buyer_bank', 'doc_preparation_date': datetime.now()})
             return {'type': 'ir.actions.act_window_close'}
 
 
