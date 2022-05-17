@@ -19,6 +19,7 @@ class ShipmentCommon(models.Model):
     bill_id = fields.Char('Bill ID', track_visibility='onchange')
     freight = fields.Char('Freight')
     goods_condition = fields.Text('Goods Condition')
+    doc_preparation_date = fields.Date('Doc. Preparation Date', track_visibility='onchange')
 
     # Existing state override
     state = fields.Selection(
@@ -81,3 +82,8 @@ class ShipmentCommon(models.Model):
         self.invoice_value = None
         if self.invoice_id:
             self.invoice_value = self.invoice_id.amount_total
+
+    @api.multi
+    def purchase_shipment_m2o_to_m2m(self):
+        for rec in self.search([('invoice_id', '!=', False)]):  # Search all the records that have value in m2o field
+            rec.write({'invoice_ids': [(6, 0, [rec.invoice_id.id])]})  # Move data

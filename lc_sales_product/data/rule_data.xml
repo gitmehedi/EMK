@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ir_cron_purchase_shipment_action" model="ir.cron">
+            <field name="name">Purchase Shipment M2o to M2m</field>
+            <field name="interval_number">4</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'purchase.shipment'"/>
+            <field name="function" eval="'purchase_shipment_m2o_to_m2m'"/>
+            <field name="args" eval=""/>
+            <field name="active" eval="False" />
+        </record>
+    </data>
+</odoo>

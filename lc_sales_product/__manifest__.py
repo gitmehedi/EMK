@@ -20,6 +20,7 @@
     ],
 
     'data': [
+        'data/rule_data.xml',
         'views/sales_tree_view.xml',
         'views/commercial_sales.xml',
         'views/lc_sales_menu.xml',
