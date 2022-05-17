@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_petty_cash_user" model="res.groups">
+            <field name="name">Petty Cash User</field>
+            <field name="category_id" ref="gbs_application_group.module_category_sale"/>
+        </record>
+
+
+
+    </data>
+</odoo>
