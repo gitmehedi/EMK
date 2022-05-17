@@ -26,12 +26,15 @@ class BillExchangeFirst(models.AbstractModel):
         data['currency_id'] = shipment_obj.lc_id.currency_id.name
         data['invoice_value'] = formatLang(self.env,shipment_obj.invoice_value)
 
-        account_invoice = self.env['account.invoice'].search([('id', 'in', shipment_obj.invoice_ids.ids)],
-                                                             order="date_invoice desc, id asc")[0]
-        if account_invoice:
-            data['invoice_id'] = account_invoice.display_name
-            data['invoice_date'] = report_utility_pool.getERPDateFormat(
-                report_utility_pool.getDateFromStr(account_invoice.date_invoice))
+        data['invoice_id'] = ''
+        data['invoice_date'] = ''
+        if shipment_obj.invoice_ids:
+            account_invoice = self.env['account.invoice'].search([('id', 'in', shipment_obj.invoice_ids.ids)],
+                                                                 order="date_invoice desc, id asc")[0]
+            if account_invoice:
+                data['invoice_id'] = account_invoice.display_name
+                data['invoice_date'] = report_utility_pool.getERPDateFormat(
+                    report_utility_pool.getDateFromStr(account_invoice.date_invoice))
 
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
         data['tenure'] = shipment_obj.lc_id.tenure

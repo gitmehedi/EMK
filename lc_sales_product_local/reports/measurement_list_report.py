@@ -22,13 +22,15 @@ class PackingList(models.AbstractModel):
         data['factory'] = report_utility_pool.getAddressByUnit(shipment_obj.operating_unit_id)
         data['buyer'] = shipment_obj.lc_id.second_party_applicant.name
         data['buyer_address'] = report_utility_pool.getCoustomerAddress(shipment_obj.lc_id.second_party_applicant)
-
-        account_invoice = self.env['account.invoice'].search([('id', 'in', shipment_obj.invoice_ids.ids)],
-                                                             order="date_invoice desc, id asc")[0]
-        if account_invoice:
-            data['invoice_id'] = account_invoice.display_name
-            data['invoice_date'] = report_utility_pool.getERPDateFormat(
-                report_utility_pool.getDateFromStr(account_invoice.date_invoice))
+        data['invoice_id'] = ''
+        data['invoice_date'] = ''
+        if shipment_obj.invoice_ids:
+            account_invoice = self.env['account.invoice'].search([('id', 'in', shipment_obj.invoice_ids.ids)],
+                                                                 order="date_invoice desc, id asc")[0]
+            if account_invoice:
+                data['invoice_id'] = account_invoice.display_name
+                data['invoice_date'] = report_utility_pool.getERPDateFormat(
+                    report_utility_pool.getDateFromStr(account_invoice.date_invoice))
 
         data['terms_condition'] = shipment_obj.lc_id.terms_condition
         data['lc_id'] = shipment_obj.lc_id.unrevisioned_name
