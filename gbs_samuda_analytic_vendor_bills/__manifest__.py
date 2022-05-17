@@ -19,7 +19,13 @@
 
     # always loaded
     'data': [
+        'security/security.xml',
         'views/inherited_account_account_view.xml',
-        'views/inherited_account_invoice_view.xml'
+        'views/inherited_account_invoice_view.xml',
+
     ],
+
+    # 'qweb': [
+    #     'static/src/xml/inherited_account_payment.xml'
+    # ],
 }
