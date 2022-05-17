@@ -6,6 +6,10 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
+<!--                <xpath expr="//field[@name='currency_id']" position="after">-->
+<!--                    <field name="can_view_payment_button"/>-->
+<!--                </xpath>-->
+
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
                     <field name="analytic_account_required" invisible="1"/>
                 </xpath>

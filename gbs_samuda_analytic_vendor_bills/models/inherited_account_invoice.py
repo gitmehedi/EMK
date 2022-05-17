@@ -5,6 +5,18 @@ from odoo.exceptions import UserError, ValidationError
 class InheritedAccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
+    # can_view_payment_button = fields.Selection([
+    #     ('yes', 'Yes'),
+    #     ('no', 'No'),
+    # ], string='Can View Payment Button', compute='_compute_can_view_button')
+    #
+    # def _compute_can_view_button(self):
+    #     for rec in self:
+    #         if self.env.user.has_group('gbs_samuda_analytic_vendor_bills.group_access_payment_reconcile_buttons'):
+    #             rec.can_view_payment_button = 'yes'
+    #         else:
+    #             rec.can_view_payment_button = 'no'
+
     def _prepare_invoice_line_from_po_line(self, line):
         """ Override parent's method to add lc analytic account on invoice line"""
         invoice_line = super(InheritedAccountInvoice, self)._prepare_invoice_line_from_po_line(line)
