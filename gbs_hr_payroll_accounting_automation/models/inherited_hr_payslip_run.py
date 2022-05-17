@@ -26,20 +26,26 @@ class InheritedPayslipRun(models.Model):
             raise UserError(_('Journal Entry already created for this payslip batch.'))
 
         if self.operating_unit_id:
-            if not self.operating_unit_id.payable_account:
-                raise UserError(_('GL Mapping not configured for this operating unit for payable account.'))
-            elif not self.operating_unit_id.tds_payable_account:
-                raise UserError(_('GL Mapping not configured for this operating unit for tds payable account.'))
-            elif not self.operating_unit_id.telephone_bill_account:
-                raise UserError(_('GL Mapping not configured for this operating unit for telephone bill account.'))
-            elif not self.operating_unit_id.employee_pf_contribution_account:
-                raise UserError(
-                    _('GL Mapping not configured for this operating unit for employee contribution account.'))
-            elif not self.operating_unit_id.company_pf_contribution_account:
-                raise UserError(
-                    _('GL Mapping not configured for this operating unit for company contribution account.'))
-            elif not self.operating_unit_id.default_debit_account:
-                raise UserError(_('GL Mapping not configured for this operating unit for default debit account.'))
+            if self.type != '2':
+                if not self.operating_unit_id.payable_account:
+                    raise UserError(_('GL Mapping not configured for this operating unit for payable account.'))
+                elif not self.operating_unit_id.tds_payable_account:
+                    raise UserError(_('GL Mapping not configured for this operating unit for tds payable account.'))
+                elif not self.operating_unit_id.telephone_bill_account:
+                    raise UserError(_('GL Mapping not configured for this operating unit for telephone bill account.'))
+                elif not self.operating_unit_id.employee_pf_contribution_account:
+                    raise UserError(
+                        _('GL Mapping not configured for this operating unit for employee contribution account.'))
+                elif not self.operating_unit_id.company_pf_contribution_account:
+                    raise UserError(
+                        _('GL Mapping not configured for this operating unit for company contribution account.'))
+                elif not self.operating_unit_id.default_debit_account:
+                    raise UserError(_('GL Mapping not configured for this operating unit for default debit account.'))
+            else:
+                if not self.operating_unit_id.payable_account_ot:
+                    raise UserError(_('GL Mapping not configured for this operating unit for OT payable account.'))
+                elif not self.operating_unit_id.default_debit_account_ot:
+                    raise UserError(_('GL Mapping not configured for this operating unit for default OT debit account.'))
 
         no_cost_center_employee_list = []
         no_department_employee_list = []
