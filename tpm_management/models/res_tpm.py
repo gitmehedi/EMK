@@ -206,21 +206,18 @@ class ResTPM(models.Model):
                         expense = local_rate[check_rate]['expense_rate']
                         expense_ratio = local_rate[check_rate]['expense_rate_ratio']
 
-                    if int(bal[3][0]) in [1, 3]:
-                        income_acc = 'income'
-                    else:
-                        income_acc = 'expense'
-
                     init_bal = bal[4]
                     cur_bal = bal[7]
 
                     if cur_bal != 0:
-                        if income_acc == 'income':
+                        if cur_bal > 0:
                             income_amount = round(cur_bal * income_ratio, 2)
                             expense_amount = 0.0
+                            income_acc = 'income'
                         else:
                             income_amount = 0.0
                             expense_amount = round(cur_bal * expense_ratio, 2)
+                            income_acc = 'expense'
 
                         line = {
                             'account_id': bal[1],

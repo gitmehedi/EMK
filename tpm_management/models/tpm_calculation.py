@@ -160,7 +160,7 @@ class TPMManagementModel(models.Model):
                     val['branch_line_id'] = line.id
                     line.branch_line_ids.create(val)
 
-            self.write({'state': 'calculate'})
+            self.write({'state': 'calculate'})   
 
     @api.multi
     def act_confirm(self):
