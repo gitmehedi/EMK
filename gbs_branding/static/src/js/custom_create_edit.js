@@ -40,9 +40,8 @@ odoo.define('gbs_branding.custom_create_edit', function (require) {
             });
             // [Start] Genweb2: custom change for changing default behaviour of many2one create and edit
             if (self.options.no_create === undefined){
-                if (self.field.__attrs.name != 'bank_account_id'){
-                    self.options.no_create = true;
-                }
+                self.options.no_create = true;
+
             }
             // [End] Genweb2:
 
