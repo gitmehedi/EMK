@@ -7,7 +7,7 @@ class ShipmentCommon(models.Model):
     _inherit = 'purchase.shipment'
 
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
-    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers')
+    invoice_ids = fields.Many2many("account.invoice", 'lc_shipment_invoice_rel', 'shipment_id', 'invoice_id', string='Invoice Numbers')
     invoice_qty = fields.Float(string='Invoice Qty')
 
     to_sales_date = fields.Date('Dispatch to Sales', track_visibility='onchange')
