@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from datetime import datetime
 
 
 class InvoiceExportWizard(models.TransientModel):
@@ -10,6 +11,12 @@ class InvoiceExportWizard(models.TransientModel):
     invoice_value = fields.Float(string='Invoice Value')
 
     shipment_id = fields.Many2one('purchase.shipment', default=lambda self: self.env.context.get('active_id'))
+
+    @api.model
+    def default_get(self, fields):
+        res = super(InvoiceExportWizard, self).default_get(fields)
+        self._onchange_shipment_id()
+        return res
 
     @api.multi
     def save_action(self):
@@ -33,6 +40,7 @@ class InvoiceExportWizard(models.TransientModel):
                 'invoice_ids': self.invoice_ids,
                 'invoice_value': total_amount,
                 'invoice_qty': total_qty,
+                'doc_preparation_date': datetime.now()
             })
             return {'type': 'ir.actions.act_window_close'}
 

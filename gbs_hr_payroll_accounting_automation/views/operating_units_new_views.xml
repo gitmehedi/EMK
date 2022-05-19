@@ -25,6 +25,9 @@
                                 <field name="payable_account"
                                        domain="[('user_type_id', '=', 'Payable') ]"
                                        options="{'no_quick_create': True, 'no_create_edit' : True, 'no_open' : True}"/>
+                                <field name="payable_account_ot"
+                                       domain="[('user_type_id', '=', 'Payable') ]"
+                                       options="{'no_quick_create': True, 'no_create_edit' : True, 'no_open' : True}"/>
                                 <field name="tds_payable_account"
                                        domain="[('user_type_id', '=', 'Payable') ]"
                                        options="{'no_quick_create': True, 'no_create_edit' : True, 'no_open' : True}"/>
@@ -40,6 +43,8 @@
                             </group>
                             <group string="Debit Account">
                                 <field name="default_debit_account" domain="[('user_type_id', '=', 'Expenses')]"
+                                       options="{'no_quick_create': True, 'no_create_edit' : True, 'no_open' : True}"/>
+                                <field name="default_debit_account_ot" domain="[('user_type_id', '=', 'Expenses')]"
                                        options="{'no_quick_create': True, 'no_create_edit' : True, 'no_open' : True}"/>
                                 <field name="default_festival_debit_account"
                                        domain="[('user_type_id', '=', 'Expenses')]"
