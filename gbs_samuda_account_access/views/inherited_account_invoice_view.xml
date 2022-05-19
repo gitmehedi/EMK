@@ -12,7 +12,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='currency_id']" position="after">
-                    <field name="can_view_payment_button"/>
+                    <field name="can_view_payment_button" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -26,7 +26,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='currency_id']" position="after">
-                    <field name="can_view_payment_button"/>
+                    <field name="can_view_payment_button" invisible="1"/>
                 </xpath>
             </field>
         </record>
