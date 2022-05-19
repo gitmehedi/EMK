@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="inherited_account_invoice_hide_button" model="ir.ui.view">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/header/button[@name='%(account.action_account_invoice_payment)d']" position="replace">
+                    <button name="%(account.action_account_invoice_payment)d" string="Register Payment" type="action"
+                            groups="account.group_account_invoice"/>
+                </xpath>
+
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="can_view_payment_button"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="inherited_account_invoice_hide_button_invoice" model="ir.ui.view">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/header/button[@name='%(account.action_account_invoice_payment)d']" position="replace">
+                    <button name="%(account.action_account_invoice_payment)d" string="Register Payment" type="action"
+                            groups="account.group_account_invoice"/>
+                </xpath>
+
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="can_view_payment_button"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

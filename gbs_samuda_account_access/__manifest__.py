@@ -16,6 +16,7 @@
 
     
     'depends': [
+        'account',
         'gbs_accounting_installer',
         'account_fy_closing'
     ],
@@ -23,9 +24,15 @@
 
     'data': [
         'security/ir.model.access.csv',
+        'data/lib_data.xml',
         'views/inherited_account_view.xml',
         'views/inherited_account.xml',
         'views/account_fiscalyear_close_view.xml',
+        'views/inherited_account_invoice_view.xml',
         'security/ir_rule.xml',
+    ],
+
+    'qweb': [
+        'static/src/xml/inherited_account_payment.xml'
     ],
 }
