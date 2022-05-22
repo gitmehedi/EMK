@@ -14,6 +14,12 @@ class InvoiceExportWizard(models.TransientModel):
     fob_value= fields.Float(string='FOB Value', compute='_compute_fob_value', store=False)
     is_print_cfr = fields.Boolean(string='Is Print CFR')
 
+    @api.model
+    def default_get(self, fields):
+        res = super(InvoiceExportWizard, self).default_get(fields)
+        self._onchange_shipment_id()
+        return res
+
     @api.one
     def _compute_fob_value(self):
         self.fob_value = self.feright_value
@@ -61,20 +67,6 @@ class InvoiceExportWizard(models.TransientModel):
                 purchase_shipment = self.env['purchase.shipment'].search([('invoice_ids', 'in', acc_inv.id)])
                 if not purchase_shipment:
                     inv_list.append(acc_inv.id)
-
-        # invoice_objs = self.env['account.invoice'].search([('sale_type_id.sale_order_type', '=', 'lc_sales'),
-        #                                                    ('state', 'in', ['open', 'paid'])])
-
-        # domain_id = self.env['account.invoice'].search(['&', '&', '&', '|', ('partner_id', '=', self.shipment_id.lc_id.second_party_applicant.id),
-        #                                  ('partner_id', 'in', self.shipment_id.lc_id.second_party_applicant.child_ids.ids),
-        #                                  ('id', 'not in', [i.invoice_id.id for i in self.env['purchase.shipment'].search([])]),
-        #                                  ('sale_type_id.sale_order_type', 'in', ['lc_sales','tt_sales','contract_sales']),
-        #                                  ('state', 'in', ['open', 'paid'])]).ids
-        #
-        # return {'domain': {'invoice_id': [('id', 'in', domain_id)]}}
-
-        # domain_id = self.env['account.invoice'].search([('id', 'in', inv_list), ('state', 'in', ['open', 'paid'])]).ids
-
         return {'domain': {'invoice_ids': [('id', 'in', inv_list)]}}
 
 
