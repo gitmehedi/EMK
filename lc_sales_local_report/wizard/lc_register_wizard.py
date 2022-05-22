@@ -8,7 +8,7 @@ class LcRegisterWizard(models.Model):
                                   ('maturated_but_amount_not_collect', 'Matured but Amount not collected'),
                                   ('goods_delivered_but_lc_not_received', 'Goods Delivered but LC not received')])
     acceptance_default_value = fields.Char(string='Default')
-    type = fields.Selection([('all', 'All'), ('local', 'Local'), ('foreign', 'Foreign')], default='all')
+    type = fields.Selection([('all', 'All'), ('local', 'Local'), ('foreign', 'Foreign')], default='all', required=True)
     is_type_hide = fields.Boolean(string='is type hide', default=False)
 
     @api.onchange('filter_by')
