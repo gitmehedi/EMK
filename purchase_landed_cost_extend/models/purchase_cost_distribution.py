@@ -22,7 +22,8 @@ class PurchaseCostDistribution(models.Model):
     @api.multi
     def action_calculate(self):
         # validation
-        if any(datetime.strptime(line.picking_id.date_done, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d") > self.date for line in self.cost_lines):
+        if any(datetime.strptime(line.picking_id.date_done, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d") > self.date for
+               line in self.cost_lines):
             raise ValidationError(_("Date cannot be less than the date of transfer of incoming shipments."))
 
         return super(PurchaseCostDistribution, self).action_calculate()
@@ -38,11 +39,19 @@ class PurchaseCostDistribution(models.Model):
 
         super(PurchaseCostDistribution, self).action_done()
 
+    # override _prepare_expense_line to add account_id in return
+    @api.model
+    def _prepare_expense_line(self, expense_line, cost_line):
+        res = super(PurchaseCostDistribution, self)._prepare_expense_line(expense_line, cost_line)
+        res['account_id'] = expense_line.account_id.id
+        return res
+
     @api.model
     def create(self, vals):
         if vals.get('name', '/') == '/':
             operating_unit = self.env['operating.unit'].browse(vals.get('operating_unit_id'))
-            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.cost.distribution', self.date, operating_unit)
+            vals['name'] = self.env['ir.sequence'].next_by_code_new('purchase.cost.distribution', self.date,
+                                                                    operating_unit)
         if not vals.get('field_readonly', False):
             vals['field_readonly'] = True
 
@@ -57,7 +66,6 @@ class PurchaseCostDistribution(models.Model):
 
     analytic_account = fields.Many2one('account.analytic.account')
     account_move_id = fields.Many2one('account.move', readonly=True, string='Journal Entry')
-
 
     def action_import_using_analytic_account(self):
         return {

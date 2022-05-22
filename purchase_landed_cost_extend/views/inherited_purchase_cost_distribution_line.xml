@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="inherited_account_config_form_inherit" model="ir.ui.view">
+            <field name="name">purchase.cost.distribution.line.form.inherit</field>
+            <field name="model">purchase.cost.distribution.line</field>
+            <field name="inherit_id" ref="purchase_landed_cost.view_purchase_cost_distribution_line_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='expense_lines']/tree/field[@name='type']" position="before">
+                    <field name="account_id"/>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
