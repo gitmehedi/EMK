@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="lc_register_report_wizard" model="ir.ui.view">
+    <record id="lc_salc_register_report_wizard" model="ir.ui.view">
         <field name="name">lc.register.wizard.global</field>
         <field name="model">lc.register.wizard</field>
         <field name="type">form</field>

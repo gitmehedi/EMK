@@ -21,4 +21,5 @@ class LcRegisterWizard(models.Model):
             self.acceptance_default_value = 0
 
     def report_print(self):
-        pass
+        self.ensure_one()
+        return self.env['report'].get_action(self, 'lc_sales_local_report.lc_register_report')
