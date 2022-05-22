@@ -77,7 +77,7 @@
                     <button name="post_journal_entry"
                             string="Post Journal Entry"
                             type="object"
-                            attrs="{'invisible':['|',('account_move_id','!=',False),('state','!=','calculated')]}"
+                            attrs="{'invisible':[('account_move_id','!=',False)]}"
                             class="oe_highlight"/>
                 </xpath>
 
