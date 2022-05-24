@@ -18,7 +18,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         sheet = workbook.add_worksheet(report_name)
         # Then override any that you want.
         sheet.set_row(0, 30)
-        sheet.set_row(4, 35)
+        sheet.set_row(5, 35)
         sheet.set_column(0, 0, 5)
         sheet.set_column(0, 1, 5)
         sheet.set_column(0, 2, 15)
@@ -55,28 +55,29 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         sheet.merge_range('A1:R1', company_id.name, title_format_center)
         sheet.merge_range('A2:R2', "Monthly Overtime Sheet", subject_format_center)
         sheet.merge_range('A3:R3', "Operating Unit: " + str(operating_unit_id.name), name_format_left)
-        sheet.merge_range('A4:N4', "Overtime Cycle: " + str(docs.date_start) + ' to ' + str(docs.date_end),
+        sheet.merge_range('A4:R4', "Initiated by: " + "HR & Admin", name_format_left)
+        sheet.merge_range('A5:R5', "Overtime Cycle: " + str(docs.date_start) + ' to ' + str(docs.date_end),
                           name_format_left)
-        sheet.merge_range('O4:R4', "Initiated by: " + docs.create_date, name_format_left)
 
-        sheet.write(4, 0, "Sl.No.", header_format_left)
-        sheet.write(4, 1, "Name", header_format_left)
-        sheet.write(4, 2, "Designation", header_format_left)
-        sheet.write(4, 3, "Date  of Joining", header_format_left)
-        sheet.write(4, 4, "ID No.", header_format_left)
-        sheet.write(4, 5, "Basic Salary 40%", header_format_left)
-        sheet.write(4, 6, "House Rent 70% of Basic", header_format_left)
-        sheet.write(4, 7, "Medical Allowance 30% of Basic", header_format_left)
-        sheet.write(4, 8, "Convince Allowance 30% of Basic", header_format_left)
-        sheet.write(4, 9, "Other Allowance 20% of Basic", header_format_left)
-        sheet.write(4, 10, "Gross", header_format_left)
-        sheet.write(4, 11, "Total Overtime Hour", header_format_left)
-        sheet.write(4, 12, "Overtime Rate/Hour", header_format_left)
-        sheet.write(4, 13, "Total OT Earning Amount", header_format_left)
-        sheet.write(4, 14, "Others/ Arrear", header_format_left)
-        sheet.write(4, 15, "Total", header_format_left)
-        sheet.write(4, 16, "Deduction", header_format_left)
-        sheet.write(4, 17, "Net Payable", header_format_left)
+
+        sheet.write(5, 0, "Sl.No.", header_format_left)
+        sheet.write(5, 1, "Name", header_format_left)
+        sheet.write(5, 2, "Designation", header_format_left)
+        sheet.write(5, 3, "Date  of Joining", header_format_left)
+        sheet.write(5, 4, "ID No.", header_format_left)
+        sheet.write(5, 5, "Basic Salary 40%", header_format_left)
+        sheet.write(5, 6, "House Rent 70% of Basic", header_format_left)
+        sheet.write(5, 7, "Medical Allowance 30% of Basic", header_format_left)
+        sheet.write(5, 8, "Convince Allowance 30% of Basic", header_format_left)
+        sheet.write(5, 9, "Other Allowance 20% of Basic", header_format_left)
+        sheet.write(5, 10, "Gross", header_format_left)
+        sheet.write(5, 11, "Total Overtime Hour", header_format_left)
+        sheet.write(5, 12, "Overtime Rate/Hour", header_format_left)
+        sheet.write(5, 13, "Total OT Earning Amount", header_format_left)
+        sheet.write(5, 14, "Others/ Arrear", header_format_left)
+        sheet.write(5, 15, "Total", header_format_left)
+        sheet.write(5, 16, "Deduction", header_format_left)
+        sheet.write(5, 17, "Net Payable", header_format_left)
 
         data['name'] = report_name
         dept = self.env['hr.department'].search([])
@@ -149,7 +150,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
             dpt_payslips_list.append(dpt_payslips)
 
         # Write on excel
-        row = 4
+        row = 5
         for dpt_emp in dpt_payslips_list:
             print(dpt_emp)
             dpt_val = dpt_emp.get('val')
@@ -202,7 +203,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         sheet.write(row, 4, '', footer_border_format_left)
         sheet.write(row, 5, footer_total_basic_40, footer_border_format_left)
         sheet.write(row, 6, footer_total_basic_70, footer_border_format_left)
-        sheet.write(row, 7, footer_total_basic_20, footer_border_format_left)
+        sheet.write(row, 7, footer_total_basic_30, footer_border_format_left)
         sheet.write(row, 8, footer_total_basic_30, footer_border_format_left)
         sheet.write(row, 9, footer_total_basic_20, footer_border_format_left)
         sheet.write(row, 10, footer_total_gross, footer_border_format_left)

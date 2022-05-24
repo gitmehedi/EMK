@@ -57,7 +57,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         sheet.merge_range('A2:O2', str(docs.date_start), name_format_left)
         sheet.merge_range('A3:O3', "Initiated by : Human Resources", name_format_left_font_11)
         sheet.merge_range('A4:O4', "To : Managing Director", name_format_left)
-        sheet.merge_range('A5:O5', "Money Requisition for Disbursement of Overtime : " + docs.name + "", subject_format_center)
+        sheet.merge_range('A5:O5', "Money Requisition for Disbursement of Overtime Salary: " + docs.name + "", subject_format_center)
 
         sheet.write(6, 0, "Department", header_format_left)
         sheet.write(6, 1, "No of Employee", header_format_left)

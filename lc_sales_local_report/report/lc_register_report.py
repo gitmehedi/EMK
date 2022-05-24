@@ -121,7 +121,7 @@ class LcRegisterXLSX(ReportXlsx):
             {'num_format': '#,###0.00', 'align': 'left', 'bold': True, 'size': 10})
         footer_border_format_left.set_font_name('Times New Roman')
         header_format_left = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'bold': False, 'size': 8, 'border': 1,
+            {'num_format': '#,###0.00', 'align': 'left', 'bold': True, 'size': 8, 'border': 1,
              'text_wrap': True})
         header_format_left.set_font_name('Times New Roman')
         sub_header_format_left = workbook.add_format(
