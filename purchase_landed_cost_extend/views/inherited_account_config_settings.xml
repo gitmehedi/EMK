@@ -2,14 +2,14 @@
 <odoo>
     <data>
 
-        <record id="inherited_account_config_form_inherit" model="ir.ui.view">
-            <field name="name">account.config.settings.form.inherit</field>
+        <record id="inherited_account_config_form_inherit_" model="ir.ui.view">
+            <field name="name">account.config.settings.form.inheritt</field>
             <field name="model">account.config.settings</field>
             <field name="inherit_id" ref="account.view_account_config_settings"/>
-            <field name="priority" eval="8"/>
+
             <field name="arch" type="xml">
-                <xpath expr="//group[3]" position="before">
-                    <group string="Foreign Purchase">
+                 <xpath expr="//group[1]" position="before">
+                    <group string="Foreign Purchase" name="foreign_purchase">
                         <field name="lc_pad_account" class="oe_inline" string="LC Goods In Transit Account"/>
                         <field name="foreign_ap_account" class="oe_inline" string="Foreign AP Clearing Account"/>
                     </group>
