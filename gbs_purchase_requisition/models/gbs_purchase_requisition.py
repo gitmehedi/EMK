@@ -151,6 +151,7 @@ class PurchaseRequisition(models.Model):
                              ('requisition_id.state', '!=', 'cancel'),
                              ('product_id', '=', indent_product_line.product_id.id)]).sorted(
                             key=lambda l: l.create_date, reverse=True)
+
                         if req_lines:
                             last_requisition_id = req_lines[:1].id
 
@@ -161,6 +162,16 @@ class PurchaseRequisition(models.Model):
                                             'product_qty': indent_product_line.qty_available,
                                              'last_requisition_id': last_requisition_id
                                       }))
+
+                        else:
+                            vals.append((0, 0, {'product_id': indent_product_line.product_id,
+                                                'name': indent_product_line.name,
+                                                'product_uom_id': indent_product_line.product_uom,
+                                                'product_ordered_qty': indent_product_line.product_uom_qty,
+                                                'product_qty': indent_product_line.qty_available,
+                                                'last_requisition_id': False
+                                                }))
+
                     self.line_ids = vals
         else:
             self.line_ids = []

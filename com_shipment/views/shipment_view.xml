@@ -42,6 +42,7 @@
                                     <field name="arrival_date" readonly="1"/>
                                     <field name="cnf_id" readonly="1"/>
                                     <field name="cnf_received_date" readonly="1"/>
+                                    <field name="intermediate_cnf_account" readonly="1"/>
                                 </group>
                                 <separator string="Comments"/>
                                 <field name="comment" nolabel="1" readonly="1"/>

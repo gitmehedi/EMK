@@ -23,6 +23,7 @@
 
 
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'data/lib_data.xml',
         'views/inherited_account_view.xml',

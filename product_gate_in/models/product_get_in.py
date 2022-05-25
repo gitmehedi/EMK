@@ -57,6 +57,16 @@ class ProductGateIn(models.Model):
         self.shipping_line_ids.write({'state': 'confirm'})
         self.ship_id.write({'state':'gate_in'})
         if self.receive_type == 'lc':
+            if self.ship_id and self.ship_id.lc_id and self.ship_id.lc_id.po_ids:
+                for po in self.ship_id.lc_id.po_ids:
+                    if not po.invoice_ids:
+                        raise UserError('Vendor Bill is not created for this shipment. Please contact your Administrator !')
+                    else:
+                        for vb in po.invoice_ids:
+                            if vb.state != 'open' and vb.state != 'paid':
+                                raise UserError(
+                                    'Vendor Bill is not validated for this shipment. Please contact your Administrator !')
+
             if self.shipping_line_ids:
                 picking_id = self._create_pickings_and_procurements()
                 picking_objs = self.env['stock.picking'].search([('id','=',picking_id)])

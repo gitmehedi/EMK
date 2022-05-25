@@ -7,7 +7,7 @@ class InheritedAccountInvoice(models.Model):
 
     def _compute_can_view_button(self):
         for rec in self:
-            if self.env.user.has_group('account.group_account_invoice'):
+            if self.env.user.has_group('gbs_samuda_account_access.group_account_reconciliation_button'):
                 rec.can_view_payment_button = True
             else:
                 rec.can_view_payment_button = False

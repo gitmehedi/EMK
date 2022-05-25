@@ -15,7 +15,7 @@
     'version': '10.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['purchase', 'account'],
+    'depends': ['purchase', 'account', 'base'],
 
     # always loaded
     'data': [
