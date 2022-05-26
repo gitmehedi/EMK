@@ -19,6 +19,8 @@ class PurchaseCostDistribution(models.Model):
 
     total_expense = fields.Float(string='Total Landed Cost')
 
+    lc_id = fields.Many2one("letter.credit", string='LC Number', readonly=True)
+
     @api.multi
     def action_calculate(self):
         # validation
