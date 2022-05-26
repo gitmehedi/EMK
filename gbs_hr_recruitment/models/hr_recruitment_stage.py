@@ -2,18 +2,17 @@ import datetime
 from psycopg2 import IntegrityError
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.opa_utility.helper.utility import Utility,Message
+from odoo.addons.opa_utility.helper.utility import Utility, Message
 
 
 class HrRecruitmentStage(models.Model):
-    _inherit = 'hr.recruitment.stage'
-    # _inherit = ['hr.recruitment.stage', 'mail.thread', 'ir.needaction_mixin']
+    _name = 'hr.recruitment.stage'
+    _inherit = ['hr.recruitment.stage', 'mail.thread', 'ir.needaction_mixin']
 
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
                              string='Status', track_visibility='onchange', )
-
 
     @api.constrains('name')
     def _check_name(self):
@@ -68,3 +67,7 @@ class HrRecruitmentStage(models.Model):
                 return super(HrRecruitmentStage, rec).unlink()
             except IntegrityError:
                 raise ValidationError(_(Message.UNLINK_INT_WARNING))
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ('draft', 'approve', 'reject'))]

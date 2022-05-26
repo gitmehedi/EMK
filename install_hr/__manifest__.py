@@ -119,7 +119,7 @@
         "hr_attendance_settings",
         "hr_employee_operating_unit",
         "gbs_hr_recruitment",
-
+        "website_job_application",
     ],
     'installable': True,
     'application': True,

@@ -4,10 +4,10 @@
         <record id="hr_applicant_form_view_inherit" model="ir.ui.view">
             <field name="name">hr.applicant.form.view.inherit</field>
             <field name="model">hr.applicant</field>
-            <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job" />
+            <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="before">
-                    <field name="applicant_image" widget="image" width="150px" height="150px" />
+                    <field name="applicant_image" widget="image" width="150px" height="150px"/>
                 </xpath>
                 <xpath expr="//field[@name='stage_id']" position="replace">
                     <field name="state" widget="statusbar" statusbar_visible="draft,gm_approve,cxo_approve,approved"/>
@@ -16,56 +16,57 @@
                     <field name="manager_id" options="{'no_create':True,'no_open':True}"/>
                 </xpath>
                 <xpath expr="//field[@name='type_id']" position="after">
-                    <field name="gender" options="{'no_create':True,'no_open':True}" />
+                    <field name="gender" options="{'no_create':True,'no_open':True}"/>
                     <field name="marital_status"/>
                 </xpath>
                 <xpath expr="//field[@name='marital_status']" position="after">
                     <field name="father_name"/>
                     <field name="mother_name"/>
-                    <separator string="Present Details " colspan="4" />
-                        <field name="pre_address_1"/>
-                        <field name="pre_address_2"/>
-                        <field name="pre_zip_postal"/>
-                        <field name="pre_country_id" options="{'no_create':True,'no_open':True}"/>
+                    <separator string="Present Details " colspan="4"/>
+                    <field name="pre_address_1"/>
+                    <field name="pre_address_2"/>
+                    <field name="pre_zip_postal"/>
+                    <field name="pre_country_id" options="{'no_create':True,'no_open':True}"/>
 
                 </xpath>
                 <xpath expr="/form/sheet/group" position="inside">
-                         </xpath>
+                </xpath>
 
                 <xpath expr="//field[@name='reference']" position="after">
-                    <field name="stage_id" options="{'no_create':True,'no_open':True}" />
+                    <field name="stage_id" options="{'no_create':True,'no_open':True}"/>
                 </xpath>
-                 <xpath expr="//field[@name='stage_id']" position="after">
-                     <field name="birth_date"/>
+                <xpath expr="//field[@name='stage_id']" position="after">
+                    <field name="birth_date"/>
                     <field name="nationality"/>
-                      <separator string="Permanent Details " colspan="4" />
-                     <field name="per_address_1"/>
-                        <field name="per_address_2"/>
-                        <field name="per_zip_postal"/>
-                        <field name="per_country_id" options="{'no_create':True,'no_open':True}"/>
+                    <separator string="Permanent Details " colspan="4"/>
+                    <field name="per_address_1"/>
+                    <field name="per_address_2"/>
+                    <field name="per_zip_postal"/>
+                    <field name="per_country_id" options="{'no_create':True,'no_open':True}"/>
 
                 </xpath>
 
 
                 <xpath expr="//button[@name='archive_applicant']" position="before">
-                    <button name="action_confirm" string="Confirm"  type="object"
-                        class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_confirm" string="Confirm" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                 </xpath>
                 <xpath expr="//button[@name='archive_applicant']" position="before">
-                    <button name="action_cxo_approve" string="Approve"  type="object"
-                        class="oe_highlight" attrs="{'invisible': [('state', '!=', 'gm_approve')]}"/>
+                    <button name="action_cxo_approve" string="Approve" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'gm_approve')]}"/>
                 </xpath>
                 <xpath expr="//button[@name='archive_applicant']" position="before">
-                    <button name="action_approve" string="Approve"  type="object"
-                        class="oe_highlight" attrs="{'invisible': [('state', '!=', 'cxo_approve')]}"/>
+                    <button name="action_approve" string="Approve" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'cxo_approve')]}"/>
                 </xpath>
 
-<!--                <xpath expr="//button[@name='archive_applicant']" position="attributes">-->
-<!--                    <attribute name="invisible">0</attribute>-->
-<!--                </xpath>-->
+                <!--                <xpath expr="//button[@name='archive_applicant']" position="attributes">-->
+                <!--                    <attribute name="invisible">0</attribute>-->
+                <!--                </xpath>-->
                 <xpath expr="//button[@name='archive_applicant']" position="before">
-                    <button name="generate_appointment_letter" string="Appointment Letter"  type="object" icon='fa-file-text'
-                        class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
+                    <button name="generate_appointment_letter" string="Appointment Letter" type="object"
+                            icon='fa-file-text'
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
                 </xpath>
                 <xpath expr="//button[1]" position="attributes">
                     <attribute name="attrs">{'invisible': [('state', '!=', 'approved')]}</attribute>
@@ -96,29 +97,29 @@
                     <attribute name="placeholder">8801900000000</attribute>
                 </xpath>
             </field>
-		</record>
-
+        </record>
 
         <record id="hr_applicant_tree_view_inherit" model="ir.ui.view">
             <field name="name">hr.applicant.tree.view.inherit</field>
             <field name="model">hr.applicant</field>
-            <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job" />
+            <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="state" />
+                    <field name="state"/>
                 </field>
             </field>
         </record>
 
-
-        <record id="hr_recruitment.crm_case_categ0_act_job" model="ir.actions.act_window">
-             <field name="view_mode">tree,form,pivot,graph,calendar</field>
+        <record model="ir.actions.act_window.view" id="hr_recruitment.action_hr_sec_kanban_view_act_job">
+            <field name="sequence" eval="5"/>
         </record>
 
         <menuitem
-            name="Applications"
-            parent="hr_recruitment.menu_hr_recruitment_root"
-            id="hr_recruitment.menu_crm_case_categ0_act_job" action="hr_recruitment.crm_case_categ0_act_job" sequence="2" groups="base.group_no_one,hr.group_hr_user,hr.group_hr_manager"/>
+                name="Applications"
+                parent="hr_recruitment.menu_hr_recruitment_root"
+                id="hr_recruitment.menu_crm_case_categ0_act_job"
+                action="hr_recruitment.crm_case_categ0_act_job"
+                sequence="2" groups="base.group_no_one,hr.group_hr_user,hr.group_hr_manager"/>
 
     </data>
 </odoo>
