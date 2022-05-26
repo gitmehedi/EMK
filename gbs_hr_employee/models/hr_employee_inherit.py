@@ -7,6 +7,7 @@ class HrEmployee(models.Model):
 
     department_id = fields.Many2one('hr.department', string='Department', required=True)
     tin_req = fields.Boolean(string='TIN Applicable')
+    employee_link_card = fields.Char('Employee Link Card')
     tin = fields.Char(string='TIN')
 
     employee_sequence = fields.Integer("Employee Sequence")
