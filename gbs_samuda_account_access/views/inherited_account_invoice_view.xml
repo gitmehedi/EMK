@@ -7,8 +7,8 @@
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/header/button[@name='%(account.action_account_invoice_payment)d']" position="replace">
-                    <button name="%(account.action_account_invoice_payment)d" string="Register Payment" type="action"
-                            groups="account.group_account_invoice"/>
+                    <button name="%(account.action_account_invoice_payment)d" string="Register Payment" type="action" states="open"
+                            groups="gbs_samuda_account_access.group_account_reconciliation_button" class="oe_highlight"/>
                 </xpath>
 
                 <xpath expr="//field[@name='currency_id']" position="after">
@@ -21,8 +21,8 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/header/button[@name='%(account.action_account_invoice_payment)d']" position="replace">
-                    <button name="%(account.action_account_invoice_payment)d" string="Register Payment" type="action"
-                            groups="account.group_account_invoice"/>
+                    <button name="%(account.action_account_invoice_payment)d" string="Register Payment" type="action" states="open"
+                            groups="gbs_samuda_account_access.group_account_reconciliation_button" class="oe_highlight"/>
                 </xpath>
 
                 <xpath expr="//field[@name='currency_id']" position="after">
