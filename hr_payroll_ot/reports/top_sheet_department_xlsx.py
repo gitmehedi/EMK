@@ -7,57 +7,35 @@ import math
 
 class TopSheetDepartmentXLSX(ReportXlsx):
 
-    def generate_xlsx_report(self, workbook, data, obj):
-        # Report Utility
-        ReportUtility = self.env['report.utility']
-        docs = obj.hr_payslip_run_id
-
-        operating_unit_id = docs.operating_unit_id
+    def _get_sheet_header(self, docs, workbook):
         company_id = docs.operating_unit_id.company_id
         report_name = "Top Sheet (Department)"
         sheet = workbook.add_worksheet(report_name)
-        sheet.set_row(0, 5)
+        sheet.set_row(0, 30)
         sheet.set_row(6, 30)
         sheet.set_column(0, 0, 18)
-        # sheet.set_column(1, 0, 8)
-        # sheet.set_default_row(22)
-
-        # Then override any that you want.
+        sheet.set_default_row(22)
 
         title_format_center = workbook.add_format({'align': 'center', 'bold': True, 'size': 22, 'text_wrap': True})
         title_format_center.set_font_name('Times New Roman')
+        name_format_left = workbook.add_format(
+            {'num_format': '#,##0.00', 'align': 'left', 'bold': False, 'size': 10, 'text_wrap': False})
+        name_format_left.set_font_name('Times New Roman')
         subject_format_center = workbook.add_format({'align': 'center', 'bold': True, 'size': 10, 'text_wrap': True})
         subject_format_center.set_font_name('Times New Roman')
-        name_format_left = workbook.add_format({'num_format': '#,##0.00','align': 'left', 'bold': False, 'size': 10, 'text_wrap': False})
-        name_format_left.set_font_name('Times New Roman')
-        name_format_left_font_11 = workbook.add_format(
-            {'num_format': '#,##0.00', 'align': 'left', 'bold': False, 'size': 11, 'text_wrap': True})
-        name_format_left_font_11.set_font_name('Times New Roman')
-        name_format_left_int = workbook.add_format({'align': 'left', 'border': 1, 'bold': False, 'size': 8, 'text_wrap': True})
-        name_format_left_int.set_font_name('Times New Roman')
 
-        footer_name_format_right = workbook.add_format(
-            {'num_format': '#,##0.00', 'align': 'right', 'border': 1, 'bold': True, 'size': 8, 'font_color': 'black'})
-        footer_name_format_right.set_font_name('Times New Roman')
-        footer_name_format_right_without_border = workbook.add_format(
-            {'num_format': '#,##0.00', 'align': 'left', 'bold': True, 'size': 8, 'font_color': 'black'})
-        footer_name_format_right_without_border.set_font_name('Times New Roman')
-        header_format_left = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#FFC000', 'bold': False, 'size': 8, 'border': 1,
-             'text_wrap': True})
-        header_format_left.set_font_name('Times New Roman')
-        name_border_format_colored = workbook.add_format(
-            {'num_format': '#,###0.00','align': 'right', 'border': 1,  'valign': 'vcenter', 'bold': False, 'size': 8})
-        name_border_format_colored.set_font_name('Times New Roman')
-        name_border_format_colored_left = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
-        name_border_format_colored_left.set_font_name('Times New Roman')
-        # SHEET HEADER
         sheet.merge_range('A1:O1', company_id.name, title_format_center)
         sheet.merge_range('A2:O2', str(docs.date_start), name_format_left)
-        sheet.merge_range('A3:O3', "Initiated by : Human Resources", name_format_left_font_11)
+        sheet.merge_range('A3:O3', "Initiated by : Human Resources", name_format_left)
         sheet.merge_range('A4:O4', "To : Managing Director", name_format_left)
-        sheet.merge_range('A5:O5', "Money Requisition for Disbursement of Overtime Salary: " + docs.name + "", subject_format_center)
+        sheet.merge_range('A5:O5', "Money Requisition for Disbursement of Overtime Salary: " + docs.name + "",
+                          subject_format_center)
+        return sheet
+
+    def _set_sheet_table_header(self, sheet, workbook):
+        header_format_left = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#FFC000', 'bold': False, 'size': 8, 'border': 1, 'text_wrap': True})
+        header_format_left.set_font_name('Times New Roman')
 
         sheet.write(6, 0, "Department", header_format_left)
         sheet.write(6, 1, "No of Employee", header_format_left)
@@ -74,9 +52,71 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         sheet.write(6, 12, "Total", header_format_left)
         sheet.write(6, 13, "Deduction", header_format_left)
         sheet.write(6, 14, "Total Payable", header_format_left)
-        data['name'] = report_name
 
-        dept = self.env['hr.department'].search([])
+    def _set_footer_value_n_signature(self, docs, sheet, row, workbook, footer_total_payable):
+        name_format_left = workbook.add_format(
+            {'num_format': '#,##0.00', 'align': 'left', 'bold': False, 'size': 10, 'text_wrap': False})
+        name_format_left.set_font_name('Times New Roman')
+        footer_name_format_right_without_border = workbook.add_format(
+            {'num_format': '#,##0.00', 'align': 'left', 'bold': True, 'size': 8, 'font_color': 'black'})
+        footer_name_format_right_without_border.set_font_name('Times New Roman')
+
+        if footer_total_payable > 0:
+            amt_to_word = self.env['res.currency'].amount_to_word(float(footer_total_payable))
+            row += 3
+            sheet.merge_range('A' + str(row + 1) + ':C' + str(row + 1) + '', 'Cash Payment:', name_format_left)
+            sheet.merge_range('D' + str(row + 1) + ':E' + str(row + 1) + '', footer_total_payable, name_format_left)
+            sheet.merge_range('F' + str(row + 1) + ':M' + str(row + 1) + '', amt_to_word, name_format_left)
+            row += 1
+            sheet.merge_range('A' + str(row + 1) + ':C' + str(row + 1) + '', 'Total fund Required:', name_format_left)
+            sheet.merge_range('D' + str(row + 1) + ':E' + str(row + 1) + '', footer_total_payable, name_format_left)
+            sheet.merge_range('F' + str(row + 1) + ':M' + str(row + 1) + '', amt_to_word, name_format_left)
+
+
+
+        row += 2
+        previous_month_payable = 0
+        date_start = datetime.strptime(docs.date_start, "%Y-%m-%d")
+        prev_month_start = date_start - relativedelta(months=1)
+        hr_payslip_runs = self.env['hr.payslip.run'].search([('date_start', '=', prev_month_start), ('operating_unit_id', '=', docs.operating_unit_id.id), ('type', '=', '2')])
+        for paylslip_run in hr_payslip_runs:
+            previous_month_payable += paylslip_run.total_payable
+
+        sheet.merge_range('A' + str(row + 1) + ':C' + str(row + 1) + '', 'Previous Month Net Payable was:', name_format_left)
+        sheet.merge_range('D' + str(row + 1) + ':E' + str(row + 1) + '', previous_month_payable, footer_name_format_right_without_border)
+
+        # Signature
+        row += 3
+        sheet.write(row, 1, 'Prepared by', name_format_left)
+        sheet.write(row, 4, 'Checked by', name_format_left)
+        sheet.write(row, 7, 'Recommended by', name_format_left)
+        sheet.write(row, 10, 'Authorized by', name_format_left)
+        sheet.write(row, 13, 'Approved by', name_format_left)
+
+    def generate_xlsx_report(self, workbook, data, obj):
+        docs = obj.hr_payslip_run_id
+        sheet = self._get_sheet_header(docs, workbook)
+
+        self._set_sheet_table_header(docs, workbook)
+
+        name_format_left_font_11 = workbook.add_format(
+            {'num_format': '#,##0.00', 'align': 'left', 'bold': False, 'size': 11, 'text_wrap': True})
+        name_format_left_font_11.set_font_name('Times New Roman')
+        name_format_left_int = workbook.add_format({'align': 'left', 'border': 1, 'bold': False, 'size': 8, 'text_wrap': True})
+        name_format_left_int.set_font_name('Times New Roman')
+
+        footer_name_format_right = workbook.add_format(
+            {'num_format': '#,##0.00', 'align': 'right', 'border': 1, 'bold': True, 'size': 8, 'font_color': 'black'})
+        footer_name_format_right.set_font_name('Times New Roman')
+
+        name_border_format_colored = workbook.add_format(
+            {'num_format': '#,###0.00','align': 'right', 'border': 1,  'valign': 'vcenter', 'bold': False, 'size': 8})
+        name_border_format_colored.set_font_name('Times New Roman')
+        name_border_format_colored_left = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
+        name_border_format_colored_left.set_font_name('Times New Roman')
+
+        departments = self.env['hr.department'].search([])
         row = 7
         footer_employee = 0
         footer_basic = 0
@@ -92,7 +132,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         footer_deduction = 0
         footer_total_payable = 0
 
-        for d in dept:
+        for department in departments:
             emp_count = 0
             basic = 0.0
             basic_70 = 0.0
@@ -107,7 +147,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
             deduction = 0.0
             total_payable = 0.0
 
-            payslip_filter_data = list(filter(lambda x: x.employee_id.department_id.id == d.id, docs.slip_ids))
+            payslip_filter_data = list(filter(lambda x: x.employee_id.department_id.id == department.id, docs.slip_ids))
             for slip in payslip_filter_data:
                 obj_number_of_hours = list(filter(lambda x: x.code == 'OT', slip.worked_days_line_ids))
                 if obj_number_of_hours:
@@ -147,7 +187,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
                         footer_deduction += deduction
                         footer_total_payable += total_payable
             if emp_count > 0 and number_of_hours > 0:
-                sheet.write(row, 0, d.name, name_border_format_colored_left)
+                sheet.write(row, 0, department.name, name_border_format_colored_left)
                 sheet.write(row, 1, emp_count, name_format_left_int)
                 sheet.write(row, 2, basic, name_border_format_colored)
                 sheet.write(row, 3, basic_70, name_border_format_colored)
@@ -182,38 +222,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         sheet.write(row, 13, footer_deduction, footer_name_format_right)
         sheet.write(row, 14, footer_total_payable, footer_name_format_right)
 
-        if footer_total_payable > 0:
-            amt_to_word = self.env['res.currency'].amount_to_word(float(footer_total_payable))
-
-            row += 3
-            sheet.merge_range('A' + str(row + 1) + ':C' + str(row + 1) + '', 'Cash Payment:', name_format_left)
-            sheet.merge_range('D' + str(row + 1) + ':E' + str(row + 1) + '', footer_total_payable, name_format_left)
-            sheet.merge_range('F' + str(row + 1) + ':M' + str(row + 1) + '', amt_to_word, name_format_left)
-            row += 1
-            sheet.merge_range('A' + str(row + 1) + ':C' + str(row + 1) + '', 'Total fund Required:', name_format_left)
-            sheet.merge_range('D' + str(row + 1) + ':E' + str(row + 1) + '', footer_total_payable, name_format_left)
-            sheet.merge_range('F' + str(row + 1) + ':M' + str(row + 1) + '', amt_to_word, name_format_left)
-
-
-        row += 2
-        # Get previous month data
-        previous_month_payable = 0
-        date_start = datetime.strptime(docs.date_start, "%Y-%m-%d")
-        prev_month_start = date_start - relativedelta(months=1)
-        hr_payslip_runs = self.env['hr.payslip.run'].search([('date_start', '=', prev_month_start), ('operating_unit_id', '=', operating_unit_id.id), ('type', '=', '2')])
-        for paylslip_run in hr_payslip_runs:
-            previous_month_payable += paylslip_run.total_payable
-
-        sheet.merge_range('A' + str(row + 1) + ':C' + str(row + 1) + '', 'Previous Month Net Payable was:', name_format_left)
-        sheet.merge_range('D' + str(row + 1) + ':E' + str(row + 1) + '', previous_month_payable, footer_name_format_right_without_border)
-
-        # Signature
-        row += 3
-        sheet.write(row, 1, 'Prepared by', name_format_left)
-        sheet.write(row, 4, 'Checked by', name_format_left)
-        sheet.write(row, 9, 'Recommended by', name_format_left)
-        sheet.write(row, 11, 'Authorized by', name_format_left)
-        sheet.write(row, 13, 'Approved by', name_format_left)
+        self._set_footer_value_n_signature(docs, sheet, row, workbook, footer_total_payable)
 
 TopSheetDepartmentXLSX('report.hr_payroll_ot.top_sheet_department_xlsx',
                    'ot.report.wizard', parser=report_sxw.rml_parse)
