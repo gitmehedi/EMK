@@ -18,23 +18,37 @@
             <field name="inherit_id" ref="hr_recruitment.hr_recruitment_stage_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="replace">
+
                     <form string="Stage" duplicate="0">
                         <header>
                             <button name="act_approve" string="Approve" states="draft" type="object"
                                     class="oe_highlight"/>
-                            <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                            <button name="act_draft" string="Draft" states="reject" type="object"
+                                    class="oe_highlight"/>
                             <button name="act_reject" string="Reject" states="draft" type="object"/>
                             <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
                         </header>
                         <sheet>
-                            <group>
+                            <group string="Stage Definition">
                                 <group>
                                     <field name="name"/>
+                                    <field name="sequence" groups="base.group_no_one"/>
+                                    <field name="job_id"/>
+                                </group>
+                                <group>
+                                    <field name="fold"/>
+                                    <field name="template_id" domain="[('model_id.model', '=', 'hr.applicant')]"/>
                                 </group>
                             </group>
+                            <separator string="Requirements"/>
+                            <field name="requirements"/>
                         </sheet>
-
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
                     </form>
+
                 </xpath>
             </field>
         </record>
