@@ -1031,19 +1031,19 @@ class CreateProvision(models.TransientModel):
                         for key, value in ot_department_net_values.items():
                             for cost_center_value in value:
                                 department = self.get_department_id(payslip_departments, key)
+                                if ot_department_net_values[key][cost_center_value] != 0:
+                                    debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                         self.payslip_run_id.operating_unit_id.default_debit_account_ot.id,
+                                                                         self.payslip_run_id.operating_unit_id.id,
+                                                                         department.id, cost_center_value.id,
+                                                                         ot_department_net_values[key][
+                                                                             cost_center_value], 0,
+                                                                         self.operating_unit_id.company_id.id)
 
-                                debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
-                                                                     self.payslip_run_id.operating_unit_id.default_debit_account_ot.id,
-                                                                     self.payslip_run_id.operating_unit_id.id,
-                                                                     department.id, cost_center_value.id,
-                                                                     ot_department_net_values[key][
-                                                                         cost_center_value], 0,
-                                                                     self.operating_unit_id.company_id.id)
+                                    sum_debit = sum_debit + ot_department_net_values[key][cost_center_value]
 
-                                sum_debit = sum_debit + ot_department_net_values[key][cost_center_value]
-
-                                if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
-                                    move_lines.append((0, 0, debit_vals))
+                                    if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
+                                        move_lines.append((0, 0, debit_vals))
 
                         main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
                                                                    self.payslip_run_id.operating_unit_id.payable_account_ot.id,
@@ -1059,38 +1059,40 @@ class CreateProvision(models.TransientModel):
                     difference = 0
 
                     if difference == 0:
-                        vals = {
-                            'name': name_seq,
-                            'journal_id': journal_id.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'date': self.date,
-                            'company_id': self.company_id.id,
-                            'state': 'draft',
-                            'line_ids': move_lines,
-                            'payslip_run_id': self.payslip_run_id.id,
-                            'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                            'ref': 'Total net value : ' + str(
-                                top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
-                                self.payslip_run_id.name)
-                        }
-
-                        move = self.env['account.move'].create(vals)
-
-                        if move:
-                            self.payslip_run_id.write({'account_move_id': move.id})
-                            message_id = self.env['success.wizard'].create({'message': _(
-                                "Journal Entry Created Successfully!")
-                            })
-                            return {
-                                'name': _('Success'),
-                                'type': 'ir.actions.act_window',
-                                'view_mode': 'form',
-                                'res_model': 'success.wizard',
-                                'context': vals,
-                                'res_id': message_id.id,
-                                'target': 'new'
+                        if move_lines:
+                            vals = {
+                                'name': name_seq,
+                                'journal_id': journal_id.id,
+                                'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                                'date': self.date,
+                                'company_id': self.company_id.id,
+                                'state': 'draft',
+                                'line_ids': move_lines,
+                                'payslip_run_id': self.payslip_run_id.id,
+                                'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                                'ref': 'Total net value : ' + str(
+                                    top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
+                                    self.payslip_run_id.name)
                             }
 
+                            move = self.env['account.move'].create(vals)
+
+                            if move:
+                                self.payslip_run_id.write({'account_move_id': move.id})
+                                message_id = self.env['success.wizard'].create({'message': _(
+                                    "Journal Entry Created Successfully!")
+                                })
+                                return {
+                                    'name': _('Success'),
+                                    'type': 'ir.actions.act_window',
+                                    'view_mode': 'form',
+                                    'res_model': 'success.wizard',
+                                    'context': vals,
+                                    'res_id': message_id.id,
+                                    'target': 'new'
+                                }
+                        else:
+                            raise UserError(_('Could not create journal entry! There may have some problem in your payslips.'))
 
             else:
                 raise UserError(_('Salary type not found'))
