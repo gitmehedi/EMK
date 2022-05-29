@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="cheque_list_not_honoured_form" model="ir.ui.view">
+    <record id="cheque_list_not_honoured_form_view" model="ir.ui.view">
         <field name="name">accounting.cheque.received.form</field>
         <field name="model">accounting.cheque.received</field>
         <field name="arch" type="xml">
@@ -9,7 +9,8 @@
                 <header>
 
                     <button name="action_pending" type="object" states="draft" string="Pending" class="oe_highlight"/>
-                    <button name="action_honoured" type="object" states="draft" string="Honoured" class="oe_highlight"/>
+                    <button name="action_honoured" groups="gbs_accounting_cheque_received.group_can_honour_cheque" type="object" states="draft" string="Honoured" class="oe_highlight"/>
+
                     <button name="action_dishonoured" type="object" states="draft" string="Disnonoured"
                             class="oe_highlight"/>
                     <button name="action_amount_deposit" type="object" states="draft" string="Amount Deposit"
@@ -44,7 +45,7 @@
         </field>
     </record>
 
-    <record id="cheque_list_not_honoured_tree" model="ir.ui.view">
+    <record id="cheque_list_not_honoured_tree_view" model="ir.ui.view">
         <field name="name">accounting.cheque.received.tree.view</field>
         <field name="model">accounting.cheque.received</field>
         <field name="type">tree</field>

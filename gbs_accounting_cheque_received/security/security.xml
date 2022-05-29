@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="group_accounting_unit_accounting" model="res.groups">
+            <field name="name">Cheque Receivable User (Unit Accounting)</field>
+            <field name="category_id" ref="gbs_application_group.module_category_sale"/>
+            <field name="sequence">101</field>
+        </record>
+
+        <record id="group_can_honour_cheque" model="res.groups">
+            <field name="name">Can Honour Cheques</field>
+            <field name="category_id" ref="gbs_application_group.module_category_sale"/>
+            <field name="sequence">102</field>
+        </record>
+
+    </data>
+</odoo>

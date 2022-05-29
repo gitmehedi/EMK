@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="action_cheque_list_not_honoured_account_unit">
+            <field name="name">Cheque List Not Honoured</field>
+            <field name="res_model">accounting.cheque.received</field>
+            <field name="domain">[('state','!=','honoured')]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                    (0, 0, {'sequence': 1002, 'view_mode': 'tree', 'view_id': ref('cheque_list_not_honoured_tree_view')}),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'form', 'view_id': ref('cheque_list_not_honoured_form_view')}),
+
+                ]"/>
+        </record>
+
+        <menuitem id="menu_inherited_unit_unhonoured_cheque_received"
+                  name="Cheque Received(Not honoured)"
+                  action="action_cheque_list_not_honoured_account_unit"
+                  parent="gbs_accounting_cheque_received.cheque_received_accounting"
+                  groups="gbs_accounting_cheque_received.group_accounting_unit_accounting"
+                  sequence="2"/>
+
+
+
+    </data>
+
+</odoo>
+
+

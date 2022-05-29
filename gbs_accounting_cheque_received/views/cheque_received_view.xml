@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="accounting_cheque_received_form" model="ir.ui.view">
+    <record id="accounting_cheque_received_form_view" model="ir.ui.view">
         <field name="name">accounting.cheque.received.form</field>
         <field name="model">accounting.cheque.received</field>
         <field name="arch" type="xml">
@@ -11,12 +11,12 @@
                     <button name="action_received" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="draft" string="Received" class="oe_highlight"/>
                     <button name="action_deposited" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="received" string="Deposited"
                             class="oe_highlight"/>
-                    <button name="action_honoured" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="deposited" string="Honoured"
+                    <button name="action_honoured" groups="gbs_accounting_cheque_received.group_can_honour_cheque" type="object" states="deposited" string="Honoured"
                             class="oe_highlight"/>
-                    <button name="action_dishonoured" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="deposited" string="Dishonoured"/>
-                    <button name="action_deposited" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="dishonoured" string="Deposited"
+                    <button name="action_dishonoured"  groups="gbs_accounting_cheque_received.group_can_honour_cheque" type="object" states="deposited" string="Dishonoured"/>
+                    <button name="action_deposited"  groups="gbs_accounting_cheque_received.group_can_honour_cheque" type="object" states="dishonoured" string="Deposited"
                             class="oe_highlight"/>
-                    <button name="action_returned_to_customer" groups="account.group_account_user,gbs_application_group.group_head_account,gbs_application_group.group_cxo" type="object" states="dishonoured"
+                    <button name="action_returned_to_customer"  groups="gbs_accounting_cheque_received.group_can_honour_cheque" type="object" states="dishonoured"
                             string="Returned to Customer"/>
 
 
@@ -66,7 +66,7 @@
         </field>
     </record>
 
-    <record id="accounting_cheque_recieved_tree" model="ir.ui.view">
+    <record id="accounting_cheque_recieved_tree_view" model="ir.ui.view">
         <field name="name">accounting.cheque.received.tree.view</field>
         <field name="model">accounting.cheque.received</field>
         <field name="type">tree</field>
@@ -77,6 +77,7 @@
                 <field name="bank_name"/>
                 <field name="cheque_amount"/>
                 <field name="sale_order_id"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
