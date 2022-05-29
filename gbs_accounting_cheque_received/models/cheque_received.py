@@ -31,13 +31,32 @@ class ChequeReceived(models.Model):
 
     name = fields.Char(string='Name', compute='_get_name')
 
-    partner_id = fields.Many2one('res.partner', domain=[('active', '=', True), ('customer', '=', True)], string="Customer", required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
-    bank_name = fields.Many2one('res.bank', string='Bank', required=True,states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
-    branch_name = fields.Char(string='Branch Name', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
-    date_on_cheque = fields.Date('Date On Cheque', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
-    cheque_amount = fields.Float(string='Amount', required=True, states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    partner_id = fields.Many2one('res.partner', domain=[('active', '=', True), ('customer', '=', True)],
+                                 string="Customer", required=True,
+                                 states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
+                                         'honoured': [('readonly', True)], 'received': [('readonly', True)],
+                                         'deposited': [('readonly', True)]})
+    bank_name = fields.Many2one('res.bank', string='Bank', required=True,
+                                states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
+                                        'honoured': [('readonly', True)], 'received': [('readonly', True)],
+                                        'deposited': [('readonly', True)]})
+    branch_name = fields.Char(string='Branch Name', required=True,
+                              states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
+                                      'honoured': [('readonly', True)], 'received': [('readonly', True)],
+                                      'deposited': [('readonly', True)]})
+    date_on_cheque = fields.Date('Date On Cheque', required=True,
+                                 states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
+                                         'honoured': [('readonly', True)], 'received': [('readonly', True)],
+                                         'deposited': [('readonly', True)]})
+    cheque_amount = fields.Float(string='Amount', required=True,
+                                 states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
+                                         'honoured': [('readonly', True)], 'received': [('readonly', True)],
+                                         'deposited': [('readonly', True)]})
     sale_order_id = fields.Many2many('sale.order', string='Sale Order',
-                                     states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]}) #domain=[('partner_id', '=', partner_id.id),('is_this_so_payment_check','=',False),('state', '=', 'done')]
+                                     states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
+                                             'honoured': [('readonly', True)], 'received': [('readonly', True)],
+                                             'deposited': [('readonly',
+                                                            True)]})  # domain=[('partner_id', '=', partner_id.id),('is_this_so_payment_check','=',False),('state', '=', 'done')]
 
     partner_id = fields.Many2one('res.partner',
                                  domain=[('parent_id', '=', False), ('active', '=', True), ('customer', '=', True)],
@@ -76,7 +95,10 @@ class ChequeReceived(models.Model):
 
     # @todo : Update this field
     is_this_payment_checked = fields.Boolean(string='is_this_payment_checked', default=False)
-    cheque_no = fields.Char(string='Cheque No', states = {'returned': [('readonly', True)],'dishonoured': [('readonly', True)],'honoured': [('readonly', True)],'received': [('readonly', True)],'deposited': [('readonly', True)]})
+    cheque_no = fields.Char(string='Cheque No',
+                            states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
+                                    'honoured': [('readonly', True)], 'received': [('readonly', True)],
+                                    'deposited': [('readonly', True)]})
     is_entry_receivable_cleared = fields.Boolean(string='Is this entry cleared receivable?')
     narration = fields.Text(string='Narration', states={'returned': [('readonly', True)],
                                                         'dishonoured': [('readonly', True)],
@@ -193,11 +215,10 @@ class ChequeReceived(models.Model):
                     'view_type': 'form',
                     'view_mode': 'form',
                     'target': 'new',
-                   # 'context': {'delivery_order_id': self.id}
+                    # 'context': {'delivery_order_id': self.id}
                 }
 
             cr.state = 'deposited'
-
 
     @api.multi
     def action_reset_to_draft(self):
@@ -288,7 +309,8 @@ class ChequeReceived(models.Model):
         """
         journal = journal or self.journal_id
         if not journal.sequence_id:
-            raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
+            raise UserError(_('Configuration Error !'),
+                            _('The journal %s does not have a sequence, please specify one.') % journal.name)
         if not journal.sequence_id.active:
             raise UserError(_('Configuration Error !'), _('The sequence of journal %s is deactivated.') % journal.name)
         name = journal.with_context(ir_sequence_date=self.date_on_cheque).sequence_id.next_by_id()
@@ -303,7 +325,8 @@ class ChequeReceived(models.Model):
         """ Returns values common to both move lines (except for debit, credit and amount_currency which are reversed)
         """
         return {
-            'partner_id': self.payment_type in ('inbound', 'outbound') and self.env['res.partner']._find_accounting_partner(self.partner_id).id or False,
+            'partner_id': self.payment_type in ('inbound', 'outbound') and self.env[
+                'res.partner']._find_accounting_partner(self.partner_id).id or False,
             'invoice_id': invoice_id and invoice_id.id or False,
             'move_id': move_id,
             'debit': debit,
@@ -349,7 +372,9 @@ class ChequeReceived(models.Model):
         # If the journal has a currency specified, the journal item need to be expressed in this currency
         if self.journal_id.currency_id and self.currency_id != self.journal_id.currency_id:
             amount = self.currency_id.with_context(date=self.payment_date).compute(amount, self.journal_id.currency_id)
-            debit, credit, amount_currency, dummy = self.env['account.move.line'].with_context(date=self.payment_date).compute_amount_fields(amount, self.journal_id.currency_id, self.company_id.currency_id)
+            debit, credit, amount_currency, dummy = self.env['account.move.line'].with_context(
+                date=self.payment_date).compute_amount_fields(amount, self.journal_id.currency_id,
+                                                              self.company_id.currency_id)
             vals.update({
                 'amount_currency': amount_currency,
                 'currency_id': self.journal_id.currency_id.id,

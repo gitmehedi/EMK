@@ -13,10 +13,12 @@
         'gbs_sale_order_approval',
         'amount_to_word_bd',
         'report_layout',
+        'gbs_samuda_account_access'
     ],
 
     'data': [
         'security/ir.model.access.csv',
+        'security/security.xml',
         'wizards/journal_add_wizard_view.xml',
         'wizards/add_honoured_date_wizard_view.xml',
         'views/cheque_received_view.xml',
@@ -26,6 +28,10 @@
         'views/inherited_account_move_line_view.xml',
         'report/gbs_money_receipt_paperformat.xml',
         'report/gbs_money_receipt_report_view.xml',
+        'views/inherit_cheque_received_view.xml',
+        'views/inherit_cheque_received_not_honoured.xml'
+
+
     ],
 
     'summary': 'Cheque Received',
