@@ -52,6 +52,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         sheet.write(6, 12, "Total", header_format_left)
         sheet.write(6, 13, "Deduction", header_format_left)
         sheet.write(6, 14, "Total Payable", header_format_left)
+        return sheet
 
     def _set_footer_value_n_signature(self, docs, sheet, row, workbook, footer_total_payable):
         name_format_left = workbook.add_format(
@@ -97,7 +98,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
         docs = obj.hr_payslip_run_id
         sheet = self._get_sheet_header(docs, workbook)
 
-        self._set_sheet_table_header(docs, workbook)
+        self._set_sheet_table_header(sheet, workbook)
 
         name_format_left_font_11 = workbook.add_format(
             {'num_format': '#,##0.00', 'align': 'left', 'bold': False, 'size': 11, 'text_wrap': True})
