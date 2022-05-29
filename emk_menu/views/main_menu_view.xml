@@ -77,11 +77,6 @@
             <field name="sequence">70</field>
         </record>
 
-        <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
-            <field name="name">Discuss</field>
-            <field name="sequence">75</field>
-        </record>
-
         <record id="utm.menu_link_tracker_root" model="ir.ui.menu">
             <field name="name">Link Tracker</field>
             <field name="sequence">90</field>
@@ -91,5 +86,11 @@
             <field name="name">Surveys</field>
             <field name="sequence">91</field>
         </record>
+
+        <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
+            <field name="name">Discuss</field>
+            <field name="sequence">75</field>
+        </record>
+
     </data>
 </odoo>
