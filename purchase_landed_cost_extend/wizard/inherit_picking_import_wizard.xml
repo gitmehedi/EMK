@@ -10,10 +10,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='supplier']" position="after">
-                        <field name="lc_id" required="1"/>
+                        <field name="lc_id" required="1" domain="[('second_party_beneficiary', '=', supplier),('operating_unit_id', '=', operating_unit_id)]"/>
                     </xpath>
-
-
                 </data>
             </field>
         </record>

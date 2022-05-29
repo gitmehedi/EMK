@@ -11,7 +11,8 @@
     'depends': [
         'purchase_landed_cost',
         'stock_picking_extend',
-        'account'
+        'account',
+        'gbs_application_group'
     ],
     'data': [
         'data/landed_cost_sequence.xml',

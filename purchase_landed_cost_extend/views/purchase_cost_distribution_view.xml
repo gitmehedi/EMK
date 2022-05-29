@@ -9,6 +9,11 @@
                 <xpath expr="//form" position="attributes">
                     <attribute name="duplicate">0</attribute>
                 </xpath>
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="lc_id" invisible="1"/>
+                </xpath>
+
+
                 <xpath expr="//div[@class='oe_title']" position="replace">
                     <h1>
                         <field name="name" class="oe_inline" readonly="1"/>
@@ -73,11 +78,22 @@
                     </div>
                 </xpath>
 
+                <xpath expr="//header/button[@name='action_calculate']" position="replace">
+                    <button name="action_calculate"
+                            string="Calculate"
+                            states="draft,error"
+                            type="object"
+                            confirm="Are you sure that you want to calculate landed cost?"
+                            class="oe_highlight"/>
+                </xpath>
+
+
                 <xpath expr="//header/button[@name='action_calculate']" position="after">
                     <button name="post_journal_entry"
                             string="Post Journal Entry"
                             type="object"
-                            attrs="{'invisible':[('account_move_id','!=',False)]}"
+                            attrs="{'invisible':['|',('account_move_id','!=',False), ('state','!=','done')]}"
+                            confirm="Are you sure that you want to post journal entry?"
                             class="oe_highlight"/>
                 </xpath>
 
@@ -108,6 +124,13 @@
         <menuitem id="purchase_landed_cost.menu_purchase_cost_distribution"
                   name="Landed Costs"
                   parent="purchase_landed_cost.menu_purchase_cost_control"
+        />
+
+        <menuitem id="purchase_landed_cost.menu_purchase_cost_distribution_line_expense"
+                  action="purchase_landed_cost.action_purchase_cost_distribution_line_expense"
+
+                  groups="gbs_application_group.make_invisible"
+                  sequence="20"
         />
 
     </data>
