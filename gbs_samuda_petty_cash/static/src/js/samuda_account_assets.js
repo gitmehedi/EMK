@@ -80,21 +80,7 @@ odoo.define('gbs_samuda_petty_cash.samudaReconciliationTags', function(require){
 //                            receipt_status: datum.receipt_status
                         }]
                     };
-                    if (datum.has_second_line) {
-                        preset.lines.push({
-                            account_id: datum.second_account_id,
-                            journal_id: datum.second_journal_id,
-                            label: datum.second_label,
-                            amount_type: datum.second_amount_type,
-                            amount: datum.second_amount,
-                            tax_id: datum.second_tax_id,
-                            analytic_account_id: datum.second_analytic_account_id,
-                            department_id: datum.second_department_id,
-                            cost_center_id: datum.second_cost_center_id,
-                            operating_unit_id: datum.second_operating_unit_id
-//                            receipt_status: datum.second_receipt_status
-                        });
-                    }
+
                     self.presets[datum.id] = preset;
                 });
             });
