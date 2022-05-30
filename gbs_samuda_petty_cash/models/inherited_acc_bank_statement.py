@@ -1,6 +1,6 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-
+from odoo.exceptions import UserError, ValidationError
 
 class InheritAccountBankStatement(models.Model):
     _inherit = 'account.bank.statement'

@@ -1,5 +1,6 @@
 from odoo import fields, models, api
 from datetime import datetime
+from odoo.exceptions import UserError, ValidationError, Warning
 
 
 class AnalyticAccountWizard(models.TransientModel):
@@ -38,16 +39,18 @@ class AnalyticAccountWizard(models.TransientModel):
                 if lc_pad_account != account['account_id']:
                     # check if already exists in the line
                     existence_check = self.env['purchase.cost.distribution.expense'].search(
-                        [('distribution', '=', self.env.context['active_id']),
-                         ('account_id', '=', account['account_id'])])
-                    if not existence_check:
+                        [('analytic_account_id', '=', self.analytic_account.id)])
+                    if existence_check:
                         self.env['purchase.cost.distribution.expense'].create({
                             'distribution': self.env.context['active_id'],
                             'ref': self.ref,
                             'expense_amount': account['closing_balance'],
                             'type': self.expense_type.id,
-                            'account_id': account['account_id']
+                            'account_id': account['account_id'],
+                            'analytic_account_id': self.analytic_account.id
                         })
+                    else:
+                        raise UserError('You cannot import different analytic account data. Existing Analytic Account data already exists in the line.')
 
         if 'active_id' in self.env.context:
             distribution = self.env['purchase.cost.distribution'].browse(self.env.context['active_id'])

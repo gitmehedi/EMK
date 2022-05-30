@@ -15,6 +15,7 @@
         'gbs_application_group'
     ],
     'data': [
+        'security/security.xml',
         'data/landed_cost_sequence.xml',
         'views/purchase_cost_distribution_view.xml',
         'views/purchase_expense_type_view.xml',
@@ -25,7 +26,8 @@
         'wizard/analytic_account_wizard.xml',
         'wizard/inherit_picking_import_wizard.xml',
         'wizard/picking_import_wizard_view.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'views/remove_existing_landed_cost_options.xml'
     ],
     'installable': True,
     'application': False

@@ -6,6 +6,7 @@ class InheritedPurchaseCostDistributionExpense(models.Model):
     _inherit = 'purchase.cost.distribution.expense'
 
     account_id = fields.Many2one('account.account', string="Account")
+    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", store=False)
 
     @api.one
     @api.constrains('expense_amount')

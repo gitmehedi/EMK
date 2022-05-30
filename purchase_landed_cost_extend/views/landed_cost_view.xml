@@ -3,6 +3,7 @@
     <menuitem id="purchase_landed_cost.menu_purchase_cost_control"
               name="Landed Costs"
               parent="account.menu_finance_payables"
+              groups="purchase_landed_cost_extend.group_user_landed_cost"
               sequence="9"/>
 
 </odoo>

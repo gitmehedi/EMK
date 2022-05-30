@@ -2,7 +2,7 @@
     'name': 'Samuda Petty Cash',
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',
-    'category': 'Gbs Samuda Petty Cash',
+    'category': 'Accounting',
     'version': '10.0.1.0.0',
     'depends': [
         'account', 'base', 'report_xlsx', 'report', 'gbs_application_group'
@@ -17,10 +17,9 @@
 
     ],
 
-    'summary': 'Excel Report For Petty Cash',
+    'summary': 'Petty Cash Implementation',
     'description':
-        """This module print report for Petty Cash
-            based on the condition'""",
+        """Petty Cash Implementation""",
     'installable': True,
     'application': True,
 }
