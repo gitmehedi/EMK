@@ -8,7 +8,7 @@ class MaturityExportWizard(models.TransientModel):
     bill_id = fields.Char('Bill ID', required=True)
     bill_id = fields.Char('Bill ID', required=True)
     bl_date = fields.Date(string='BL Date', required=True)
-    to_first_acceptance_date = fields.Date('1\'st Acceptance Date', track_visibility='onchange', required=True)
+    to_first_acceptance_date = fields.Date('1st Acceptance Date', track_visibility='onchange', required=True)
 
     @api.multi
     def save_action(self):

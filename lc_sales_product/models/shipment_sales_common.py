@@ -9,9 +9,8 @@ class ShipmentCommon(models.Model):
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
     invoice_ids = fields.Many2many("account.invoice", 'lc_shipment_invoice_rel', 'shipment_id', 'invoice_id', string='Invoice Numbers')
     invoice_qty = fields.Float(string='Invoice Qty')
-
     to_sales_date = fields.Date('Dispatch to Sales', track_visibility='onchange')
-    to_first_acceptance_date = fields.Date('1\'st Acceptance Date', track_visibility='onchange')
+    to_first_acceptance_date = fields.Date('1st Acceptance Date', track_visibility='onchange')
     to_second_acceptance_date = fields.Date('2nd Acceptance Date', track_visibility='onchange')
     to_buyer_date = fields.Date('Dispatch to Party', track_visibility='onchange')
     to_seller_bank_date = fields.Date('Seller Bank Receive', track_visibility='onchange')
