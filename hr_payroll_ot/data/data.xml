@@ -16,7 +16,10 @@
 elif payslip.type == '1': result = False
 elif payslip.type == '2': result = True</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = ((contract.wage + (contract.wage*70)/100 + (contract.wage*30)/100 + (contract.wage*30)/100 + (contract.wage*20)/100)/208)*worked_days.OT.number_of_hours</field>
+            <field name="amount_python_compute">try:
+    result = ((contract.wage + (contract.wage*70)/100 + (contract.wage*30)/100 + (contract.wage*30)/100 + (contract.wage*20)/100)/208)*worked_days.OT.number_of_hours
+except:
+   result = 0</field>
         </record>
 
     </data>
