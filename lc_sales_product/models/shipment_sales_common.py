@@ -11,7 +11,7 @@ class ShipmentCommon(models.Model):
     invoice_qty = fields.Float(string='Invoice Qty')
 
     to_sales_date = fields.Date('Dispatch to Sales', track_visibility='onchange')
-    to_first_acceptance_date = fields.Date('1\'st Acceptance Date', track_visibility='onchange')
+    to_first_acceptance_date = fields.Date('1st Acceptance Date', track_visibility='onchange')
     to_buyer_date = fields.Date('Dispatch to Party', track_visibility='onchange')
     to_seller_bank_date = fields.Date('Seller Bank Receive', track_visibility='onchange')
     to_buyer_bank_date = fields.Date('Buyer Bank Receive', track_visibility='onchange')
