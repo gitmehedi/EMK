@@ -96,7 +96,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
                 ot_rate = (slip.employee_id.contract_id.wage + payslip['basic_70'] + payslip['basic_30'] + payslip[
                     'basic_30'] + payslip['basic_20']) / 208
                 payslip['ot_rate_hour'] = ot_rate
-                payslip['ot_earning_amount'] = (number_of_hours * ot_rate)
+                payslip['ot_earning_amount'] = round(number_of_hours * ot_rate)
                 obj_ot_arrear = list(filter(lambda x: x.code == 'ARSOT', slip.input_line_ids))
                 arrear = 0
                 if obj_ot_arrear:
