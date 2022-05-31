@@ -141,7 +141,7 @@ class LcRegisterXLSX(ReportXlsx):
             where += "where ps.doc_preparation_date is null and ps.state = 'receive_doc'"
 
         elif filter_by == 'first_acceptance':
-            filter_by_text = '1\'st Acceptance'
+            filter_by_text = '1st Acceptance'
             # where += "where (ps.to_first_acceptance_date-ps.to_buyer_date) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
             where += "where (CURRENT_DATE-Date(ps.to_first_acceptance_date)) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
 
