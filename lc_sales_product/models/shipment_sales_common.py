@@ -35,7 +35,7 @@ class ShipmentCommon(models.Model):
          ('add_invoice', "Invoice"),
          ('to_sales',"To Sales"),
          ('to_buyer',"To Buyer"),
-         ('to_first_acceptance',"1'st Acceptance"),
+         ('to_first_acceptance',"1st Acceptance"),
          ('to_seller_bank',"To Seller Bank"),
          ('to_buyer_bank',"To Buyer Bank"),
          ('to_maturity', "To Maturity"),

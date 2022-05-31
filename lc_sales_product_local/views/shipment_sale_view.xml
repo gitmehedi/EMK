@@ -31,7 +31,7 @@
                         <button string="Add Invoice" name="action_add_invoice_export" states="receive_doc" type="object" class="oe_highlight"/>
                         <button string="To Sales" name="action_to_sales_export" states="add_invoice" type="object" class="oe_highlight"/>
                         <button string="To Buyer" name="action_to_buyer_export" states="to_sales" type="object" class="oe_highlight"/>
-                        <button string="1'st Acceptance" name="action_to_first_acceptance_export" states="to_buyer" type="object" class="oe_highlight"/>
+                        <button string="1st Acceptance" name="action_to_first_acceptance_export" states="to_buyer" type="object" class="oe_highlight"/>
                         <button string="To Seller Bank" name="action_to_seller_bank_export" states="to_first_acceptance" type="object" class="oe_highlight"/>
                         <button string="To Buyer Bank" name="action_to_buyer_bank_export" states="to_seller_bank" type="object" class="oe_highlight"/>
                         <button string="To Maturity" name="action_to_maturity_export" states="to_buyer_bank" type="object" class="oe_highlight"/>
@@ -53,7 +53,7 @@
                                 <field name="comment" nolabel="1" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                             </group>
                             <!---->
-                            <group string="1'st Acceptance">
+                            <group string="1st Acceptance">
                                 <field name="to_sales_date" readonly="1"/>
                                 <field name="to_buyer_date" readonly="1"/>
                                 <field name="to_first_acceptance_date" readonly="1"/>
