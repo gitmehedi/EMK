@@ -9,6 +9,7 @@
         'hr_payroll_arrear'
         ],
     'data': [
+        'data/data.xml',
         'views/hr_payroll_arrear_ot.xml',
 
     ],

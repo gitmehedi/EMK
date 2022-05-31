@@ -10,7 +10,7 @@
             <field name="name">OT</field>
             <field name="category_id" ref="hr_payroll_ot.otawl"/>
             <field name="code">EOTA</field>
-            <field name="sequence" eval="140"/>
+            <field name="sequence" eval="30"/>
             <field name="condition_select">python</field>
             <field name="condition_python">if payslip.type == '0': result = False
 elif payslip.type == '1': result = False
