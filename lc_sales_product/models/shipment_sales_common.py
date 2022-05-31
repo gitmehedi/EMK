@@ -12,6 +12,7 @@ class ShipmentCommon(models.Model):
 
     to_sales_date = fields.Date('Dispatch to Sales', track_visibility='onchange')
     to_first_acceptance_date = fields.Date('1\'st Acceptance Date', track_visibility='onchange')
+    to_second_acceptance_date = fields.Date('2nd Acceptance Date', track_visibility='onchange')
     to_buyer_date = fields.Date('Dispatch to Party', track_visibility='onchange')
     to_seller_bank_date = fields.Date('Seller Bank Receive', track_visibility='onchange')
     to_buyer_bank_date = fields.Date('Buyer Bank Receive', track_visibility='onchange')
@@ -38,6 +39,7 @@ class ShipmentCommon(models.Model):
          ('to_first_acceptance',"1st Acceptance"),
          ('to_seller_bank',"To Seller Bank"),
          ('to_buyer_bank',"To Buyer Bank"),
+         ('to_second_acceptance',"2nd Acceptance"),
          ('to_maturity', "To Maturity"),
          ('done', "Done"),
          ('cancel', "Cancel")], default='draft', track_visibility='onchange')
