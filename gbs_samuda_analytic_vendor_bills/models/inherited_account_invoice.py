@@ -15,6 +15,11 @@ class InheritedAccountInvoice(models.Model):
             invoice_line.update({'quantity': line.product_qty})
 
         if self.type == 'in_invoice' and self.purchase_id:
+            # vendor reference
+            if self.purchase_id.cnf_quotation and self.purchase_id.shipment_id and self.purchase_id.shipment_id.cnf_id:
+                vendor_ref = self.purchase_id.shipment_id.cnf_id.name
+                self.update({'reference': vendor_ref})
+
             if self.purchase_id.region_type == 'foreign' or self.purchase_id.is_service_order:
                 if self.purchase_id.lc_ids:
                     analytic_account_id = self.purchase_id.lc_ids[0].analytic_account_id.id
