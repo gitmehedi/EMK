@@ -21,6 +21,21 @@ class PurchaseCostDistribution(models.Model):
 
     lc_id = fields.Many2one("letter.credit", string='LC Number', readonly=True)
 
+    @api.depends('cost_lines', 'cost_lines.total_amount','expense_lines', 'expense_lines.expense_amount')
+    def _compute_lcost_per(self):
+        for rec in self:
+            if rec.cost_lines and rec.expense_lines:
+                total_purchase = sum([x.total_amount for x in rec.cost_lines])
+                total_expense = sum([x.expense_amount for x in rec.expense_lines])
+                if total_purchase != 0:
+                    rec.percentage_of_lcost = (total_expense / total_purchase) * 100
+                else:
+                    rec.percentage_of_lcost = False
+            else:
+                rec.percentage_of_lcost = False
+
+    percentage_of_lcost = fields.Float(string='Landed Cost (%)', compute='_compute_lcost_per', store=False)
+
     @api.multi
     def action_calculate(self):
         # validation
