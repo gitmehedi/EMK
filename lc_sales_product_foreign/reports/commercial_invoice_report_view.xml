@@ -225,7 +225,8 @@
                                         </tr>
                                     </t>
                                     <tr>
-                                        <td colspan="5" class="text-right">Total CFR
+                                        <td colspan="5" class="text-right">
+                                            Total <span t-esc="data['inco_terms']"/>
                                             <t t-if="data['fob_value']">(FOB <span t-esc="data['fob_value']"/></t>
                                             <t t-if="data['feright_value']">+Freight <span t-esc="data['feright_value']"/>)</t>
                                         </td>
