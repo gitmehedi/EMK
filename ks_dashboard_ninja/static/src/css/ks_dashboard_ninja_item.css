@@ -1,0 +1,60 @@
+.ks_item_icon {
+    width : 110px !important;
+}
+
+.ks_item_icon>img {
+    width : 50px;
+}
+
+.ks_field_required{
+    color : red;
+}
+
+.ks_db_item_preview{
+    width: 280px;
+}
+
+.ks_not_click{
+    pointer-events: none;
+}
+
+.ks_color_picker{
+    margin-right: 10px;
+}
+
+.ks_color_opacity{
+    vertical-align:middle;
+     display: initial !important;
+    width: initial !important;
+}
+
+.ks_color_picker_field{
+    display : inline-block !important;
+}
+
+/* Icon Container in image widget render view*/
+.ks_image_widget_icon_container{
+    background : transparent;
+    border: none;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.ks_domain_content{
+    overflow : auto;
+}
+
+
+/* Preview Footer Note */
+.ks_db_item_preview_footer_note{
+    margin-top : 10px;
+}
+
+/* Handling long dashboard item name and making inner group of fixed width*/
+.ks_dashboard_item_record_name{
+    overflow-y:auto;
+}
+
+.ks_dashboard_item_record_inner_group{
+    max-width : 522px !important;
+}

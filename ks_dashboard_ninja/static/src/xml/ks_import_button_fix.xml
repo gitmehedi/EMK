@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="ks_disable_import" xml:space="preserve">
+
+<!--To disable import button in dashboard manager view-->
+  <t t-extend="ImportView.import_button">
+    <t t-jquery=".btn.btn-sm.btn-default.o_button_import" t-operation="replace">
+      <button t-if="widget.is_action_enabled('ks_disable_import')" type="button" class="btn btn-sm btn-default o_button_import">
+          Import
+      </button>
+    </t>
+  </t>
+
+</templates>

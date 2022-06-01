@@ -1,0 +1,31 @@
+.ks_dashboard_theme_input::before {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 20px;
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+.ks_color_blue::before{
+    background: #337ab7;
+}
+.ks_color_red::before{
+    background: #d9534f;
+}
+.ks_color_yellow::before{
+    background: #f0ad4e;
+}
+.ks_color_green::before{
+    background: #5cb85c;
+}
+.ks_dashboard_theme_view_render{
+    display: flex;
+}
+.ks_dashboard_theme_input:checked:before{
+    content: '✔';
+}
+
+.ks_dashboard_theme_input_container{
+        margin-right: 20px;
+}
