@@ -853,36 +853,41 @@ class CreateProvision(models.TransientModel):
                     else:
                         raise UserError(_('Total debit value and total credit value mismatched.'))
                     if difference == 0:
-                        vals = {
-                            'name': name_seq,
-                            'journal_id': journal_id.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'date': self.date,
-                            'company_id': self.company_id.id,
-                            'state': 'draft',
-                            'line_ids': move_lines,
-                            'payslip_run_id': self.payslip_run_id.id,
-                            'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                            'ref': 'Total net value : ' + str(top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
-                                self.payslip_run_id.name)
-                        }
-
-                        move = self.env['account.move'].create(vals)
-
-                        if move:
-                            self.payslip_run_id.write({'account_move_id': move.id})
-                            message_id = self.env['success.wizard'].create({'message': _(
-                                "Journal Entry Created Successfully!")
-                            })
-                            return {
-                                'name': _('Success'),
-                                'type': 'ir.actions.act_window',
-                                'view_mode': 'form',
-                                'res_model': 'success.wizard',
-                                'context': vals,
-                                'res_id': message_id.id,
-                                'target': 'new'
+                        if len(move_lines) > 0:
+                            vals = {
+                                'name': name_seq,
+                                'journal_id': journal_id.id,
+                                'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                                'date': self.date,
+                                'company_id': self.company_id.id,
+                                'state': 'draft',
+                                'line_ids': move_lines,
+                                'payslip_run_id': self.payslip_run_id.id,
+                                'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                                'ref': 'Total net value : ' + str(top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
+                                    self.payslip_run_id.name)
                             }
+
+                            move = self.env['account.move'].create(vals)
+
+                            if move:
+                                self.payslip_run_id.write({'account_move_id': move.id})
+                                message_id = self.env['success.wizard'].create({'message': _(
+                                    "Journal Entry Created Successfully!")
+                                })
+                                return {
+                                    'name': _('Success'),
+                                    'type': 'ir.actions.act_window',
+                                    'view_mode': 'form',
+                                    'res_model': 'success.wizard',
+                                    'context': vals,
+                                    'res_id': message_id.id,
+                                    'target': 'new'
+                                }
+                        else:
+                            raise UserError(
+                                _('Could not create journal entry! There may have some problem in your payslips.'))
+
                     else:
                         # return wizard to confirm
                         vals = {
@@ -990,37 +995,42 @@ class CreateProvision(models.TransientModel):
                     difference = 0
 
                     if difference == 0:
-                        vals = {
-                            'name': name_seq,
-                            'journal_id': journal_id.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'date': self.date,
-                            'company_id': self.company_id.id,
-                            'state': 'draft',
-                            'line_ids': move_lines,
-                            'payslip_run_id': self.payslip_run_id.id,
-                            'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                            'ref': 'Total net value : ' + str(
-                                top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
-                                self.payslip_run_id.name)
-                        }
-
-                        move = self.env['account.move'].create(vals)
-
-                        if move:
-                            self.payslip_run_id.write({'account_move_id': move.id})
-                            message_id = self.env['success.wizard'].create({'message': _(
-                                "Journal Entry Created Successfully!")
-                            })
-                            return {
-                                'name': _('Success'),
-                                'type': 'ir.actions.act_window',
-                                'view_mode': 'form',
-                                'res_model': 'success.wizard',
-                                'context': vals,
-                                'res_id': message_id.id,
-                                'target': 'new'
+                        if len(move_lines) > 0:
+                            vals = {
+                                'name': name_seq,
+                                'journal_id': journal_id.id,
+                                'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                                'date': self.date,
+                                'company_id': self.company_id.id,
+                                'state': 'draft',
+                                'line_ids': move_lines,
+                                'payslip_run_id': self.payslip_run_id.id,
+                                'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                                'ref': 'Total net value : ' + str(
+                                    top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
+                                    self.payslip_run_id.name)
                             }
+
+                            move = self.env['account.move'].create(vals)
+
+                            if move:
+                                self.payslip_run_id.write({'account_move_id': move.id})
+                                message_id = self.env['success.wizard'].create({'message': _(
+                                    "Journal Entry Created Successfully!")
+                                })
+                                return {
+                                    'name': _('Success'),
+                                    'type': 'ir.actions.act_window',
+                                    'view_mode': 'form',
+                                    'res_model': 'success.wizard',
+                                    'context': vals,
+                                    'res_id': message_id.id,
+                                    'target': 'new'
+                                }
+                        else:
+                            raise UserError(
+                                _('Could not create journal entry! There may have some problem in your payslips.'))
+
             elif self.salary_type == '2':
                 ot_department_net_values = self.get_department_net_values(self.payslip_run_id, 'EOTA')
                 if self.payslip_run_id.operating_unit_id:
@@ -1059,7 +1069,7 @@ class CreateProvision(models.TransientModel):
                     difference = 0
 
                     if difference == 0:
-                        if move_lines:
+                        if len(move_lines) > 0:
                             vals = {
                                 'name': name_seq,
                                 'journal_id': journal_id.id,
