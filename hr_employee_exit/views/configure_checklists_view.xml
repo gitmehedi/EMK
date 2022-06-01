@@ -39,9 +39,7 @@
                         <notebook>
                             <page string="Check Lists">
                                 <field name="checklists_ids">
-                                    <tree editable="top" decoration-danger="state=='not_received'"
-                                          decoration-success="state == 'received'"
-                                          decoration-muted="state=='not_applicable'">
+                                    <tree editable="top">
                                         <field name="checklist_item_id" options='{"no_open": True,"no_create": 1}'
                                                domain="[('state','=','approve')]"/>
                                         <field name="checklist_type" options='{"no_open": True,"no_create": 1}'
