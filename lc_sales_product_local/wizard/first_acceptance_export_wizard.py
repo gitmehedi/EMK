@@ -4,7 +4,7 @@ from odoo import api, fields, models
 class BuyerExportWizard(models.TransientModel):
     _name = 'to.first.acceptance.export.wizard'
 
-    to_first_acceptance_date = fields.Date('1\'st Acceptance Date', required=True)
+    to_first_acceptance_date = fields.Date('1st Acceptance Date', required=True)
 
     @api.multi
     def save_action(self):

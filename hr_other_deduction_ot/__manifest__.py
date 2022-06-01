@@ -11,7 +11,9 @@
                ],
 
     'data': [
-        'views/hr_other_deduction_ot.xml'
+        'data/data.xml',
+        'views/hr_other_deduction_ot.xml',
+
     ],
 
     'summary': 'Calculates HR Other Deduction OT Information',

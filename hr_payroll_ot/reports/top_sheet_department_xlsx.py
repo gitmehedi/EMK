@@ -162,7 +162,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
                         gross += math.ceil((slip.employee_id.contract_id.wage) * 2.5)
 
                         ot_rate += (basic + basic_70 + basic_30 + basic_30 + basic_20)/208
-                        ot_earning_amount += (number_of_hours * ot_rate)
+                        ot_earning_amount += round(number_of_hours * ot_rate)
                         obj_ot_arrear = list(filter(lambda x: x.code == 'ARSOT', slip.input_line_ids))
                         ot_arrear = 0
                         if obj_ot_arrear:
