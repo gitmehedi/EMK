@@ -19,6 +19,7 @@
         'delivery_challan_report',
         'ir_sequence_operating_unit',
         'gbs_samuda_stock',
+        'stock'
     ],
 
     'data': [
