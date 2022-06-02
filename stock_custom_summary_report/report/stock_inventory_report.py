@@ -14,6 +14,18 @@ class StockInventoryReport(models.AbstractModel):
         op_unit_obj = self.env['operating.unit'].search([('id', '=', op_unit_id)])
         data['address'] = report_utility_pool.getAddressByUnit(op_unit_obj)
 
+        ##########################product name using named_get function###########################
+        product_categs = self.env['product.category'].sudo().search([])
+        for categ in product_categs:
+
+            for line in get_data['category'][categ.name]['product']:
+                if line['product_id']:
+                    pro_obj = self.env['product.product'].browse(line['product_id'])
+                    pro_name = pro_obj.name_get()[0][1]
+                    line['name'] = pro_name
+
+        #####################################################
+
         docargs = {
             'doc_ids': self._ids,
             'docs': self,
@@ -269,7 +281,8 @@ class StockInventoryReport(models.AbstractModel):
                                       category,
                                       cost_val 
                         ''' % (
-        date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param, product_param)
+            date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param,
+            product_param)
 
         sql_out_tk = '''SELECT product_id,
                            name,
@@ -324,7 +337,8 @@ class StockInventoryReport(models.AbstractModel):
                               category,
                               list_price
                         ''' % (
-        date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param, product_param)
+            date_end, date_end, date_start, date_end, location_outsource, location_outsource, category_param,
+            product_param)
 
         sql_ck = '''
                   SELECT product_id,
@@ -420,8 +434,8 @@ class StockInventoryReport(models.AbstractModel):
                       category,
                       cost_val 
                         ''' % (
-        date_end, date_end, location_outsource, location_outsource, category_param, product_param,
-        date_end, date_end, location_outsource, location_outsource, category_param, product_param)
+            date_end, date_end, location_outsource, location_outsource, category_param, product_param,
+            date_end, date_end, location_outsource, location_outsource, category_param, product_param)
 
         sql = '''
                             SELECT ROW_NUMBER() OVER(ORDER BY table_ck.code DESC) AS id ,
