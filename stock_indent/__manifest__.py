@@ -8,6 +8,7 @@
                 'indent_type',
                 'gbs_product_category',
                 'report_layout',
+                'stock',
                 'stock_operating_unit_user'],
     'author': 'Genweb2 Limited',
     'website': 'www.genweb2.com',

@@ -11,6 +11,7 @@
     'category': 'Stock',
     'version': '10.0.0.1',
     'depends': [
+        'stock',
         'stock_operating_unit_extend',
         'account',
         'gbs_product',
