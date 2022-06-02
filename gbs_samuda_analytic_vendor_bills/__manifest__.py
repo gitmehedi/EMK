@@ -15,7 +15,7 @@
     'version': '10.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['purchase', 'account', 'base'],
+    'depends': ['purchase', 'account', 'base', 'purchase_landed_cost_extend'],
 
     # always loaded
     'data': [
