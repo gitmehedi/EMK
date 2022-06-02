@@ -1032,7 +1032,7 @@ class CreateProvision(models.TransientModel):
                                 _('Could not create journal entry! There may have some problem in your payslips.'))
 
             elif self.salary_type == '2':
-                ot_department_net_values = self.get_department_net_values(self.payslip_run_id, 'EOTA')
+                ot_department_net_values = self.get_department_net_values(self.payslip_run_id, 'NET')
                 if self.payslip_run_id.operating_unit_id:
                     move_lines = []
                     sum_debit = 0
