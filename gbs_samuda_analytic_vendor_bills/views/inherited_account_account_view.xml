@@ -7,6 +7,11 @@
             <field name="model">account.account</field>
             <field name="inherit_id" ref="account.view_account_form"/>
             <field name="arch" type="xml">
+                <label for="reconcile" position="replace">
+                    <label for="reconcile" attrs="{'invisible': [('internal_type','=','liquidity')]}"
+                           groups="base.group_private_addresses"/>
+                </label>
+
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="analytic_account_required"/>
                     <field name="cost_center_required"/>
@@ -17,7 +22,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='compacted']" position="attributes">
-                     <attribute name="groups">base.group_private_addresses</attribute>
+                    <attribute name="groups">base.group_private_addresses</attribute>
                 </xpath>
                 <xpath expr="//field[@name='type_third_parties']" position="attributes">
                     <attribute name="groups">base.group_private_addresses</attribute>

@@ -13,43 +13,44 @@ class InheritedItemBorrowing(models.Model):
     item_transfer_send_id = fields.Many2one('item.loan.lending', string='Transfer')
     receive_date = fields.Datetime('Receive Date', track_visibility='onchange')
 
-    # TODO
-    # for now
-    @api.model
-    def create(self, vals):
-        if 'is_transfer' in vals:
-            if vals['is_transfer']:
-                if vals['operating_unit_id'] and vals['request_date']:
-                    operating_unit_obj = self.env['operating.unit'].browse(vals['operating_unit_id'])
-                    src_location_id = self.env['stock.location'].search(
-                        [('company_id', '=', operating_unit_obj.company_id.id), ('usage', '=', 'transit'),
-                         ('can_operating_unit_transfer', '=', True)], limit=1).id
 
-                    dest_location_id = self.env['stock.location'].search(
-                        [('operating_unit_id', '=', operating_unit_obj.id), ('name', '=', 'Input')],
-                        limit=1).id
+    # create method was written so that CTG inventory can manually recieve products
 
-                    receiving_picking_type_id = self.env['stock.picking.type'].suspend_security().search(
-                        [('default_location_src_id', '=', src_location_id),
-                         ('code', '=', 'operating_unit_transfer'),
-                         ('default_location_dest_id', '=', dest_location_id),
-                         ('operating_unit_id', '=', operating_unit_obj.id)], limit=1).id
-                    if not receiving_picking_type_id:
-                        raise UserError(
-                            _('Please create "Incoming" picking type for Item Receiving - ' + operating_unit_obj.name))
-
-                    vals['location_id'] = src_location_id
-                    vals['item_loan_borrow_location_id'] = dest_location_id
-                    vals['picking_type_id'] = receiving_picking_type_id
-
-                    new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing.receive', vals['request_date'],
-                                                                       operating_unit_obj)
-                    borrow_name = ''
-                    if new_seq:
-                        borrow_name = new_seq
-                    vals['name'] = borrow_name
-
-        return super(InheritedItemBorrowing, self).create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     if 'is_transfer' in vals:
+    #         if vals['is_transfer']:
+    #             if vals['operating_unit_id'] and vals['request_date']:
+    #                 operating_unit_obj = self.env['operating.unit'].browse(vals['operating_unit_id'])
+    #                 src_location_id = self.env['stock.location'].search(
+    #                     [('company_id', '=', operating_unit_obj.company_id.id), ('usage', '=', 'transit'),
+    #                      ('can_operating_unit_transfer', '=', True)], limit=1).id
+    #
+    #                 dest_location_id = self.env['stock.location'].search(
+    #                     [('operating_unit_id', '=', operating_unit_obj.id), ('name', '=', 'Input')],
+    #                     limit=1).id
+    #
+    #                 receiving_picking_type_id = self.env['stock.picking.type'].suspend_security().search(
+    #                     [('default_location_src_id', '=', src_location_id),
+    #                      ('code', '=', 'operating_unit_transfer'),
+    #                      ('default_location_dest_id', '=', dest_location_id),
+    #                      ('operating_unit_id', '=', operating_unit_obj.id)], limit=1).id
+    #                 if not receiving_picking_type_id:
+    #                     raise UserError(
+    #                         _('Please create "Incoming" picking type for Item Receiving - ' + operating_unit_obj.name))
+    #
+    #                 vals['location_id'] = src_location_id
+    #                 vals['item_loan_borrow_location_id'] = dest_location_id
+    #                 vals['picking_type_id'] = receiving_picking_type_id
+    #
+    #                 new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing.receive', vals['request_date'],
+    #                                                                    operating_unit_obj)
+    #                 borrow_name = ''
+    #                 if new_seq:
+    #                     borrow_name = new_seq
+    #                 vals['name'] = borrow_name
+    #
+    #     return super(InheritedItemBorrowing, self).create(vals)
 
     @api.multi
     def button_confirm_receive(self):

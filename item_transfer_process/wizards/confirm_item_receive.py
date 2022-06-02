@@ -26,10 +26,9 @@ class ConfirmItemReceiveWizard(models.TransientModel):
 
     @api.multi
     def confirm(self):
-        #TODO
 
-        # if not self.item_borrowing_id.suspend_security().item_transfer_send_id.picking_id.state == 'done':
-        #     raise UserError(_('You cannot confirm this because item sender has not completed stock picking operation.'))
+        if not self.item_borrowing_id.suspend_security().item_transfer_send_id.picking_id.state == 'done':
+            raise UserError(_('You cannot confirm this because item sender has not completed stock picking operation.'))
 
         for loan in self.item_borrowing_id:
             if not loan.item_lines:
