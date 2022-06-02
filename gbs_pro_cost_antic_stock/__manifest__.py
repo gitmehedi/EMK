@@ -8,6 +8,7 @@
     'sequence': 14,
     'depends': [
          "product",
+         "stock",
     ],
     'data': [
     ],

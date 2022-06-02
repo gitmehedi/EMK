@@ -13,7 +13,8 @@
         'stock_custom_summary_report',
         'stock_purchase_custom_report',
         'stock_transfer_report',
-        'gbs_application_group'
+        'gbs_application_group',
+        'stock',
     ],
     'data': [
         'security/ir.model.access.csv',
