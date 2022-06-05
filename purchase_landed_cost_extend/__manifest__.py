@@ -12,7 +12,8 @@
         'purchase_landed_cost',
         'stock_picking_extend',
         'account',
-        'gbs_application_group'
+        'gbs_application_group',
+        'base'
     ],
     'data': [
         'security/security.xml',
