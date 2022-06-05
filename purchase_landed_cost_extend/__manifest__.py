@@ -22,7 +22,7 @@
         'views/stock_picking_view.xml',
         'views/landed_cost_view.xml',
         'views/inherited_account_config_settings.xml',
-        'views/inherited_purchase_cost_distribution_line.xml',
+        # 'views/inherited_purchase_cost_distribution_line.xml',
         'wizard/analytic_account_wizard.xml',
         'wizard/inherit_picking_import_wizard.xml',
         'wizard/picking_import_wizard_view.xml',

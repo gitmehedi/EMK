@@ -121,7 +121,7 @@ class PurchaseCostDistribution(models.Model):
         if not lc_pad_account:
             raise UserError(
                 _(
-                    "LC PAD Account not set. Please contact your system administrator for assistance."))
+                    "LC Goods In Transit Account not set. Please contact your system administrator for assistance."))
 
         move_lines = []
 
