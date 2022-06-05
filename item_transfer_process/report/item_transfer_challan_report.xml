@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <report
+                id="action_report_item_transfer_challan"
+                string="Transfer Challan"
+                model="item.loan.lending"
+                report_type="qweb-pdf"
+                file="item_transfer_process.report_item_transfer_challan"
+                name="item_transfer_process.report_item_transfer_challan"
+                paperformat="report_layout.custom_a4_pad_paperformat"
+        />
+
+
+        <template id="report_item_transfer_challan">
+            <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_custom_pad_with_system_sig_report_template">
+                    <div class="page clearfix" style="page-break-inside: auto">
+                        <style>
+                            .proforma-terms p, .proforma-terms li {
+                                padding:0!important; margin:0!important; line-height:normal;
+                            }
+                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: left; }
+                        </style>
+                        <div class="clearfix">
+                            <div class="report-title">
+                                <h4 class="mt-0"><b>Transfer Challan</b></h4>
+                            </div>
+                            <hr class="hr-sm mb-0"/>
+                            <div class="report-ref">
+                                <p><h5 class="mt-2"><b>Reference No :</b>
+                                    <span t-esc="data['name']"/></h5><br/>
+                                </p>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <p><h5><b><u>Sender Information</u></b></h5></p>
+                                    <p><h6><b>Operating Unit:</b>
+                                        <span t-esc="data['operating_unit_id']"/><br/></h6>
+                                    </p>
+                                    <p><h6><b>Request Date:</b>
+                                        <span t-esc="data['request_date']"/><br/></h6>
+                                    </p>
+                                </div>
+                                <div class="col-xs-6 text-left">
+                                    <p><h5><b><u>Receiver Information</u></b></h5></p>
+                                    <p><h6><b>Operating Unit:</b>
+                                        <span t-esc="data['receiving_operating_unit_id']"/><br/>
+                                    </h6></p>
+                                    <p><h6><b>Transfer Date:</b>
+                                        <span t-esc="data['transfer_date']"/><br/>
+                                    </h6></p>
+                                </div>
+                            </div>
+                            <div class="desc">
+                                <h5 class="text-left mt-5"><u><b>Description of Goods</b></u></h5>
+                            </div>
+                            <div class="space">
+                                <h6 class="text-left mt-5"><u><b></b></u></h6>
+                            </div>
+                            <div class="table">
+                                <table class="table table-report-sm table-bordered table-striped mb-0">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="w5"><h6><b>Sl</b></h6></th>
+                                        <th><h6><b>Products</b></h6></th>
+                                        <th ><h6><b>Internal Ref</b></h6></th>
+                                        <th><h6><b>Qty</b></h6></th>
+                                        <th><h6><b>UOM</b></h6></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="lists" t-as="l">
+                                        <tr style="page-break-inside: avoid">
+                                            <td><h6><span t-esc="l_index+1"/></h6></td>
+                                            <td><h6><span t-esc="l['product_id']"/></h6></td>
+                                            <td><h6><span t-esc="l['product_code']"/></h6></td>
+                                            <td ><h6><span t-esc="l['product_qty']"/></h6></td>
+                                            <td><h6><span t-esc="l['product_uom']"/></h6></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
