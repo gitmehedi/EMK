@@ -38,9 +38,9 @@ class ConfirmItemReceiveWizard(models.TransientModel):
             }
             requested_date = datetime.strptime(self.item_borrowing_id.request_date, "%Y-%m-%d %H:%M:%S").date()
 
-            new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing.receive', requested_date)
-            if new_seq:
+            #new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing.receive', requested_date)
+            #if new_seq:
                 # res['name'] = new_seq
-                res['receive_date'] = self.receive_date
+            res['receive_date'] = self.receive_date
             loan.write(res)
             loan.item_lines.write({'state': 'waiting_approval'})
