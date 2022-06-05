@@ -15,7 +15,10 @@ class StockInventoryReport(models.AbstractModel):
         data['address'] = report_utility_pool.getAddressByUnit(op_unit_obj)
 
         ##########################product name using named_get function###########################
-        product_categs = self.env['product.category'].sudo().search([])
+        if data['category_id']:
+            product_categs =  self.env['product.category'].sudo().browse(data['category_id'])
+        else:
+            product_categs = self.env['product.category'].sudo().search([])
         for categ in product_categs:
 
             for line in get_data['category'][categ.name]['product']:
