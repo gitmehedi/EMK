@@ -6,10 +6,12 @@
                 id="action_report_item_transfer_challan"
                 string="Transfer Challan"
                 model="item.loan.lending"
+                menu="False"
                 report_type="qweb-pdf"
                 file="item_transfer_process.report_item_transfer_challan"
                 name="item_transfer_process.report_item_transfer_challan"
                 paperformat="report_layout.custom_a4_pad_paperformat"
+
         />
 
 
@@ -18,10 +20,6 @@
                 <t t-call="report_layout.gbs_custom_pad_with_system_sig_report_template">
                     <div class="page clearfix" style="page-break-inside: auto">
                         <style>
-                            .proforma-terms p, .proforma-terms li {
-                                padding:0!important; margin:0!important; line-height:normal;
-                            }
-                            .auth-signature { padding: 5px 0; border-top: 1px dashed #333; float: left; }
                         </style>
                         <div class="clearfix">
                             <div class="report-title">
@@ -30,26 +28,26 @@
                             <hr class="hr-sm mb-0"/>
                             <div class="report-ref">
                                 <p><h5 class="mt-2"><b>Reference No :</b>
-                                    <span t-esc="data['name']"/></h5><br/>
+                                    <span t-esc="data['name']"/></h5>
+                                </p>
+                                <p><h5 class="mt-2"><b>Transfer Date :</b>
+                                    <span t-esc="data['transfer_date']"/></h5><br/>
                                 </p>
                             </div>
                             <div class="row">
-                                <div class="col-xs-6">
-                                    <p><h5><b><u>Sender Information</u></b></h5></p>
+                                <div class="col-xs-8">
+                                    <p><h5><b><u>Sender</u></b></h5></p>
                                     <p><h6><b>Operating Unit:</b>
                                         <span t-esc="data['operating_unit_id']"/><br/></h6>
                                     </p>
-                                    <p><h6><b>Request Date:</b>
-                                        <span t-esc="data['request_date']"/><br/></h6>
+                                    <p><h6><b>Prepare By:</b>
+                                        <span t-esc="data['employee_name']"/><br/></h6>
                                     </p>
                                 </div>
-                                <div class="col-xs-6 text-left">
-                                    <p><h5><b><u>Receiver Information</u></b></h5></p>
+                                <div class="col-xs-4 text-left">
+                                    <p><h5><b><u>Receiver</u></b></h5></p>
                                     <p><h6><b>Operating Unit:</b>
                                         <span t-esc="data['receiving_operating_unit_id']"/><br/>
-                                    </h6></p>
-                                    <p><h6><b>Transfer Date:</b>
-                                        <span t-esc="data['transfer_date']"/><br/>
                                     </h6></p>
                                 </div>
                             </div>
