@@ -31,7 +31,7 @@
 
                 <xpath expr="//field[@name='send_email']" position="before">
 
-                    <field name="operating_unit_id" options="{'no_quick_create': True, 'no_create_edit' : True}" required="1"/>
+                    <field name="operating_unit_id" attrs="{'readonly': [('state','=','close')]}" options="{'no_quick_create': True, 'no_create_edit' : True}" required="1"/>
 
                 </xpath>
 
