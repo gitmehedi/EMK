@@ -24,11 +24,9 @@ class ConfirmItemReceiveWizard(models.TransientModel):
 
     @api.constrains('receive_date')
     def _check_receive_date(self):
-        date = fields.Date.today()
         if self.receive_date:
-            _date = datetime.strptime(date, '%Y-%m-%d')
             dt = datetime.strptime(self.receive_date, '%Y-%m-%d %H:%M:%S')
-            if dt.date() > _date.date():
+            if dt > datetime.now():
                 raise ValidationError(
                     "Receive Date cannot be greater than current date")
 
