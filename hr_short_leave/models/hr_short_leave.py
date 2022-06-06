@@ -1,23 +1,22 @@
-from odoo import models, fields, api,SUPERUSER_ID
+from odoo import models, fields, api, SUPERUSER_ID
 import logging
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-
 HOURS_PER_DAY = 8
 
 
 class HrShortLeave(models.Model):
-
     _name = "hr.short.leave"
     _description = "Short Leaves "
     _order = "date_from desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _default_employee(self):
-        return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        return self.env.context.get('default_employee_id') or self.env['hr.employee'].search(
+            [('user_id', '=', self.env.uid)], limit=1)
 
     @api.multi
     def _default_approver(self):
@@ -35,16 +34,21 @@ class HrShortLeave(models.Model):
     name = fields.Char('Description')
 
     report_note = fields.Text('HR Comments')
-    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
-    date_from = fields.Datetime('Start Time', readonly=True, index=True, copy=False,required=True,track_visibility='onchange',
+    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True,
+                              default=lambda self: self.env.uid, readonly=True)
+    date_from = fields.Datetime('Start Time', readonly=True, index=True, copy=False, required=True,
+                                track_visibility='onchange',
                                 states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    date_to = fields.Datetime('End Time', readonly=True, copy=False,required=True,track_visibility='onchange',
+    date_to = fields.Datetime('End Time', readonly=True, copy=False, required=True, track_visibility='onchange',
                               states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,required=True,
-                                  states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee)
-    notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True, required=True,
+                                  states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+                                  default=_default_employee)
+    notes = fields.Text('Reasons', readonly=True,
+                        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     number_of_days = fields.Float('Number of Days', compute='_compute_total_hours', readonly=True, store=True)
-    department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', readonly=True, store=True)
+    department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department',
+                                    readonly=True, store=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
 
     pending_approver = fields.Many2one('hr.employee', string="Pending Approver", readonly=True,
@@ -94,8 +98,8 @@ class HrShortLeave(models.Model):
     def _check_number_of_hours(self):
         if self.number_of_days:
             if self.number_of_days > self.holiday_status_id.number_of_hours:
-                raise ValidationError(_('[Warning] Short leave cannot exceed %s hours' % self.holiday_status_id.number_of_hours))
-
+                raise ValidationError(
+                    _('[Warning] Short leave cannot exceed %s hours' % self.holiday_status_id.number_of_hours))
 
     @api.multi
     def _compute_can_reset(self):
@@ -176,8 +180,6 @@ class HrShortLeave(models.Model):
             else:
                 raise ValidationError('Start Date and End Date should be same')
 
-
-
     @api.multi
     def add_follower(self, employee_id):
         employee = self.env['hr.employee'].browse(employee_id)
@@ -216,23 +218,11 @@ class HrShortLeave(models.Model):
                     {'short_leave_ids': short_leave.id, 'approver': self.env.uid, 'sequence': sequence,
                      'date': fields.Datetime.now()})
 
-
     @api.multi
     def action_validate(self):
-        # attendance_obj = self.env['hr.attendance']
         for holiday in self:
             if holiday.state not in ['confirm']:
                 raise UserError(_('Leave request must be confirmed in order to approve it.'))
-            # vals1 = {}
-            # vals1['employee_id'] = holiday.employee_id.id
-            # vals1['operating_unit_id'] = holiday.employee_id.operating_unit_id.id
-            # vals1['manual_attendance_request'] = False
-            # vals1['is_system_generated'] = False
-            # vals1['has_error'] = False
-            # vals1['is_short_leave'] = True
-            # vals1['check_in'] = holiday.date_from
-            # vals1['check_out'] = holiday.date_to
-            # attendance_obj.create(vals1)
             holiday.write({'state': 'validate'})
             return True
 
@@ -263,7 +253,8 @@ class HrShortLeave(models.Model):
             employee = self.env['hr.employee'].browse(employee_id)
             if employee and employee.holidays_approvers and employee.holidays_approvers[0]:
                 values['pending_approver'] = employee.holidays_approvers[0].approver.id
-        holiday = super(HrShortLeave, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
+        holiday = super(HrShortLeave, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(
+            values)
         holiday.add_follower(employee_id)
         holiday._notify_approvers()
         return holiday
@@ -272,7 +263,8 @@ class HrShortLeave(models.Model):
     def write(self, values):
         employee_id = values.get('employee_id', False)
         if employee_id:
-            self.pending_approver = self.env['hr.employee'].search([('id', '=', employee_id)]).holidays_approvers[0].approver.id
+            self.pending_approver = self.env['hr.employee'].search([('id', '=', employee_id)]).holidays_approvers[
+                0].approver.id
         result = super(HrShortLeave, self).write(values)
         self.add_follower(employee_id)
         return result
@@ -298,21 +290,6 @@ class HrShortLeave(models.Model):
                     [approver.sudo(SUPERUSER_ID).user_id.partner_id.id])
         return True
 
-    # @api.multi
-    # def _check_state_access_right(self, vals):
-    #     if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (
-    #                 self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
-    #             or self.env['res.users'].has_group('gbs_application_group.group_dept_manager')):
-    #         return False
-    #     return True
-
-    ###In Create and Write Method######
-    # if not self._check_state_access_right(values):
-    #     raise AccessError(
-    #         _('You cannot set a leave request as \'%s\'. Contact a human resource manager.') % values.get('state'))
-
-#
-# class HrEmployee(models.Model):
-#     _inherit = "hr.attendance"
-#
-#     is_short_leave = fields.Boolean(string='Is Short Leave', default=False)
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ('draft', 'confirm'))]

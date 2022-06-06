@@ -37,13 +37,8 @@
 
         <menuitem
 				name="District"
-				id="main_menu_district"
-        />
-        <menuitem
-				name="District"
-                parent="main_menu_district"
+                parent="hr.menu_human_resources_configuration"
 				id="menu_district"
-                action="action_bd_district"
-        />
+                action="action_bd_district"/>
     </data>
 </odoo>
