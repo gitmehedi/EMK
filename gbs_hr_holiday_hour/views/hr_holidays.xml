@@ -130,11 +130,11 @@
             <field name="search_view_id" ref="view_hr_short_leave_filter"/>
         </record>
 
-        <menuitem
+        <menuitem name="Leave Request (Half)"
                 id="menu_short_open_ask_holidays_new"
                 parent="hr_holidays.menu_hr_holidays_my_leaves"
                 action="short_open_ask_holidays"
-                sequence="22"/>
+                sequence="15"/>
 
 
         <record id="edit_holiday_status_form_view" model="ir.ui.view">
@@ -174,6 +174,7 @@
 
         <menuitem action="hr_holidays.open_view_holiday_status" id="menu_hr_holidays_type" name="Leave Types"
                   parent="hr_holidays.menu_hr_holidays_configuration" sequence="5"/>
+
 
     </data>
 </odoo>
