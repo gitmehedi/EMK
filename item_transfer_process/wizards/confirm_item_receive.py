@@ -1,7 +1,7 @@
 import time
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from datetime import datetime
+from datetime import datetime, date
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, frozendict
 
@@ -21,6 +21,16 @@ class ConfirmItemReceiveWizard(models.TransientModel):
         string='Borrowing',
         required=True
     )
+
+    @api.constrains('receive_date')
+    def _check_receive_date(self):
+        date = fields.Date.today()
+        if self.receive_date:
+            _date = datetime.strptime(date, '%Y-%m-%d')
+            dt = datetime.strptime(self.receive_date, '%Y-%m-%d %H:%M:%S')
+            if dt.date() > _date.date():
+                raise ValidationError(
+                    "Receive Date cannot be greater than current date")
 
     receive_date = fields.Datetime('Receive Date', track_visibility='onchange', required=True)
 

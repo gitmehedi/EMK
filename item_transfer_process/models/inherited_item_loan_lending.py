@@ -102,6 +102,7 @@ class InheritedItemLoanLending(models.Model):
             'issuer_id': self.issuer_id.id,
             'is_transfer': self.is_transfer,
             'item_transfer_send_id': self.id,
+            'item_transfer_send_ref': self.name,
             'request_date': self.request_date,
             'partner_id': self.company_id.partner_id.id,
             'description': self.description,

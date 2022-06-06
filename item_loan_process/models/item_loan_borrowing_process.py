@@ -218,17 +218,28 @@ class ItemBorrowingLines(models.Model):
     _description = 'Item Borrowing Line'
 
     item_borrowing_id = fields.Many2one('item.borrowing', string='Item', required=True, ondelete='cascade')
+
+    @api.depends('product_id')
+    def compute_categ(self):
+        for rec in self:
+            if rec.product_id:
+                rec.product_category_id = rec.product_id.categ_id.id
+            else:
+                rec.product_category_id = False
+
+    product_category_id = fields.Many2one('product.category', string='Category', compute='compute_categ', store=False)
+
     product_id = fields.Many2one('product.product', string='Product', required=True,ondelete='cascade')
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
     product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string= 'Unit of Measure',
-                                  required=True,store=True)
+                                  store=True)
     # price_unit = fields.Float(related='product_id.standard_price',string='Price', digits=dp.get_precision('Product Price'),
     #                           help="Price computed based on the last purchase order approved.",store=True)
     price_unit = fields.Float(compute='_compute_price_unit', string='Price',
                               digits=dp.get_precision('Product Price'),
                               help="Price computed based on the last purchase order approved.", store=True)
-    name = fields.Char(related='product_id.name',string='Specification',store=True)
+    name = fields.Char(related='product_id.name',string='Specification',store=True, readonly=True)
     sequence = fields.Integer('Sequence')
     given_qty = fields.Float('Given Quantity', digits=dp.get_precision('Product UoS'))
     received_qty = fields.Float('Receive Quantity', digits=dp.get_precision('Product UoS'))
