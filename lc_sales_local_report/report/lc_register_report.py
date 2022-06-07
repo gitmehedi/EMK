@@ -76,6 +76,171 @@ class LcRegisterXLSX(ReportXlsx):
             lc_so_ids += data['name'] + ", "
         return lc_so_ids
 
+    def get_sheet_header(self, sheet, docs, workbook, filter_by_text, type_text):
+        title_format_center = workbook.add_format({'align': 'center', 'bold': False, 'size': 22, 'text_wrap': True})
+        title_format_center.set_font_name('Times New Roman')
+        sub_title_format_center = workbook.add_format({'align': 'center', 'bold': False, 'size': 10, 'text_wrap': True})
+        sub_title_format_center.set_font_name('Times New Roman')
+        subject_format_center = workbook.add_format({'align': 'center', 'bold': False, 'size': 15, 'text_wrap': True})
+        subject_format_center.set_font_name('Times New Roman')
+        header_format_left = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'left', 'bold': True, 'size': 8, 'border': 1,
+             'text_wrap': True})
+        header_format_left.set_font_name('Times New Roman')
+
+        company_id = docs[0].company_id
+        street = docs[0].company_id.street
+        street2 = docs[0].company_id.street2
+        city_zip_country = docs[0].company_id.city + "-" + docs[0].company_id.zip + ", " + docs[
+            0].company_id.country_id.name
+
+        sheet.merge_range('A1:AP1', company_id.name, title_format_center)
+        sheet.merge_range('A2:AP2', street, sub_title_format_center)
+        sheet.merge_range('A3:AP3', street2, sub_title_format_center)
+        sheet.merge_range('A4:AP4', city_zip_country, sub_title_format_center)
+        sheet.merge_range('A5:AP5', "LC Register", subject_format_center)
+        sheet.merge_range('A6:AP6', "Filter By: " + filter_by_text + "    Type: " + type_text, header_format_left)
+
+    def get_sheet_table_head(self, sheet, workbook):
+        header_format_left = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'left', 'bold': True, 'size': 8, 'border': 1,
+             'text_wrap': True})
+        header_format_left.set_font_name('Times New Roman')
+
+        sheet.write(6, 0, "SL", header_format_left)
+        sheet.write(6, 1, "Party Name", header_format_left)
+        sheet.write(6, 2, "Executive Name", header_format_left)
+        sheet.write(6, 3, "Product Name", header_format_left)
+        sheet.write(6, 4, "PI No", header_format_left)
+        sheet.write(6, 5, "SO NO", header_format_left)
+        sheet.write(6, 6, "LC No", header_format_left)
+        sheet.write(6, 7, "LC Date", header_format_left)
+        sheet.write(6, 8, "LC Quantity", header_format_left)
+        sheet.write(6, 9, "LC Amount", header_format_left)
+        sheet.write(6, 10, "Currency", header_format_left)
+        sheet.write(6, 11, "LC Delivery Quantity", header_format_left)
+        sheet.write(6, 12, "Shipment No", header_format_left)
+        sheet.write(6, 13, "Shipment Qty", header_format_left)
+        sheet.write(6, 14, "Shipment Amt", header_format_left)
+        sheet.write(6, 15, "Shipment Amt in BDT", header_format_left)
+        sheet.write(6, 16, "Tenure", header_format_left)
+        sheet.write(6, 17, "Shipment Date", header_format_left)
+        sheet.write(6, 18, "Expiry date", header_format_left)
+        sheet.write(6, 19, "Last Delivery date/Date of Transfer", header_format_left)
+        sheet.write(6, 20, "Delivery Details", header_format_left)
+        sheet.write(6, 21, "Doc. Preparation Date", header_format_left)
+        sheet.write(6, 22, "Aging (Days) Document Prepared", header_format_left)
+        sheet.write(6, 23, "Doc. Dispatch to Party Date", header_format_left)
+        sheet.write(6, 24, "First Acceptance/ Doc. Submission Date", header_format_left)
+        sheet.write(6, 25, "Aging (Days) First Acceptance", header_format_left)
+        sheet.write(6, 26, "To Buyer Bank", header_format_left)
+        sheet.write(6, 27, "2nd Acceptance Date", header_format_left)
+        sheet.write(6, 28, "Aging (Days) 2nd Acceptance", header_format_left)
+        sheet.write(6, 29, "Maturity Date", header_format_left)
+        sheet.write(6, 30, "Shipment Done Date", header_format_left)
+        sheet.write(6, 31, "Discrepancy Amount", header_format_left)
+        sheet.write(6, 32, "AIT Amount", header_format_left)
+        sheet.write(6, 33, "Payment Rec. Date", header_format_left)
+        sheet.write(6, 34, "Payment Rece. Amount", header_format_left)
+        sheet.write(6, 35, "Payment Charge", header_format_left)
+        sheet.write(6, 36, "Discrepancy Details", header_format_left)
+        sheet.write(6, 37, "Aging /(Days) Final Payment", header_format_left)
+        sheet.write(6, 38, "Party Bank & Branch", header_format_left)
+        sheet.write(6, 39, "Samuda Bank Name", header_format_left)
+        sheet.write(6, 40, "Packing Type", header_format_left)
+        sheet.write(6, 41, "Bill ID NO", header_format_left)
+
+
+    def set_sheet_table_data(self, sheet, workbook, datas):
+        name_format_left_int = workbook.add_format(
+            {'align': 'left', 'border': 1, 'bold': False, 'size': 8, 'text_wrap': True})
+        name_border_format_colored = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8,
+             'text_wrap': True})
+        name_border_format_colored.set_font_name('Times New Roman')
+
+        sl = 0
+        row = 6
+        for data in datas:
+            sl = sl + 1
+            row = row + 1
+            delivery_details_date_of_trans = self.get_delivery_detail(data['lc_id'])
+            region_type = data['region_type']
+
+            sheet.write(row, 0, sl, name_format_left_int)
+            sheet.write(row, 1, data['party_name'], name_border_format_colored)
+            sheet.write(row, 2, data['executive_name'], name_border_format_colored)
+            sheet.write(row, 3, data['product_name'], name_border_format_colored)
+            sheet.write(row, 4, self.get_lc_pi_no(data['lc_id']), name_border_format_colored)
+            sheet.write(row, 5, self.get_lc_so_no(data['lc_id']), name_border_format_colored)
+            sheet.write(row, 6, data['lc_number'], name_border_format_colored)
+            sheet.write(row, 7, data['lc_date'], name_border_format_colored)
+            sheet.write(row, 8, self.get_lc_qty_n_delivery_qty(data['lc_id']), name_border_format_colored)
+            sheet.write(row, 9, data['lc_amount'], name_border_format_colored)
+            sheet.write(row, 10, data['currency'], name_border_format_colored)
+            sheet.write(row, 11, '', name_border_format_colored)
+            sheet.write(row, 12, data['shipment_no'], name_border_format_colored)
+            sheet.write(row, 13, data['shipment_qty'], name_border_format_colored)
+            sheet.write(row, 14, data['shipment_amount'], name_border_format_colored)
+            sheet.write(row, 15, self.get_amount_in_bdt(data['shipment_amount'], data['currency']),
+                        name_border_format_colored)
+            sheet.write(row, 16, data['tenure'], name_border_format_colored)
+            sheet.write(row, 17, data['shipment_date'], name_border_format_colored)
+            sheet.write(row, 18, data['expiry_date'], name_border_format_colored)
+            sheet.write(row, 19, delivery_details_date_of_trans[1], name_border_format_colored)
+            sheet.write(row, 20, delivery_details_date_of_trans[0], name_border_format_colored)
+            sheet.write(row, 21, data['doc_preparation_date'], name_border_format_colored)
+            sheet.write(row, 22,
+                        date_subtract_date_to_days(data['doc_preparation_date'], delivery_details_date_of_trans[1]),
+                        name_border_format_colored)
+
+            if region_type == 'local':
+                sheet.write(row, 23, data['doc_dispatch_to_party_date'], name_border_format_colored)
+            elif region_type == 'foreign':
+                sheet.write(row, 23, data['doc_dispatch_to_party_date_foreign'], name_border_format_colored)
+
+            sheet.write(row, 24, data['first_acceptance_doc_submission_date'], name_border_format_colored)
+
+            if region_type == 'local':
+                sheet.write(row, 25, data['aging_first_acceptance_days'], name_border_format_colored)
+            elif region_type == 'foreign':
+                sheet.write(row, 25, data['aging_first_acceptance_days_foreign'], name_border_format_colored)
+            else:
+                a = '10'
+            if region_type == 'local':
+                sheet.write(row, 26, data['to_buyer_bank_date'], name_border_format_colored)
+            elif region_type == 'foreign':
+                sheet.write(row, 26, data['to_buyer_bank_date_foreign'], name_border_format_colored)
+            if region_type == 'local':
+                sheet.write(row, 27, data['second_acceptance_date'], name_border_format_colored)
+            elif region_type == 'foreign':
+                sheet.write(row, 27, 'N/A', name_border_format_colored)
+            if region_type == 'local':
+                sheet.write(row, 28, data['aging_2nd_acceptance_days'], name_border_format_colored)
+            elif region_type == 'foreign':
+                sheet.write(row, 28, 'N/A', name_border_format_colored)
+
+            sheet.write(row, 29, data['maturity_date'], name_border_format_colored)
+            sheet.write(row, 30, data['shipment_done_date'], name_border_format_colored)
+            sheet.write(row, 31, data['discrepancy_amount'], name_border_format_colored)
+
+            if region_type == 'local':
+                sheet.write(row, 32, data['ait_amount'], name_border_format_colored)
+            elif region_type == 'foreign':
+                sheet.write(row, 32, 'N/A', name_border_format_colored)
+
+            sheet.write(row, 33, data['payment_rec_date'], name_border_format_colored)
+            sheet.write(row, 34, data['payment_rec_amount'], name_border_format_colored)
+            sheet.write(row, 35, data['payment_charge'], name_border_format_colored)
+            sheet.write(row, 36, data['comment'], name_border_format_colored)
+            sheet.write(row, 37, date_subtract_date_to_days(data['shipment_done_date'], data['maturity_date']),
+                        name_border_format_colored)
+            sheet.write(row, 38, data['bank_code'], name_border_format_colored)
+            sheet.write(row, 39, data['samuda_bank_name'], name_border_format_colored)
+            sheet.write(row, 40, data['packing_type'], name_border_format_colored)
+            sheet.write(row, 41, data['bill_id_no'], name_border_format_colored)
+
+
     def generate_xlsx_report(self, workbook, data, obj):
 
         filter_by = obj.filter_by
@@ -86,10 +251,7 @@ class LcRegisterXLSX(ReportXlsx):
         if type == 'all':
             domain = ['|', ('lc_id.region_type', '=', 'local'), ('lc_id.region_type', '=', 'foreign')]
         docs = self.env['purchase.shipment'].search(domain)
-        company_id = docs[0].company_id
-        street = docs[0].company_id.street
-        street2 = docs[0].company_id.street2
-        city_zip_country = docs[0].company_id.city + "-" + docs[0].company_id.zip + ", " + docs[0].company_id.country_id.name
+
         report_name = "LC Register Report"
         sheet = workbook.add_worksheet(report_name)
         # Then override any that you want.
@@ -108,31 +270,17 @@ class LcRegisterXLSX(ReportXlsx):
         sheet.set_column(20, 20, 20)
 
         # FORMAT
-        title_format_center = workbook.add_format({'align': 'center', 'bold': False, 'size': 22, 'text_wrap': True})
-        title_format_center.set_font_name('Times New Roman')
-
-        sub_title_format_center = workbook.add_format({'align': 'center', 'bold': False, 'size': 10, 'text_wrap': True})
-        sub_title_format_center.set_font_name('Times New Roman')
-
-        subject_format_center = workbook.add_format({'align': 'center', 'bold': False, 'size': 15, 'text_wrap': True})
-        subject_format_center.set_font_name('Times New Roman')
 
         footer_border_format_left = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'bold': True, 'size': 10})
         footer_border_format_left.set_font_name('Times New Roman')
-        header_format_left = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'bold': True, 'size': 8, 'border': 1,
-             'text_wrap': True})
-        header_format_left.set_font_name('Times New Roman')
+
         sub_header_format_left = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#81d41a', 'bold': False, 'size': 10, 'border': 1,
              'text_wrap': True})
         sub_header_format_left.set_font_name('Times New Roman')
-        name_format_left_int = workbook.add_format(
-            {'align': 'left', 'border': 1, 'bold': False, 'size': 8, 'text_wrap': True})
-        name_border_format_colored = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8, 'text_wrap': True})
-        name_border_format_colored.set_font_name('Times New Roman')
+        
+
 
         where = ''
         filter_by_text = ''
@@ -200,134 +348,14 @@ class LcRegisterXLSX(ReportXlsx):
             datas_excel = []
 
         # SHEET HEADER
-        sheet.merge_range('A1:AP1', company_id.name, title_format_center)
-        sheet.merge_range('A2:AP2', street, sub_title_format_center)
-        sheet.merge_range('A3:AP3', street2, sub_title_format_center)
-        sheet.merge_range('A4:AP4', city_zip_country, sub_title_format_center)
-        sheet.merge_range('A5:AP5', "LC Register", subject_format_center)
-        sheet.merge_range('A6:AP6', "Filter By: " + filter_by_text + "    Type: " + type_text, header_format_left)
+        self.get_sheet_header(docs, workbook, filter_by_text, type_text)
 
-        sheet.write(6, 0, "SL", header_format_left)
-        sheet.write(6, 1, "Party Name", header_format_left)
-        sheet.write(6, 2, "Executive Name", header_format_left)
-        sheet.write(6, 3, "Product Name", header_format_left)
-        sheet.write(6, 4, "PI No", header_format_left)
-        sheet.write(6, 5, "SO NO", header_format_left)
-        sheet.write(6, 6, "LC No", header_format_left)
-        sheet.write(6, 7, "LC Date", header_format_left)
-        sheet.write(6, 8, "LC Quantity", header_format_left)
-        sheet.write(6, 9, "LC Amount", header_format_left)
-        sheet.write(6, 10, "Currency", header_format_left)
-        sheet.write(6, 11, "LC Delivery Quantity", header_format_left)
-        sheet.write(6, 12, "Shipment No", header_format_left)
-        sheet.write(6, 13, "Shipment Qty", header_format_left)
-        sheet.write(6, 14, "Shipment Amt", header_format_left)
-        sheet.write(6, 15, "Shipment Amt in BDT", header_format_left)
-        sheet.write(6, 16, "Tenure", header_format_left)
-        sheet.write(6, 17, "Shipment Date", header_format_left)
-        sheet.write(6, 18, "Expiry date", header_format_left)
-        sheet.write(6, 19, "Last Delivery date/Date of Transfer", header_format_left)
-        sheet.write(6, 20, "Delivery Details", header_format_left)
-        sheet.write(6, 21, "Doc. Preparation Date", header_format_left)
-        sheet.write(6, 22, "Aging (Days) Document Prepared", header_format_left)
-        sheet.write(6, 23, "Doc. Dispatch to Party Date", header_format_left)
-        sheet.write(6, 24, "First Acceptance/ Doc. Submission Date", header_format_left)
-        sheet.write(6, 25, "Aging (Days) First Acceptance", header_format_left)
-        sheet.write(6, 26, "To Buyer Bank", header_format_left)
-        sheet.write(6, 27, "2nd Acceptance Date", header_format_left)
-        sheet.write(6, 28, "Aging (Days) 2nd Acceptance", header_format_left)
-        sheet.write(6, 29, "Maturity Date", header_format_left)
-        sheet.write(6, 30, "Shipment Done Date", header_format_left)
-        sheet.write(6, 31, "Discrepancy Amount", header_format_left)
-        sheet.write(6, 32, "AIT Amount", header_format_left)
-        sheet.write(6, 33, "Payment Rec. Date", header_format_left)
-        sheet.write(6, 34, "Payment Rece. Amount", header_format_left)
-        sheet.write(6, 35, "Payment Charge", header_format_left)
-        sheet.write(6, 36, "Discrepancy Details", header_format_left)
-        sheet.write(6, 37, "Aging /(Days) Final Payment", header_format_left)
-        sheet.write(6, 38, "Party Bank & Branch", header_format_left)
-        sheet.write(6, 39, "Samuda Bank Name", header_format_left)
-        sheet.write(6, 40, "Packing Type", header_format_left)
-        sheet.write(6, 41, "Bill ID NO", header_format_left)
+        self.get_sheet_table_head(sheet, workbook)
+
+        self.set_sheet_table_data(sheet, workbook, datas_excel)
 
         data['name'] = report_name
 
-        sl = 0
-        row = 6
-        for data in datas_excel:
-            sl = sl + 1
-            row = row + 1
-            delivery_details_date_of_trans = self.get_delivery_detail(data['lc_id'])
-            region_type = data['region_type']
-
-            sheet.write(row, 0, sl, name_format_left_int)
-            sheet.write(row, 1, data['party_name'], name_border_format_colored)
-            sheet.write(row, 2, data['executive_name'], name_border_format_colored)
-            sheet.write(row, 3, data['product_name'], name_border_format_colored)
-            sheet.write(row, 4, self.get_lc_pi_no(data['lc_id']), name_border_format_colored)
-            sheet.write(row, 5, self.get_lc_so_no(data['lc_id']), name_border_format_colored)
-            sheet.write(row, 6, data['lc_number'], name_border_format_colored)
-            sheet.write(row, 7, data['lc_date'], name_border_format_colored)
-            sheet.write(row, 8, self.get_lc_qty_n_delivery_qty(data['lc_id']), name_border_format_colored)
-            sheet.write(row, 9, data['lc_amount'], name_border_format_colored)
-            sheet.write(row, 10, data['currency'], name_border_format_colored)
-            sheet.write(row, 11, '', name_border_format_colored)
-            sheet.write(row, 12, data['shipment_no'], name_border_format_colored)
-            sheet.write(row, 13, data['shipment_qty'], name_border_format_colored)
-            sheet.write(row, 14, data['shipment_amount'], name_border_format_colored)
-            sheet.write(row, 15, self.get_amount_in_bdt(data['shipment_amount'], data['currency']), name_border_format_colored)
-            sheet.write(row, 16, data['tenure'], name_border_format_colored)
-            sheet.write(row, 17, data['shipment_date'], name_border_format_colored)
-            sheet.write(row, 18, data['expiry_date'], name_border_format_colored)
-            sheet.write(row, 19, delivery_details_date_of_trans[1], name_border_format_colored)
-            sheet.write(row, 20, delivery_details_date_of_trans[0], name_border_format_colored)
-            sheet.write(row, 21, data['doc_preparation_date'], name_border_format_colored)
-            sheet.write(row, 22, date_subtract_date_to_days(data['doc_preparation_date'], delivery_details_date_of_trans[1]), name_border_format_colored)
-
-            if region_type == 'local':
-                sheet.write(row, 23, data['doc_dispatch_to_party_date'], name_border_format_colored)
-            elif region_type == 'foreign':
-                sheet.write(row, 23, data['doc_dispatch_to_party_date_foreign'], name_border_format_colored)
-
-            sheet.write(row, 24, data['first_acceptance_doc_submission_date'], name_border_format_colored)
-
-            if region_type == 'local':
-                sheet.write(row, 25, data['aging_first_acceptance_days'], name_border_format_colored)
-            elif region_type == 'foreign':
-                sheet.write(row, 25, data['aging_first_acceptance_days_foreign'], name_border_format_colored)
-            else:
-                a = '10'
-            if region_type == 'local':
-                sheet.write(row, 26, data['to_buyer_bank_date'], name_border_format_colored)
-            elif region_type == 'foreign':
-                sheet.write(row, 26, data['to_buyer_bank_date_foreign'], name_border_format_colored)
-            if region_type == 'local':
-                sheet.write(row, 27, data['second_acceptance_date'], name_border_format_colored)
-            elif region_type == 'foreign':
-                sheet.write(row, 27, 'N/A', name_border_format_colored)
-            if region_type == 'local':
-                sheet.write(row, 28, data['aging_2nd_acceptance_days'], name_border_format_colored)
-            elif region_type == 'foreign':
-                sheet.write(row, 28, 'N/A', name_border_format_colored)
-
-            sheet.write(row, 29, data['maturity_date'], name_border_format_colored)
-            sheet.write(row, 30, data['shipment_done_date'], name_border_format_colored)
-            sheet.write(row, 31, data['discrepancy_amount'], name_border_format_colored)
-
-            if region_type == 'local':
-                sheet.write(row, 32, data['ait_amount'], name_border_format_colored)
-            elif region_type == 'foreign':
-                sheet.write(row, 32, 'N/A', name_border_format_colored)
-
-            sheet.write(row, 33, data['payment_rec_date'], name_border_format_colored)
-            sheet.write(row, 34, data['payment_rec_amount'], name_border_format_colored)
-            sheet.write(row, 35, data['payment_charge'], name_border_format_colored)
-            sheet.write(row, 36, data['comment'], name_border_format_colored)
-            sheet.write(row, 37, date_subtract_date_to_days(data['shipment_done_date'], data['maturity_date']), name_border_format_colored)
-            sheet.write(row, 38, data['bank_code'], name_border_format_colored)
-            sheet.write(row, 39, data['samuda_bank_name'], name_border_format_colored)
-            sheet.write(row, 40, data['packing_type'], name_border_format_colored)
-            sheet.write(row, 41, data['bill_id_no'], name_border_format_colored)
 
 
 LcRegisterXLSX('report.lc_sales_local_report.lc_register_report',
