@@ -1,7 +1,7 @@
 import time
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from datetime import datetime
+from datetime import datetime, date
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, frozendict
 
@@ -22,6 +22,14 @@ class ConfirmItemReceiveWizard(models.TransientModel):
         required=True
     )
 
+    @api.constrains('receive_date')
+    def _check_receive_date(self):
+        if self.receive_date:
+            dt = datetime.strptime(self.receive_date, '%Y-%m-%d %H:%M:%S')
+            if dt > datetime.now():
+                raise ValidationError(
+                    "Receive Date cannot be greater than current date")
+
     receive_date = fields.Datetime('Receive Date', track_visibility='onchange', required=True)
 
     @api.multi
@@ -38,9 +46,9 @@ class ConfirmItemReceiveWizard(models.TransientModel):
             }
             requested_date = datetime.strptime(self.item_borrowing_id.request_date, "%Y-%m-%d %H:%M:%S").date()
 
-            new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing.receive', requested_date)
-            if new_seq:
+            #new_seq = self.env['ir.sequence'].next_by_code_new('item.borrowing.receive', requested_date)
+            #if new_seq:
                 # res['name'] = new_seq
-                res['receive_date'] = self.receive_date
+            res['receive_date'] = self.receive_date
             loan.write(res)
             loan.item_lines.write({'state': 'waiting_approval'})

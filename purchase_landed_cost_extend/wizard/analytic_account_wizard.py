@@ -33,24 +33,30 @@ class AnalyticAccountWizard(models.TransientModel):
         #  accounts_result = self._get_account_move_entry(used_context)
         accounts_result = self.env['accounting.report.utility']._get_account_move_entry(False, used_context)
 
+        is_analytic_acc_data_exists = self.env['purchase.cost.distribution.expense'].search(
+            [('analytic_account_id', '=', self.analytic_account.id),
+             ('distribution', '=', self.env.context['active_id'])])
+        if is_analytic_acc_data_exists:
+            raise UserError('Analytic Account data already exists in the line. Clear the lines then import again.')
+        is_expense_line_exists = self.env['purchase.cost.distribution.expense'].search(
+            [('distribution', '=', self.env.context['active_id'])])
+        if is_expense_line_exists:
+            for line in is_expense_line_exists:
+                if line.analytic_account_id.id != self.analytic_account.id:
+                    raise UserError('Analytic Account data already exists in the line. Clear the lines then import again.')
+
         for account in accounts_result:
             if account['closing_balance'] != 0:
                 lc_pad_account = self.env['ir.values'].get_default('account.config.settings', 'lc_pad_account')
                 if lc_pad_account != account['account_id']:
-                    # check if already exists in the line
-                    existence_check = self.env['purchase.cost.distribution.expense'].search(
-                        [('analytic_account_id', '=', self.analytic_account.id)])
-                    if existence_check:
-                        self.env['purchase.cost.distribution.expense'].create({
-                            'distribution': self.env.context['active_id'],
-                            'ref': self.ref,
-                            'expense_amount': account['closing_balance'],
-                            'type': self.expense_type.id,
-                            'account_id': account['account_id'],
-                            'analytic_account_id': self.analytic_account.id
-                        })
-                    else:
-                        raise UserError('You cannot import different analytic account data. Existing Analytic Account data already exists in the line.')
+                    self.env['purchase.cost.distribution.expense'].create({
+                        'distribution': self.env.context['active_id'],
+                        'ref': self.ref,
+                        'expense_amount': account['closing_balance'],
+                        'type': self.expense_type.id,
+                        'account_id': account['account_id'],
+                        'analytic_account_id': self.analytic_account.id
+                    })
 
         if 'active_id' in self.env.context:
             distribution = self.env['purchase.cost.distribution'].browse(self.env.context['active_id'])

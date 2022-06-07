@@ -15,10 +15,10 @@ class InheritedAccountInvoice(models.Model):
             invoice_line.update({'quantity': line.product_qty})
 
         if self.type == 'in_invoice' and self.purchase_id:
-            # vendor reference
-            if self.purchase_id.cnf_quotation and self.purchase_id.shipment_id and self.purchase_id.shipment_id.cnf_id:
-                vendor_ref = self.purchase_id.shipment_id.cnf_id.name
-                self.update({'reference': vendor_ref})
+            # # vendor reference
+            # if self.purchase_id.cnf_quotation and self.purchase_id.shipment_id and self.purchase_id.shipment_id.cnf_id:
+            #     vendor_ref = self.purchase_id.shipment_id.cnf_id.name
+            #     self.update({'reference': vendor_ref})
 
             if self.purchase_id.region_type == 'foreign' or self.purchase_id.is_service_order:
                 if self.purchase_id.lc_ids:
@@ -34,7 +34,7 @@ class InheritedAccountInvoice(models.Model):
                 account_conf_pool = self.env.user.company_id
                 if not account_conf_pool.lc_pad_account:
                     raise UserError(
-                        _("LC PAD Account not set. Please contact your system administrator for "
+                        _("LC Goods In Transit Account not set. Please contact your system administrator for "
                           "assistance."))
                 invoice_line.update({'account_id': account_conf_pool.lc_pad_account.id})  # update the dictionary
 

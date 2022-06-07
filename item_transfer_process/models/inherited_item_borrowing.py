@@ -10,9 +10,10 @@ class InheritedItemBorrowing(models.Model):
     _inherit = 'item.borrowing'
 
     is_transfer = fields.Boolean(string='Is Transfer')
-    item_transfer_send_id = fields.Many2one('item.loan.lending', string='Transfer')
-    receive_date = fields.Datetime('Receive Date', track_visibility='onchange')
+    item_transfer_send_id = fields.Many2one('item.loan.lending', string='Transfer Reference')
 
+    item_transfer_send_ref = fields.Char(string='Transfer')
+    receive_date = fields.Datetime('Receive Date', track_visibility='onchange')
 
     # create method was written so that CTG inventory can manually recieve products
 

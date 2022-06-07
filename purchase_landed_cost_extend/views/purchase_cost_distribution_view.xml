@@ -67,7 +67,8 @@
 
 
                 <xpath expr="//field[@name='currency_id']" position="after">
-                    <field name="debit_account" required="1"/>
+                    <field name="debit_account" required="1"
+                        attrs="{'readonly':[('account_move_id','!=',False)]}"/>
                     <field name="account_move_id" invisible="1"/>
                 </xpath>
 
@@ -110,6 +111,27 @@
                 <xpath expr="//button[@name='%(purchase_landed_cost.action_import_invoice_line_wizard)d']"
                        position="attributes">
                     <attribute name="invisible">True</attribute>
+                </xpath>
+
+
+                <xpath expr="//field[@name='expense_lines']" position="replace">
+                    <field name="expense_lines" options="{'no_open': True}">
+                        <tree string="Cost distribution expenses"
+                              editable="bottom">
+                            <field name="account_id"/>
+                            <field name="type"/>
+                            <field name="calculation_method"/>
+                            <field name="ref"/>
+                            <field name="expense_amount"/>
+                            <field name="analytic_account_id" invisible="1"/>
+                            <field name="imported_lines"
+                                   invisible="1"/>
+                            <field name="affected_lines"
+                                   widget="many2many_tags" invisible="1"/>
+                            <field name="invoice_line"
+                                   options="{'no_create': true, 'create_edit': false}" invisible="1"/>
+                        </tree>
+                    </field>
                 </xpath>
 
             </field>

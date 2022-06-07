@@ -9,6 +9,9 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, frozendict
 class InheritedItemLoanLending(models.Model):
     _inherit = 'item.loan.lending'
 
+    is_picking_done = fields.Boolean(string='Is Picking Done',
+                                     compute='_compute_is_picking_done',store= False)
+
     @api.model
     def default_get(self, fields):
         res = super(InheritedItemLoanLending, self).default_get(fields)
@@ -99,6 +102,7 @@ class InheritedItemLoanLending(models.Model):
             'issuer_id': self.issuer_id.id,
             'is_transfer': self.is_transfer,
             'item_transfer_send_id': self.id,
+            'item_transfer_send_ref': self.name,
             'request_date': self.request_date,
             'partner_id': self.company_id.partner_id.id,
             'description': self.description,
@@ -225,3 +229,17 @@ class InheritedItemLoanLending(models.Model):
                 res['name'] = new_seq
             loan.write(res)
             loan.item_lines.write({'state': 'waiting_approval'})
+
+    @api.depends('picking_id.state')
+    def _compute_is_picking_done(self):
+        for rec in self:
+            if rec.picking_id and rec.picking_id.state == 'done':
+                rec.is_picking_done = True
+            else:
+                rec.is_picking_done = False
+
+    @api.multi
+    def print_challan(self):
+        data = {}
+        data['active_id'] = self.id
+        return self.env['report'].get_action(self, 'item_transfer_process.report_item_transfer_challan', data)
