@@ -142,6 +142,7 @@
                             <div class="text-left">
                                 <b>Net Weight: </b>
                                 <span t-esc=" data['net_weight']"/>
+                                <span t-esc="data['weight_uom']"/>
                             </div>
 
 
