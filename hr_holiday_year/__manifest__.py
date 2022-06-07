@@ -11,6 +11,7 @@
         'date_range',
     ],
     'data': [
+        'views/menu_view.xml',
         'views/hr_holidays_view.xml',
         'views/date_range_view.xml',
     ],

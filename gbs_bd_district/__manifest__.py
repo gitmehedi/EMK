@@ -3,7 +3,7 @@
     'summary': 'List to show all district of Bangladesh',
     'author': 'Genweb2 Limited',
     'website': 'http://www.genweb2.com',
-    'depends': ['base'],
+    'depends': ['base', 'hr'],
     'data': [
         'views/gbs_bd_district_view.xml',
     ],

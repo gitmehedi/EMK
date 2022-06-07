@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inherit_hr_salary_contribution_tree_view" model="ir.ui.view">
+            <field name="name">inherit.hr.salary.contribution.tree.view</field>
+            <field name="model">hr.contribution.register</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contribution_register_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">state == 'reject'</attribute>
+                    <attribute name="decoration-bf">state == 'approve'</attribute>
+                    <attribute name="decoration-success">state == 'approve'</attribute>
+                    <attribute name="decoration-info">state == 'draft'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="state"></field>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="hr_contribution_register_form_inherit" model="ir.ui.view">
+            <field name="name">hr.contribution.register</field>
+            <field name="model">hr.contribution.register</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contribution_register_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/*" position="before">
+                    <form string="Contribution">
+                        <header>
+                            <button name="act_approve" string="Approve" states="draft" type="object"
+                                    class="oe_highlight"/>
+                            <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                            <button name="act_reject" string="Reject" states="draft" type="object"/>
+                            <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                        </header>
+                        <sheet>
+                            <group>
+                                <field name="name"/>
+                                <field name="partner_id" invisible="True"
+                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                <field name="company_id" groups="base.group_multi_company"
+                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                       class="oe_inline"/>
+                            </group>
+                            <newline/>
+                            <group>
+                                <separator string="Description"/>
+                                <newline/>
+                                <field name="note" nolabel="1"/>
+                            </group>
+                        </sheet>
+                    </form>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_hr_salary_contribution_search_view" model="ir.ui.view">
+            <field name="name">inherit.hr.salary.contribution.search.view</field>
+            <field name="model">hr.contribution.register</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contribution_register_filter"/>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="hr_payroll.action_contribution_register_form">
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

@@ -95,6 +95,8 @@
             </field>
         </record>
 
+
+
         <record id="hr_holidays.open_allocation_holidays" model="ir.actions.act_window">
             <field name="name">Allocation Request</field>
             <field name="res_model">hr.holidays</field>
@@ -205,13 +207,13 @@
             <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/*" position="before">
-                        <header>
-                            <button name="act_approve" string="Approve" states="draft" type="object"
-                                    class="oe_highlight"/>
-                            <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
-                            <button name="act_reject" string="Reject" states="draft" type="object"/>
-                            <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
-                        </header>
+                    <header>
+                        <button name="act_approve" string="Approve" states="draft" type="object"
+                                class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
                 </xpath>
             </field>
         </record>
