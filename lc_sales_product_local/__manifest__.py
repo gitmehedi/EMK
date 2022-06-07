@@ -35,6 +35,7 @@
         'wizard/sales_invoice_export_wizard_view.xml',
         'wizard/first_acceptance_export_wizard.xml',
         'wizard/second_acceptance_export_wizard.xml',
+        'wizard/bill_id_export_wizard.xml',
         'views/lc_sales_comm_acc.xml',
         'views/lc_sales_menu.xml',
     ],

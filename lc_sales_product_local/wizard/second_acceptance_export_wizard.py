@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class BuyerExportWizard(models.TransientModel):
+class SecondAcceptExportWizard(models.TransientModel):
     _name = 'to.second.acceptance.export.wizard'
 
     to_second_acceptance_date = fields.Date('2nd Acceptance Date', required=True)

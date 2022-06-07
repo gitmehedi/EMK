@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <record id="to_maturity_export_wizard" model="ir.ui.view">
-            <field name="name">to.maturity.export.wizard</field>
-            <field name="model">to.maturity.export.wizard</field>
+        <record id="to_bill_id_export_wizard" model="ir.ui.view">
+            <field name="name">to.bill.id.export.wizard</field>
+            <field name="model">to.bill.id.export.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml" >
                 <form string="Please Enter The Information" create="false" edit="false">
                     <group>
                         <group>
-                            <field name="to_maturity_date"/>
+                            <field name="bill_id"/>
                         </group>
                     </group>
                     <footer>
