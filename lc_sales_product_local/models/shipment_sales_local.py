@@ -177,3 +177,18 @@ class ShipmentLocal(models.Model):
             'target': 'new',
         }
         return result
+
+    @api.multi
+    def to_second_acceptance_export_wizard(self):
+        res = self.env.ref('lc_sales_product_local.to_second_acceptance_export_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'to.second.acceptance.export.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
