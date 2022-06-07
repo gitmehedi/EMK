@@ -40,7 +40,7 @@
                                     <p><h6><b>Operating Unit:</b>
                                         <span t-esc="data['operating_unit_id']"/><br/></h6>
                                     </p>
-                                    <p><h6><b>Prepare By:</b>
+                                    <p><h6><b>Prepared By:</b>
                                         <span t-esc="data['employee_name']"/><br/></h6>
                                     </p>
                                 </div>
@@ -63,8 +63,8 @@
                                     <tr class="odo-bg-gray">
                                         <th class="w5"><h6><b>Sl</b></h6></th>
                                         <th><h6><b>Products</b></h6></th>
-                                        <th ><h6><b>Internal Ref</b></h6></th>
-                                        <th><h6><b>Qty</b></h6></th>
+                                        <th ><h6><b>Internal Ref.</b></h6></th>
+                                        <th class="w10 text-center"><h6><b>Qty</b></h6></th>
                                         <th><h6><b>UOM</b></h6></th>
                                     </tr>
                                 </thead>
@@ -74,7 +74,7 @@
                                             <td><h6><span t-esc="l_index+1"/></h6></td>
                                             <td><h6><span t-esc="l['product_id']"/></h6></td>
                                             <td><h6><span t-esc="l['product_code']"/></h6></td>
-                                            <td ><h6><span t-esc="l['product_qty']"/></h6></td>
+                                            <td class="text-right"><h6><span t-esc="l['product_qty']"/></h6></td>
                                             <td><h6><span t-esc="l['product_uom']"/></h6></td>
                                         </tr>
                                     </t>

@@ -16,11 +16,13 @@ class StockInventoryReport(models.AbstractModel):
 
         ##########################product name using named_get function###########################
         if data['category_id']:
-            product_categs =  self.env['product.category'].sudo().browse(data['category_id'])
+            product_categs = self.env['product.category'].sudo().browse(data['category_id'])
+            for cat in product_categs:
+                if not cat.parent_id:
+                    product_categs = self.env['product.category'].sudo().search([('parent_id', '=', cat.id)])
         else:
             product_categs = self.env['product.category'].sudo().search([])
         for categ in product_categs:
-
             for line in get_data['category'][categ.name]['product']:
                 if line['product_id']:
                     pro_obj = self.env['product.product'].browse(line['product_id'])
