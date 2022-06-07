@@ -5,7 +5,8 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class HRSalaryStructure(models.Model):
-    _inherit = "hr.payroll.structure"
+    _name = "hr.payroll.structure"
+    _inherit = ['hr.payroll.structure', 'mail.thread', 'ir.needaction_mixin']
 
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
@@ -55,6 +56,10 @@ class HRSalaryStructure(models.Model):
                 'pending': False,
                 'active': False,
             })
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ('draft', 'approve'))]
 
     @api.multi
     def unlink(self):
@@ -68,7 +73,8 @@ class HRSalaryStructure(models.Model):
 
 
 class HRSalaryRuleCategory(models.Model):
-    _inherit = "hr.salary.rule.category"
+    _name = "hr.salary.rule.category"
+    _inherit = ['hr.salary.rule.category', 'mail.thread', 'ir.needaction_mixin']
 
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
@@ -118,6 +124,10 @@ class HRSalaryRuleCategory(models.Model):
                 'pending': False,
                 'active': False,
             })
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ('draft', 'approve'))]
 
     @api.multi
     def unlink(self):
@@ -131,21 +141,13 @@ class HRSalaryRuleCategory(models.Model):
 
 
 class HRSalaryRule(models.Model):
-    _inherit = "hr.salary.rule"
+    _name = "hr.salary.rule"
+    _inherit = ['hr.salary.rule', 'mail.thread', 'ir.needaction_mixin']
 
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
                              string='Status', track_visibility='onchange', )
-
-    # @api.constrains('name')
-    # def _check_name(self):
-    #     name = self.search(
-    #         [('name', '=ilike', self.name.strip()), ('state', '!=', 'reject'), '|', ('active', '=', True),
-    #          ('active', '=', False)])
-    #     if len(name) > 1:
-    #         raise ValidationError(_(Utility.UNIQUE_WARNING))
-
 
     @api.onchange("name")
     def onchange_strips(self):
@@ -183,6 +185,10 @@ class HRSalaryRule(models.Model):
                 'active': False,
             })
 
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ('draft', 'approve'))]
+
     @api.multi
     def unlink(self):
         for rec in self:
@@ -195,7 +201,8 @@ class HRSalaryRule(models.Model):
 
 
 class HRSalaryContributionRegister(models.Model):
-    _inherit = "hr.contribution.register"
+    _name = "hr.contribution.register"
+    _inherit = ['hr.contribution.register','mail.thread', 'ir.needaction_mixin']
 
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
@@ -245,6 +252,10 @@ class HRSalaryContributionRegister(models.Model):
                 'pending': False,
                 'active': False,
             })
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', 'in', ('draft', 'approve'))]
 
     @api.multi
     def unlink(self):
