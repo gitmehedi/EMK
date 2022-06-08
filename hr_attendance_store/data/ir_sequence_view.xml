@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="seq_hr_manual_attendance_process" model="ir.sequence">
+            <field name="name">HR Manual Attendance Process</field>
+            <field name="code">hr.manual.attendance.process</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">MA/%(year)s/%(month)s/%(day)s/</field>
+            <field name="padding">2</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>

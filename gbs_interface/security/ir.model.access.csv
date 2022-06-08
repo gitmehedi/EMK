@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+acc_middleware_configuration_gf,middleware_configuration_gf,model_middleware_configuration,grp_api_group_finance,1,1,1,1
+acc_middleware_configuration_manager,middleware_configuration_manager,model_middleware_configuration,grp_api_interface_manager,1,1,1,1
