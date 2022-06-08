@@ -32,7 +32,8 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         sheet.merge_range('A2:R2', "Monthly Overtime Sheet", subject_format_center)
         sheet.merge_range('A3:R3', "Operating Unit: " + str(docs.operating_unit_id.name), name_format_left)
         sheet.merge_range('A4:R4', "Initiated by: " + "HR & Admin", name_format_left)
-        sheet.merge_range('A5:R5', "Overtime Cycle: " + str(docs.date_start) + ' to ' + str(docs.date_end),
+        sheet.merge_range('A5:R5', "Overtime Cycle: " + self.env['report.utility'].get_date_from_string(
+            docs.date_start) + ' to ' + self.env['report.utility'].get_date_from_string(docs.date_end),
                           name_format_left)
 
     def _get_sheet_table_header(self, sheet, workbook):
@@ -60,9 +61,6 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         sheet.write(5, 16, "Deduction", header_format_left)
         sheet.write(5, 17, "Net Payable", header_format_left)
 
-
-
-
     def _get_table_dataset(self, docs):
         department = self.env['hr.department'].search([])
         dpt_payslips_list = []
@@ -82,10 +80,10 @@ class MonthlyOtSheetXLSX(ReportXlsx):
                 payslip['gross'] = formatLang(self.env, gross)
                 payslip['gross_float'] = gross
                 payslip['emp_id'] = slip.employee_id.device_employee_acc
-                payslip['basic_40'] = (slip.employee_id.contract_id.wage * 40) / 100
-                payslip['basic_70'] = (slip.employee_id.contract_id.wage * 70) / 100
-                payslip['basic_30'] = (slip.employee_id.contract_id.wage * 30) / 100
-                payslip['basic_20'] = (slip.employee_id.contract_id.wage * 20) / 100
+                payslip['basic_40'] = slip.employee_id.contract_id.wage
+                payslip['basic_70'] = (slip.employee_id.contract_id.wage * 0.70)
+                payslip['basic_30'] = (slip.employee_id.contract_id.wage * 0.30)
+                payslip['basic_20'] = (slip.employee_id.contract_id.wage * 0.20)
                 obj_number_of_hours = list(filter(lambda x: x.code == 'OT', slip.worked_days_line_ids))
                 number_of_hours = 0
                 if obj_number_of_hours:
@@ -118,16 +116,15 @@ class MonthlyOtSheetXLSX(ReportXlsx):
             dpt_payslips_list.append(dpt_payslips)
         return dpt_payslips_list
 
-
-    def _set_sheet_table_data(self,sheet, workbook, dpt_payslips_list):
+    def _set_sheet_table_data(self, sheet, workbook, dpt_payslips_list):
         sub_header_format_left = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#81d41a', 'bold': False, 'size': 10, 'border': 1,
-             'text_wrap': True})
+            {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#ffffff', 'bold': True, 'size': 10, 'border': 1,
+             'text_wrap': False})
         sub_header_format_left.set_font_name('Times New Roman')
         name_border_format_colored_int = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
+            {'align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
         name_border_format_colored = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
+            {'num_format': '#,###0.00', 'align': 'right', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
         name_border_format_colored.set_font_name('Times New Roman')
 
         row = 5
@@ -154,15 +151,15 @@ class MonthlyOtSheetXLSX(ReportXlsx):
                         row += 1
                         department_serial += 1
                         dpt_name = department_emp.get('name')
-                        sheet.merge_range('A' + str(row + 1) + ':R' + str(row + 1) + '', dpt_name, sub_header_format_left)
+                        sheet.write(row, 0, dpt_name, sub_header_format_left)
 
                     row += 1
                     sl += 1
                     sheet.write(row, 0, sl, name_border_format_colored_int)
-                    sheet.write(row, 1, emp.get('emp_name'), name_border_format_colored)
-                    sheet.write(row, 2, emp.get('designation'), name_border_format_colored)
-                    sheet.write(row, 3, emp.get('doj'), name_border_format_colored)
-                    sheet.write(row, 4, emp.get('emp_id'), name_border_format_colored)
+                    sheet.write(row, 1, emp.get('emp_name'), name_border_format_colored_int)
+                    sheet.write(row, 2, emp.get('designation'), name_border_format_colored_int)
+                    sheet.write(row, 3, emp.get('doj'), name_border_format_colored_int)
+                    sheet.write(row, 4, emp.get('emp_id'), name_border_format_colored_int)
                     sheet.write(row, 5, emp.get('basic_40'), name_border_format_colored)
                     sheet.write(row, 6, emp.get('basic_70'), name_border_format_colored)
                     sheet.write(row, 7, emp.get('basic_30'), name_border_format_colored)
@@ -209,36 +206,37 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         return footer_data
 
     def _set_footer_data(self, sheet, workbook, footer_dataset):
-        footer_border_format_left = workbook.add_format(
-            {'num_format': '#,###0.00', 'align': 'left', 'bold': True, 'size': 10})
-        footer_border_format_left.set_font_name('Times New Roman')
+        footer_border_format_right = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'right', 'bold': True, 'size': 10})
+        footer_border_format_right.set_font_name('Times New Roman')
 
         row = footer_dataset['row']
         row += 1
-        sheet.merge_range('A' + str(row + 1) + ':C' + str(row + 1) + '', 'Total', footer_border_format_left)
-        sheet.write(row, 3, '', footer_border_format_left)
-        sheet.write(row, 4, '', footer_border_format_left)
-        sheet.write(row, 5, footer_dataset['total_basic_40'], footer_border_format_left)
-        sheet.write(row, 6, footer_dataset['total_basic_70'], footer_border_format_left)
-        sheet.write(row, 7, footer_dataset['total_basic_30'], footer_border_format_left)
-        sheet.write(row, 8, footer_dataset['total_basic_30'], footer_border_format_left)
-        sheet.write(row, 9, footer_dataset['total_basic_20'], footer_border_format_left)
-        sheet.write(row, 10, footer_dataset['total_gross'], footer_border_format_left)
-        sheet.write(row, 11, footer_dataset['over_time_hours'], footer_border_format_left)
-        sheet.write(row, 12, footer_dataset['total_over_time_rate'], footer_border_format_left)
-        sheet.write(row, 13, footer_dataset['ot_earning_amount'], footer_border_format_left)
-        sheet.write(row, 14, footer_dataset['total_arrear'], footer_border_format_left)
-        sheet.write(row, 15, footer_dataset['total_amount'], footer_border_format_left)
-        sheet.write(row, 16, footer_dataset['total_deduction'], footer_border_format_left)
-        sheet.write(row, 17, footer_dataset['total_net_payable'], footer_border_format_left)
+        sheet.merge_range('A' + str(row + 1) + ':C' + str(row + 1) + '', 'Total', footer_border_format_right)
+        sheet.write(row, 3, '', footer_border_format_right)
+        sheet.write(row, 4, '', footer_border_format_right)
+        sheet.write(row, 5, footer_dataset['total_basic_40'], footer_border_format_right)
+        sheet.write(row, 6, footer_dataset['total_basic_70'], footer_border_format_right)
+        sheet.write(row, 7, footer_dataset['total_basic_30'], footer_border_format_right)
+        sheet.write(row, 8, footer_dataset['total_basic_30'], footer_border_format_right)
+        sheet.write(row, 9, footer_dataset['total_basic_20'], footer_border_format_right)
+        sheet.write(row, 10, footer_dataset['total_gross'], footer_border_format_right)
+        sheet.write(row, 11, footer_dataset['over_time_hours'], footer_border_format_right)
+        sheet.write(row, 12, footer_dataset['total_over_time_rate'], footer_border_format_right)
+        sheet.write(row, 13, footer_dataset['ot_earning_amount'], footer_border_format_right)
+        sheet.write(row, 14, footer_dataset['total_arrear'], footer_border_format_right)
+        sheet.write(row, 15, footer_dataset['total_amount'], footer_border_format_right)
+        sheet.write(row, 16, footer_dataset['total_deduction'], footer_border_format_right)
+        sheet.write(row, 17, footer_dataset['total_net_payable'], footer_border_format_right)
 
         # Total Amount
         row += 2
-        sheet.write(row, 15, 'Total', footer_border_format_left)
-        sheet.write(row, 17, footer_dataset['total_net_payable'], footer_border_format_left)
+        sheet.write(row, 15, 'Total', footer_border_format_right)
+        sheet.write(row, 17, footer_dataset['total_net_payable'], footer_border_format_right)
 
         # In Words
-        footer_border_format_right = workbook.add_format({'num_format': '#,###0.00', 'align': 'right', 'bold': True, 'size': 8, 'text_wrap': False})
+        footer_border_format_right = workbook.add_format(
+            {'num_format': '#,###0.00', 'align': 'right', 'bold': True, 'size': 8, 'text_wrap': False})
 
         if footer_dataset['total_net_payable'] > 0:
             amt_to_word = self.env['res.currency'].amount_to_word(float(footer_dataset['total_net_payable']))
@@ -268,6 +266,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         get_footer_dataset = self._set_sheet_table_data(sheet, workbook, dpt_payslips_list)
 
         self._set_footer_data(sheet, workbook, get_footer_dataset)
+
 
 MonthlyOtSheetXLSX('report.hr_payroll_ot.monthly_ot_sheet_xlsx',
                    'ot.report.wizard', parser=report_sxw.rml_parse)

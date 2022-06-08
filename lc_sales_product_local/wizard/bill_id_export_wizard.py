@@ -1,10 +1,10 @@
 from odoo import api, fields, models
 
 
-class MaturityExportWizard(models.TransientModel):
-    _name = 'to.maturity.export.wizard'
+class BillIDExportWizard(models.TransientModel):
+    _name = 'to.bill.id.export.wizard'
 
-    to_maturity_date = fields.Date('Maturity Date', required=True)
+    bill_id = fields.Date('Bill ID', required=True)
 
     @api.multi
     def save_action(self):
@@ -13,12 +13,6 @@ class MaturityExportWizard(models.TransientModel):
         shipment_pool = self.env['purchase.shipment']
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
         if shipment_obj:
-            shipment_obj.write({'to_maturity_date': self.to_maturity_date,
-                                'state': 'to_maturity'})
+            shipment_obj.write({'bill_id': self.bill_id,
+                                'state': 'to_buyer_bank'})
             return {'type': 'ir.actions.act_window_close'}
-
-
-
-
-
-
