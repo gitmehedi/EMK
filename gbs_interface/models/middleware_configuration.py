@@ -135,9 +135,7 @@ class ServerFileProcess(models.Model):
 
     @api.multi
     def get_source_files(self,instance,extension='.txt'):
-        # for rec in self.filtered(lambda r: r.method == "interface"):
         with self.sftp_connection('source') as source:
-            # with self.sftp_connection('destination') as destination:
             dirs = [self.folder, self.source_path, self.dest_path]
             self.directory_check(dirs)
             files = filter(lambda x: x.endswith(extension), source.listdir(self.source_path))
@@ -145,17 +143,20 @@ class ServerFileProcess(models.Model):
                 source_path = os.path.join(self.source_path, fl)
                 local_path = os.path.join(self.folder, fl)
                 source.get(source_path, localpath=local_path, preserve_mtime=True)
-                source.unlink(source_path)
 
             return files
 
     @api.multi
     def _put_files_destination(self,fl):
+        source_path = os.path.join(self.source_path, fl)
         dest_path = os.path.join(self.dest_path, fl)
         local_path = os.path.join(self.folder, fl)
         with self.sftp_connection('destination') as destination:
             if destination.put(local_path, dest_path):
                 os.remove(local_path)
+        with self.sftp_connection('source') as source:
+            source.unlink(source_path)
+
 
 
 

@@ -19,7 +19,6 @@
         'mass_editing',
         'password_security',
         'auth_admin_passkey',
-        'web_access_rule_buttons',
         'web_export_view',
     ],
     'installable': True,

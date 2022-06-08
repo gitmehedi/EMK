@@ -30,7 +30,7 @@ class HrManualAttendanceProcess(models.Model):
     @api.one
     def act_filter(self):
         if self.state == 'draft':
-            name = self.env['ir.sequence'].sudo().next_by_code('asset.depreciation.change.request')
+            name = self.env['ir.sequence'].sudo().next_by_code('hr.manual.attendance.process')
             self.filter_ids.unlink()
             terminal_ids = self.env['hr.attendance.terminal'].search([('is_attendance', '=', True),
                                                                       ('active', '=', True),
