@@ -93,20 +93,21 @@ class MonthlyOtSheetXLSX(ReportXlsx):
                 ot_rate = (slip.employee_id.contract_id.wage + payslip['basic_70'] + payslip['basic_30'] + payslip[
                     'basic_30'] + payslip['basic_20']) / 208
                 payslip['ot_rate_hour'] = ot_rate
-                payslip['ot_earning_amount'] = round(number_of_hours * ot_rate)
+
+                obj_ot_earning_amount = list(filter(lambda x: x.code == 'EOTA', slip.line_ids))
+                payslip['ot_earning_amount'] = obj_ot_earning_amount[0].amount if obj_ot_earning_amount else 0
+
                 obj_ot_arrear = list(filter(lambda x: x.code == 'ARSOT', slip.input_line_ids))
-                arrear = 0
-                if obj_ot_arrear:
-                    arrear = obj_ot_arrear[0].amount
-                payslip['arrear'] = arrear
+                payslip['arrear'] = obj_ot_arrear[0].amount if obj_ot_arrear else 0
+
                 payslip['total'] = payslip['ot_earning_amount'] + payslip['arrear']
 
                 obj_ot_deduction = list(filter(lambda x: x.code == 'ODSOT', slip.input_line_ids))
-                deduction = 0
-                if obj_ot_deduction:
-                    deduction = obj_ot_deduction[0].amount
-                payslip['deduction'] = deduction
-                payslip['total_payable'] = payslip['total'] - payslip['deduction']
+                payslip['deduction'] = obj_ot_deduction[0].amount if obj_ot_deduction else 0
+
+                obj_total_payable = list(filter(lambda x: x.code == 'NET', slip.line_ids))
+                payslip['total_payable'] =  obj_total_payable[0].amount if obj_total_payable else 0
+
                 dpt_payslips['val'].append(payslip)
 
             emp_sort_list = dpt_payslips['val']

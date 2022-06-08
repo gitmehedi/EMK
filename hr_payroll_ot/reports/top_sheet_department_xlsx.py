@@ -139,37 +139,34 @@ class TopSheetDepartmentXLSX(ReportXlsx):
             payslip_filter_data = list(filter(lambda x: x.employee_id.department_id.id == department.id, docs.slip_ids))
             for slip in payslip_filter_data:
                 obj_number_of_hours = list(filter(lambda x: x.code == 'OT', slip.worked_days_line_ids))
-                if obj_number_of_hours:
-                    if obj_number_of_hours[0].number_of_hours > 0:
-                        number_of_hours = obj_number_of_hours[0].number_of_hours
-                        dpt_number_of_hours += number_of_hours
-                        emp_count += 1
-                        basic = slip.employee_id.contract_id.wage
-                        dpt_basic += basic
-                        basic_70 = (slip.employee_id.contract_id.wage * 0.70)
-                        dpt_basic_70 += basic_70
-                        basic_30 = (slip.employee_id.contract_id.wage * 0.30)
-                        dpt_basic_30 += basic_30
-                        basic_20 = (slip.employee_id.contract_id.wage * 0.20)
-                        dpt_basic_20 += basic_20
-                        gross = math.ceil((slip.employee_id.contract_id.wage) * 2.5)
-                        dpt_gross += gross
+                number_of_hours = obj_number_of_hours[0].number_of_hours if obj_number_of_hours else 0
+                if number_of_hours > 0:
+                    dpt_number_of_hours += number_of_hours
+                    emp_count += 1
+                    basic = slip.employee_id.contract_id.wage
+                    dpt_basic += basic
+                    basic_70 = (slip.employee_id.contract_id.wage * 0.70)
+                    dpt_basic_70 += basic_70
+                    basic_30 = (slip.employee_id.contract_id.wage * 0.30)
+                    dpt_basic_30 += basic_30
+                    basic_20 = (slip.employee_id.contract_id.wage * 0.20)
+                    dpt_basic_20 += basic_20
+                    gross = math.ceil((slip.employee_id.contract_id.wage) * 2.5)
+                    dpt_gross += gross
 
-                        ot_rate = (basic + basic_70 + basic_30 + basic_30 + basic_20) / 208
-                        dpt_ot_rate += ot_rate
-                        ot_earning_amount += round(number_of_hours * ot_rate)
-                        obj_ot_arrear = list(filter(lambda x: x.code == 'ARSOT', slip.input_line_ids))
+                    ot_rate = (basic + basic_70 + basic_30 + basic_30 + basic_20) / 208
+                    dpt_ot_rate += ot_rate
+                    obj_ot_amount = list(filter(lambda x: x.code == 'EOTA', slip.line_ids))
+                    ot_earning_amount += obj_ot_amount[0].amount if obj_ot_amount else 0
 
-                        ot_arrear = 0
-                        if obj_ot_arrear:
-                            ot_arrear = obj_ot_arrear[0].amount
-                        total = ot_earning_amount + ot_arrear
+                    obj_ot_arrear = list(filter(lambda x: x.code == 'ARSOT', slip.input_line_ids))
+                    ot_arrear += obj_ot_arrear[0].amount if obj_ot_arrear else 0
 
-                        obj_ot_deduction = list(filter(lambda x: x.code == 'ODSOT', slip.input_line_ids))
-                        deduction = 0
-                        if obj_ot_deduction:
-                            deduction = obj_ot_deduction[0].amount
-                        total_payable = total - deduction
+                    obj_ot_deduction = list(filter(lambda x: x.code == 'ODSOT', slip.input_line_ids))
+                    deduction += obj_ot_deduction[0].amount if obj_ot_deduction else 0
+
+                    obj_total_payable = list(filter(lambda x: x.code == 'NET', slip.line_ids))
+                    total_payable += obj_total_payable[0].amount if obj_total_payable else 0
 
             footer_employee += emp_count
             footer_basic += dpt_basic
