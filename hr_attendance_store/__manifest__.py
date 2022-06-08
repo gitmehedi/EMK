@@ -14,9 +14,11 @@
         'hr',
         'hr_attendance',
         'hr_manual_attendance',
+        'gbs_interface',
     ],
     "data": [
-        # "data/ir_cron.xml",
+        "data/ir_cron.xml",
+        "data/ir_sequence_view.xml",
         # "views/menu_view.xml",
         "wizards/hr_manual_attendance_process_wizard_view.xml",
         "views/hr_attendance_terminal_view.xml",

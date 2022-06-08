@@ -1,3 +1,5 @@
+import os, shutil, base64, csv
+
 from odoo import api, models, fields, _
 from odoo.addons.hr_attendance_store.helpers import helper
 from odoo.exceptions import ValidationError
@@ -10,6 +12,7 @@ class HrManualAttendanceProcess(models.Model):
     _rec_name = 'date'
     _order = 'id desc'
 
+    name = fields.Char(string='Serial No', track_visibility='onchange')
     date = fields.Date(string='Date', default=fields.Datetime.now, track_visibility='onchange', required=True)
     attendance_filename = fields.Char(string='Attendance Filename', track_visibility='onchange')
     attendance_file = fields.Binary(string='Attendance File', attachement=True, track_visibility='onchange')
@@ -27,6 +30,7 @@ class HrManualAttendanceProcess(models.Model):
     @api.one
     def act_filter(self):
         if self.state == 'draft':
+            name = self.env['ir.sequence'].sudo().next_by_code('asset.depreciation.change.request')
             self.filter_ids.unlink()
             terminal_ids = self.env['hr.attendance.terminal'].search([('is_attendance', '=', True),
                                                                       ('active', '=', True),
@@ -52,7 +56,10 @@ class HrManualAttendanceProcess(models.Model):
                 vals['duration'] = str(line[5])
                 vals['line_id'] = self.id
                 self.filter_ids.create(vals)
-            self.state = 'filter'
+            self.write({
+                'name':name,
+                'state':'filter',
+            })
 
     @api.one
     def act_approve(self):
@@ -76,7 +83,7 @@ class HrManualAttendanceProcess(models.Model):
     @api.one
     def act_done(self):
         if self.state == 'approve':
-            self.state = 'done'
+            self.state = 'approve'
 
     @api.one
     def act_reject(self):
@@ -93,6 +100,96 @@ class HrManualAttendanceProcess(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ('filter', 'approve', 'migrate'))]
+
+    @api.model
+    def _import_hr_manual_attendance(self):
+        """Run all scheduled backups."""
+        integration = self.env['middleware.configuration'].search([('type', '=', 'interface'),
+                                                                   ('method', '=', 'sftp'),
+                                                                   ('status', '=', True)], limit=1)
+        if not integration:
+            raise ValidationError(_("Record is not available with proper configuration"))
+        return self.import_attendance_date(integration)
+
+    @api.multi
+    def get_existing_data(self):
+        terminal = {val.code: val.id for val in
+                    self.env['hr.attendance.terminal'].search([('active', '=', True), ('is_attendance', '=', True)])}
+        employee = {val.employee_number: val.id for val in self.env['hr.employee'].search([('active', '=', True)])}
+        card = {val.code: val.id for val in self.env['hr.attendance.card'].search([('active', '=', True)])}
+
+        return terminal, employee, card
+
+    @staticmethod
+    def format_record(line):
+        return "('{0}','{1}','{2}','{3}','{4}',{5},{6},{7},{8}),".format(
+            line['date'],
+            line['time'],
+            line['result'],
+            line['mode'],
+            line['type'],
+            line['card_serial_id'],
+            line['terminal_id'],
+            line['employee_id'],
+            line['line_id'])
+
+    @api.multi
+    def import_attendance_date(self, integration):
+        files = integration.get_source_files(integration, extension='.csv')
+        for fl in files:
+            local_path = os.path.join(integration.folder, fl)
+            terminal, employee, card = self.get_existing_data()
+            errors, record_entry = "", ""
+
+            with open(local_path, 'r') as file_ins:
+                index = 0
+                readline = csv.DictReader(file_ins)
+                data = open(local_path, 'rb').read()
+                base64_encoded = base64.b64encode(data).decode('UTF-8')
+                process = self.create({'date': fields.Datetime.now(),
+                                       'attendance_filename': fl,
+                                       'attendance_file': base64_encoded,
+                                       })
+
+                for line in readline:
+                    index += 1
+                    line = line
+                    if len(line) > 2:
+                        val = dict()
+                        date_str = line['Date'].strip()
+                        time = line['Time'].strip()
+                        terminal_split = line['Terminal ID'].split(':')
+                        terminal_id = terminal_split[0].strip() if len(terminal_split) > 0 else ''
+                        employee_id = line['User ID'].strip()
+                        mode = line['Mode'].strip()
+                        card_id = line['Card Serial No.'].strip()
+                        result = line['Result'].strip()
+                        type = line['Type'].strip()
+
+                        if (terminal_id in terminal.keys()) and (employee_id in employee.keys()):
+                            val['date'] = date_str
+                            val['time'] = time
+                            val['terminal_id'] = terminal[terminal_id] if terminal_id else 'null'
+                            val['card_serial_id'] = 'null'
+                            val['employee_id'] = employee[employee_id] if employee_id else 'null'
+                            val['result'] = result
+                            val['mode'] = mode
+                            val['type'] = type
+                            val['line_id'] = process.id
+
+                            record_entry += self.format_record(val)
+
+                if len(errors) == 0:
+                    query = """
+                        INSERT INTO hr_manual_attendance_process_line
+                        (date, time,result, mode, type, card_serial_id,terminal_id, employee_id, line_id)
+                        VALUES %s""" % record_entry[:-1]
+                    self.env.cr.execute(query)
+
+                    process.act_filter()
+                    if process.state == 'filter':
+                        process.act_approve()
+                    integration._put_files_destination(fl)
 
 
 class HrManualAttendanceProcessLine(models.Model):
