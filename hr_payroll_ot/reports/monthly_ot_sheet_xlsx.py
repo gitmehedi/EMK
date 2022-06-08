@@ -13,8 +13,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         sheet.set_row(0, 30)
         sheet.set_row(5, 35)
         sheet.set_column(0, 0, 5)
-        sheet.set_column(0, 1, 5)
-        sheet.set_column(0, 2, 15)
+        sheet.set_column(1, 1, 15)
         return sheet
 
     def _get_sheet_header(self, sheet, docs, workbook):
@@ -77,7 +76,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
                     slip.employee_id.initial_employment_date)
 
                 gross = math.ceil((slip.employee_id.contract_id.wage) * 2.5)
-                payslip['gross'] = formatLang(self.env, gross)
+                payslip['gross'] = gross
                 payslip['gross_float'] = gross
                 payslip['emp_id'] = slip.employee_id.device_employee_acc
                 payslip['basic_40'] = slip.employee_id.contract_id.wage
@@ -123,6 +122,8 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         sub_header_format_left.set_font_name('Times New Roman')
         name_border_format_colored_int = workbook.add_format(
             {'align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
+        name_border_format_colored_right_int = workbook.add_format(
+            {'align': 'right', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
         name_border_format_colored = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'right', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
         name_border_format_colored.set_font_name('Times New Roman')
@@ -155,7 +156,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
 
                     row += 1
                     sl += 1
-                    sheet.write(row, 0, sl, name_border_format_colored_int)
+                    sheet.write(row, 0, sl, name_border_format_colored_right_int)
                     sheet.write(row, 1, emp.get('emp_name'), name_border_format_colored_int)
                     sheet.write(row, 2, emp.get('designation'), name_border_format_colored_int)
                     sheet.write(row, 3, emp.get('doj'), name_border_format_colored_int)
