@@ -62,10 +62,11 @@ class ProductGateIn(models.Model):
                     if not po.invoice_ids:
                         raise UserError('Vendor Bill is not created for this shipment. Please contact your Accounting Department !')
                     else:
-                        for vb in po.invoice_ids:
-                            if vb.state != 'open' and vb.state != 'paid':
-                                raise UserError(
-                                    'Vendor Bill is not validated for this shipment. Please contact your Accounting Department !')
+                        invoice_states = po.invoice_ids.mapped('state')
+                        if not ('open' in invoice_states or 'paid' in invoice_states):
+                            raise UserError('Vendor Bill is not validated for this shipment. Please contact your '
+                                            'Accounting Department !')
+
             else:
                 raise UserError(
                     'Purchase Order or LC or Shipment not found. Please contact your Accounting Department !')
