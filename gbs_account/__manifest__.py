@@ -11,7 +11,8 @@
     'data': [
         'views/res_config_view.xml',
         'views/inherited_res_company_view.xml',
-        'views/account_view.xml'
+        'views/account_view.xml',
+        'views/account_mis_menu.xml',
     ],
 
     'summary': 'Adding of Accounts related Journals',
