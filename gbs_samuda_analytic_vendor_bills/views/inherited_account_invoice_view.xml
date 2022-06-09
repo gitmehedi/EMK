@@ -10,10 +10,15 @@
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='company_id']"
                        position="after">
                     <field name="analytic_account_required" invisible="1"/>
+                    <field name="cost_center_required" invisible="1"/>
                 </xpath>
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
                        position="attributes">
                     <attribute name="attrs">{'required': [('analytic_account_required', '=', True)]}</attribute>
+                </xpath>
+                <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='cost_center_id']"
+                       position="attributes">
+                    <attribute name="attrs">{'required': [('cost_center_required', '=', True)]}</attribute>
                 </xpath>
             </field>
         </record>
