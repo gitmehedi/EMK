@@ -6,12 +6,14 @@
         <menuitem id="cheque_received_accounting"
                   name="Accounting"
                   parent="gbs_samuda_account_access.menu_finance_unit"
-                  sequence="30" groups="gbs_accounting_cheque_received.group_accounting_unit_accounting"/>
+                  sequence="30" groups="gbs_accounting_cheque_received.group_cheque_receive_unit"/>
 
-        <record model="ir.actions.act_window" id="accounting_cheque_received_action_account_unit">
+        <record model="ir.actions.act_window" id="cheque_received_action_from_accounting_unit">
             <field name="name">Cheque Received</field>
             <field name="res_model">accounting.cheque.received</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('received_from', '=', 'unit')]</field>
+            <field name="context">{'default_received_from': 'unit'}</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                     (0, 0, {'sequence': 1002, 'view_mode': 'tree', 'view_id': ref('accounting_cheque_recieved_tree_view')}),
@@ -21,9 +23,9 @@
         </record>
 
         <menuitem id="menu_inherited_unit_cheque_received"
-                  name="Cheque Received" action="accounting_cheque_received_action_account_unit"
+                  name="Cheque Received" action="cheque_received_action_from_accounting_unit"
                   parent="gbs_accounting_cheque_received.cheque_received_accounting"
-                  groups="gbs_accounting_cheque_received.group_accounting_unit_accounting"
+                  groups="gbs_accounting_cheque_received.group_cheque_receive_unit"
                   sequence="1"/>
 
 

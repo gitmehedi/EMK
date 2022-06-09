@@ -9,6 +9,22 @@ class ChequeReceived(models.Model):
     _order = 'id DESC'
     _description = "Cheque Info"
 
+    ####################################
+
+    def _get_operating_unit(self):
+        domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
+        return domain
+
+    operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', domain=_get_operating_unit, states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
+                                        'honoured': [('readonly', True)], 'received': [('readonly', True)],
+                                        'deposited': [('readonly', True)]})
+    received_from = fields.Selection([
+        ('ho', 'HO'),
+        ('unit', 'Unit'),
+    ], string='Received From')
+
+    ####################################
+
     state = fields.Selection([
         ('draft', 'Cheque Entry'),
         ('received', 'Confirm'),

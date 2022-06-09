@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Unit User Access-->
+
+    <record id="rule_for_cheque_receive_unit" model="ir.rule">
+        <field name="name">Cheque Receive Access for Unit</field>
+        <field name="model_id" ref="model_accounting_cheque_received"/>
+        <field name="domain_force">
+            [('received_from','=','unit'),('operating_unit_id','in',user.operating_unit_ids.ids)]
+        </field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('gbs_accounting_cheque_received.group_cheque_receive_unit'))]"/>
+    </record>
+
+
+    <!--HO will get 1=1-->
+    <record id="rule_for_cheque_receive_ho" model="ir.rule">
+        <field name="model_id" ref="model_accounting_cheque_received"/>
+        <field name="domain_force">[(1 ,'=', 1)]</field>
+        <field name="name">Cheque Receive Access for HO</field>
+        <field name="groups" eval="[(4,ref('gbs_accounting_cheque_received.group_cheque_receive_ho'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+</odoo>
