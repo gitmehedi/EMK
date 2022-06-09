@@ -162,6 +162,8 @@ class TopSheetDepartmentXLSX(ReportXlsx):
                     obj_ot_arrear = list(filter(lambda x: x.code == 'ARSOT', slip.input_line_ids))
                     ot_arrear += obj_ot_arrear[0].amount if obj_ot_arrear else 0
 
+                    total += ot_earning_amount + ot_arrear
+
                     obj_ot_deduction = list(filter(lambda x: x.code == 'ODSOT', slip.input_line_ids))
                     deduction += obj_ot_deduction[0].amount if obj_ot_deduction else 0
 
