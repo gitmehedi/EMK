@@ -13,8 +13,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         sheet.set_row(0, 30)
         sheet.set_row(5, 35)
         sheet.set_column(0, 0, 5)
-        sheet.set_column(0, 1, 5)
-        sheet.set_column(0, 2, 15)
+        sheet.set_column(1, 1, 15)
         return sheet
 
     def _get_sheet_header(self, sheet, docs, workbook):
@@ -77,7 +76,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
                     slip.employee_id.initial_employment_date)
 
                 gross = math.ceil((slip.employee_id.contract_id.wage) * 2.5)
-                payslip['gross'] = formatLang(self.env, gross)
+                payslip['gross'] = gross
                 payslip['gross_float'] = gross
                 payslip['emp_id'] = slip.employee_id.device_employee_acc
                 payslip['basic_40'] = slip.employee_id.contract_id.wage
@@ -94,20 +93,21 @@ class MonthlyOtSheetXLSX(ReportXlsx):
                 ot_rate = (slip.employee_id.contract_id.wage + payslip['basic_70'] + payslip['basic_30'] + payslip[
                     'basic_30'] + payslip['basic_20']) / 208
                 payslip['ot_rate_hour'] = ot_rate
-                payslip['ot_earning_amount'] = round(number_of_hours * ot_rate)
+
+                obj_ot_earning_amount = list(filter(lambda x: x.code == 'EOTA', slip.line_ids))
+                payslip['ot_earning_amount'] = obj_ot_earning_amount[0].amount if obj_ot_earning_amount else 0
+
                 obj_ot_arrear = list(filter(lambda x: x.code == 'ARSOT', slip.input_line_ids))
-                arrear = 0
-                if obj_ot_arrear:
-                    arrear = obj_ot_arrear[0].amount
-                payslip['arrear'] = arrear
+                payslip['arrear'] = obj_ot_arrear[0].amount if obj_ot_arrear else 0
+
                 payslip['total'] = payslip['ot_earning_amount'] + payslip['arrear']
 
                 obj_ot_deduction = list(filter(lambda x: x.code == 'ODSOT', slip.input_line_ids))
-                deduction = 0
-                if obj_ot_deduction:
-                    deduction = obj_ot_deduction[0].amount
-                payslip['deduction'] = deduction
-                payslip['total_payable'] = payslip['total'] - payslip['deduction']
+                payslip['deduction'] = obj_ot_deduction[0].amount if obj_ot_deduction else 0
+
+                obj_total_payable = list(filter(lambda x: x.code == 'NET', slip.line_ids))
+                payslip['total_payable'] =  obj_total_payable[0].amount if obj_total_payable else 0
+
                 dpt_payslips['val'].append(payslip)
 
             emp_sort_list = dpt_payslips['val']
@@ -123,6 +123,8 @@ class MonthlyOtSheetXLSX(ReportXlsx):
         sub_header_format_left.set_font_name('Times New Roman')
         name_border_format_colored_int = workbook.add_format(
             {'align': 'left', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
+        name_border_format_colored_right_int = workbook.add_format(
+            {'align': 'right', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
         name_border_format_colored = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'right', 'border': 1, 'valign': 'vcenter', 'bold': False, 'size': 8})
         name_border_format_colored.set_font_name('Times New Roman')
@@ -155,7 +157,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
 
                     row += 1
                     sl += 1
-                    sheet.write(row, 0, sl, name_border_format_colored_int)
+                    sheet.write(row, 0, sl, name_border_format_colored_right_int)
                     sheet.write(row, 1, emp.get('emp_name'), name_border_format_colored_int)
                     sheet.write(row, 2, emp.get('designation'), name_border_format_colored_int)
                     sheet.write(row, 3, emp.get('doj'), name_border_format_colored_int)
