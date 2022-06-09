@@ -15,6 +15,7 @@ class InvoiceExportWizard(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(InvoiceExportWizard, self).default_get(fields)
+        purchase_shipment = self.env['purchase.shipment'].search([('id', '=', res.get('shipment_id'))])
         self._onchange_shipment_id()
         return res
 
@@ -61,15 +62,14 @@ class InvoiceExportWizard(models.TransientModel):
     def _onchange_shipment_id(self):
         so_list = []
         for pi_id in self.shipment_id.lc_id.pi_ids_temp:
-            sale_order = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
+            sale_order = self.env['sale.order'].sudo().search([('pi_id', '=', pi_id.id)])
             so_list.append(sale_order.id)
 
         inv_list = []
         for so in so_list:
-            account_invoices = self.env['account.invoice'].search(
-                [('so_id', '=', so), ('state', 'in', ['open', 'paid'])])
+            account_invoices = self.env['account.invoice'].sudo().search([('so_id', '=', so), ('state', 'in', ['open', 'paid'])])
             for acc_inv in account_invoices:
-                purchase_shipment = self.env['purchase.shipment'].search([('invoice_ids', 'in', acc_inv.id)])
+                purchase_shipment = self.env['purchase.shipment'].sudo().search([('invoice_ids', 'in', acc_inv.id)])
                 if not purchase_shipment:
                     inv_list.append(acc_inv.id)
         return {'domain': {'invoice_ids': [('id', 'in', inv_list)]}}
