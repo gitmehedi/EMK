@@ -51,8 +51,6 @@ class StockMove(models.Model):
                                     tmpl_dict[move.product_id.id] += move.product_qty
                                     std_price_update[move.company_id.id, move.product_id.id] = new_std_price
                 return
-            else:
-                super(StockMove, self).product_price_update_before_done()
         #########################################################
 
         super(StockMove, self).product_price_update_before_done()
