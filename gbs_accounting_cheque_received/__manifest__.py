@@ -17,8 +17,9 @@
     ],
 
     'data': [
-        'security/ir.model.access.csv',
         'security/security.xml',
+        'security/ir_rule.xml',
+        'security/ir.model.access.csv',
         'wizards/journal_add_wizard_view.xml',
         'wizards/add_honoured_date_wizard_view.xml',
         'views/cheque_received_view.xml',

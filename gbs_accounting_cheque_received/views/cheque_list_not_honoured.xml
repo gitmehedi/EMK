@@ -60,8 +60,8 @@
 <!--        </field>-->
 <!--    </record>-->
 
-    <record model="ir.actions.act_window" id="action_cheque_list_not_honoured">
-        <field name="name">Cheque List Not Honoured</field>
+    <record model="ir.actions.act_window" id="action_cheque_list_not_honoured_from_accounting">
+        <field name="name">Cheques Not Honoured</field>
         <field name="res_model">accounting.cheque.received</field>
         <field name="domain">[('state','!=','honoured')]</field>
         <field name="view_mode">tree,form</field>
@@ -80,9 +80,10 @@
               <!--parent="account.menu_finance"-->
               <!--sequence="2"/>-->
 
-    <menuitem action="action_cheque_list_not_honoured"
+    <menuitem action="action_cheque_list_not_honoured_from_accounting"
               id="cheque_list_not_honoured_id"
               parent="account.menu_finance_receivables"
-              name="Cheque List Not Honoured"
+              groups="gbs_accounting_cheque_received.group_cheque_receive_ho"
+              name="Cheques(Not Honoured)"
     />
 </odoo>
