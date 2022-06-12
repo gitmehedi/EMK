@@ -38,9 +38,9 @@
                            options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
                     <field name="field_readonly" invisible="1"/>
                 </xpath>
-                <xpath expr="//field[@name='cost_lines']" position="attributes">
-                    <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
-                </xpath>
+<!--                <xpath expr="//field[@name='cost_lines']" position="attributes">-->
+<!--                    <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>-->
+<!--                </xpath>-->
                 <xpath expr="//field[@name='cost_lines']/tree/field[@name='picking_id']" position="after">
                     <field name="date_done"/>
                 </xpath>
@@ -123,7 +123,7 @@
                             <field name="calculation_method"/>
                             <field name="ref"/>
                             <field name="expense_amount"/>
-                            <field name="analytic_account_id" invisible="1"/>
+                            <field name="analytic_account_id"/>
                             <field name="imported_lines"
                                    invisible="1"/>
                             <field name="affected_lines"
