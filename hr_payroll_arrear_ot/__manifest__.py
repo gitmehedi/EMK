@@ -19,5 +19,5 @@
         """This module calculates the  arrear ot of the employee
             based on the condition'""",
     'installable': True,
-    'application': True,
+    'application': False,
 }
