@@ -4,7 +4,8 @@ from odoo.exceptions import UserError
 
 
 class StockInventory(models.Model):
-    _inherit = "stock.inventory"
+    _name = 'stock.inventory'
+    _inherit = ['stock.inventory', 'mail.thread']
 
     @api.model
     def _default_location_id(self):
