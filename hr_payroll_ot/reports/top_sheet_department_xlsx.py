@@ -138,9 +138,11 @@ class TopSheetDepartmentXLSX(ReportXlsx):
 
             payslip_filter_data = list(filter(lambda x: x.employee_id.department_id.id == department.id, docs.slip_ids))
             for slip in payslip_filter_data:
-                obj_number_of_hours = list(filter(lambda x: x.code == 'OT', slip.worked_days_line_ids))
-                number_of_hours = obj_number_of_hours[0].number_of_hours if obj_number_of_hours else 0
-                if number_of_hours > 0:
+                obj_total_payable = list(filter(lambda x: x.code == 'NET', slip.line_ids))
+
+                if obj_total_payable != 0:
+                    obj_number_of_hours = list(filter(lambda x: x.code == 'OT', slip.worked_days_line_ids))
+                    number_of_hours = obj_number_of_hours[0].number_of_hours if obj_number_of_hours else 0
                     dpt_number_of_hours += number_of_hours
                     emp_count += 1
                     basic = slip.employee_id.contract_id.wage
@@ -167,7 +169,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
                     obj_ot_deduction = list(filter(lambda x: x.code == 'ODSOT', slip.input_line_ids))
                     deduction += obj_ot_deduction[0].amount if obj_ot_deduction else 0
 
-                    obj_total_payable = list(filter(lambda x: x.code == 'NET', slip.line_ids))
+
                     total_payable += obj_total_payable[0].amount if obj_total_payable else 0
 
             footer_employee += emp_count
@@ -183,7 +185,7 @@ class TopSheetDepartmentXLSX(ReportXlsx):
             footer_total += total
             footer_deduction += deduction
             footer_total_payable += total_payable
-            if emp_count > 0 and number_of_hours > 0:
+            if emp_count > 0:
                 sheet.write(row, 0, department.name, reportFormat.text_align_left_with_border())
                 sheet.write(row, 1, emp_count, reportFormat.numeric())
                 sheet.write(row, 2, dpt_basic, reportFormat.text_align_right_with_border())

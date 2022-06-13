@@ -148,7 +148,7 @@ class MonthlyOtSheetXLSX(ReportXlsx):
             department_serial = 0
             department_wise_val = department_emp.get('val')
             for emp in department_wise_val:
-                if emp.get('ot_earning_amount') > 0:
+                if emp.get('total_payable') != 0:
                     if department_serial == 0:
                         row += 1
                         department_serial += 1
