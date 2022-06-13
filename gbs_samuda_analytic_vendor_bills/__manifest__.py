@@ -15,12 +15,13 @@
     'version': '10.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['purchase', 'account', 'base', 'purchase_landed_cost_extend','account_cost_center'],
+    'depends': ['purchase', 'account', 'base', 'account_cost_center'],
 
     # always loaded
     'data': [
         'views/inherited_account_account_view.xml',
         'views/inherited_account_invoice_view.xml',
+        'views/inherited_account_config_settings.xml'
 
     ],
 

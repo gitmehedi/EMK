@@ -95,7 +95,7 @@ class ChequeReceived(models.Model):
     cheque_amount = fields.Float(string='Amount', required=True,
                                  states={'returned': [('readonly', True)], 'dishonoured': [('readonly', True)],
                                          'honoured': [('readonly', True)], 'received': [('readonly', True)],
-                                         'deposited': [('readonly', True)]})
+                                         'deposited': [('readonly', True)]},track_visibility='onchange')
 
     is_cheque_payment = fields.Boolean(string='Cheque Payment', default=True)
     company_id = fields.Many2one('res.company', string='Company', ondelete='cascade',

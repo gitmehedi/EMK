@@ -5,7 +5,7 @@ from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
-
+import openerp.addons.decimal_precision as dp
 
 class PurchaseCostDistribution(models.Model):
     _inherit = 'purchase.cost.distribution'
@@ -15,9 +15,18 @@ class PurchaseCostDistribution(models.Model):
                                         default=lambda self: self.env.user.default_operating_unit_id)
     field_readonly = fields.Boolean(string='Field Readonly')
 
-    total_purchase = fields.Float(string='Total Product Cost')
+    @api.multi
+    @api.depends('expense_lines', 'expense_lines.expense_amount')
+    def _compute_total_expense(self):
+        lc_pad_account = self.env['ir.values'].get_default('account.config.settings', 'lc_pad_account')
+        for distribution in self:
+            distribution.total_expense = sum([x.expense_amount for x in
+                                              distribution.expense_lines.filtered(lambda x: x.account_id.id != lc_pad_account)])
 
-    total_expense = fields.Float(string='Total Landed Cost')
+    total_purchase = fields.Float(string='Total Product Cost')
+    total_expense = fields.Float(
+        compute=_compute_total_expense,
+        digits=dp.get_precision('Account'), string='Total Landed Cost')
 
     lc_id = fields.Many2one("letter.credit", string='LC Number', readonly=True)
 
@@ -25,8 +34,9 @@ class PurchaseCostDistribution(models.Model):
     def _compute_lcost_per(self):
         for rec in self:
             if rec.cost_lines and rec.expense_lines:
+                lc_pad_account = self.env['ir.values'].get_default('account.config.settings', 'lc_pad_account')
                 total_purchase = sum([x.total_amount for x in rec.cost_lines])
-                total_expense = sum([x.expense_amount for x in rec.expense_lines])
+                total_expense = sum([x.expense_amount for x in rec.expense_lines.filtered(lambda x: x.account_id.id != lc_pad_account)])
                 if total_purchase != 0:
                     rec.percentage_of_lcost = (total_expense / total_purchase) * 100
                 else:
@@ -194,3 +204,11 @@ class PurchaseCostDistributionLine(models.Model):
     expense_amount = fields.Float(string='Landed Cost')
 
     total_amount = fields.Float(string='Product Cost')
+
+    @api.depends('distribution')
+    def compute_dist_state(self):
+        for rec in self:
+            if rec.distribution:
+                rec.distribution_state = rec.distribution.state
+
+    distribution_state = fields.Char(compute='compute_dist_state')
