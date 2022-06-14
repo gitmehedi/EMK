@@ -6,7 +6,8 @@
     'version': '10.0.1.0.0',
     'depends': ['hr',
         'hr_payroll',
-        'hr_payroll_arrear'
+        'hr_payroll_arrear',
+        'hr_payroll_ot'
         ],
     'data': [
         'data/data.xml',
