@@ -54,13 +54,14 @@
                             <group>
                                 <field name="is_transfer" invisible="1"/>
                                 <field name="issuer_id" readonly="1"/>
-                                <field name="request_date"/>
+                                <field name="request_date" invisible="1"/>
                                 <field name="partner_id"/>
                             </group>
                             <group>
                                 <field name="receive_date" readonly="1"
                                        attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                                <field name="item_transfer_send_id" readonly="1"/>
+                                <field name="item_transfer_send_id" invisible="1"/>
+                                <field name="item_transfer_send_ref" readonly="1"/>
                                 <field name="approved_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 <field name="approver_id" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             </group>
@@ -71,8 +72,9 @@
                                     <tree string="Items" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id"/>
+                                        <field name="product_category_id"/>
                                         <field name="name"/>
-                                        <field name="product_uom" string="UOM"/>
+                                        <field name="product_uom" string="UOM" readonly="1"/>
                                         <field name="product_uom_qty" sum="Total Qty"/>
                                         <field name="received_qty" sum="Total Received" invisible="1" readonly="1"/>
                                         <field name="given_qty" sum="Total Given" invisible="1" readonly="1"/>
@@ -118,8 +120,7 @@
             <field name="model">item.borrowing</field>
             <field name="arch" type="xml">
                 <search string="Receive Items">
-                    <field name="item_transfer_send_id"/>
-                    <field name="name"/>
+                    <field name="name" filter_domain="['|',('name', 'ilike', self),('item_transfer_send_ref', 'ilike', self)]" string="Transfer"/>
                     <field name="issuer_id"/>
                     <field name="request_date"/>
                     <field name="receive_date"/>

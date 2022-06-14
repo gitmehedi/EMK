@@ -5,7 +5,7 @@
 
     'category': 'Payroll',
     'version': '10.0.1.0.0',
-    'depends': ['base', 'hr_payroll', 'account', 'gbs_operating_unit', 'gbs_employee_cost_center_link'],
+    'depends': ['base', 'hr_payroll', 'account', 'gbs_operating_unit', 'gbs_employee_cost_center_link', 'hr_payroll_ot'],
 
     # always loaded
     'data': [

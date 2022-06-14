@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="purchase_order_form_landed_cost">
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_open_landed_cost']" position="attributes">
+                <attribute name="groups">base.group_private_addresses</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_picking_form_landed_cost">
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_open_landed_cost']" position="attributes">
+                <attribute name="groups">base.group_private_addresses</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="invoice_supplier_form_landed_cost" model="ir.ui.view">
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[3]" position="attributes">
+                <attribute name="groups">gbs_application_group.make_invisible</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

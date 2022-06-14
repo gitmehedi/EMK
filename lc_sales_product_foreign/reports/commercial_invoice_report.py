@@ -40,6 +40,7 @@ class CommercialInvoice(models.AbstractModel):
             'invoice_value': shipment_obj.invoice_value,
             'is_print_cfr': shipment_obj.is_print_cfr,
             'fob_value': shipment_obj.fob_value,
+            'inco_terms': shipment_obj.lc_id.inco_terms.code,
             'feright_value': shipment_obj.feright_value,
             'company_id': shipment_obj.company_id.name,
             'factory': report_utility_pool.getAddressByUnit(shipment_obj.operating_unit_id),

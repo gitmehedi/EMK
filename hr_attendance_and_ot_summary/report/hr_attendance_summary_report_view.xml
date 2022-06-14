@@ -54,6 +54,8 @@
 										<th>Off Duty Hrs</th>
 										<th>Schedule OT Hours</th>
 										<th>OT Hours Calculation</th>
+										<th>OT Extra Hours</th>
+										<th>Total OT Hours</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -111,6 +113,12 @@
 													</td>
 													<td>
 														<span t-esc="o['cal_ot_hrs']"></span>
+													</td>
+													<td>
+														<span t-esc="o['extra_ot']"></span>
+													</td>
+													<td>
+														<span t-esc="o['total_ot']"></span>
 													</td>
 
 												</tr>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_category_landed_cost" model="ir.module.category" >
+        <field name="name">Landed Cost</field>
+        <field name="sequence">201</field>
+    </record>
+
+   <record id="group_user_landed_cost" model="res.groups">
+        <field name="name">Landed Cost User</field>
+        <field name="category_id" ref="module_category_landed_cost"/>
+    </record>
+
+    <record id="group_manager_landed_cost" model="res.groups">
+        <field name="name">Landed Cost Manager</field>
+        <field name="category_id" ref="module_category_landed_cost"/>
+        <field name="implied_ids" eval="[(4, ref('group_user_landed_cost'))]"/>
+    </record>
+
+
+</odoo>
+

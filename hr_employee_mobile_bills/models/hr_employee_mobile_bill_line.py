@@ -36,8 +36,8 @@ class HrEmployeeMobileBillLimit(models.Model):
             if recode.parent_id.effective_bill_date:
                 recode.effective_date = recode.parent_id.effective_bill_date
 
-    @api.onchange('limit')
-    def _onchange_bill(self):
+    @api.constrains('limit')
+    def _check_bill_amount(self):
         # Show a msg for minus value
         if self.limit < 0:
-            raise UserError(_('Mobile Bill Limit never take negative value!'))
+            raise ValidationError(_('Mobile Bill Limit never take negative value!'))

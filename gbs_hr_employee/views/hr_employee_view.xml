@@ -24,5 +24,17 @@
                 </data>
             </field>
         </record>
+        <record id="hr_hr_employee_view_form9" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form9</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='bank_account_id']" position="attributes">
+                        <attribute name="options">{'no_create':0,'no_create_edit':0}</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
     </data>
 </odoo>

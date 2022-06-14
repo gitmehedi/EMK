@@ -34,9 +34,9 @@ class HrOtherAllowanceLine(models.Model):
     ], default='draft')
 
     # Show a msg for minus value
-    @api.onchange('other_allowance_amount')
-    def _onchange_bill(self):
+    @api.constrains('other_allowance_amount')
+    def _check_bill_amount(self):
         if self.other_allowance_amount < 0:
-            raise UserError(_('Amount never take negative value!'))
+            raise ValidationError(_('Other Allowance Amount never take negative value!'))
 
 

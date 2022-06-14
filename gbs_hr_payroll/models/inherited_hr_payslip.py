@@ -39,6 +39,7 @@ class HrPayslipRun(models.Model):
     _order = 'date_end desc'
 
     send_email = fields.Boolean('Send Email',default=False)
+    total_payable = fields.Float(string='Payable Amount', readonly=True)
 
     @api.multi
     def unlink(self):
@@ -51,10 +52,15 @@ class HrPayslipRun(models.Model):
     @api.multi
     def confirm_payslip(self):
         res = super(HrPayslipRun, self).close_payslip_run()
-
+        payble_amount = 0
         for payslip in self.slip_ids:
+            obj_payable_amount = list(filter(lambda x: x.code == 'NET', payslip.line_ids))
+            payble_amount += obj_payable_amount[0].amount
             payslip.action_payslip_done()
 
+        self.update({
+            'total_payable': payble_amount
+        })
         email_server_obj = self.env['ir.mail_server'].search([], order='id ASC', limit=1)
         payslip_line = self.env['hr.payslip'].search([('payslip_run_id','=',self.id)])
         if self.send_email == True:

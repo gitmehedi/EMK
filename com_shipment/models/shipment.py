@@ -15,7 +15,7 @@ class Shipment(models.Model):
     eta_date = fields.Date('ETA Date', help="Estimated Time of Arrival")
     arrival_date = fields.Date('Arrival Date', )
     cnf_received_date = fields.Date('C&F Received Date', readonly=True)
-    cnf_id = fields.Many2one('res.partner', "Supplier", readonly=True)
+    cnf_id = fields.Many2one('res.partner', "C&F Agent", readonly=True)
     comment = fields.Text('Comment')
     transport_by = fields.Char('Transport By')
     vehical_no = fields.Char('Vehicle No')
@@ -55,6 +55,16 @@ class Shipment(models.Model):
     # Invoice
     invoice_number = fields.Char(string='Invoice Number')
     invoice_value = fields.Float(string='Invoice Value')
+
+    # done
+    shipment_done_date = fields.Date(string='Shipment Done Date', required=False)
+    ait_amount = fields.Float(string='Amount')
+    payment_rec_date = fields.Date(string='Payment Rec. Date')
+    payment_rec_amount = fields.Float(string='Payment Rec. Amount')
+    payment_charge = fields.Float(string='Payment Charge')
+    discrepancy_amount = fields.Float(string='Discrepancy Amount')
+
+    intermediate_cnf_account = fields.Many2one('res.partner', "Intermediate C&F Account", readonly=True)
 
     # @api.multi
     def name_get(self):

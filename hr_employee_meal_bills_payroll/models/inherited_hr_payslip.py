@@ -46,13 +46,14 @@ class InheritHRPayslip(models.Model):
             """
             Meal Bills
             """
-            for meal_data in meal_datas:
-                other_line_ids += other_line_ids.new({
-                    'name': 'Meal Bill',
-                    'code': "MEAL",
-                    'amount': meal_data.bill_amount,
-                    'contract_id': self.contract_id.id,
-                    'ref': meal_data.id,
-                })
+            if self.type == '0':
+                for meal_data in meal_datas:
+                    other_line_ids += other_line_ids.new({
+                        'name': 'Meal Bill',
+                        'code': "MEAL",
+                        'amount': meal_data.bill_amount,
+                        'contract_id': self.contract_id.id,
+                        'ref': meal_data.id,
+                    })
 
-            self.input_line_ids = other_line_ids
+                self.input_line_ids = other_line_ids

@@ -47,6 +47,10 @@ class AttendanceSummary(models.Model):
         
     @api.multi
     def action_confirm(self):
+        hr_attendance_summary = self.env['hr.attendance.summary'].search([('period', '=', self.period.id), ('operating_unit_id', '=', self.operating_unit_id.id), ('state', 'in', ('approved', 'confirmed'))])
+        if hr_attendance_summary:
+            raise UserError("You can't confirmed because of " + self.period.name + " period attendance summary already confirmed/approved")
+
         self.state = 'confirmed'
         self.att_summary_lines.write({'state': 'confirmed'})
             
@@ -63,3 +67,30 @@ class AttendanceSummary(models.Model):
                 raise UserError(_('You can not delete this.'))
             summary.att_summary_lines.unlink()
         return super(AttendanceSummary,self).unlink()
+
+
+    @api.multi
+    def action_reconstruct(self):
+        hr_attendance_summary = self.env['hr.attendance.summary'].browse(self.id)
+        if not hr_attendance_summary.att_summary_lines:
+            raise UserError("No employee found")
+
+        for hr_atten in hr_attendance_summary.att_summary_lines:
+            empIds = [hr_atten.employee_id.id]
+            summaryId = hr_atten.att_summary_id.id
+            operating_unit_id = self.env['hr.attendance.summary'].browse(summaryId).operating_unit_id.id
+
+            attendanceProcess = self.env['hr.attendance.summary.temp']
+            attendanceProcess.process(empIds, summaryId, operating_unit_id)
+
+        self.message_post(body="Reconstructed attendance summary", subject="Reconstructed")
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'src_model': 'hr.attendance.summary',
+            'res_model': 'hr.attendance.summary',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'res_id': summaryId,
+            'target': 'current'
+        }

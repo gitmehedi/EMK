@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+        <record id="otded" model="hr.salary.rule.category">
+            <field name="name">OT Deduction</field>
+            <field name="code">OTDED</field>
+        </record>
+
+        <record id="other_deduction_ot_salary_rule" model="hr.salary.rule">
+            <field name="name">Others Deduction (OT)</field>
+            <field name="category_id" ref="hr_other_deduction_ot.otded"/>
+            <field name="code">ODSOT</field>
+            <field name="sequence" eval="70"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">if payslip.type == '0': result = False
+elif payslip.type == '1': result = False
+elif payslip.type == '2': result = True</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -(inputs.ODSOT and inputs.ODSOT.amount)
+</field>
+        </record>
+    </data>
+</odoo>

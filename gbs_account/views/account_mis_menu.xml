@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem id="mis_reports_root_menu" name="MIS Report" parent="account.menu_finance_reports" sequence="1" groups="gbs_application_group.group_mis_reports"/>
+</odoo>

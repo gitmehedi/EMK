@@ -131,6 +131,7 @@
                             <group string="Maturity Info">
                                 <field name="to_maturity_date" readonly="1"/>
                                 <field name="bill_id" readonly="1"/>
+                                <field name="bl_date" readonly="1"/>
                             </group>
 
                             <group string="Invoice">
@@ -138,12 +139,16 @@
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="invoice_date_dummy" string="Date (Dummy)"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                                <field name="invoice_id" readonly="1"
+                                <field name="invoice_id" readonly="1" invisible="1"
                                        options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
-                                <field name="invoice_value" required="1"
+                                <field name="invoice_ids" readonly="1" widget="many2many_tags"
+                                       options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
+
+                                <field name="invoice_value" required="1"  readonly="1"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="feright_value" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="fob_value" readonly="1"/>
+                                <field name="invoice_qty" readonly="1" invisible="1"/>
                                 <field name="is_print_cfr" required="1" invisible="1"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                             </group>
@@ -154,26 +159,29 @@
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="truck_receipt_no"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                                <field name="bl_date"
-                                       attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="container_no"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                <field name="to_first_acceptance_date" readonly="1"/>
                                 <!--<field name="mother_vessel"-->
                                        <!--attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>-->
                             </group>
-                            <group string="Packing Details" colspan="4">
-                                <group>
-                                    <field name="gross_weight" required="1"
+
+                            <group string="Packing Details">
+                                <field name="gross_weight" required="1"
                                            attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                                    <field name="net_weight" required="1"
-                                           attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
-                                </group>
-                                <group>
-                                    <field name="weight_uom" required="1"
-                                           attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"
-                                           options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
-                                </group>
+                                <field name="net_weight" required="1"
+                                       attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
+                                <field name="weight_uom" required="1"
+                                       attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"
+                                       options="{'no_open':True,'no_quick_create':True,'no_create_edit':True}"/>
                             </group>
+                            <group string="Shipment Done Info">
+                                <field name="discrepancy_amount" readonly="1"/>
+                                <field name="payment_rec_date" readonly="1"/>
+                                <field name="payment_rec_amount" readonly="1"/>
+                                <field name="payment_charge" readonly="1"/>
+                            </group>
+
                             <group colspan="4">
                                 <p>
                                     <b>Total(Jar/Drum/Bag/Bulk): &#x2063;&#x2063;</b>

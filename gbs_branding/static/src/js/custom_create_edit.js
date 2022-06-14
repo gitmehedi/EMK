@@ -38,10 +38,10 @@ odoo.define('gbs_branding.custom_create_edit', function (require) {
                     id: x[0],
                 };
             });
-
             // [Start] Genweb2: custom change for changing default behaviour of many2one create and edit
             if (self.options.no_create === undefined){
                 self.options.no_create = true;
+
             }
             // [End] Genweb2:
 

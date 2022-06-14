@@ -27,11 +27,9 @@
                     </header>
                     <sheet>
                         <group>
-                            <group>
+                            <group name="payroll_arrear">
                                 <field name="name"/>
                             </group>
-                            <group></group>
-
                             <group>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                             </group>

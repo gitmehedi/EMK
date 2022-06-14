@@ -16,6 +16,8 @@ class LocalFirstAcceptanceWizard(models.TransientModel):
 
         return self.env['report'].get_action(self, 'lc_sales_local_report.local_first_acceptance_temp',
                                              data=data)
+        self.ensure_one()
+        return self.env['report'].get_action(self, report_name='hr_payroll_ot.top_sheet_department_xlsx')
 
 
 class LocalSecondAcceptanceWizard(models.TransientModel):

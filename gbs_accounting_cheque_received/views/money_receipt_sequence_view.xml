@@ -20,7 +20,7 @@
         </field>
     </record>
 
-    <record id="accounting_cheque_recieved_tree" model="ir.ui.view">
+    <record id="money_recieved_tree" model="ir.ui.view">
         <field name="name">account.money.receipt.tree.view</field>
         <field name="model">account.money.receipt</field>
         <field name="type">tree</field>

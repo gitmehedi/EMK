@@ -65,6 +65,7 @@ class ItemLoanLending(models.Model):
     ####################################################
     # Business methods
     ####################################################
+
     @api.multi
     def button_confirm(self):
         for loan in self:
@@ -224,8 +225,20 @@ class ItemLoanLendingLines(models.Model):
     product_id = fields.Many2one('product.product', string='Product', required=True,ondelete='cascade')
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
+
+    @api.depends('product_id')
+    def compute_categ(self):
+        for rec in self:
+            if rec.product_id:
+                rec.product_category_id = rec.product_id.categ_id.id
+            else:
+                rec.product_category_id = False
+
+    product_category_id =fields.Many2one('product.category', string='Category', compute='compute_categ', store=False)
+
+
     product_uom = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure',
-                                  required=True, store=True)
+                                  store=True)
     # price_unit = fields.Float(related='product_id.standard_price', string='Price',
     #                           digits=dp.get_precision('Product Price'),
     #                           help="Price computed based on the last purchase order approved.", store=True)
@@ -233,7 +246,7 @@ class ItemLoanLendingLines(models.Model):
                               digits=dp.get_precision('Product Price'),
                               help="Price computed based on the last purchase order approved.", store=True)
     qty_available = fields.Float('In Stock', compute='_compute_product_quantity', store=True)
-    name = fields.Char(related='product_id.name', string='Specification', store=True)
+    name = fields.Char(related='product_id.name', string='Specification', store=True, readonly=True)
     sequence = fields.Integer('Sequence')
     given_qty = fields.Float('Given Quantity', digits=dp.get_precision('Product UoS'))
     received_qty = fields.Float('Receive Quantity', digits=dp.get_precision('Product UoS'))
@@ -257,6 +270,7 @@ class ItemLoanLendingLines(models.Model):
     #     if self.received_qty:
     #         if self.received_qty==self.given_qty:
     #             self.write({'state': 'receive'})
+
 
     @api.depends('product_id')
     def _compute_price_unit(self):

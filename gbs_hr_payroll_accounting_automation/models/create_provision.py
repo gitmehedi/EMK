@@ -35,37 +35,47 @@ class CreateProvision(models.TransientModel):
     def _default_payable_account(self):
         payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
             'active_id'))
-        return payslip_run_obj.operating_unit_id.payable_account
+        return payslip_run_obj.operating_unit_id.payable_account if payslip_run_obj.operating_unit_id.payable_account else False
 
     payable_account = fields.Many2one('account.account',
-                                      required=True, readonly=True,
+                                      readonly=True,
                                       default=lambda self: self._default_payable_account(),
                                       string='Payable GL')
+
+    def _default_ot_payable_account(self):
+        payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
+            'active_id'))
+        return payslip_run_obj.operating_unit_id.payable_account_ot if payslip_run_obj.operating_unit_id.payable_account_ot else False
+
+    payable_account_ot = fields.Many2one('account.account',
+                                      readonly=True,
+                                      default=lambda self: self._default_ot_payable_account(),
+                                      string='OT Payable GL')
 
     def _default_tds_payable_account(self):
         payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
             'active_id'))
-        return payslip_run_obj.operating_unit_id.tds_payable_account
+        return payslip_run_obj.operating_unit_id.tds_payable_account if payslip_run_obj.operating_unit_id.tds_payable_account else False
 
-    tds_payable_account = fields.Many2one('account.account', readonly=True, required=True,
+    tds_payable_account = fields.Many2one('account.account', readonly=True,
                                           default=lambda self: self._default_tds_payable_account(),
                                           string='TDS Payable GL')
 
     def _default_telephone_bill_account(self):
         payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
             'active_id'))
-        return payslip_run_obj.operating_unit_id.telephone_bill_account
+        return payslip_run_obj.operating_unit_id.telephone_bill_account if payslip_run_obj.operating_unit_id.telephone_bill_account else False
 
-    telephone_bill_account = fields.Many2one('account.account', readonly=True, required=True,
+    telephone_bill_account = fields.Many2one('account.account', readonly=True,
                                              default=lambda self: self._default_telephone_bill_account(),
                                              string='Telephone Bill GL')
 
     def _default_employee_pf_contribution_account(self):
         payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
             'active_id'))
-        return payslip_run_obj.operating_unit_id.employee_pf_contribution_account
+        return payslip_run_obj.operating_unit_id.employee_pf_contribution_account if payslip_run_obj.operating_unit_id.employee_pf_contribution_account else False
 
-    employee_pf_contribution_account = fields.Many2one('account.account', required=True, readonly=True,
+    employee_pf_contribution_account = fields.Many2one('account.account', readonly=True,
                                                        default=lambda
                                                            self: self._default_employee_pf_contribution_account(),
                                                        string='Employee PF Contribution GL')
@@ -73,9 +83,9 @@ class CreateProvision(models.TransientModel):
     def _default_company_pf_contribution_account(self):
         payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
             'active_id'))
-        return payslip_run_obj.operating_unit_id.company_pf_contribution_account
+        return payslip_run_obj.operating_unit_id.company_pf_contribution_account if payslip_run_obj.operating_unit_id.company_pf_contribution_account else False
 
-    company_pf_contribution_account = fields.Many2one('account.account', required=True, readonly=True,
+    company_pf_contribution_account = fields.Many2one('account.account', readonly=True,
                                                       default=lambda
                                                           self: self._default_company_pf_contribution_account(),
                                                       string='Company PF Contribution GL')
@@ -83,16 +93,25 @@ class CreateProvision(models.TransientModel):
     def _default_debit_account(self):
         payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
             'active_id'))
-        return payslip_run_obj.operating_unit_id.default_debit_account
+        return payslip_run_obj.operating_unit_id.default_debit_account if payslip_run_obj.operating_unit_id.default_debit_account else False
 
     default_debit_account = fields.Many2one('account.account', readonly=True,
                                             default=lambda self: self._default_debit_account(),
                                             string='Default Debit GL')
 
+    def _default_debit_account_ot(self):
+        payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
+            'active_id'))
+        return payslip_run_obj.operating_unit_id.default_debit_account_ot if payslip_run_obj.operating_unit_id.default_debit_account_ot else False
+
+    default_debit_account_ot = fields.Many2one('account.account', readonly=True,
+                                               default=lambda self: self._default_debit_account_ot(),
+                                               string='Default OT Debit GL')
+
     def _default_festival_debit_account(self):
         payslip_run_obj = self.env['hr.payslip.run'].browse(self.env.context.get(
             'active_id'))
-        return payslip_run_obj.operating_unit_id.default_festival_debit_account
+        return payslip_run_obj.operating_unit_id.default_festival_debit_account if payslip_run_obj.operating_unit_id.default_festival_debit_account else False
 
     default_festival_debit_account = fields.Many2one('account.account',
                                                      default=lambda self: self._default_festival_debit_account(),
@@ -115,8 +134,7 @@ class CreateProvision(models.TransientModel):
                 })
                 debit_account_lines.append(line)
             res.update({'debit_account_ids': debit_account_lines})
-        else:
-            print('not debit accounts found')
+
 
         if payslip_run_obj.operating_unit_id.festival_debit_account_ids:
             bonus_debit_account_lines = [(5, 0, 0)]
@@ -127,8 +145,7 @@ class CreateProvision(models.TransientModel):
                 })
                 bonus_debit_account_lines.append(line)
             res.update({'festival_debit_account_ids': bonus_debit_account_lines})
-        else:
-            print('not bonus debit accounts found')
+
         return res
 
     debit_account_ids = fields.One2many('temp.department.account.map', 'provision_id',
@@ -173,7 +190,8 @@ class CreateProvision(models.TransientModel):
         return payslip_run_obj.type
 
     salary_type = fields.Selection([("0", "Regular Salary"),
-                                    ("1", "Festival Bonus")], "Type", default=lambda self: self._default_salary_type())
+                                    ("1", "Festival Bonus"),
+                                    ("2", "OT")], "Type", default=lambda self: self._default_salary_type())
 
     def get_payslip_list(self, payslip_run_id):
         self.env.cr.execute("""
@@ -756,15 +774,16 @@ class CreateProvision(models.TransientModel):
                                         if value[department.id] < 0:
                                             value[department.id] = value[department.id] * (-1)
                                         if not value[department.id] == 0:
-                                            loan_mess_debit_values = self.get_move_line_vals('Loan, Mess and Mobile Bill',
-                                                                                             self.date, journal_id.id,
-                                                                                             self.payslip_run_id.operating_unit_id.default_debit_account.id,
-                                                                                             self.payslip_run_id.operating_unit_id.id,
-                                                                                             department.id,
-                                                                                             key,
-                                                                                             value[department.id],
-                                                                                             0,
-                                                                                             self.operating_unit_id.company_id.id)
+                                            loan_mess_debit_values = self.get_move_line_vals(
+                                                'Loan, Mess and Mobile Bill',
+                                                self.date, journal_id.id,
+                                                self.payslip_run_id.operating_unit_id.default_debit_account.id,
+                                                self.payslip_run_id.operating_unit_id.id,
+                                                department.id,
+                                                key,
+                                                value[department.id],
+                                                0,
+                                                self.operating_unit_id.company_id.id)
 
                                             sum_debit = sum_debit + value[department.id]
                                             move_lines.append((0, 0, loan_mess_debit_values))
@@ -834,36 +853,41 @@ class CreateProvision(models.TransientModel):
                     else:
                         raise UserError(_('Total debit value and total credit value mismatched.'))
                     if difference == 0:
-                        vals = {
-                            'name': name_seq,
-                            'journal_id': journal_id.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'date': self.date,
-                            'company_id': self.company_id.id,
-                            'state': 'draft',
-                            'line_ids': move_lines,
-                            'payslip_run_id': self.payslip_run_id.id,
-                            'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                            'ref': 'Total net value : ' + str(top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
-                                self.payslip_run_id.name)
-                        }
-
-                        move = self.env['account.move'].create(vals)
-
-                        if move:
-                            self.payslip_run_id.write({'account_move_id': move.id})
-                            message_id = self.env['success.wizard'].create({'message': _(
-                                "Journal Entry Created Successfully!")
-                            })
-                            return {
-                                'name': _('Success'),
-                                'type': 'ir.actions.act_window',
-                                'view_mode': 'form',
-                                'res_model': 'success.wizard',
-                                'context': vals,
-                                'res_id': message_id.id,
-                                'target': 'new'
+                        if len(move_lines) > 0:
+                            vals = {
+                                'name': name_seq,
+                                'journal_id': journal_id.id,
+                                'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                                'date': self.date,
+                                'company_id': self.company_id.id,
+                                'state': 'draft',
+                                'line_ids': move_lines,
+                                'payslip_run_id': self.payslip_run_id.id,
+                                'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                                'ref': 'Total net value : ' + str(top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
+                                    self.payslip_run_id.name)
                             }
+
+                            move = self.env['account.move'].create(vals)
+
+                            if move:
+                                self.payslip_run_id.write({'account_move_id': move.id})
+                                message_id = self.env['success.wizard'].create({'message': _(
+                                    "Journal Entry Created Successfully!")
+                                })
+                                return {
+                                    'name': _('Success'),
+                                    'type': 'ir.actions.act_window',
+                                    'view_mode': 'form',
+                                    'res_model': 'success.wizard',
+                                    'context': vals,
+                                    'res_id': message_id.id,
+                                    'target': 'new'
+                                }
+                        else:
+                            raise UserError(
+                                _('Could not create journal entry! There may have some problem in your payslips.'))
+
                     else:
                         # return wizard to confirm
                         vals = {
@@ -971,37 +995,114 @@ class CreateProvision(models.TransientModel):
                     difference = 0
 
                     if difference == 0:
-                        vals = {
-                            'name': name_seq,
-                            'journal_id': journal_id.id,
-                            'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
-                            'date': self.date,
-                            'company_id': self.company_id.id,
-                            'state': 'draft',
-                            'line_ids': move_lines,
-                            'payslip_run_id': self.payslip_run_id.id,
-                            'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
-                            'ref': 'Total net value : ' + str(
-                                top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
-                                self.payslip_run_id.name)
-                        }
-
-                        move = self.env['account.move'].create(vals)
-
-                        if move:
-                            self.payslip_run_id.write({'account_move_id': move.id})
-                            message_id = self.env['success.wizard'].create({'message': _(
-                                "Journal Entry Created Successfully!")
-                            })
-                            return {
-                                'name': _('Success'),
-                                'type': 'ir.actions.act_window',
-                                'view_mode': 'form',
-                                'res_model': 'success.wizard',
-                                'context': vals,
-                                'res_id': message_id.id,
-                                'target': 'new'
+                        if len(move_lines) > 0:
+                            vals = {
+                                'name': name_seq,
+                                'journal_id': journal_id.id,
+                                'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                                'date': self.date,
+                                'company_id': self.company_id.id,
+                                'state': 'draft',
+                                'line_ids': move_lines,
+                                'payslip_run_id': self.payslip_run_id.id,
+                                'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                                'ref': 'Total net value : ' + str(
+                                    top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
+                                    self.payslip_run_id.name)
                             }
+
+                            move = self.env['account.move'].create(vals)
+
+                            if move:
+                                self.payslip_run_id.write({'account_move_id': move.id})
+                                message_id = self.env['success.wizard'].create({'message': _(
+                                    "Journal Entry Created Successfully!")
+                                })
+                                return {
+                                    'name': _('Success'),
+                                    'type': 'ir.actions.act_window',
+                                    'view_mode': 'form',
+                                    'res_model': 'success.wizard',
+                                    'context': vals,
+                                    'res_id': message_id.id,
+                                    'target': 'new'
+                                }
+                        else:
+                            raise UserError(
+                                _('Could not create journal entry! There may have some problem in your payslips.'))
+
+            elif self.salary_type == '2':
+                ot_department_net_values = self.get_department_net_values(self.payslip_run_id, 'NET')
+                if self.payslip_run_id.operating_unit_id:
+                    move_lines = []
+                    sum_debit = 0
+
+                    if self.payslip_run_id.operating_unit_id.default_debit_account_ot:
+                        for key, value in ot_department_net_values.items():
+                            for cost_center_value in value:
+                                department = self.get_department_id(payslip_departments, key)
+                                if ot_department_net_values[key][cost_center_value] != 0:
+                                    debit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                         self.payslip_run_id.operating_unit_id.default_debit_account_ot.id,
+                                                                         self.payslip_run_id.operating_unit_id.id,
+                                                                         department.id, cost_center_value.id,
+                                                                         ot_department_net_values[key][
+                                                                             cost_center_value], 0,
+                                                                         self.operating_unit_id.company_id.id)
+
+                                    sum_debit = sum_debit + ot_department_net_values[key][cost_center_value]
+
+                                    if not (debit_vals['debit'] == 0 and debit_vals['credit'] == 0):
+                                        move_lines.append((0, 0, debit_vals))
+
+                        main_credit_vals = self.get_move_line_vals('0', self.date, journal_id.id,
+                                                                   self.payslip_run_id.operating_unit_id.payable_account_ot.id,
+                                                                   self.payslip_run_id.operating_unit_id.id, False,
+                                                                   False,
+                                                                   0, sum_debit,
+                                                                   self.operating_unit_id.company_id.id)
+
+                        move_lines.append((0, 0, main_credit_vals))
+                        sum_credit = sum_debit
+
+                    name_seq = self.env['ir.sequence'].next_by_code('account.move.seq')
+                    difference = 0
+
+                    if difference == 0:
+                        if len(move_lines) > 0:
+                            vals = {
+                                'name': name_seq,
+                                'journal_id': journal_id.id,
+                                'operating_unit_id': self.payslip_run_id.operating_unit_id.id,
+                                'date': self.date,
+                                'company_id': self.company_id.id,
+                                'state': 'draft',
+                                'line_ids': move_lines,
+                                'payslip_run_id': self.payslip_run_id.id,
+                                'narration': 'Provision above amount against Salary month of ' + month + '-' + datey,
+                                'ref': 'Total net value : ' + str(
+                                    top_sheet_total_net_value) + '\n' + 'Batch : ' + str(
+                                    self.payslip_run_id.name)
+                            }
+
+                            move = self.env['account.move'].create(vals)
+
+                            if move:
+                                self.payslip_run_id.write({'account_move_id': move.id})
+                                message_id = self.env['success.wizard'].create({'message': _(
+                                    "Journal Entry Created Successfully!")
+                                })
+                                return {
+                                    'name': _('Success'),
+                                    'type': 'ir.actions.act_window',
+                                    'view_mode': 'form',
+                                    'res_model': 'success.wizard',
+                                    'context': vals,
+                                    'res_id': message_id.id,
+                                    'target': 'new'
+                                }
+                        else:
+                            raise UserError(_('Could not create journal entry! There may have some problem in your payslips.'))
 
             else:
                 raise UserError(_('Salary type not found'))

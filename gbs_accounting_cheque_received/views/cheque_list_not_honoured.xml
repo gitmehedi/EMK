@@ -1,69 +1,76 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="cheque_list_not_honoured_form" model="ir.ui.view">
-        <field name="name">accounting.cheque.received.form</field>
-        <field name="model">accounting.cheque.received</field>
-        <field name="arch" type="xml">
-            <form string="Cheque Received Form">
-                <header>
+<!--    <record id="cheque_list_not_honoured_form_view" model="ir.ui.view">-->
+<!--        <field name="name">accounting.cheque.received.not.honoured.form</field>-->
+<!--        <field name="model">accounting.cheque.received</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <form string="Cheque Received Form">-->
+<!--                <header>-->
 
-                    <button name="action_pending" type="object" states="draft" string="Pending" class="oe_highlight"/>
-                    <button name="action_honoured" type="object" states="draft" string="Honoured" class="oe_highlight"/>
-                    <button name="action_dishonoured" type="object" states="draft" string="Disnonoured"
-                            class="oe_highlight"/>
-                    <button name="action_amount_deposit" type="object" states="draft" string="Amount Deposit"
-                            class="oe_highlight"/>
-                    <button name="action_approve" type="object" states="draft" string="Approve" class="oe_highlight"/>
+<!--                    <button name="action_pending" type="object" states="draft" string="Pending" class="oe_highlight"/>-->
+<!--                    <button name="action_honoured" groups="gbs_accounting_cheque_received.group_can_honour_cheque" type="object" states="draft" string="Honoured" class="oe_highlight"/>-->
 
-                    <field name="state" widget="statusbar"/>
+<!--                    <button name="action_dishonoured" groups="gbs_accounting_cheque_received.group_can_honour_cheque" type="object" states="draft" string="Disnonoured"-->
+<!--                            class="oe_highlight"/>-->
+<!--                    <button name="action_amount_deposit" groups="gbs_accounting_cheque_received.group_can_honour_cheque" type="object" states="draft" string="Amount Deposit"-->
+<!--                            class="oe_highlight"/>-->
+<!--                    <button name="action_approve" groups="gbs_accounting_cheque_received.group_can_honour_cheque" type="object" states="draft" string="Approve" class="oe_highlight"/>-->
 
-                </header>
-                <sheet>
-                    <h1>
-                        <field name="name"/>
-                    </h1>
-                    <group>
-                        <group>
-                            <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="bank_name" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="branch_name"/>
-                        </group>
+<!--                    <field name="state" widget="statusbar"/>-->
 
-                        <group>
-                            <field name="date_on_cheque"/>
-                            <field name="cheque_amount"/>
-                            <field name="sale_order_id" options="{'no_open': True, 'no_create': True}"/>
-                        </group>
+<!--                </header>-->
+<!--                <sheet>-->
+<!--                    <h1>-->
+<!--                        <field name="name"/>-->
+<!--                    </h1>-->
+<!--                    <group>-->
+<!--                        <group>-->
+<!--                            <field name="partner_id" options="{'no_open': True, 'no_create': True}"/>-->
+<!--                            <field name="bank_name" options="{'no_open': True, 'no_create': True}"/>-->
+<!--                            <field name="branch_name"/>-->
+<!--                        </group>-->
 
-                    </group>
+<!--                        <group>-->
+<!--                            <field name="date_on_cheque"/>-->
+<!--                            <field name="cheque_amount"/>-->
+<!--                            <field name="sale_order_id" options="{'no_open': True, 'no_create': True}"/>-->
+<!--                        </group>-->
 
-                </sheet>
+<!--                    </group>-->
 
-            </form>
-        </field>
-    </record>
+<!--                </sheet>-->
 
-    <record id="cheque_list_not_honoured_tree" model="ir.ui.view">
-        <field name="name">accounting.cheque.received.tree.view</field>
-        <field name="model">accounting.cheque.received</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Cheque Received Tree">
-                <field name="partner_id"/>
-                <field name="bank_name"/>
-                <field name="cheque_amount"/>
-                <field name="sale_order_id"/>
-                <field name="state"/>
-            </tree>
-        </field>
-    </record>
+<!--            </form>-->
+<!--        </field>-->
+<!--    </record>-->
 
-    <record model="ir.actions.act_window" id="action_cheque_list_not_honoured">
-        <field name="name">Cheque List Not Honoured</field>
+<!--    <record id="cheque_list_not_honoured_tree_view" model="ir.ui.view">-->
+<!--        <field name="name">accounting.cheque.received.not.honoured.tree.view</field>-->
+<!--        <field name="model">accounting.cheque.received</field>-->
+<!--        <field name="type">tree</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <tree string="Cheque Received Tree">-->
+<!--                <field name="partner_id"/>-->
+<!--                <field name="bank_name"/>-->
+<!--                <field name="cheque_amount"/>-->
+<!--                <field name="sale_order_id"/>-->
+<!--                <field name="state"/>-->
+<!--            </tree>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record model="ir.actions.act_window" id="action_cheque_list_not_honoured_from_accounting">
+        <field name="name">Cheques Not Honoured</field>
         <field name="res_model">accounting.cheque.received</field>
         <field name="domain">[('state','!=','honoured')]</field>
         <field name="view_mode">tree,form</field>
+          <field name="view_ids"
+                   eval="[(5, 0, 0),
+                    (0, 0, {'sequence': 2001, 'view_mode': 'tree', 'view_id': ref('accounting_cheque_recieved_tree_view')}),
+                    (0, 0, {'sequence': 2002, 'view_mode': 'form', 'view_id': ref('accounting_cheque_received_form_view')}),
+
+                ]"/>
     </record>
 
 
@@ -73,9 +80,10 @@
               <!--parent="account.menu_finance"-->
               <!--sequence="2"/>-->
 
-    <menuitem action="action_cheque_list_not_honoured"
+    <menuitem action="action_cheque_list_not_honoured_from_accounting"
               id="cheque_list_not_honoured_id"
               parent="account.menu_finance_receivables"
-              name="Cheque List Not Honoured"
+              groups="gbs_accounting_cheque_received.group_cheque_receive_ho"
+              name="Cheques(Not Honoured)"
     />
 </odoo>

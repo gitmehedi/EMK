@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="lc_salc_register_report_wizard" model="ir.ui.view">
+        <field name="name">lc.register.wizard.global</field>
+        <field name="model">lc.register.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="LC Register">
+                <group>
+                    <group>
+                        <field name="filter_by"/>
+                        <field name="acceptance_default_value" attrs="{'invisible':['|', '|', '|', ('filter_by', '=', False), ('filter_by', '=', 'goods_delivered_doc_not_prepared'), ('filter_by', '=', 'maturated_but_amount_not_collect'), ('filter_by', '=', 'goods_delivered_but_lc_not_received')]}"/>
+                    </group>
+                    <group>
+                        <field name="type" attrs="{'invisible': [('is_type_hide', '=', True)]}"/>
+                        <field name="is_type_hide" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="lc_number"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="report_print" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- LC Register Global -->
+    <record id="action_wizard_lc_register" model="ir.actions.act_window">
+        <field name="name">LC Register</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">lc.register.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem action="action_wizard_lc_register"
+              id="menu_wizard_lc_register"
+              parent="gbs_account.mis_reports_root_menu"
+              sequence="101"/>
+
+    <!-- LC Register Local -->
+    <record id="action_wizard_lc_register_local" model="ir.actions.act_window">
+        <field name="name">LC Register(Local)</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">lc.register.wizard</field>
+        <field name="context">{'default_type': 'local', 'default_is_type_hide': True}</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem action="action_wizard_lc_register_local"
+              id="menu_wizard_lc_register_local"
+              parent="letter_of_credit.lc_report_menu_root"
+              groups="gbs_application_group.group_export_local_lc"
+              sequence="13"/>
+
+    <!-- LC Register Foreign -->
+    <record id="action_wizard_lc_register_foreign" model="ir.actions.act_window">
+        <field name="name">LC Register(Foreign)</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">lc.register.wizard</field>
+        <field name="context">{'default_type': 'foreign', 'default_is_type_hide': True}</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem action="action_wizard_lc_register_foreign"
+              id="menu_wizard_lc_register_foreign"
+              parent="letter_of_credit.lc_report_menu_root"
+              groups="gbs_application_group.group_export_foreign_lc"
+              sequence="13"/>
+</odoo>

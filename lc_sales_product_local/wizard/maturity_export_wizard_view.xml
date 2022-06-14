@@ -11,9 +11,6 @@
                         <group>
                             <field name="to_maturity_date"/>
                         </group>
-                        <group>
-                            <field name="bill_id"/>
-                        </group>
                     </group>
                     <footer>
                         <button string="Save" name="save_action" type="object" class="oe_highlight"  />

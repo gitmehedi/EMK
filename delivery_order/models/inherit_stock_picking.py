@@ -53,8 +53,7 @@ class InheritStockPicking(models.Model):
                             compute="_calculate_bank_code", store=False)
     pack_type = fields.Many2one('product.packaging.mode', string='Packing Mode', readonly=True)
     show_transport_info = fields.Boolean(string='Show Transport Info', default=False,
-                                         states={'partially_available': [('readonly', True)],
-                                                 'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
+                                         states={'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                                  'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     vat_challan_id = fields.Char(string='VAT Challan Id', states={'partially_available': [('readonly', True)],
@@ -67,26 +66,21 @@ class InheritStockPicking(models.Model):
     transport_details = fields.Selection([
         ('owned', 'Owned'),
         ('hired', 'Hired'),
-    ], string='Type', states={'partially_available': [('readonly', True)],
-                              'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
+    ], string='Type', states={'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                               'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     transport_name = fields.Text(string='Transport Details',
-                                 states={'partially_available': [('readonly', True)],
-                                         'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
+                                 states={'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                          'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     vehicle_no = fields.Char(size=100, string='Vehicle #',
-                             states={'partially_available': [('readonly', True)],
-                                     'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
+                             states={'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                      'done': [('readonly', True)], 'cancel': [('readonly', True)]},
                              track_visibility='onchange')
     driver_no = fields.Char(size=100, string='Driver Name',
-                            states={'partially_available': [('readonly', True)],
-                                    'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
+                            states={'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                     'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     driver_mob = fields.Char(size=100, string='Driver Mob #',
-                             states={'partially_available': [('readonly', True)],
-                                     'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
+                             states={'confirmed': [('readonly', True)], 'waiting': [('readonly', True)],
                                      'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     # Inherited below fields to meet custom demands

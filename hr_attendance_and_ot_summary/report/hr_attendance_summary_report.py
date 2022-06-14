@@ -42,6 +42,8 @@ class HrAttendanceSummaryReport(models.AbstractModel):
                     att_summary['late_hrs'] = self.convertFloatToTime(att_sum.late_hrs)
                     att_summary['schedule_ot_hrs'] = self.convertFloatToTime(att_sum.schedule_ot_hrs)
                     att_summary['cal_ot_hrs'] = self.convertFloatToTime(att_sum.cal_ot_hrs)
+                    att_summary['extra_ot'] = self.convertFloatToTime(att_sum.extra_ot)
+                    att_summary['total_ot'] = self.convertFloatToTime(att_sum.cal_ot_hrs + att_sum.extra_ot)
 
                     dpt_att_summary['val'].append(att_summary)
                     

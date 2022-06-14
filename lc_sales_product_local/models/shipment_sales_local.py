@@ -65,6 +65,7 @@ class ShipmentLocal(models.Model):
             'view_id': res and res.id or False,
             'res_model': 'done.wizard',
             'type': 'ir.actions.act_window',
+            'context': {'default_region_type': 'local'},
             'nodestroy': True,
             'target': 'new',
         }
@@ -156,6 +157,51 @@ class ShipmentLocal(models.Model):
             'view_mode': 'form',
             'view_id': res and res.id or False,
             'res_model': 'to.maturity.export.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_to_first_acceptance_export(self):
+        res = self.env.ref('lc_sales_product_local.to_first_acceptance_export_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'to.first.acceptance.export.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_to_second_acceptance_export_wizard(self):
+        res = self.env.ref('lc_sales_product_local.to_second_acceptance_export_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'to.second.acceptance.export.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+        }
+        return result
+
+    @api.multi
+    def action_to_bill_id_export_wizard(self):
+        res = self.env.ref('lc_sales_product_local.to_bill_id_export_wizard')
+        result = {
+            'name': _('Please Enter The Information'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': res and res.id or False,
+            'res_model': 'to.bill.id.export.wizard',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',

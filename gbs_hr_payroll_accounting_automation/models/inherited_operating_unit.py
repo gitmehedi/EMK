@@ -21,3 +21,8 @@ class InheritedOperatingUnit(models.Model):
                                         track_visibility='onchange', string="""Salary Debit GL's""")
     festival_debit_account_ids = fields.One2many('department.account.map', 'festival_operating_unit_id',
                                                  track_visibility='onchange', string="""Bonus Debit GL's""")
+
+    payable_account_ot = fields.Many2one('account.account', track_visibility='onchange', string='OT Payable GL')
+
+    default_debit_account_ot = fields.Many2one('account.account', track_visibility='onchange',
+                                               string='OT Default Debit GL')

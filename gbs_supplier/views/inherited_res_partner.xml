@@ -32,7 +32,7 @@
 
                 <xpath expr="//field[@name='category_id']" position="after">
                     <field name="sector_id"/>
-                    <field name="supplier_type"/>
+                    <field name="supplier_type" required="1"/>
                 </xpath>
                 <xpath expr="//group[@name='container_row_2']/group[2]" position="after">
                     <group string="CNF Agent" name="cnf" attrs="{'invisible':['|',('supplier', '=', True),('customer', '=', True)]}">
