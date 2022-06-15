@@ -17,7 +17,6 @@
                                 <field name="location"/>
                             </group>
                             <group>
-                                <field name="passed_date"/>
                                 <field name="start_date"/>
                                 <field name="expire"/>
                                 <field name="end_date" attrs="{'invisible':[('expire', '=', False)]}"/>
