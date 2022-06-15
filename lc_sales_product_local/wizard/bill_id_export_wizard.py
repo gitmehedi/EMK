@@ -4,7 +4,7 @@ from odoo import api, fields, models
 class BillIDExportWizard(models.TransientModel):
     _name = 'to.bill.id.export.wizard'
 
-    bill_id = fields.Date('Bill ID', required=True)
+    bill_id = fields.Char('Bill ID', required=True)
 
     @api.multi
     def save_action(self):
