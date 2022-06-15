@@ -13,6 +13,7 @@
         'point_of_sale',
         # 'pos_reprint',
         'pos_operating_unit',
+        'hr_employee_ted_cafe_bills',
         # 'pos_discount',
         # 'product_sequence',
         # 'pos_notes',
