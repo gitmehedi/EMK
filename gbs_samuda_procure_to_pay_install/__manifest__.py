@@ -22,7 +22,6 @@
         'purchase_quotation_compare',
         'letter_of_credit_done',
         'gbs_stock_product',
-        'web_access_rule_button_extend',
         'letter_of_credit_report',
         'stock_gate_in'
     ],

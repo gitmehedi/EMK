@@ -65,13 +65,13 @@ class AttendanceProcessor(models.Model):
                          empJoiningDateMap):
 
         ############### Delete Current Records ##########################################
-        self.env["hr.attendance.summary.line"].search(
-            [('employee_id', '=', employeeId), ('att_summary_id', '=', summaryId)]).unlink()
+        self.env["hr.attendance.summary.line"].search([('employee_id', '=', employeeId),
+                                                       ('att_summary_id', '=', summaryId)]).unlink()
 
         hr_employee_pool = self.env['hr.employee']
 
-        employee = hr_employee_pool.search(
-            ['&', ('id', '=', employeeId), '|', ('active', '=', True), ('active', '=', False)])
+        employee = hr_employee_pool.search(['&', ('id', '=', employeeId), '|', ('active', '=', True),
+                                            ('active', '=', False)])
         day = datetime.timedelta(days=1)
 
         # Get Date from Account Period
@@ -242,7 +242,7 @@ class AttendanceProcessor(models.Model):
                                                     currentDayDutyTime.otStartDutyTime,
                                                     currentDayDutyTime.otEndDutyTime,
                                                     (
-                                                                currentDayDutyTime.dutyMinutes + currentDayDutyTime.otDutyMinutes) / 60,
+                                                            currentDayDutyTime.dutyMinutes + currentDayDutyTime.otDutyMinutes) / 60,
                                                     totalPresentTime / 60, attendanceDayList))
         return attSummaryLine
 

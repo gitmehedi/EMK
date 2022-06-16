@@ -15,11 +15,15 @@
                                 class="oe_highlight"/>
                         <button name="act_approve" string="Approve" states="filter" type="object" class="oe_highlight"/>
                         <button name="act_draft" string="Draft" states="filter" type="object"/>
-                        <button name="act_done" string="Done" states="approve" type="object"/>
                         <button name="act_reject" string="Reject" states="draft" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done,reject"/>
                     </header>
                     <sheet>
+                        <div class="pull-left">
+                            <h1>
+                                <field name="name" readonly="1" nolabel="1"/>
+                            </h1>
+                        </div>
                         <group>
                             <group>
                                 <field name="date"/>
@@ -77,6 +81,7 @@
                       decoration-success="state in ('draft','filter','approve','migrate',)"
                       decoration-muted="state=='reject'"
                       decoration-bf="state in ('filter','approve','migrate',)">
+                    <field name="name"/>
                     <field name="date"/>
                     <field name="state"/>
                 </tree>

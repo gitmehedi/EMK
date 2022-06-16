@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="edit_holiday_status_form_view" model="ir.ui.view">
+            <field name="name">hr_holidays_status_form</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='limit']" position="after">
+                        <field name="short_leave_flag"/>
+                        <field name="half_leave_flag" attrs="{'invisible': [('short_leave_flag', '=', False)]}"/>
+                        <field name="compensatory_flag"/>
+                        <field name="number_of_hours" attrs="{'invisible': [('short_leave_flag', '=', False)]}" />
+                    </xpath>
+                    <xpath expr="//field[@name='company_id']" position="attributes">
+                        <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='categ_id']" position="attributes">
+                        <attribute name="options">{'no_open':True,'no_create':True,'no_create_edit':True}</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="inherit_hr_leave_type_tree_view" model="ir.ui.view">
+            <field name="name">inherit.hr.leave.type.tree.view</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="inherit_id" ref="hr_holidays.view_holiday_status_normal_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">state == 'reject'</attribute>
+                    <attribute name="decoration-bf">state == 'approve'</attribute>
+                    <attribute name="decoration-success">state == 'approve'</attribute>
+                    <attribute name="decoration-info">state == 'draft'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='limit']" position="after">
+                    <field name="short_leave_flag"></field>
+                </xpath>
+                <xpath expr="//field[@name='short_leave_flag']" position="after">
+                    <field name="state"></field>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="inherit_hr_leave_type_form_view">
+            <field name="name">inherit.hr.leave.type.form.view</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/*" position="before">
+                    <header>
+                        <button name="act_approve" string="Approve" states="draft" type="object"
+                                class="oe_highlight"/>
+                        <button name="act_draft" string="Draft" states="reject" type="object" class="oe_highlight"/>
+                        <button name="act_reject" string="Reject" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_hr_leave_type_search_view" model="ir.ui.view">
+            <field name="name">inherit.hr.leave.type.search.view</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="inherit_id" ref="hr_holidays.view_hr_holidays_status_search"/>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="state"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="hr_holidays.open_view_holiday_status">
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True'}
+            </field>
+        </record>
+
+
+        <menuitem action="hr_holidays.open_view_holiday_status" id="menu_hr_holidays_type" name="Leave Types"
+                  parent="hr_holidays.menu_hr_holidays_configuration" sequence="5"/>
+    </data>
+</odoo>

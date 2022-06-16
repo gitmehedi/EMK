@@ -32,7 +32,6 @@
         'stock_warehouse_extend',
         'stock_move_backdating',
         'board',
-        'web_access_rule_button_extend',
         'delivery_jar_counting',
         'customer_area',
         'terms_setup',
