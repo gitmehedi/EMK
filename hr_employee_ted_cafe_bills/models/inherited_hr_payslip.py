@@ -28,7 +28,7 @@ class InheritedHrTedCafePayslip(models.Model):
 
             line_ids = self.input_line_ids
             lines = self.env['hr.ted.cafe.bill.line'].search([('employee_id', '=', self.employee_id.id),
-                                                            ('state', '=', 'approved')])
+                                                            ('state', '=', 'applied')])
 
             for line in lines:
                 line_ids += line_ids.new({

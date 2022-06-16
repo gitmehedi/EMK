@@ -1,14 +1,14 @@
 from odoo import api, fields, models, tools, _
 
 
-class InheritedHrTedCafePayslip(models.Model):
+class InheritedHrPayrollAbsentPayslip(models.Model):
     _inherit = "hr.payslip"
 
     ref = fields.Char('Reference')
 
     @api.multi
     def action_payslip_done(self):
-        res = super(InheritedHrTedCafePayslip, self).action_payslip_done()
+        res = super(InheritedHrPayrollAbsentPayslip, self).action_payslip_done()
 
         tcb_ids = []
         for line in self.input_line_ids:
@@ -24,18 +24,18 @@ class InheritedHrTedCafePayslip(models.Model):
     def onchange_employee(self):
         if self.employee_id:
             self.input_line_ids = 0
-            super(InheritedHrTedCafePayslip, self).onchange_employee()
+            super(InheritedHrPayrollAbsentPayslip, self).onchange_employee()
 
             line_ids = self.input_line_ids
             lines = self.env['hr.employee.payroll.absence.line'].search([('employee_id', '=', self.employee_id.id),
-                                                            ('state', '=', 'approved')])
+                                                            ('state', '=', 'applied')])
 
             for line in lines:
                 line_ids += line_ids.new({
                     'name': 'Employee Payroll Absent',
                     'code': "HMPA",
-                    'amount': line.amount,
+                    'amount': line.days,
                     'contract_id': self.contract_id.id,
-                    'ref': line.id,
+                    'ref': line.id
                 })
             self.input_line_ids = line_ids

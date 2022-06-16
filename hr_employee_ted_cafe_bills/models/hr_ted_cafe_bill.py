@@ -25,7 +25,7 @@ class HrTedCafeBill(models.Model):
                             states={'draft': [('readonly', False)]})
     date_to = fields.Date(string='End Date', required=True, default=get_last_day, readonly=True, copy=True,
                           states={'draft': [('readonly', False)]})
-    line_ids = fields.One2many(comodel_name='hr.ted.cafe.bill.line', inverse_name='parent_id', string="Line Id",
+    line_ids = fields.One2many(comodel_name='hr.ted.cafe.bill.line', inverse_name='line_id', string="Line Id",
                                readonly=True, copy=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', "Draft"), ('approve', "Approved"), ('done', "Done"), ], default='draft')
 
@@ -38,7 +38,7 @@ class HrTedCafeBill(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.state = 'applied'
+        self.state = 'approve'
         for line in self.line_ids:
             if line.state != 'adjusted':
                 line.write({'state': 'applied'})
@@ -83,7 +83,7 @@ class HrTedCafeBillLine(models.Model):
                        states={'draft': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string="Employee", store=True, required=True,
                                   domain=_get_contract_employee, readonly=True, states={'draft': [('readonly', False)]})
-    parent_id = fields.Many2one(comodel_name='hr.ted.cafe.bill', ondelete='cascade', string='Cafe No')
+    line_id = fields.Many2one(comodel_name='hr.ted.cafe.bill', ondelete='cascade', string='Cafe No')
 
     state = fields.Selection([('draft', "Draft"),
                               ('applied', "Applied"),
