@@ -8,9 +8,18 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//tree" position="attributes">
+                        <attribute name="decoration-info">state == 'draft'</attribute>
+                        <attribute name="decoration-success">state=='open'</attribute>
+                        <attribute name="decoration-danger">state=='pending'</attribute>
+                        <attribute name="decoration-muted">state=='close'</attribute>
+                        <attribute name="decoration-bf">state in ('open',)</attribute>
+                    </xpath>
                     <xpath expr="//field[@name='job_id']" position="after">
-                         <field name="contractual" />
-
+                        <field name="contractual"/>
+                    </xpath>
+                    <xpath expr="//field[@name='date_end']" position="after">
+                        <field name="state"/>
                     </xpath>
                 </data>
             </field>
@@ -23,7 +32,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='type_id']" position="after">
-                        <field name="contractual" />
+                        <field name="contractual"/>
                     </xpath>
                 </data>
             </field>
@@ -37,7 +46,7 @@
                 <data>
                     <xpath expr="//field[@name='supplementary_allowance']" position="after">
 
-                        <field name="transport_allowance" />
+                        <field name="transport_allowance"/>
                     </xpath>
                 </data>
             </field>

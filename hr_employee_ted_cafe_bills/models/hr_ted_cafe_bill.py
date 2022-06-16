@@ -71,12 +71,18 @@ class HrTedCafeBillLine(models.Model):
     _name = 'hr.ted.cafe.bill.line'
     _description = 'HR mobile bill line'
 
+    @api.model
+    def _get_contract_employee(self):
+        contracts = self.env['hr.contract'].search([('state', '=', 'open')])
+        ids = [val.employee_id.id for val in contracts]
+        return [('id', 'in', ids)]
+
     amount = fields.Float(string="Cafe Bill Amount", required=True, readonly=True,
                           states={'draft': [('readonly', False)]})
     date = fields.Date(string="Date", required=True, readonly=True, default=fields.Date.today,
-                          states={'draft': [('readonly', False)]})
-    employee_id = fields.Many2one('hr.employee', string="Employee", store=True, required=True, ondelete='cascade',
-                                  readonly=True, states={'draft': [('readonly', False)]})
+                       states={'draft': [('readonly', False)]})
+    employee_id = fields.Many2one('hr.employee', string="Employee", store=True, required=True,
+                                  domain=_get_contract_employee, readonly=True, states={'draft': [('readonly', False)]})
     parent_id = fields.Many2one(comodel_name='hr.ted.cafe.bill', ondelete='cascade', string='Cafe No')
 
     state = fields.Selection([('draft', "Draft"),
@@ -84,3 +90,4 @@ class HrTedCafeBillLine(models.Model):
                               ('approved', "Approved"),
                               ('adjusted', "Adjusted")
                               ], default='draft')
+

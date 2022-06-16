@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <form string="Employee Ted Cafe Bills" delete="false">
                     <header>
+                        <button name="%(contract_employee_ted_wizard_action_view)d"
+                                type="action" string="Employee" class="oe_highlight" states="draft"/>
                         <button name="action_confirm" type="object" string="Approve" states="draft"
                                 class="oe_highlight"/>
                         <button name="action_done" type="object" groups="hr.group_hr_manager"
