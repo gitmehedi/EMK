@@ -120,6 +120,7 @@
         "hr_employee_operating_unit",
         "gbs_hr_recruitment",
         "website_job_application",
+        "hr_employee_payroll_absence",
     ],
     'installable': True,
     'application': True,

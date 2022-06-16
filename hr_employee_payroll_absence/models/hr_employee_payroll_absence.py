@@ -3,10 +3,10 @@ from odoo import api, models, fields, _
 from odoo.exceptions import UserError, ValidationError
 
 
-class HrTedCafeBill(models.Model):
-    _name = 'hr.ted.cafe.bill'
+class HrEmployeePayrollAbsence(models.Model):
+    _name = 'hr.employee.payroll.absence'
     _inherit = ['mail.thread']
-    _description = 'Ted Cafe Bills'
+    _description = 'Employee Payroll Absence'
     _order = 'name desc'
 
     def get_first_day(self):
@@ -25,7 +25,7 @@ class HrTedCafeBill(models.Model):
                             states={'draft': [('readonly', False)]})
     date_to = fields.Date(string='End Date', required=True, default=get_last_day, readonly=True, copy=True,
                           states={'draft': [('readonly', False)]})
-    line_ids = fields.One2many(comodel_name='hr.ted.cafe.bill.line', inverse_name='parent_id', string="Line Id",
+    line_ids = fields.One2many('hr.employee.payroll.absence.line', 'line_id', string="Line ID",
                                readonly=True, copy=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', "Draft"), ('approve', "Approved"), ('done', "Done"), ], default='draft')
 
@@ -64,12 +64,12 @@ class HrTedCafeBill(models.Model):
             if bill.state != 'draft':
                 raise UserError(_('After Approval you can not delete this record.'))
             bill.line_ids.unlink()
-        return super(HrTedCafeBill, self).unlink()
+        return super(HrEmployeePayrollAbsence, self).unlink()
 
 
 class HrTedCafeBillLine(models.Model):
-    _name = 'hr.ted.cafe.bill.line'
-    _description = 'HR mobile bill line'
+    _name = 'hr.employee.payroll.absence.line'
+    _description = 'Employee Payroll Absence'
 
     @api.model
     def _get_contract_employee(self):
@@ -77,17 +77,14 @@ class HrTedCafeBillLine(models.Model):
         ids = [val.employee_id.id for val in contracts]
         return [('id', 'in', ids)]
 
-    amount = fields.Float(string="Cafe Bill Amount", required=True, readonly=True,
-                          states={'draft': [('readonly', False)]})
-    date = fields.Date(string="Date", required=True, readonly=True, default=fields.Date.today,
-                       states={'draft': [('readonly', False)]})
+    days = fields.Float(string="Absent Days", required=True, readonly=True,
+                        states={'draft': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string="Employee", store=True, required=True,
                                   domain=_get_contract_employee, readonly=True, states={'draft': [('readonly', False)]})
-    parent_id = fields.Many2one(comodel_name='hr.ted.cafe.bill', ondelete='cascade', string='Cafe No')
+    line_id = fields.Many2one(comodel_name='hr.employee.payroll.absence', ondelete='cascade', string='Line No')
 
     state = fields.Selection([('draft', "Draft"),
                               ('applied', "Applied"),
                               ('approved', "Approved"),
                               ('adjusted', "Adjusted")
                               ], default='draft')
-

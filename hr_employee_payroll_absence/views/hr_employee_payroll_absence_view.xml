@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="hr_ted_cafe_bill_form" model="ir.ui.view">
-            <field name="name">hr.ted.cafe.bill.form</field>
-            <field name="model">hr.ted.cafe.bill</field>
+        <record id="hr_employee_payroll_absence_form" model="ir.ui.view">
+            <field name="name">hr.employee.payroll.absence.form</field>
+            <field name="model">hr.employee.payroll.absence</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee Ted Cafe Bills" delete="false">
+                <form string="Payroll Absence" delete="false">
                     <header>
-                        <button name="%(contract_employee_ted_wizard_action_view)d"
+                        <button name="%(contract_employee_wizard_action_view)d"
                                 type="action" string="Employee" class="oe_highlight" states="draft"/>
-                        <button name="action_confirm" type="object" string="Approve" states="draft"
+						<button name="action_confirm" type="object" string="Approve" states="draft"
                                 class="oe_highlight"/>
                         <button name="action_done" type="object" groups="hr.group_hr_manager"
                                 string="Done" states="approve" class="oe_highlight"/>
@@ -29,13 +29,12 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Ted Cafe Bills">
+                            <page string="Payroll Absence">
                                 <field name="line_ids">
                                     <tree string="List" editable="bottom">
                                         <field name="employee_id"
                                                options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
-                                        <field name="amount"/>
-                                        <field name="date"/>
+                                        <field name="days"/>
                                         <field name="state" invisible="1"/>
                                     </tree>
                                 </field>
@@ -50,12 +49,12 @@
             </field>
         </record>
 
-        <record id="hr_ted_cafe_bill_tree" model="ir.ui.view">
-            <field name="name">hr.ted.cafe.bill.tree</field>
-            <field name="model">hr.ted.cafe.bill</field>
+        <record id="hr_employee_payroll_absence_tree" model="ir.ui.view">
+            <field name="name">hr.employee.payroll.absence.tree</field>
+            <field name="model">hr.employee.payroll.absence</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Employee Ted Cafe Bills" decoration-info="state=='draft'"
+                <tree string="Payroll Absence" decoration-info="state=='draft'"
                       decoration-success="state=='approve'" decoration-mute="state=='done'"
                       decoration-bf="state in ('approve',)">
                     <field name="name"/>
@@ -65,15 +64,17 @@
                 </tree>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="hr_ted_cafe_bill_action">
-            <field name="name">Ted Cafe Loan</field>
-            <field name="res_model">hr.ted.cafe.bill</field>
+        <record model="ir.actions.act_window" id="hr_employee_payroll_absence_action">
+            <field name="name">Payroll Absence</field>
+            <field name="res_model">hr.employee.payroll.absence</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_ted_cafe_bill_menu" name="Ted Cafe Operation" parent="point_of_sale.menu_point_root"
-                  action="hr_ted_cafe_bill_action" groups="hr.group_hr_user" sequence="92"/>
-        <menuitem id="hr_ted_cafe_bills_menu" name="Ted Cafe Bills" parent="hr_ted_cafe_bill_menu"
-                  action="hr_ted_cafe_bill_action" groups="hr.group_hr_user"/>
+        <menuitem id="hr_employee_payroll_absence_menu" name="Payroll Absence Operation"
+                  parent="point_of_sale.menu_point_root"
+                  action="hr_employee_payroll_absence_action" groups="hr.group_hr_user" sequence="92"/>
+        <menuitem id="hr_employee_payroll_absences_menu" name="Payroll Absence"
+                  parent="hr_employee_payroll_absence_menu"
+                  action="hr_employee_payroll_absence_action" groups="hr.group_hr_user"/>
     </data>
 </odoo>
