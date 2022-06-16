@@ -348,7 +348,7 @@ class LcRegisterXLSX(ReportXlsx):
             datas_excel = []
 
         # SHEET HEADER
-        self.get_sheet_header(docs, workbook, filter_by_text, type_text)
+        self.get_sheet_header(sheet, docs, workbook, filter_by_text, type_text)
 
         self.get_sheet_table_head(sheet, workbook)
 
