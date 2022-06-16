@@ -22,7 +22,7 @@
         'gbs_hr_attendance_grace_time',
         'hr_holidays',
         'hr_holiday_year',
-        'gbs_hr_holiday_hour',
+        "hr_short_leave",
         'gbs_hr_employee',
         'gbs_hr_department_sequence',
         'gbs_hr_attendance_error_correction',

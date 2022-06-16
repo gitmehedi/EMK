@@ -58,6 +58,7 @@
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                                 <field name="department_id"/>
                                 <field name="pending_approver" groups="hr.group_hr_user"/>
+                                <field name="leave_year_id" invisible="1"/>
                             </group>
                             <group colspan="2">
                                 <group>
@@ -125,7 +126,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="hr_short_leave_action">
+        <record id="hr_short_leave_action" model="ir.actions.act_window">
             <field name="name">Short Leaves</field>
             <field name="res_model">hr.short.leave</field>
             <field name="view_mode">tree,form</field>
@@ -147,6 +148,7 @@
             </field>
             <field name="search_view_id" ref="view_hr_short_leave_filter"/>
         </record>
+
         <record id="my_short_leave_action" model="ir.actions.act_window">
             <field name="name">Short Leaves</field>
             <field name="res_model">hr.short.leave</field>
@@ -159,6 +161,5 @@
 
         <menuitem id="short_leave" name="Leave Request (Short)" parent="hr_holidays.menu_hr_holidays_my_leaves"
                   action="hr_short_leave_action" sequence="20"/>
-
     </data>
 </odoo>

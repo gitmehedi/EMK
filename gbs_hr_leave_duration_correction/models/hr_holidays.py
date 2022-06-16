@@ -18,9 +18,9 @@ class HRHolidays(models.Model):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1)
 
-    date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False,
+    date_from = fields.Date('Start Date', readonly=True, index=True, copy=False,
                             states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    date_to = fields.Datetime('End Date', readonly=True, copy=False,
+    date_to = fields.Date('End Date', readonly=True, copy=False,
                           states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
     number_of_days_temp = fields.Float('Allocation', readonly=True, copy=False,
@@ -68,7 +68,7 @@ class HRHolidays(models.Model):
                 d2 = fields.Datetime.from_string(end_date)
 
                 if holiday.check_hour:
-                    duration = ((d2 - d1).seconds / 3600) / 8.0
+                    duration = abs(holiday.number_of_days)
                 else:
                     duration = (d2 - d1).days + 1
                 values['number_of_days_temp'] = duration

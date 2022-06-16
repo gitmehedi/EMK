@@ -12,7 +12,7 @@
         'hr_holidays',
         'hr_payroll',
         'gbs_hr_public_holidays',
-        'hr_holidays_compute_days',
+        # 'hr_holidays_compute_days',
         'hr_absence_summary',
         'hr_earned_leave',
         ],

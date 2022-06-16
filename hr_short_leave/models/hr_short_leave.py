@@ -18,6 +18,11 @@ class HrShortLeave(models.Model):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search(
             [('user_id', '=', self.env.uid)], limit=1)
 
+    def _default_leave_year(self):
+        today = fields.Date.today()
+        return self.env['date.range'].search([('type_id.holiday_year', '=', True),
+                                              ('date_start', '<=', today), ('date_end', '>=', today)])
+
     @api.multi
     def _default_approver(self):
         default_approver = 0
@@ -63,6 +68,9 @@ class HrShortLeave(models.Model):
     holiday_status_id = fields.Many2one("hr.holidays.status", string="Leave Type", required=True, readonly=True,
                                         domain="[('short_leave_flag','=',True)]",
                                         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    leave_year_id = fields.Many2one('date.range', string="Leave Year", default=_default_leave_year,
+                                    domain="[('type_id.holiday_year', '=', True)]")
+
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -220,10 +228,26 @@ class HrShortLeave(models.Model):
 
     @api.multi
     def action_validate(self):
-        for holiday in self:
-            if holiday.state not in ['confirm']:
-                raise UserError(_('Leave request must be confirmed in order to approve it.'))
-            holiday.write({'state': 'validate'})
+        if self.state == 'confirm':
+            if self.holiday_status_id.half_leave_flag:
+                from_dt = fields.Datetime.from_string(self.date_from)
+                to_dt = fields.Datetime.from_string(self.date_to)
+                time_delta = to_dt - from_dt
+                vals = {
+                    'leave_ids': self.id,
+                    'check_hour': True,
+                    'type': 'remove',
+                    'holiday_status_id': self.holiday_status_id.id,
+                    'date_from': self.date_from,
+                    'date_to': self.date_to,
+                    'number_of_days_temp': (time_delta.seconds / 3600) / 8.0,
+                    'employee_id': self.employee_id.id,
+                    'leave_year_id': self.leave_year_id.id,
+                    'state': self.state
+                }
+                holiday = self.env['hr.holidays'].create(vals)
+                holiday.write({'state': 'validate'})
+            self.write({'state': 'validate'})
             return True
 
     @api.multi
@@ -293,3 +317,37 @@ class HrShortLeave(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ('draft', 'confirm'))]
+
+
+class HRHolidays(models.Model):
+    _inherit = 'hr.holidays'
+
+    expire_date = fields.Date(string='Expiration Date')
+
+    @api.constrains('holiday_type', 'type', 'employee_id', 'holiday_status_id')
+    def _check_holidays(self):
+        for holiday in self:
+            if holiday.holiday_type != 'employee' or holiday.type != 'remove' or holiday.holiday_status_id.short_leave_flag:
+                continue
+            super(HRHolidays, self)._check_holidays()
+
+
+class HrHolidayStatus(models.Model):
+    _inherit = 'hr.holidays.status'
+
+    short_leave_flag = fields.Boolean(string='Allow Short Leave', default=False)
+    half_leave_flag = fields.Boolean(string='Allow Short Leave', default=False)
+    compensatory_flag = fields.Boolean(string='Allow Compensatory Leave', default=False)
+    number_of_hours = fields.Integer(string='Leave Hours')
+
+
+class EmployeeLeaves(models.Model):
+    _name = "hr.employee"
+    _inherit = "hr.employee"
+
+    @api.multi
+    def _compute_leaves_count(self):
+        super(EmployeeLeaves, self)._compute_leaves_count()
+
+    leaves_count = fields.Float('Number of Leaves', compute='_compute_leaves_count', readonly=0)
+
