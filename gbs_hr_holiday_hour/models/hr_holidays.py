@@ -8,7 +8,8 @@ HOURS_PER_DAY = 8
 
 class HrHolidayHour(models.Model):
     _name = 'hr.holiday.hour'
-    _inherit = 'hr.holidays'
+    _inherit = ['hr.holidays','mail.thread', 'ir.needaction_mixin']
+    # _inherit = 'hr.holidays'
 
     def _default_employee(self):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -30,6 +31,9 @@ class HrHolidayHour(models.Model):
                                         domain="[('short_leave_flag','=',True)]",
                                         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     check_hour = fields.Boolean(string='Half Leave', default=True)
+    # state = fields.Selection([])
+    notes = fields.Text()
+    report_note = fields.Text()
 
     _sql_constraints = [
         ('date_check2', "CHECK ( (date_from <= date_to))", "The start date must be anterior to the end date."),
@@ -132,6 +136,7 @@ class HrHolidayStatus(models.Model):
     _inherit = 'hr.holidays.status'
 
     short_leave_flag = fields.Boolean(string='Allow Short Leave', default=False)
+    half_day_leave = fields.Boolean(string='Allow Half Leave', default=False)
     compensatory_flag = fields.Boolean(string='Allow Compensatory Leave', default=False)
     number_of_hours = fields.Integer(string='Leave Hours')
 

@@ -12,7 +12,6 @@ class HR_Academic(models.Model):
 class HR_Professional(models.Model):
     _inherit = "hr.experience"
 
-    passed_date = fields.Date('Passed Date', required=True, track_visibility="onchange")
     employer_name = fields.Char('Employer Name', track_visibility="onchange")
 
 class HR_Certification(models.Model):

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<odoo>
+    <data>
+        <template id="report_mobile_bill">
+           <t t-call="report.html_container">
+                <t t-call="report_layout.gbs_internal_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page" style="page-break-inside:auto">
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align:center;">
+                                    <h4 class="report-title">Employee Mobile Bills Report</h4>
+                                    <p><span t-field="o.name"/></p>
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered table-report-sm table-striped">
+                                <thead style="border-style:none;">
+                                    <tr class="odo-bg-gray">
+                                        <th>Employee</th>
+                                        <th>Mobile Number</th>
+                                        <th>Bill Amount</th>
+                                        <th>Exceed Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.line_ids" t-as="l">
+                                        <tr>
+                                            <td><span t-esc="l.employee_id.name"/></td>
+                                            <td><span t-esc="l.emp_mobile_phone"/></td>
+                                            <td><span t-esc="l.bill_amount"/></td>
+                                            <td><span t-esc="l.amount"/></td>
+                                        </tr>
+                	                 </t>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

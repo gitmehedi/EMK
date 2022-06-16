@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="custom_report_mobile_bill"
+                model="hr.mobile.bill"
+                string="Employee Mobile Bills"
+                report_type="qweb-pdf"
+                name="hr_employee_mobile_bills.report_mobile_bill"
+                file="hr_employee_mobile_bills.report_mobile_bill"
+                paperformat="report_layout.paperformat_backend_portrait"
+        />
+    </data>
+</odoo>

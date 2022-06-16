@@ -21,6 +21,7 @@
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
+        'views/hr_holidays_status_views.xml',
         'views/hr_short_leave_views.xml',
 
     ],
