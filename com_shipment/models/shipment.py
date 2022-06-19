@@ -54,7 +54,7 @@ class Shipment(models.Model):
 
     # Invoice
     invoice_number = fields.Char(string='Invoice Number')
-    invoice_value = fields.Float(string='Invoice Value')
+    invoice_value = fields.Float(string='Invoice Value', track_visibility='onchange')
 
     # done
     shipment_done_date = fields.Date(string='Shipment Done Date', required=False)

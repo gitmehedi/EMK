@@ -21,5 +21,5 @@
         """This module calculates the  other deduction ot of the employee
             based on the condition'""",
     'installable': True,
-    'application': True,
+    'application': False,
 }

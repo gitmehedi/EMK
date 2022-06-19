@@ -5,8 +5,8 @@ class InvoiceExportWizard(models.TransientModel):
     _name = 'invoice.export.wizard.foreign'
 
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
-    invoice_value = fields.Float(string='Invoice Value')
-    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers')
+    invoice_value = fields.Float(string='Invoice Value', track_visibility='onchange')
+    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers', track_visibility='onchange')
     invoice_qty = fields.Float(string='Invoice QTY')
     shipment_id = fields.Many2one('purchase.shipment', default=lambda self: self.env.context.get('active_id'))
 
@@ -35,7 +35,7 @@ class InvoiceExportWizard(models.TransientModel):
         shipment_pool = self.env['purchase.shipment']
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
         if shipment_obj:
-            total_amount = 0
+            total_amount = 0.0
             total_qty = 0
             for invoice_id in self.invoice_ids:
                 total_amount += invoice_id.amount_total
@@ -51,6 +51,7 @@ class InvoiceExportWizard(models.TransientModel):
                                 'invoice_value': total_amount,
                                 'invoice_qty': total_qty
                                 })
+            shipment_obj.message_post(subject='Added invoice and value', body='Invoice Ids: %s, qty: %s and values: %s'% ([str(x.number) for x in self.invoice_ids], str(total_qty), str(total_amount)))
             return {'type': 'ir.actions.act_window_close'}
 
     @api.onchange('shipment_id')
