@@ -7,7 +7,8 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='toggle_active']" position="before">
-                    <button  class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
+                    <button class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o"
+                            groups="hr.group_hr_user">
                         <field string="Documents" name="doc_count" widget="statinfo"/>
                     </button>
                 </xpath>

@@ -37,7 +37,8 @@
                 <data>
                     <xpath expr="/form/*" position="replace">
                         <header>
-                            <button name="act_approve" string="Running" states="draft" type="object" class="oe_highlight"/>
+                            <button name="act_approve" string="Running" states="draft" type="object"
+                                    class="oe_highlight"/>
                             <button name="act_draft" string="Draft" states="close" type="object" class="oe_highlight"/>
                             <button name="act_renew" string="Renew" states="open" type="object" class="oe_highlight"/>
                             <button name="act_reject" string="Expired" states="open" type="object"/>
@@ -101,7 +102,8 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='state_id']" position="replace">
-                    <field name="state_id" class="o_address_state" placeholder="Division" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                    <field name="state_id" class="o_address_state" placeholder="Division"
+                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                 </xpath>
             </field>
         </record>
@@ -111,7 +113,8 @@
             <field name="inherit_id" ref="base.view_res_bank_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='state']" position="replace">
-                    <field name="state" class="o_address_state" placeholder="Division" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                    <field name="state" class="o_address_state" placeholder="Division"
+                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                 </xpath>
             </field>
         </record>
@@ -121,12 +124,27 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='state_id']" position="replace">
-                      <field name="state_id" class="o_address_state" placeholder="Division" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
+                    <field name="state_id" class="o_address_state" placeholder="Division"
+                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"
+                           context="{'country_id': country_id, 'zip': zip}"/>
                 </xpath>
                 <xpath expr="//field[@name='category_id']" position="replace">
-                     <field name="category_id" widget="many2many_tags" invisible="1" placeholder="Tags..." options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                    <field name="category_id" widget="many2many_tags" invisible="1" placeholder="Tags..."
+                           options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                 </xpath>
+            </field>
+        </record>
+        <record id="emk_hr_employee_view_form2" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form2</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='contracts_count']/parent::button" position="attributes">
+                        <attribute name="groups">hr.group_hr_manager,hr.group_hr_user</attribute>
+                    </xpath>
+                </data>
             </field>
         </record>
     </data>
