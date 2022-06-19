@@ -69,7 +69,7 @@
                     <field name="certification_ids"></field>
                 </xpath>
                 <xpath expr="//page[@name='hr_settings']" position="after">
-                    <page string="Contact &amp; Address">
+                    <page string="Contact &amp; Address" groups="hr.group_hr_user">
                         <group>
                             <group>
                                 <label for="per_street" string="Permanent Address"/>

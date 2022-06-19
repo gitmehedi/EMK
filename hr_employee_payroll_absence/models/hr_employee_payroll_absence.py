@@ -38,7 +38,7 @@ class HrEmployeePayrollAbsence(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.state = 'applied'
+        self.state = 'approve'
         for line in self.line_ids:
             if line.state != 'adjusted':
                 line.write({'state': 'applied'})
@@ -69,7 +69,7 @@ class HrEmployeePayrollAbsence(models.Model):
 
 class HrTedCafeBillLine(models.Model):
     _name = 'hr.employee.payroll.absence.line'
-    _description = 'Employee Payroll Absence'
+    _description = 'Employee Payroll Absence Line'
 
     @api.model
     def _get_contract_employee(self):

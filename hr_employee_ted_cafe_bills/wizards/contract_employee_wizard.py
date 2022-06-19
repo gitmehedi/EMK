@@ -10,13 +10,14 @@ class ContractEmployeeTedWizard(models.TransientModel):
     def process_employee_line(self, context):
         id = context['active_id']
 
-        lines = self.env['hr.ted.cafe.bill'].search([('line_id', '=', id)])
+        lines = self.env['hr.ted.cafe.bill.line'].search([('line_id', '=', id)])
         contract_employee = list(set(self.employee_ids.ids) - set([val.employee_id.id for val in lines]))
 
         for contract in contract_employee:
             lines.create({
                 'employee_id': contract,
-                'date': fields.Datetime.today(),
+                'date': fields.Date.today(),
+                'amount': 0.0,
                 'line_id': id,
             })
 
