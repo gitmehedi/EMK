@@ -6,11 +6,17 @@
             <field name="model">purchase.cost.distribution</field>
             <field name="inherit_id" ref="purchase_landed_cost.purchase_cost_distribution_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
                 <xpath expr="//form" position="attributes">
                     <attribute name="duplicate">0</attribute>
                 </xpath>
                 <xpath expr="//field[@name='date']" position="after">
-                    <field name="lc_id" invisible="1"/>
+                    <field name="lc_id" readonly="1"/>
                 </xpath>
                 <xpath expr="//field[@name='total_expense']" position="after">
                     <field name="percentage_of_lcost"/>
@@ -44,6 +50,9 @@
                 <xpath expr="//field[@name='cost_lines']/tree/field[@name='picking_id']" position="after">
                     <field name="date_done"/>
                 </xpath>
+                <xpath expr="//field[@name='cost_lines']/tree/field[@name='standard_price_old']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
                 <xpath expr="//field[@name='expense_lines']" position="attributes">
                     <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
                 </xpath>
@@ -65,11 +74,18 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
 
+                 <xpath expr="//field[@name='standard_price_new']" position="attributes">
+                        <attribute name="string">Total Cost Per Unit</attribute>
+                    </xpath>
+
 
                 <xpath expr="//field[@name='currency_id']" position="after">
-                    <field name="debit_account" required="1"
-                        attrs="{'readonly':[('account_move_id','!=',False)]}"/>
+                    <field name="debit_account" readonly="1"/>
                     <field name="account_move_id" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='operating_unit_id']" position="after">
+                    <field name="currency_rate" string='Rate Used' readonly="1"/>
                 </xpath>
 
                 <xpath expr="//field[@name='name']" position="before">

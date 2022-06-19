@@ -12,7 +12,9 @@
                            domain="[('partner_id', 'child_of', supplier),
                                     ('location_id.usage', '=', 'supplier'),
                                     ('state', '=', 'done'),
-                                    ('shipment_id.lc_id', '=', lc_id)]"/>
+                                    ('shipment_id.lc_id', '=', lc_id)]"
+                           attrs="{'invisible':['|' ,('lc_id', '=', False),('journal_entry_created','=',False)]}"
+                    />
                 </xpath>
                 <xpath expr="//field[@name='pickings']" position="after">
                     <field name="operating_unit_id" invisible="1"/>

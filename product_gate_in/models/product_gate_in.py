@@ -56,24 +56,34 @@ class ProductGateIn(models.Model):
         self.state = 'confirm'
         self.shipping_line_ids.write({'state': 'confirm'})
         self.ship_id.write({'state':'gate_in'})
+        include_product_purchase_cost = self.env['ir.values'].get_default('account.config.settings',
+                                                                          'include_product_purchase_cost')
+
+        stock_move_utility = self.env['stock.move.utility']
         if self.receive_type == 'lc':
-            # if self.ship_id and self.ship_id.lc_id and self.ship_id.lc_id.po_ids:
-            #     for po in self.ship_id.lc_id.po_ids:
-            #         if not po.invoice_ids:
-            #             raise UserError('Vendor Bill is not created for this shipment. Please contact your Accounting Department !')
-            #         else:
-            #             invoice_states = po.invoice_ids.mapped('state')
-            #             if not ('open' in invoice_states or 'paid' in invoice_states):
-            #                 raise UserError('Vendor Bill is not validated for this shipment. Please contact your '
-            #                                 'Accounting Department !')
-            #
-            # else:
-            #     raise UserError(
-            #         'Purchase Order or LC or Shipment not found. Please contact your Accounting Department !')
+            if not include_product_purchase_cost:
+                if self.ship_id and self.ship_id.lc_id and self.ship_id.lc_id.po_ids:
+                    for po in self.ship_id.lc_id.po_ids:
+                        if not po.invoice_ids:
+                            raise UserError('Vendor Bill is not created for this shipment. Please contact your Accounting Department !')
+                        else:
+                            invoice_states = po.invoice_ids.mapped('state')
+                            if not ('open' in invoice_states or 'paid' in invoice_states):
+                                raise UserError('Vendor Bill is not validated for this shipment. Please contact your '
+                                                'Accounting Department !')
+
+                else:
+                    raise UserError(
+                        'Purchase Order or LC or Shipment not found. Please contact your Accounting Department !')
 
             if self.shipping_line_ids:
                 picking_id = self._create_pickings_and_procurements()
                 picking_objs = self.env['stock.picking'].search([('id','=',picking_id)])
+                moves = self.env['stock.move'].search([('picking_id','=',picking_id)])
+                for move in moves:
+                    stock_move_utility.update_move_price_unit(self.ship_id.lc_id.po_ids,move, 'product_gate_in_window',False)
+
+
                 picking_objs.action_confirm()
                 picking_objs.force_assign()
                 self.write({'picking_id': picking_id})

@@ -2,13 +2,14 @@
 from datetime import datetime
 
 # import of odoo
-from odoo import models, fields, api, _
+from odoo import models, fields, exceptions, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
 import openerp.addons.decimal_precision as dp
 
 class PurchaseCostDistribution(models.Model):
-    _inherit = 'purchase.cost.distribution'
+    _name = "purchase.cost.distribution"
+    _inherit = ["purchase.cost.distribution", "mail.thread"]
 
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True, readonly=True,
                                         states={'draft': [('readonly', False)]},
@@ -38,7 +39,7 @@ class PurchaseCostDistribution(models.Model):
                 total_purchase = sum([x.total_amount for x in rec.cost_lines])
                 total_expense = sum([x.expense_amount for x in rec.expense_lines.filtered(lambda x: x.account_id.id != lc_pad_account)])
                 if total_purchase != 0:
-                    rec.percentage_of_lcost = (total_expense / total_purchase) * 100
+                    rec.percentage_of_lcost = (total_expense / (total_purchase+total_expense)) * 100
                 else:
                     rec.percentage_of_lcost = False
             else:
@@ -64,7 +65,93 @@ class PurchaseCostDistribution(models.Model):
         })
         self.env.context = frozendict(context)
 
-        super(PurchaseCostDistribution, self).action_done()
+        self.ensure_one()
+        if self.cost_update_type != 'direct':
+            return
+        d = {}
+        for line in self.cost_lines:
+            product = line.move_id.product_id
+            if (product.cost_method != 'average' or
+                    line.move_id.location_id.usage != 'supplier'):
+                continue
+            line.move_id.quant_ids._price_update(line.standard_price_new)
+            d.setdefault(product, [])
+            d[product].append(
+                (line.move_id,
+                 line.standard_price_new - line.standard_price_old, line.standard_price_new),
+            )
+        for product, vals_list in d.items():
+            self._product_price_update(product, vals_list)
+            for vals in vals_list:
+                vals[0].product_price_update_after_done()
+        self.state = 'done'
+
+        #super(PurchaseCostDistribution, self).action_done()
+
+    @api.multi
+    def action_cancel(self):
+        """Perform all moves that touch the same product in batch."""
+        self.ensure_one()
+        self.state = 'draft'
+        if self.cost_update_type != 'direct':
+            return
+        d = {}
+        for line in self.cost_lines:
+            product = line.move_id.product_id
+            if (product.cost_method != 'average' or
+                    line.move_id.location_id.usage != 'supplier'):
+                continue
+            if self.currency_id.compare_amounts(
+                    line.move_id.quant_ids[0].cost,
+                    line.standard_price_new) != 0:
+                raise exceptions.UserError(
+                    _('Cost update cannot be undone because there has '
+                      'been a later update. Restore correct price and try '
+                      'again.'))
+            line.move_id.quant_ids._price_update(line.standard_price_old)
+            d.setdefault(product, [])
+            d[product].append(
+                (line.move_id,
+                 line.standard_price_old - line.standard_price_new, line.standard_price_new),
+            )
+        for product, vals_list in d.items():
+            self._product_price_update(product, vals_list)
+            for vals in vals_list:
+                vals[0].product_price_update_after_done()
+
+    def _product_price_update(self, product, vals_list):
+        """Method that mimicks stock.move's product_price_update_before_done
+        method behaviour, but taking into account that calculations are made
+        on an already done moves, and prices sources are given as parameters.
+        """
+        moves_total_qty = 0
+        moves_total_diff_price = 0
+        product_unit_cost = 0
+        for move, price_diff, standard_price_new in vals_list:
+            moves_total_qty += move.product_qty
+            moves_total_diff_price += move.product_qty * price_diff
+            product_unit_cost = standard_price_new
+        prev_qty_available = product.qty_available - moves_total_qty
+        if prev_qty_available <= 0:
+            prev_qty_available = 0
+        total_available = prev_qty_available + moves_total_qty
+
+        include_product_purchase_cost = self.env['ir.values'].get_default('account.config.settings',
+                                                                          'include_product_purchase_cost')
+
+        ####################EDITED#####################
+
+        if include_product_purchase_cost:
+            new_std_price = ((product.standard_price * prev_qty_available) + (product_unit_cost * moves_total_qty)) / total_available
+            self.message_post(
+                body="%s : New Cost Price %s = ((Prev Cost Price %s *  Prev Qty %s) + (Total Cost Per Unit %s * New Qty %s)) / Qty(After Stock Update) %s" % (product.name,new_std_price, product.standard_price,prev_qty_available,product_unit_cost,moves_total_qty,total_available))
+        else:
+            new_std_price = ((total_available * product.standard_price + moves_total_diff_price) / total_available)
+            self.message_post(
+                body="%s : New Cost Price %s = ((Qty(After Stock Update) %s * Prev Cost Price %s + Total Landed Cost %s) /Qty(After Stock Update) %s)" % (product.name,new_std_price,total_available,product.standard_price,moves_total_diff_price,total_available))
+        # Write the standard price, as SUPERUSER_ID, because a
+        # warehouse manager may not have the right to write on products
+        product.sudo().write({'standard_price': new_std_price})
 
     # override _prepare_expense_line to add account_id in return
     @api.model
@@ -89,7 +176,7 @@ class PurchaseCostDistribution(models.Model):
         if self.date > datetime.today().strftime("%Y-%m-%d"):
             raise ValidationError(_("Date cannot be greater than Current Date."))
 
-    debit_account = fields.Many2one('account.account', 'Asset / Inventory GL', required=True)
+    debit_account = fields.Many2one('account.account', 'Asset / Inventory GL', readonly=True)
 
     analytic_account = fields.Many2one('account.analytic.account')
     account_move_id = fields.Many2one('account.move', readonly=True, string='Journal Entry')
@@ -103,84 +190,16 @@ class PurchaseCostDistribution(models.Model):
             'target': 'new'
         }
 
-    def get_move_line_vals(self, name, date, journal_id, account_id, operating_unit_id, analytic_account_id,
-                           debit, credit,
-                           company_id):
-        return {
-            'name': name,
-            'date': date,
-            'journal_id': journal_id,
-            'account_id': account_id,
-            'operating_unit_id': operating_unit_id,
-            'analytic_account_id': analytic_account_id,
-            'debit': debit,
-            'credit': credit,
-            # 'company_id': company_id,
-        }
 
     def post_journal_entry(self):
-        if not self.analytic_account:
-            raise UserError('Analytic Account not found!')
-
-        journal_id = self.env['account.journal'].sudo().search(
-            [('code', '=', 'STJ'), ('company_id', '=', self.operating_unit_id.company_id.id)], limit=1)
-        if not journal_id:
-            raise UserError('Stock Journal not found!')
-        lc_pad_account = self.env['ir.values'].get_default('account.config.settings', 'lc_pad_account')
-
-        if not lc_pad_account:
-            raise UserError(
-                _(
-                    "LC Goods In Transit Account not set. Please contact your system administrator for assistance."))
-
-        move_lines = []
-
-        expense_lines = self.env['purchase.cost.distribution.expense'].search([('distribution', '=', self.id)])
-        ref = ''
-        for expense in expense_lines:
-            ref = expense.ref
-            credit_entry = self.get_move_line_vals(expense.ref, datetime.now().date(), journal_id.id,
-                                                   expense.account_id.id,
-                                                   self.operating_unit_id.id,
-                                                   self.analytic_account.id,
-                                                   0,
-                                                   expense.expense_amount,
-                                                   self.operating_unit_id.company_id.id)
-            move_lines.append((0, 0, credit_entry))
-
-        credit_entry = self.get_move_line_vals(ref, datetime.now().date(), journal_id.id,
-                                               lc_pad_account,
-                                               self.operating_unit_id.id,
-                                               self.analytic_account.id,
-                                               0,
-                                               self.total_purchase,
-                                               self.operating_unit_id.company_id.id)
-        move_lines.append((0, 0, credit_entry))
-
-        debit_entry = self.get_move_line_vals(ref, datetime.now().date(), journal_id.id,
-                                              self.debit_account.id,
-                                              self.operating_unit_id.id,
-                                              False,
-                                              self.total_expense + self.total_purchase,
-                                              0,
-                                              self.operating_unit_id.company_id.id)
-
-        move_lines.append((0, 0, debit_entry))
-
-        vals = {
-            'name': 'Total Landed Cost Charge to Inventory Dept By Acc Dept',
-            'journal_id': journal_id.id,
-            'operating_unit_id': self.operating_unit_id.id,
-            'date': datetime.now().date(),
-            'company_id': self.operating_unit_id.company_id.id,
-            'state': 'draft',
-            'line_ids': move_lines,
-            'narration': '',
-            'ref': 'landed cost provision'
+        return {
+            'name': 'Post Journal Entry',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'journal.entry.post.wizard',
+            'target': 'new',
         }
-
-        move = self.env['account.move'].create(vals)
-        self.write({'account_move_id': move.id})
 
     def get_journal_entry(self):
         self.ensure_one()
@@ -194,12 +213,16 @@ class PurchaseCostDistribution(models.Model):
         }
 
 
+    currency_rate = fields.Float('Currency Rate')
+
 class PurchaseCostDistributionLine(models.Model):
     _inherit = 'purchase.cost.distribution.line'
 
     date_done = fields.Datetime(string='Date of Transfer', related='move_id.picking_id.date_done')
 
     cost_ratio = fields.Float(string="Landed Cost Per Unit")
+
+    product_price_unit = fields.Float(string="Product Cost Per Unit")
 
     expense_amount = fields.Float(string='Landed Cost')
 
