@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="inherited_account_config_form_" model="ir.ui.view">
+            <field name="name">account.config.settings.form.inherited</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]" position="before">
+                    <group string="Vendor Payment" name="vendor_payment">
+                        <field name="post_difference_account" class="oe_inline" string="Post Difference Account"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
