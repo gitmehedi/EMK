@@ -27,6 +27,8 @@ class HRHolidays(models.Model):
                                        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True)
+    holiday_type = fields.Selection(readonly=True,
+                                    states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
     ## Newly Introduced Fields
     requested_by = fields.Many2one('hr.employee', string="Requisition By", default=_current_employee, readonly=True)
@@ -203,6 +205,6 @@ class HRHolidays(models.Model):
 
     def _check_state_access_right(self, vals):
         if vals.get('state') and vals['state'] not in ['draft', 'confirm', 'cancel'] and not (
-        self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')):
+                self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')):
             return False
         return True
