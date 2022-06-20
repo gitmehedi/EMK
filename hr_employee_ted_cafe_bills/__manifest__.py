@@ -15,7 +15,7 @@
                 'point_of_sale'
                 ],
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         # 'security/ir_rule.xml',
         'wizards/contract_employee_wizard_view.xml',
         'views/hr_ted_cafe_bill_view.xml',

@@ -11,11 +11,11 @@
                 'hr_payroll',
                 'l10n_in_hr_payroll',
                 'report_layout',
-                'point_of_sale'
+                'point_of_sale',
+                'hr_attendance'
                 ],
     'data': [
-        # 'security/ir.model.access.csv',
-        # 'security/ir_rule.xml',
+        'security/ir.model.access.csv',
         'wizards/contract_employee_wizard_view.xml',
         'views/hr_employee_payroll_absence_view.xml',
     ],
