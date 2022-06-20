@@ -54,7 +54,7 @@ class JournalEntryPost(models.TransientModel):
         ref = ''
         for expense in expense_lines:
             ref = expense.ref
-            credit_entry = self.get_move_line_vals(expense.ref, datetime.now().date(), journal_id.id,
+            credit_entry = self.get_move_line_vals(expense.ref, self.distribution_id.date, journal_id.id,
                                                    expense.account_id.id,
                                                    self.distribution_id.operating_unit_id.id,
                                                    self.distribution_id.analytic_account.id,
@@ -63,7 +63,7 @@ class JournalEntryPost(models.TransientModel):
                                                    self.distribution_id.operating_unit_id.company_id.id)
             move_lines.append((0, 0, credit_entry))
 
-        credit_entry = self.get_move_line_vals(ref, datetime.now().date(), journal_id.id,
+        credit_entry = self.get_move_line_vals(ref, self.distribution_id.date, journal_id.id,
                                                lc_pad_account,
                                                self.distribution_id.operating_unit_id.id,
                                                self.distribution_id.analytic_account.id,
@@ -72,7 +72,7 @@ class JournalEntryPost(models.TransientModel):
                                                self.distribution_id.operating_unit_id.company_id.id)
         move_lines.append((0, 0, credit_entry))
 
-        debit_entry = self.get_move_line_vals(ref, datetime.now().date(), journal_id.id,
+        debit_entry = self.get_move_line_vals(ref, self.distribution_id.date, journal_id.id,
                                               self.debit_account.id,
                                               self.distribution_id.operating_unit_id.id,
                                               False,
@@ -85,7 +85,7 @@ class JournalEntryPost(models.TransientModel):
             'name': 'Total Landed Cost Charge to Inventory Dept By Acc Dept',
             'journal_id': journal_id.id,
             'operating_unit_id': self.distribution_id.operating_unit_id.id,
-            'date': datetime.now().date(),
+            'date': self.distribution_id.date,
             'company_id': self.distribution_id.operating_unit_id.company_id.id,
             'state': 'draft',
             'line_ids': move_lines,

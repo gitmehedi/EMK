@@ -30,7 +30,8 @@
         'wizard/picking_import_wizard_view.xml',
         'wizard/journal_entry_post_wizard.xml',
         'security/ir.model.access.csv',
-        'views/remove_existing_landed_cost_options.xml'
+        'views/remove_existing_landed_cost_options.xml',
+        'views/inherited_vendor_bill.xml'
     ],
     'installable': True,
     'application': False

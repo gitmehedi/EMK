@@ -1,11 +1,18 @@
 from odoo import fields, models, api
 
+class ResCompany(models.Model):
+    _inherit = "res.company"
+
+    post_difference_account = fields.Many2one('account.account', string='LC PAD Account')
 
 class InheritedAccountConfigSettings(models.TransientModel):
     _inherit = 'account.config.settings'
 
     def _get_default_post_difference_account_id(self):
-        return self.env.user.company_id.post_difference_account
+        if self.env.user.company_id.post_difference_account:
+            return self.env.user.company_id.post_difference_account
+        else:
+            return False
 
     post_difference_account = fields.Many2one('account.account', 'Post Difference Account',
                                               default=lambda self: self._get_default_post_difference_account_id())
@@ -18,7 +25,4 @@ class InheritedAccountConfigSettings(models.TransientModel):
             'account.config.settings', 'post_difference_account', self.post_difference_account.id)
 
 
-class ResCompany(models.Model):
-    _inherit = "res.company"
 
-    post_difference_account = fields.Many2one('account.account', string='LC PAD Account')
