@@ -66,7 +66,26 @@
                                         </tr>
                                     </t>
 
+                                    <tr>
+                                        <td class="text-left" colspan="3"></td>
+                                        <td class="text-right"><strong>Total</strong></td>
 
+                                        <td>
+                                        <t t-set="sum_row1" t-value="0"/>
+                                        <t t-foreach="docs" t-as="line">
+                                            <t t-set="sum_row1" t-value="sum_row1+line.debit"/>
+                                        </t>
+                                        <t t-esc="sum_row1" t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+
+                                        <td>
+                                        <t t-set="sum_row2" t-value="0"/>
+                                        <t t-foreach="docs" t-as="line">
+                                            <t t-set="sum_row2" t-value="sum_row2+line.credit"/>
+                                        </t>
+                                        <t t-esc="sum_row2"  t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
