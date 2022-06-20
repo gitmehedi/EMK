@@ -12,6 +12,7 @@
                       decoration-muted="state in ('cancel', 'done')">
                     <field name="name" string="REF #"/>
                     <field name="partner_id" string="Vendor"/>
+                    <field name="purchase_order_id" string="Order"/>
                     <field name="date"/>
                     <field name="advance_amount" sum="advance_amount"/>
                     <field name="adjusted_amount" sum="adjusted_amount"/>
@@ -28,10 +29,10 @@
             <field name="arch" type="xml">
                 <form string="Vendor Advance" duplicate="0">
                     <header>
-                        <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
-                        <button name="action_validate" type="object" string="Validate" states="confirm" class="oe_highlight"/>
-                        <button name="action_cancel" type="object" string="Cancel" states="confirm"/>
-                        <button name="action_draft" type="object" string="Reset to draft" states="cancel"/>
+                        <button name="action_confirm" type="object" string="Confirm" states="draft" groups="account.group_account_manager,account.group_account_user" class="oe_highlight"/>
+                        <button name="action_validate" type="object" string="Validate" states="confirm" groups="account.group_account_manager,account.group_account_user" class="oe_highlight"/>
+                        <button name="action_cancel" type="object" string="Cancel" groups="account.group_account_manager,account.group_account_user" states="confirm"/>
+                        <button name="action_draft" type="object" string="Reset to draft" groups="account.group_account_manager,account.group_account_user" states="cancel"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done"/>
                     </header>
                     <sheet>
@@ -44,9 +45,11 @@
                             <group>
                                 <field name="partner_id" string="Vendor" required="True"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="journal_id" string="Bank Name" required="1" domain="[('type', '=', 'bank')]"
+                                <field name="purchase_order_id" string="Order Reference" required="True" domain="[('partner_id', '=', partner_id)]"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
-                                <field name="description" required="1"/>
+                                <field name="journal_id" string="Bank Name" attrs="{'required': [('state', '!=','draft')]}" domain="[('type', '=', 'bank')]"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+
 
                             </group>
                             <group>
@@ -54,6 +57,7 @@
                                 <field name="operating_unit_id" required="True"
                                        options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
                                 <field name="move_id" attrs="{'invisible': [('move_id', '=',False )]}"/>
+                                <field name="description" attrs="{'required': [('state', '!=','draft')]}"/>
                             </group>
                         </group>
                         <group string="Advance Calculation">
@@ -95,6 +99,7 @@
                 <search string="Search Vendor Advances">
                     <field name="name" filter_domain="[('name', 'ilike', self)]"
                            string="Advance No"/>
+                    <field name="purchase_order_id" string="Order Reference"/>
                     <field name="partner_id" string="Vendor"/>
                     <field name="state" string="Status"/>
                     <filter name="pending_va" string="Pending" domain="[('state','=', 'draft')]"/>
@@ -115,6 +120,7 @@
             <field name="name">Vendor Advances</field>
             <field name="res_model">vendor.advance</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_pending_va': 1}</field>
             <field name="search_view_id" ref="vendor_advance_search"/>
         </record>
 

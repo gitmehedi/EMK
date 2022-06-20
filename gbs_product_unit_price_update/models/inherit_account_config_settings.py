@@ -1,5 +1,9 @@
 from odoo import fields, models, api
 
+class ResCompany(models.Model):
+    _inherit = "res.company"
+
+    include_product_purchase_cost = fields.Boolean(string='Include Product Purchase Cost')
 
 class InheritedAccountConfigSettings(models.TransientModel):
     _inherit = 'account.config.settings'
@@ -18,7 +22,4 @@ class InheritedAccountConfigSettings(models.TransientModel):
             'account.config.settings', 'include_product_purchase_cost', self.include_product_purchase_cost)
 
 
-class ResCompany(models.Model):
-    _inherit = "res.company"
 
-    include_product_purchase_cost = fields.Boolean(string='Include Product Purchase Cost')
