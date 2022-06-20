@@ -5,9 +5,7 @@ import datetime
 from psycopg2 import IntegrityError
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.opa_utility.helper.utility import Utility,Message
-
-
+from odoo.addons.opa_utility.helper.utility import Utility, Message
 
 
 class HrHolidays(models.Model):
@@ -16,9 +14,9 @@ class HrHolidays(models.Model):
     def _default_leave_year_id(self):
         return self.env.context.get('leave_year_id')
 
-
-    leave_year_id = fields.Many2one('date.range', string="Leave Year",default=_default_leave_year_id,
-                                    domain ="[('type_id.holiday_year', '=', True)]")
+    leave_year_id = fields.Many2one('date.range', string="Leave Year", default=_default_leave_year_id, readonly=True,
+                                    states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+                                    domain="[('type_id.holiday_year', '=', True)]")
 
     @api.constrains('date_from', 'date_to')
     def _check_date(self):
@@ -52,7 +50,7 @@ class HrHolidays(models.Model):
         # years = self.env.cr.dictfetchone()
         years = self.env['date.range'].search([('date_start', '<=', res_date),
                                                ('date_end', '>=', res_date),
-                                               ('type_id.holiday_year', '=', True)],limit=1,order='id desc')
+                                               ('type_id.holiday_year', '=', True)], limit=1, order='id desc')
 
         if not years:
             raise ValidationError(_('Unable to apply leave request. Please contract your administrator.'))
@@ -61,7 +59,7 @@ class HrHolidays(models.Model):
         self.leave_year_id = year_id
 
     @api.multi
-    def _prepare_create_by_category(self,employee):
+    def _prepare_create_by_category(self, employee):
         values = super(HrHolidays, self)._prepare_create_by_category(employee)
         values['leave_year_id'] = self.leave_year_id.id
         return values
@@ -128,7 +126,6 @@ class HrHolidaysStatus(models.Model):
                 return super(HrHolidaysStatus, rec).unlink()
             except IntegrityError:
                 raise ValidationError(_(Message.UNLINK_INT_WARNING))
-
 
     @api.multi
     def get_days(self, employee_id):
