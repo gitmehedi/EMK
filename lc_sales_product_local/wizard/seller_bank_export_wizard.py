@@ -14,7 +14,7 @@ class SellerBankExportWizard(models.TransientModel):
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
         if shipment_obj:
             shipment_obj.write({'to_seller_bank_date': self.to_seller_bank_date,
-                                'state': 'to_seller_bank'})
+                                'state': 'to_bill_id'})
             return {'type': 'ir.actions.act_window_close'}
 
 
