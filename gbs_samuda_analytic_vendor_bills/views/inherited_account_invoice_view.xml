@@ -2,7 +2,22 @@
 <odoo>
     <data>
 
+        <record id="inherited_account_invoice_tds_vds" model="ir.ui.view">
+            <field name="name">inherit.account.invoice.supplier.tds.vds</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount_tds']" position="replace">
+                    <field name="tds_value"/>
+                </xpath>
+                <xpath expr="//field[@name='amount_vat_payable']" position="replace">
+                    <field name="vat_payable_value"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="inherited_account_invoice_analytic_account" model="ir.ui.view">
+            <field name="name">inherit.account.invoice.supplier.form.analytic.account</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
