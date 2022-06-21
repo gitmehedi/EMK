@@ -17,3 +17,17 @@ class InheritedAccountPayment(models.Model):
             res['name'] = self.payment_narration.strip()
 
         return res
+
+
+    def action_cheque_print(self):
+        obj = self.env['cheque.print.wizard'].create({'amount': self.amount, 'pay_to': self.partner_id.name, 'date_on_cheque': self.payment_date, 'amount_in_word': self.check_amount_in_words})
+
+        return {
+            'name': _('Cheque Print'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'cheque.print.wizard',
+            'context': {},
+            'res_id': obj.id,
+            'target': 'new'
+        }
