@@ -12,9 +12,9 @@
                 <xpath expr="//field[@name='product_price_unit']" position="after">
                     <field name="distribution_state" invisible="1"/>
                 </xpath>
-                <xpath expr="//field[@name='product_price_unit']" position="replace">
-                    <field name="product_price_unit" attrs="{'readonly': [('distribution_state', '!=', 'draft')]}"/>
-                </xpath>
+<!--                <xpath expr="//field[@name='product_price_unit']" position="replace">-->
+<!--                    <field name="product_price_unit" attrs="{'readonly': [('distribution_state', '!=', 'draft')]}"/>-->
+<!--                </xpath>-->
                 <xpath expr="//field[@name='expense_lines']/tree/field[@name='type']" position="before">
                     <field name="account_id"/>
                 </xpath>

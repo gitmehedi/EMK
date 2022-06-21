@@ -10,6 +10,7 @@
 
     'data': [
         'views/inherited_account_payment_view.xml',
+        'views/inherited_account_config_settings.xml'
     ],
 
     'summary': 'Vendor Bill Payment',

@@ -2,28 +2,28 @@
 <odoo>
     <data noupdate="1">
         <!-- Sequences for service.order -->
-        <record id="wo_sequence_SCCL_HO" model="ir.sequence">
-            <field name="name">WO SCCL HO</field>
+        <record id="sro_sequence_SCCL_HO" model="ir.sequence">
+            <field name="name">SRO SCCL HO</field>
             <field name="code">service.order</field>
-            <field name="prefix">WO-OU-%(year)s-</field>
+            <field name="prefix">SRO-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
         </record>
 
-        <record id="wo_sequence_SCCL_DF" model="ir.sequence">
-            <field name="name">WO SCCL DF</field>
+        <record id="sro_sequence_SCCL_DF" model="ir.sequence">
+            <field name="name">SRO SCCL DF</field>
             <field name="code">service.order</field>
-            <field name="prefix">WO-OU-%(year)s-</field>
+            <field name="prefix">SRO-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
         </record>
 
-        <record id="wo_sequence_SCCL_CTG" model="ir.sequence">
-            <field name="name">WO SCCL CTG</field>
+        <record id="sro_sequence_SCCL_CTG" model="ir.sequence">
+            <field name="name">SRO SCCL CTG</field>
             <field name="code">service.order</field>
-            <field name="prefix">WO-OU-%(year)s-</field>
+            <field name="prefix">SRO-OU-%(year)s-</field>
             <field eval="6" name="padding"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>

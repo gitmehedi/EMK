@@ -15,7 +15,7 @@
     'version': '10.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['purchase', 'account', 'base', 'account_cost_center'],
+    'depends': ['purchase', 'account', 'base', 'account_cost_center','l10n_bd_account_tax','samuda_vendor_bill'],
 
     # always loaded
     'data': [

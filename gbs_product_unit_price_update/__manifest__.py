@@ -11,6 +11,7 @@
         'stock',
     ],
     'data': [
+        'views/inherited_account_config_settings.xml'
     ],
     'summary': 'Override base module logic.',
     'description': """

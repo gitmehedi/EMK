@@ -14,7 +14,8 @@
         'account',
         'gbs_application_group',
         'base',
-        'gbs_samuda_analytic_vendor_bills'
+        'gbs_samuda_analytic_vendor_bills',
+        'product_gate_in'
     ],
     'data': [
         'security/security.xml',
@@ -27,8 +28,10 @@
         'wizard/analytic_account_wizard.xml',
         'wizard/inherit_picking_import_wizard.xml',
         'wizard/picking_import_wizard_view.xml',
+        'wizard/journal_entry_post_wizard.xml',
         'security/ir.model.access.csv',
-        'views/remove_existing_landed_cost_options.xml'
+        'views/remove_existing_landed_cost_options.xml',
+        'views/inherited_vendor_bill.xml'
     ],
     'installable': True,
     'application': False
