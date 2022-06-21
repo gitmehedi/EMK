@@ -8,11 +8,10 @@ class BillIDExportWizard(models.TransientModel):
 
     @api.multi
     def save_action(self):
-
         form_id = self.env.context.get('active_id')
         shipment_pool = self.env['purchase.shipment']
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
         if shipment_obj:
             shipment_obj.write({'bill_id': self.bill_id,
-                                'state': 'to_buyer_bank'})
+                                'state': 'to_bill_id'})
             return {'type': 'ir.actions.act_window_close'}
