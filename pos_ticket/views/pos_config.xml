@@ -8,19 +8,17 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='receipt']" position="after">
                     <group name="service_charge" string="Service Charge">
-                        <field name="service_charge" string="Service Charge"/>
+                        <group>
+                            <field name="enable_service_charge"/>
+                            <field name="service_charge_type" widget="radio" class="o_light_label"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True,'horizontal': true}"
+                                   attrs="{'required':[('enable_service_charge','=',True)]}"/>
+                            <field name="service_product_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                   attrs="{'required':[('enable_service_charge','=',True)]}"/>
+                            <field name="service_charge"/>
+                        </group>
                     </group>
-
-                </xpath>
-            </field>
-        </record>
-        <record id="view_pos_pos_form" model="ir.ui.view">
-            <field name="name">pos.order.form</field>
-            <field name="model">pos.order</field>
-            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='amount_tax']" position="after">
-                    <field name="service_charge"/>
                 </xpath>
             </field>
         </record>

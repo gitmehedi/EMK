@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="hr_ted_cafe_bill_form" model="ir.ui.view">
-            <field name="name">hr.ted.cafe.bill.form</field>
-            <field name="model">hr.ted.cafe.bill</field>
+        <record id="hr_ted_cafe_credit_sale_form" model="ir.ui.view">
+            <field name="name">hr.ted.cafe.credit.sale.form</field>
+            <field name="model">hr.ted.cafe.credit.sale</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee Ted Cafe Bills" delete="false">
                     <header>
-                        <button name="%(contract_employee_ted_wizard_action_view)d"
-                                type="action" string="Employee" class="oe_highlight" states="draft"/>
                         <button name="action_confirm" type="object" string="Approve" states="draft"
                                 class="oe_highlight"/>
                         <button name="action_done" type="object" groups="hr.group_hr_manager"
@@ -30,13 +28,15 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Ted Cafe Bills">
+                            <page string="Credit Sales">
                                 <field name="line_ids">
-                                    <tree string="List" editable="bottom">
+                                    <tree string="List" editable="bottom" delete="0" create="0" edit="0">
                                         <field name="employee_id"
                                                options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
-                                        <field name="amount"/>
+                                        <field name="pos_id"
+                                               options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                                         <field name="date"/>
+                                        <field name="amount" sum="amount"/>
                                         <field name="state" invisible="1"/>
                                     </tree>
                                 </field>
@@ -51,9 +51,9 @@
             </field>
         </record>
 
-        <record id="hr_ted_cafe_bill_tree" model="ir.ui.view">
-            <field name="name">hr.ted.cafe.bill.tree</field>
-            <field name="model">hr.ted.cafe.bill</field>
+        <record id="hr_ted_cafe_credit_sale_tree" model="ir.ui.view">
+            <field name="name">hr.ted.cafe.credit.sale.tree</field>
+            <field name="model">hr.ted.cafe.credit.sale</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Employee Ted Cafe Bills" decoration-info="state=='draft'"
@@ -67,13 +67,13 @@
                 </tree>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="hr_ted_cafe_bill_action">
-            <field name="name">Ted Cafe Loan</field>
-            <field name="res_model">hr.ted.cafe.bill</field>
+        <record id="hr_ted_cafe_credit_sale_action" model="ir.actions.act_window">
+            <field name="name">Cafe Credit Sales</field>
+            <field name="res_model">hr.ted.cafe.credit.sale</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="hr_ted_cafe_bills_menu" name="Cafe Loans" parent="hr_cafe_operations_menu"
-                  action="hr_ted_cafe_bill_action" sequence="10" groups="hr.group_hr_user"/>
+        <menuitem id="hr_ted_cafe_credit_sales_menu" name="Cafe Credit Sale" parent="hr_cafe_operations_menu"
+                  action="hr_ted_cafe_credit_sale_action" sequence="5" groups="hr.group_hr_user"/>
     </data>
 </odoo>

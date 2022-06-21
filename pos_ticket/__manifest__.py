@@ -12,7 +12,7 @@
                 'operating_unit',
                 ],
     'data': [
-        "views/pos_ticket.xml",
+        "views/pos_templates.xml",
         "views/pos_config.xml",
         "views/operating_unit_view.xml",
     ],
