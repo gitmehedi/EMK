@@ -16,13 +16,12 @@
                 ],
     'data': [
         'security/ir.model.access.csv',
-        # 'security/ir_rule.xml',
+        'views/menu_view.xml',
         'wizards/contract_employee_wizard_view.xml',
+        'wizards/employee_credit_sale_wizard_view.xml',
         'views/hr_ted_cafe_bill_view.xml',
-        # 'views/hr_emp_mb_bill_view.xml',
-        # 'views/hr_emp_mb_bill_limit_view.xml',
-        # 'report/gbs_hr_mobile_report.xml',
-        # 'report/gbs_hr_mobile_report_templates.xml',
+        'views/hr_ted_cafe_credit_sale_view.xml',
+        'views/point_of_sale_view.xml',
     ],
 
     'installable': True,

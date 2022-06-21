@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <menuitem id="hr_cafe_operations_menu" name="Cafe Operations" parent="point_of_sale.menu_point_root"
+                  groups="hr.group_hr_user" sequence="92"/>
+    </data>
+</odoo>
