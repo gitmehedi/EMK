@@ -12,6 +12,9 @@ class ChequePrintWizard(models.TransientModel):
     def _get_pay_to(self):
         pay_to = 'Cash'
         model = self.env.context.get('active_model')
+        # Because Register Payment is in 'account.invoice'
+        if model == 'account.invoice':
+            model = 'account.move'
         docs = self.env[model].browse(self.env.context.get('active_id', []))
         if model == 'account.move':
             if docs.line_ids[0].partner_id:
@@ -28,6 +31,9 @@ class ChequePrintWizard(models.TransientModel):
     @api.model
     def _default_date_on_cheque(self):
         model = self.env.context.get('active_model')
+         # Because Register Payment is in 'account.invoice'
+        if model == 'account.invoice':
+            model = 'account.move'
         docs = self.env[model].browse(self.env.context.get('active_id', []))
         if model == 'account.move':
             date_on_cheque = docs.date
@@ -39,6 +45,9 @@ class ChequePrintWizard(models.TransientModel):
     @api.model
     def _default_amount(self):
         model = self.env.context.get('active_model')
+        # Because Register Payment is in 'account.invoice'
+        if model == 'account.invoice' or model == 'account.payment':
+            model = 'account.move'
         docs = self.env[model].browse(self.env.context.get('active_id', []))
         account_type_obj = self.env['account.account.type'].suspend_security().search([('is_bank_type', '=', True)],
                                                                                       limit=1, order="id asc")
@@ -48,7 +57,6 @@ class ChequePrintWizard(models.TransientModel):
                 if line.credit > 0:
                     credit_amount = line.credit
                     return credit_amount
-
 
     pay_to = fields.Char("Pay To", required=True, default=_default_pay_to)
     is_cross_cheque = fields.Boolean(string='Is Cross Cheque')
@@ -78,8 +86,6 @@ class ChequePrintWizard(models.TransientModel):
         data['amount_in_word'] = self.amount_in_word
         data['company_name'] = self.env.user.company_id.name
         data['is_cross_cheque'] = self.is_cross_cheque
-
-
         return self.env['report'].get_action(self, 'gbs_cheque_management.report_cheque_print', data=data)
 
     @api.multi
