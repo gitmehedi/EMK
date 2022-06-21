@@ -4,25 +4,21 @@ from odoo import models, fields, api
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
+    enable_service_charge = fields.Boolean(string='Service Charges')
+    service_charge_type = fields.Selection([('percentage', 'Percentage'),
+                                            ('amount', 'Amount')], string='Type', default='percentage')
     service_charge = fields.Float(string='Service Charge')
+    service_product_id = fields.Many2one('product.product', string='Service Product',
+                                         domain="[('available_in_pos', '=', True),"
+                                                "('sale_ok', '=', True), ('type', '=', 'service')]")
 
-
-class PosOrder(models.Model):
-    _inherit = 'pos.order'
-
-    service_charge = fields.Float(compute='_compute_amount_all', string='Service Charge', store=True, digits=0)
-    amount_tax = fields.Float(compute='_compute_amount_all', string='VAT', digits=0)
-
-    @api.depends('statement_ids', 'lines.price_subtotal_incl', 'lines.discount')
-    def _compute_amount_all(self):
-        for order in self:
-            order.amount_paid = order.amount_return = order.amount_tax = 0.0
-            currency = order.pricelist_id.currency_id
-            order.amount_paid = sum(payment.amount for payment in order.statement_ids)
-            order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.statement_ids)
-            order.amount_tax = currency.round(
-                sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
-            amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
-            service = round(amount_untaxed * (order.session_id.config_id.service_charge / 100))
-            order.service_charge = service
-            order.amount_total = order.amount_tax + amount_untaxed + service
+    @api.onchange('enable_service_charge')
+    def set_config_service_charge(self):
+        if self.enable_service_charge:
+            if not self.service_product_id:
+                domain = [('available_in_pos', '=', True), ('sale_ok', '=', True), ('type', '=', 'service')]
+                self.service_product_id = self.env['product.product'].search(domain, limit=1)
+            self.service_charge = 10.0
+        else:
+            self.service_product_id = False
+            self.service_charge = 0.0
