@@ -238,6 +238,8 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         row += 1
         for account in accounts_result:
             for rec in account['move_lines']:
+
+
                 if rec['lid'] == 0:
                     sheet.merge_range(row, col, row, col + 9, rec['lname'], td_cell_center_bold)
                     sheet.write(row, col + 10, rec['debit'], total_format)
@@ -246,6 +248,14 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
                     sheet.write(row, col + 13, rec['amount_currency'], total_format)
                     row += 1
                 else:
+
+                    # customize code for Entry Label Column
+                    entry_label = rec['lname']
+                    move_line_obj = self.env['account.move.line'].browse(rec['lid'])
+                    if move_line_obj.journal_id.type == 'bank':
+                        if len(move_line_obj.ref) > 0 and move_line_obj.credit != 0 and 'SUPP' in move_line_obj.name:
+                            entry_label = move_line_obj.ref
+                    #
                     if rec['amount_currency'] > 0:
                         amount_currency_str = formatLang(self.env, rec['amount_currency'])
                         amount_currency_str += ' ' + rec['currency_code']
@@ -258,7 +268,7 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
                     sheet.write(row, col + 2, rec['partner_name'], td_cell_left)
                     sheet.write(row, col + 3, rec['lref'], td_cell_left)
                     sheet.write(row, col + 4, rec['move_name'], td_cell_center)
-                    sheet.write(row, col + 5, rec['lname'], td_cell_left)
+                    sheet.write(row, col + 5, entry_label, td_cell_left)
                     sheet.write(row, col + 6, rec['operating_unit_name'], td_cell_center)
                     sheet.write(row, col + 7, rec['analytic_name'], td_cell_left)
                     sheet.write(row, col + 8, rec['department_name'], td_cell_left)
