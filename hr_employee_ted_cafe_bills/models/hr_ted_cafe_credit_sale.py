@@ -3,10 +3,10 @@ from odoo import api, models, fields, _
 from odoo.exceptions import UserError, ValidationError
 
 
-class HrTedCafeBill(models.Model):
-    _name = 'hr.ted.cafe.bill'
+class HrTedCafeCreditSale(models.Model):
+    _name = 'hr.ted.cafe.credit.sale'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = 'Ted Cafe Bills'
+    _description = 'Ted Cafe Credit Sale'
     _order = 'name desc'
 
     def get_first_day(self):
@@ -26,7 +26,7 @@ class HrTedCafeBill(models.Model):
     date_to = fields.Date(string='End Date', required=True, default=get_last_day, readonly=True, copy=True,
                           states={'draft': [('readonly', False)]})
     total_amount = fields.Float(compute='_compute_total_amount', string='Total Amount')
-    line_ids = fields.One2many(comodel_name='hr.ted.cafe.bill.line', inverse_name='line_id', string="Line Id",
+    line_ids = fields.One2many(comodel_name='hr.ted.cafe.credit.sale.line', inverse_name='line_id', string="Line Id",
                                readonly=True, copy=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([('draft', "Draft"), ('approve', "Approved"), ('done', "Done"), ], default='draft')
 
@@ -74,16 +74,16 @@ class HrTedCafeBill(models.Model):
             if bill.state != 'draft':
                 raise UserError(_('After Approval you can not delete this record.'))
             bill.line_ids.unlink()
-        return super(HrTedCafeBill, self).unlink()
+        return super(HrTedCafeCreditSale, self).unlink()
 
     @api.model
     def _needaction_domain_get(self):
         return [('state', '=', 'approve')]
 
 
-class HrTedCafeBillLine(models.Model):
-    _name = 'hr.ted.cafe.bill.line'
-    _description = 'HR mobile bill line'
+class HrTedCafeCreditSaleLine(models.Model):
+    _name = 'hr.ted.cafe.credit.sale.line'
+    _description = 'HR Ted Cafe Credit Sale Line'
 
     @api.model
     def _get_contract_employee(self):
@@ -91,13 +91,14 @@ class HrTedCafeBillLine(models.Model):
         ids = [val.employee_id.id for val in contracts]
         return [('id', 'in', ids)]
 
-    amount = fields.Float(string="Cafe Bill Amount", required=True, readonly=True,
+    amount = fields.Float(string="Credit Amount", required=True, readonly=True,
                           states={'draft': [('readonly', False)]})
-    date = fields.Date(string="Date", required=True, readonly=True, default=fields.Date.today,
+    date = fields.Date(string="Credit Date", required=True, readonly=True,
                        states={'draft': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string="Employee", store=True, required=True,
                                   domain=_get_contract_employee, readonly=True, states={'draft': [('readonly', False)]})
-    line_id = fields.Many2one(comodel_name='hr.ted.cafe.bill', ondelete='cascade', string='Cafe No')
+    line_id = fields.Many2one(comodel_name='hr.ted.cafe.credit.sale', ondelete='cascade', string='Credit Sale No')
+    pos_id = fields.Many2one('pos.order', string='Order No', readonly=True, states={'draft': [('readonly', False)]})
 
     state = fields.Selection([('draft', "Draft"),
                               ('applied', "Applied"),
@@ -117,10 +118,10 @@ class InheritedHrTedCafePayslip(models.Model):
 
         tcb_ids = []
         for line in self.input_line_ids:
-            if input.code == 'TCB':
+            if input.code == 'TCCS':
                 tcb_ids.append(int(line.ref))
 
-        tcb_data = self.env['hr.ted.cafe.bill.line'].browse(tcb_ids)
+        tcb_data = self.env['hr.ted.cafe.credit.sale.line'].browse(tcb_ids)
         tcb_data.write({'state': 'adjusted'})
 
         return res
@@ -132,15 +133,26 @@ class InheritedHrTedCafePayslip(models.Model):
             super(InheritedHrTedCafePayslip, self).onchange_employee()
 
             line_ids = self.input_line_ids
-            lines = self.env['hr.ted.cafe.bill.line'].search([('employee_id', '=', self.employee_id.id),
-                                                              ('state', '=', 'applied')])
+            lines = self.env['hr.ted.cafe.credit.sale.line'].search([('employee_id', '=', self.employee_id.id),
+                                                                     ('state', '=', 'applied')])
 
             for line in lines:
                 line_ids += line_ids.new({
-                    'name': 'Ted Cafe Bill',
-                    'code': "TCB",
+                    'name': 'Ted Cafe Credit Sales',
+                    'code': "TCCS",
                     'amount': line.amount,
                     'contract_id': self.contract_id.id,
                     'ref': line.id,
                 })
             self.input_line_ids = line_ids
+
+
+class PoSOrder(models.Model):
+    _inherit = 'pos.order'
+
+    credit_sale_id = fields.Many2one('hr.ted.cafe.credit.sale.line')
+
+class PoSOrderLine(models.Model):
+    _inherit = 'pos.order.line'
+
+    tax_ids_after_fiscal_position = fields.Many2many(string='VAT')
