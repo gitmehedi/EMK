@@ -9,14 +9,32 @@
                 <group>
                     <group>
                         <field name="filter_by"/>
-                        <field name="acceptance_default_value" attrs="{'invisible':['|', '|', '|', ('filter_by', '=', False), ('filter_by', '=', 'goods_delivered_doc_not_prepared'), ('filter_by', '=', 'maturated_but_amount_not_collect'), ('filter_by', '=', 'goods_delivered_but_lc_not_received')]}"/>
+                        <field name="acceptance_default_value" attrs="{'invisible':['|', '|', '|', '|', '|', ('filter_by', '=', False),
+                        ('filter_by', '=', 'goods_delivered_doc_not_prepared'), ('filter_by', '=', 'maturated_but_amount_not_collect'),
+                        ('filter_by', '=', 'goods_delivered_but_lc_not_received'), ('filter_by', '=', 'lc_history'), ('filter_by', '=', 'lc_number')]}"/>
                     </group>
                     <group>
                         <field name="type" attrs="{'invisible': [('is_type_hide', '=', True)]}"/>
                         <field name="is_type_hide" invisible="1"/>
                     </group>
                     <group>
-                        <field name="lc_number"/>
+                        <field name="lc_number" attrs="{'invisible':['|', '|', '|', '|', '|', '|', '|', ('filter_by', '=', False),
+                        ('filter_by', '=', 'goods_delivered_doc_not_prepared'), ('filter_by', '=', 'maturated_but_amount_not_collect'),
+                        ('filter_by', '=', 'goods_delivered_but_lc_not_received'), ('filter_by', '=', 'lc_history'),
+                        ('filter_by', '=', 'percentage_of_first_acceptance_collection'), ('filter_by', '=', 'first_acceptance'),
+                        ('filter_by', '=', 'second_acceptance')]}"/>
+                        <field name="date_from" attrs="{'invisible':['|', '|', '|', '|', '|', '|', '|', ('filter_by', '=', False),
+                        ('filter_by', '=', 'goods_delivered_doc_not_prepared'), ('filter_by', '=', 'maturated_but_amount_not_collect'),
+                        ('filter_by', '=', 'goods_delivered_but_lc_not_received'), ('filter_by', '=', 'lc_history'),
+                        ('filter_by', '=', 'lc_number'), ('filter_by', '=', 'first_acceptance'),
+                        ('filter_by', '=', 'second_acceptance')]}"/>
+                    </group>
+                    <group>
+                        <field name="date_to" attrs="{'invisible':['|', '|', '|', '|', '|', '|', '|', ('filter_by', '=', False),
+                        ('filter_by', '=', 'goods_delivered_doc_not_prepared'), ('filter_by', '=', 'maturated_but_amount_not_collect'),
+                        ('filter_by', '=', 'goods_delivered_but_lc_not_received'), ('filter_by', '=', 'lc_history'),
+                        ('filter_by', '=', 'lc_number'), ('filter_by', '=', 'first_acceptance'),
+                        ('filter_by', '=', 'second_acceptance')]}"/>
                     </group>
                 </group>
                 <footer>
