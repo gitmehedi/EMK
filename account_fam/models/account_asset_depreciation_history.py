@@ -16,7 +16,7 @@ class AccountAssetDepreciationHistory(models.Model):
     date = fields.Date(string='Depreciation Date', required=True, readonly=True)
     total_amount = fields.Float(compute='_compute_total_amount', string='Amount', store=True)
     request_date = fields.Date(string='Request Date', required=True,
-                               default=lambda self: self.env.user.company_id.batch_date,
+                               default=lambda self: fields.Date.today(),
                                readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
     approve_date = fields.Date(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]},
                                track_visibility='onchange')
@@ -64,7 +64,7 @@ class AccountAssetDepreciationHistory(models.Model):
             if post:
                 self.write({
                     'state': 'approve',
-                    'approve_date': self.env.user.company_id.batch_date,
+                    'approve_date': fields.Date.today(),
                     'approve_user_id': self.env.user.id
                 })
 

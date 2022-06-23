@@ -20,7 +20,7 @@ class AccountAssetSale(models.Model):
     total_sale_amount = fields.Float(string='Sale Value', compute='_compute_total_sale_amount',
                                      track_visibility='onchange')
     request_date = fields.Date(string='Request Date', required=True,
-                               default=lambda self: self.env.user.company_id.batch_date,
+                               default=lambda self: fields.Date.today(),
                                readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
     approve_date = fields.Date(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]},
                                track_visibility='onchange')
@@ -94,7 +94,7 @@ class AccountAssetSale(models.Model):
 
             self.write({
                 'state': 'approve',
-                'approve_date': self.env.user.company_id.batch_date,
+                'approve_date': fields.Date.today(),
                 'approve_user_id': self.env.user.id,
                 'name': self.env['ir.sequence'].next_by_code('account.asset.sale') or _('New'),
             })
@@ -106,7 +106,7 @@ class AccountAssetSale(models.Model):
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
 
             for rec in self.line_ids:
-                date = datetime.strptime(self.env.user.company_id.batch_date, DATE_FORMAT)
+                date = datetime.strptime(fields.Date.today(), DATE_FORMAT)
 
                 sell = self.generate_move(rec.asset_id, rec)
                 if sell.state == 'draft':
@@ -116,7 +116,7 @@ class AccountAssetSale(models.Model):
 
             self.write({
                 'state': 'sale',
-                'sale_date': self.env.user.company_id.batch_date,
+                'sale_date': fields.Date.today(),
                 'sale_user_id': self.env.user.id,
             })
 
@@ -188,7 +188,7 @@ class AccountAssetSale(models.Model):
 
         return self.env['account.move'].create({
             'ref': asset.code,
-            'date': self.env.user.company_id.batch_date,
+            'date': fields.Date.today(),
             'journal_id': asset.category_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'maker_id': self.approve_user_id.id,
