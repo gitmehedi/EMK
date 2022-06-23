@@ -8,7 +8,7 @@ class AccountInvoice(models.Model):
     amount_payable = fields.Float('Vendor Payable', readonly=True, copy=False)
 
     def _get_date_invoice(self):
-        return self.env.user.company_id.batch_date
+        return fields.Date.today()
 
     # date_invoice = fields.Date(default=_get_date_invoice, required=True)
     date_invoice = fields.Date()

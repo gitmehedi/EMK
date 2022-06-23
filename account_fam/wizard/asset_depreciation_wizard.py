@@ -10,14 +10,14 @@ class AssetDepreciationWizard(models.TransientModel):
     _name = 'asset.depreciation.wizard'
 
     def default_date(self):
-        return self.env.user.company_id.batch_date
+        return fields.Date.today()
 
     date = fields.Date(string='Date', required=True, default=default_date)
     sure = fields.Selection([('yes', 'Yes'), ('no', 'No')], string='Double Check Execute Date?', required=True)
 
     @api.constrains('date')
     def check_date(self):
-        if self.env.user.company_id.batch_date > self.date:
+        if fields.Date.today() > self.date:
             raise ValidationError(_('Date should not be less than system date.'))
 
     @api.multi

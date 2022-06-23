@@ -400,7 +400,7 @@ class ServerFileProcess(models.Model):
                     os.remove(local_path)
 
     def generate_filename(self):
-        rec_date = self.env.user.company_id.batch_date.split('-')
+        rec_date = fields.Date.today().split('-')
         record_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0]) + datetime.strftime(datetime.now(),
                                                                                                      "%H%M%S_")
         process_date = "{0}{1}{2}_".format(rec_date[2], rec_date[1], rec_date[0])

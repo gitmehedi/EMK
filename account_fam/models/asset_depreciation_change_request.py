@@ -121,7 +121,7 @@ class AssetDepreciationChangeRequest(models.Model):
                 history = self.env['history.account.asset.category'].create({'method': self.method,
                                                                              'depreciation_year': self.asset_life,
                                                                              'method_progress_factor': 0.0,
-                                                                             'request_date': self.env.user.company_id.batch_date,
+                                                                             'request_date': fields.Date.today(),
                                                                              'line_id': category.id,
                                                                              })
                 category.write({'pending': True, 'maker_id': self.maker_id.id})
@@ -180,7 +180,7 @@ class AssetDepreciationChangeRequest(models.Model):
                 'name': name,
                 'approver_id': self.env.user.id,
                 'move_id': move.id if move else [],
-                'approve_date': self.env.user.company_id.batch_date
+                'approve_date': fields.Date.today()
             })
 
     @api.model
