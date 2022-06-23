@@ -14,7 +14,9 @@ class StockMove(models.Model):
         std_price_update = {}
         # Start Custom Logic For GBS : Unit Price will not update for Foreign Purchase (LC & TT). Because landed cost are not added on PO
         include_product_purchase_cost = self.env['ir.values'].get_default('account.config.settings', 'include_product_purchase_cost')
-
+        moves = self.filtered(lambda move: move.location_id.usage in ('supplier', 'production') and move.product_id.cost_method == 'average')
+        move_length = len(moves)
+        count = 0
         for move in self.filtered(lambda move: move.location_id.usage in ('supplier', 'production') and move.product_id.cost_method == 'average'):
             product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
 
@@ -53,7 +55,9 @@ class StockMove(models.Model):
                                         tmpl_dict[move.product_id.id] += move.product_qty
                                         std_price_update[move.company_id.id, move.product_id.id] = new_std_price
 
-
+                    count = count + 1
+                    if count == move_length:
+                        return
             # if not po:
             #     # It's mean move coming form production. So need to update Finish goods Unit Price
             #     return super(StockMove, self).product_price_update_before_done()
@@ -62,6 +66,6 @@ class StockMove(models.Model):
             #     return
 
 
-        #super(StockMove, self).product_price_update_before_done()
+        super(StockMove, self).product_price_update_before_done()
 
         # End Custom Logic For GBS

@@ -13,11 +13,12 @@ class InheritedPickingImportWizard(models.TransientModel):
             if rec.lc_id:
                 purchase_cost_dist_obj =self.env['purchase.cost.distribution'].sudo().search([('lc_id','=',rec.lc_id.id)])
                 if purchase_cost_dist_obj:
-                    if purchase_cost_dist_obj.account_move_id:
-                        return
-                    else:
-                        raise UserError(
-                            "Landed Cost already added for this LC. You need to post journal entry for that Landed Cost First!")
+                    for cost in purchase_cost_dist_obj:
+                        if cost.account_move_id:
+                            return
+                        else:
+                            raise UserError(
+                                "Landed Cost already added for this LC. You need to post journal entry for that Landed Cost First!")
 
     ################based on flag TRUE######################
 

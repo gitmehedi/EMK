@@ -6,14 +6,15 @@ class UtilityStockMove(models.TransientModel):
     def update_move_price_unit(self, po_ids, move, _from, currency_rate):
         if _from == 'product_gate_in_window':
             for po in po_ids:
-                for vb in po.invoice_ids.sorted(lambda r: r.date,reverse=True)[0]:
-                    for line in vb.invoice_line_ids.sudo().search([('product_id', '=', move.product_id.id)])[0]:
-                        if vb.currency_id.name == 'BDT':
-                            updated_price_unit = line.price_unit
-                        else:
-                            if vb.conversion_rate:
-                                updated_price_unit = line.price_unit * vb.conversion_rate
-                        move.write({'price_unit': updated_price_unit})
+                if po.invoice_ids:
+                    for vb in po.invoice_ids.sorted(lambda r: r.date,reverse=True)[0]:
+                        for line in vb.invoice_line_ids.sudo().search([('product_id', '=', move.product_id.id)])[0]:
+                            if vb.currency_id.name == 'BDT':
+                                updated_price_unit = line.price_unit
+                            else:
+                                if vb.conversion_rate:
+                                    updated_price_unit = line.price_unit * vb.conversion_rate
+                            move.write({'price_unit': updated_price_unit})
 
         elif _from == 'landed_cost_window':
             for po in po_ids:

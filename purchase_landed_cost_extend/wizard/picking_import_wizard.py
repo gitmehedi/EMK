@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 
+
 class PickingImportWizard(models.TransientModel):
     _inherit = "picking.import.wizard"
 
@@ -18,11 +19,10 @@ class PickingImportWizard(models.TransientModel):
                 purchase_cost_dist_obj = self.env['purchase.cost.distribution'].sudo().search(
                     [('lc_id', '=', rec.lc_id.id)])
                 if purchase_cost_dist_obj:
-                    if purchase_cost_dist_obj.account_move_id:
-                        rec.journal_entry_created = True
-                    else:
-                        rec.journal_entry_created = False
-
+                    for cost_dist in purchase_cost_dist_obj:
+                        if cost_dist.account_move_id:
+                            rec.journal_entry_created = True
+                        else:
+                            rec.journal_entry_created = False
 
     journal_entry_created = fields.Boolean(compute='_journal_entry_created')
-
