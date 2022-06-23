@@ -29,10 +29,10 @@ class AssetAllocationWizard(models.TransientModel):
         if asset.asset_usage_date and len(asset.asset_allocation_ids.ids) == 0:
             return asset.asset_usage_date
         else:
-            return self.env.user.company_id.batch_date
+            return fields.Date.today()
 
     def default_warranty_date(self):
-        return self.env.user.company_id.batch_date
+        return fields.Date.today()
 
     def default_status(self):
         if 'allocation' in self.env.context:
@@ -53,7 +53,7 @@ class AssetAllocationWizard(models.TransientModel):
 
     @api.constrains('date', 'warranty_date', 'usage_date')
     def check_warranty_date(self):
-        sys_date = self.env.user.company_id.batch_date
+        sys_date = fields.Date.today()
 
         if self.usage_date:
             provision_diff = datetime.strptime(sys_date, DATE_FORMAT) - relativedelta(years=3)
@@ -154,7 +154,7 @@ class AssetAllocationWizard(models.TransientModel):
                     if not asset.asset_seq and asset.date and asset.asset_type_id.code:
                         date = self.date.split('-')
                         count = asset.asset_type_id.asset_count + 1
-                        code = '{0}-{1}-FIA-{2}-{3}'.format(date[0],
+                        code = '{0}-{1}-EMK-{2}-{3}'.format(date[0],
                                                             date[1].zfill(2),
                                                             asset.asset_type_id.code,
                                                             str(count).zfill(5))

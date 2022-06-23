@@ -23,6 +23,10 @@ class IndentIndent(models.Model):
         return warehouse_id
 
     @api.model
+    def _get_default_location(self):
+        return self.env.user.default_location_id.id
+
+    @api.model
     def _get_required_date(self):
         return datetime.strftime(datetime.today() + timedelta(days=7), DEFAULT_SERVER_DATETIME_FORMAT)
 
@@ -54,7 +58,7 @@ class IndentIndent(models.Model):
     stock_location_id = fields.Many2one('stock.location', string='Stock Location', readonly=True, required=True,
                                         states={'draft': [('readonly', False)]},
                                         help="Default User Location.Destination location.",
-                                        default=lambda self: self.env.user.default_location_id,
+                                        default=_get_default_location,
                                         track_visibility="onchange")
 
     analytic_account_id = fields.Many2one('account.analytic.account', string='Project', ondelete="cascade",
@@ -88,10 +92,9 @@ class IndentIndent(models.Model):
                                    help="Default Warehouse.Source location.",
                                    states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
                                    track_visibility="onchange")
-    picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type',
-                                      compute='_compute_default_picking_type',
-                                      readonly=True, store=True, track_visibility="onchange")
-    move_type = fields.Selection([('one', 'All at once'),('direct', 'Partial')], 'Receive Method',
+    picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type', required=True,
+                                      track_visibility="onchange")
+    move_type = fields.Selection([('one', 'All at once'), ('direct', 'Partial')], 'Receive Method',
                                  readonly=True, required=True, default='one',
                                  states={'cancel': [('readonly', True)]},
                                  help="It specifies goods to be deliver partially or all at once",
@@ -99,11 +102,9 @@ class IndentIndent(models.Model):
 
     pr_indent_check = fields.Boolean(string='Indent List Check', default=True, track_visibility="onchange")
 
-
-    product_id = fields.Many2one(
-        'product.product', 'Products',
-        readonly="False", related='product_lines.product_id',
-        help="This comes from the product form.", track_visibility="onchange")
+    product_id = fields.Many2one('product.product', 'Products',
+                                 readonly="False", related='product_lines.product_id',
+                                 help="This comes from the product form.", track_visibility="onchange")
 
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -131,19 +132,17 @@ class IndentIndent(models.Model):
         if required_date < indent_date:
             raise UserError('Required Date can not be less then indent date!!!')
 
-    @api.multi
-    @api.depends('warehouse_id', 'stock_location_id')
-    def _compute_default_picking_type(self):
-        for indent in self:
-            picking_type_obj = indent.env['stock.picking.type']
+    @api.onchange('warehouse_id', 'stock_location_id')
+    def _onchange_default_picking_type(self):
+        if self.warehouse_id and self.stock_location_id:
+            picking_type_obj = self.env['stock.picking.type']
             picking_type_ids = picking_type_obj.search(
-                [('default_location_src_id', '=', indent.warehouse_id.sudo().lot_stock_id.id),
-                 ('default_location_dest_id', '=', indent.stock_location_id.id)])
-            picking_type_id = picking_type_ids and picking_type_ids[0] or False
-            indent.picking_type_id = picking_type_id
-            if picking_type_id:
-                indent.picking_type_id = picking_type_id
+                [('default_location_src_id', '=', self.warehouse_id.sudo().lot_stock_id.id),
+                 ('default_location_dest_id', '=', self.stock_location_id.id)])
+            pkt_id = picking_type_ids and picking_type_ids[0] or False
 
+            if pkt_id:
+                self.picking_type_id = pkt_id.id
 
     @api.onchange('requirement')
     def onchange_requirement(self):
@@ -163,8 +162,8 @@ class IndentIndent(models.Model):
             'approver_id': self.env.user.id,
             'approve_date': time.strftime('%Y-%m-%d %H:%M:%S')
         }
-        resproducts={
-            'state':'inprogress'
+        resproducts = {
+            'state': 'inprogress'
         }
         self.write(res)
         for indent in self:
@@ -192,14 +191,11 @@ class IndentIndent(models.Model):
         }
         self.write(res)
 
-
-
     @api.multi
     def indent_confirm(self):
         for indent in self:
             if not indent.product_lines:
                 raise UserError(_('Unable to confirm an indent without product. Please add product(s).'))
-
 
             res = {
                 'state': 'waiting_approval'
@@ -356,8 +352,8 @@ class IndentIndent(models.Model):
                     if picking.state != 'assigned':
                         picking.action_assign()
                         if picking.state != 'assigned':
-                               raise UserError(
-                                   _("Could not reserve all requested products. Please use the \'Mark as Todo\' button to handle the reservation manually."))
+                            raise UserError(
+                                _("Could not reserve all requested products. Please use the \'Mark as Todo\' button to handle the reservation manually."))
                 for pack in picking.pack_operation_ids:
                     if pack.product_qty > 0:
                         pack.write({'qty_done': pack.product_qty})
@@ -392,9 +388,9 @@ class IndentIndent(models.Model):
         for product in self.product_lines:
             if product.received_qty <= 0:
                 raise UserError('Issue Quantity can not 0')
-        for product in self.product_lines:
-            if product.received_qty != product.product_uom_qty:
-                raise UserError('Issue Quantity and Indent Quantity must be same')
+        # for product in self.product_lines:
+        #     if product.received_qty != product.product_uom_qty:
+        #         raise UserError('Issue Quantity and Indent Quantity must be same')
 
     @api.multi
     def action_view_picking(self):
@@ -486,8 +482,7 @@ class IndentIndent(models.Model):
     ####################################################
     @api.model
     def _needaction_domain_get(self):
-        return [('state', 'in', ['draft','confirm','received','waiting_approval','reject'])]
-
+        return [('state', 'in', ['draft', 'confirm', 'received', 'waiting_approval', 'reject'])]
 
     def unlink(self):
         for indent in self:
@@ -501,14 +496,15 @@ class IndentProductLines(models.Model):
     _name = 'indent.product.lines'
     _description = 'Indent Product Lines'
 
-    indent_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade',track_visibility='onchange')
-    product_id = fields.Many2one('product.product', string='Product', required=True,track_visibility='onchange')
+    indent_id = fields.Many2one('indent.indent', string='Indent', required=True, ondelete='cascade',
+                                track_visibility='onchange')
+    product_id = fields.Many2one('product.product', string='Product', required=True, track_visibility='onchange')
     product_uom_qty = fields.Float('Indent Quantity', digits=dp.get_precision('Product UoS'),
-                                   required=True, default=1,track_visibility='onchange')
+                                   required=True, default=1, track_visibility='onchange')
     received_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),
-                                help="Receive Quantity which Update by done quantity.",track_visibility='onchange')
+                                help="Receive Quantity which Update by done quantity.", track_visibility='onchange')
     issue_qty = fields.Float('Issue Quantity', digits=dp.get_precision('Product UoS'),
-                             help="Issued Quantity which Update by available quantity.",track_visibility='onchange')
+                             help="Issued Quantity which Update by available quantity.", track_visibility='onchange')
 
     product_uom = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='Unit of Measure',
                                   required=True, store=True, track_visibility='onchange')
@@ -537,13 +533,12 @@ class IndentProductLines(models.Model):
     # Business methods
     ####################################################
 
-
     @api.depends('product_id')
     @api.multi
     def _compute_product_qty(self):
         for product in self:
             location_id = product.indent_id.warehouse_id.sudo().lot_stock_id.id
-            product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id), ('location_id', '=', location_id)])
+            product_quant = self.env['stock.quant'].search(
+                [('product_id', '=', product.product_id.id), ('location_id', '=', location_id)])
             quantity = sum([val.qty for val in product_quant])
             product.qty_available = quantity
-

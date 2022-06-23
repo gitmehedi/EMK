@@ -53,6 +53,7 @@
                                options="{'no_create':True,'no_create_edit':True}"/>
                         <field name="batch_no"/>
                         <field name="model_name"/>
+                        <field name="asset_ref"/>
                     </group>
                     <group>
                         <field name="invoice_date" readonly="True"/>

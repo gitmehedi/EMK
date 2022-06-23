@@ -76,7 +76,7 @@
 									<group>
 										<field name="warehouse_id" groups="stock.group_stock_multi_locations" options="{'no_create': True,'no_open':True}"/>
 										<field name="scrap_location_id" options="{'no_create': True,'no_open':True}" /><!--groups="stock.group_stock_multi_locations"-->
-										<field name="picking_type_id" invisible="1"/>
+										<field name="picking_type_id"/>
 									</group>
 								</group>
 							</page>
