@@ -13,6 +13,7 @@
         'account_operating_unit',
         'account_fam_menu',
         'base_vat_bd',
+        'purchase',
     ],
     "data": [
         'views/vendor_view.xml',

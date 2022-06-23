@@ -42,7 +42,8 @@ class AccountAssetAsset(models.Model):
     date = fields.Date(string='Purchase Date', track_visibility='onchange')
     asset_usage_date = fields.Date(string='Usage Date', help='Usage Date/Allocation Date', readonly=True,
                                    track_visibility='onchange', states={'draft': [('readonly', False)]})
-    model_name = fields.Char(string='Model', track_visibility='onchange', readonly=True)
+    model_name = fields.Char(string='Model', track_visibility='onchange', readonly=True,states={'draft': [('readonly', False)]})
+    asset_ref = fields.Char(string='Reference', track_visibility='onchange', readonly=True,states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Purchase Branch', required=True,
                                         track_visibility='onchange')
     invoice_date = fields.Date(related='invoice_id.date_invoice', string='Bill Date', track_visibility='onchange')
@@ -322,7 +323,7 @@ class AccountAssetAsset(models.Model):
         company_id = self.env.user.company_id.id
         opu_id = self.env.user.default_operating_unit_id.id
         narr_date = datetime.strptime(date, DATE_FORMAT).strftime(' - %b, %Y')
-        system_date = self.env.user.company_id.batch_date
+        system_date = fields.Date.today()
         self.env.cr.execute("""SELECT * FROM asset_depreciation('%s',%s,%s,%s,%s,'%s','%s')""" % (
             date, self.env.uid, journal_id.id, opu_id, company_id, narr_date, system_date));
         debit, credit = 0, 0
@@ -410,7 +411,7 @@ class AccountAssetAsset(models.Model):
     def create_move(self, line, date):
         created_moves = self.env['account.move']
         prec = self.env['decimal.precision'].precision_get('Account')
-        sys_date = self.env.user.company_id.batch_date
+        sys_date = fields.Date.today()
 
         if line:
             if line.move_id:

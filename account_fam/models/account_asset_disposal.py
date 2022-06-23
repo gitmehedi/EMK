@@ -24,7 +24,7 @@ class AccountAssetDisposal(models.Model):
     narration_gl = fields.Char(string="Narration Gain/Loss", required=True, readonly=True, size=50,
                                states={'draft': [('readonly', False)]}, track_visibility='onchange')
     request_date = fields.Date(string='Request Date', required=True,
-                               default=lambda self: self.env.user.company_id.batch_date,
+                               default=lambda self: fields.Date.today(),
                                readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
     approve_date = fields.Date(string='Approve Date', readonly=True, states={'draft': [('readonly', False)]},
                                track_visibility='onchange')
@@ -97,7 +97,7 @@ class AccountAssetDisposal(models.Model):
             self.write({
                 'name': self.env['ir.sequence'].next_by_code('account.asset.disposal') or _('New'),
                 'state': 'approve',
-                'approve_date': self.env.user.company_id.batch_date,
+                'approve_date': fields.Date.today(),
                 'approve_user_id': self.env.user.id,
             })
 
@@ -108,7 +108,7 @@ class AccountAssetDisposal(models.Model):
                 raise ValidationError(_("[Validation Error] Maker and Approver can't be same person!"))
 
             for rec in self.line_ids:
-                date = datetime.strptime(self.env.user.company_id.batch_date, DATE_FORMAT)
+                date = datetime.strptime(fields.Date.today(), DATE_FORMAT)
                 dispose = self.generate_move(rec.asset_id)
                 if dispose.state == 'draft':
                     dispose.post()
@@ -117,7 +117,7 @@ class AccountAssetDisposal(models.Model):
 
             self.write({
                 'state': 'dispose',
-                'dispose_date': self.env.user.company_id.batch_date,
+                'dispose_date': fields.Date.today(),
                 'dispose_user_id': self.env.user.id,
             })
 
@@ -164,7 +164,7 @@ class AccountAssetDisposal(models.Model):
         # if credit >0 and debit>
         return self.env['account.move'].create({
             'ref': asset.code,
-            'date': self.env.user.company_id.batch_date,
+            'date': fields.Date.today(),
             'journal_id': asset.category_id.journal_id.id,
             'operating_unit_id': asset.current_branch_id.id,
             'maker_id': self.approve_user_id.id,
