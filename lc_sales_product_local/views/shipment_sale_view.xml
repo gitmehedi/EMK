@@ -33,12 +33,12 @@
                         <button string="To Buyer" name="action_to_buyer_export" states="to_sales" type="object" class="oe_highlight"/>
                         <button string="1st Acceptance" name="action_to_first_acceptance_export" states="to_buyer" type="object" class="oe_highlight"/>
                         <button string="To Seller Bank" name="action_to_seller_bank_export" states="to_first_acceptance" type="object" class="oe_highlight"/>
-                        <button string="To Buyer Bank" name="action_to_buyer_bank_export" states="to_seller_bank" type="object" class="oe_highlight"/>
-                        <button string="To Bill ID" name="action_to_bill_id_export_wizard" states="to_buyer_bank" type="object" class="oe_highlight"/>
-                        <button string="2nd Acceptance" name="action_to_second_acceptance_export_wizard" states="to_bill_id" type="object" class="oe_highlight"/>
+                        <button string="To Bill ID" name="action_to_bill_id_export_wizard" states="to_seller_bank" type="object" class="oe_highlight"/>
+                        <button string="To Buyer Bank" name="action_to_buyer_bank_export" states="to_bill_id" type="object" class="oe_highlight"/>
+                        <button string="2nd Acceptance" name="action_to_second_acceptance_export_wizard" states="to_buyer_bank" type="object" class="oe_highlight"/>
                         <button string="To Maturity" name="action_to_maturity_export" states="to_second_acceptance" type="object" class="oe_highlight"/>
                         <button string="Done" name="action_done_export" states="to_maturity" type="object" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,receive_doc,add_invoice,to_sales,to_buyer,to_first_acceptance,to_seller_bank,to_buyer_bank,to_bill_id,to_second_acceptance,to_maturity,done"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,receive_doc,add_invoice,to_sales,to_buyer,to_first_acceptance,to_seller_bank,to_bill_id,to_buyer_bank,to_second_acceptance,to_maturity,done"/>
                         <button string="Cancel" name="action_cancel" class="btn-primary btn-danger mr24 pull-right oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
                     </header>
                     <sheet>
