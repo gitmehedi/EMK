@@ -40,11 +40,24 @@
                     </group>
                 </xpath>
 
-                 <xpath expr="//group[@name='purchase']" position="attributes">
+<!--                 <xpath expr="//group[@name='purchase']" position="attributes">-->
+<!--                    <attribute name="attrs">{'invisible': [('is_cnf', '=', True)]}</attribute>-->
+<!--                </xpath>-->
+
+                <xpath expr="//group[@name='sale']" position="attributes">
                     <attribute name="attrs">{'invisible': [('is_cnf', '=', True)]}</attribute>
                 </xpath>
 
-                <xpath expr="//group[@name='sale']" position="attributes">
+                <xpath expr="//field[@name='supplier_category_id']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_cnf', '=', True)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='ntn_no']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_cnf', '=', True)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='gst_no']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_cnf', '=', True)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='iec_no']" position="attributes">
                     <attribute name="attrs">{'invisible': [('is_cnf', '=', True)]}</attribute>
                 </xpath>
             </field>
