@@ -8,7 +8,7 @@ class DoneWizard(models.TransientModel):
     shipment_done_date = fields.Date(string='Shipment Done Date')
     ait_amount = fields.Float(string='AIT Amount')
     payment_rec_date = fields.Date(string='Payment Rec. Date')
-    payment_rec_amount = fields.Float(string='Payment Rec. Amount')
+    payment_rec_amount = fields.Float(string='Payment Rec. Amount', default=lambda self: self._get_default_shipment_invoice_values())
     payment_charge = fields.Float(string='Payment Charge')
     discrepancy_amount = fields.Float(string='Discrepancy Amount')
     region_type = fields.Selection([('local', "Local"),('foreign', "Foreign")], readonly=True,)
@@ -33,10 +33,29 @@ class DoneWizard(models.TransientModel):
                 'shipment_done_date': self.shipment_done_date,
                 'ait_amount': self.ait_amount,
                 'payment_rec_date': self.payment_rec_date,
-                'payment_rec_amount': self.payment_rec_amount,
+                'payment_rec_amount': self.payment_rec_amount - (self.ait_amount + self.payment_charge + self.discrepancy_amount),
                 'payment_charge': self.payment_charge,
                 'discrepancy_amount': self.discrepancy_amount,
                 'state': 'done'
             })
         return {'type': 'ir.actions.act_window_close'}
 
+    def _get_default_shipment_invoice_values(self):
+        shipment_id = self.env.context.get('active_id')
+        shipment = self.env['purchase.shipment'].search([('id', '=', shipment_id)])
+        invoice_value = 0
+        if shipment:
+            invoice_value = shipment.invoice_value
+
+        #
+        return invoice_value
+
+    @api.onchange('ait_amount', 'payment_charge', 'discrepancy_amount')
+    def _calculate_payment_rec_amount(self):
+        shipment_id = self.env.context.get('active_id')
+        shipment = self.env['purchase.shipment'].search([('id', '=', shipment_id)])
+        invoice_value = 0
+        if shipment:
+            invoice_value = shipment.invoice_value
+        self.payment_rec_amount = invoice_value - (self.ait_amount + self.payment_charge + self.discrepancy_amount)
+        

@@ -14,7 +14,7 @@
                             <field name="shipment_done_date" attrs="{'invisible':[('region_type', '=', 'foreign')],'required': [('region_type', '=', 'local')]}" />
                             <field name="ait_amount" attrs="{'invisible':[('region_type', '=', 'foreign')],'required': [('region_type', '=', 'local')]}" />
                             <field name="payment_rec_date" required="1"/>
-                            <field name="payment_rec_amount" required="1"/>
+                            <field name="payment_rec_amount" required="1" readonly="1"/>
                         </group>
                         <group>
                             <field name="payment_charge" required="1"/>
