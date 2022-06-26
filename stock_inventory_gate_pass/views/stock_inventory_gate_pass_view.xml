@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id='view_stock_inventory_gate_pass_tree' model='ir.ui.view'>
+            <field name="name">stock.inventory.gate.pass.tree</field>
+            <field name="model">stock.inventory.gate.pass</field>
+            <field name="arch" type="xml">
+                <tree string="Gate Pass" decoration-bf="message_needaction == True"
+                      colors="blue:state=='draft';green:state=='approve';gray:state=='confirm';red:state=='reject';">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="request_id"/>
+                    <field name="request_date"/>
+                    <field name="approver_id"/>
+                    <field name="approve_date"/>
+                    <field name="message_needaction" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='view_stock_stock_inventory_gate_pass_form' model='ir.ui.view'>
+            <field name="name">stock.inventory.gate.pass.form</field>
+            <field name="model">stock.inventory.gate.pass</field>
+            <field name="arch" type="xml">
+                <form string="Gate Pass">
+                    <header>
+                        <button name="act_confirm" string="Confirm" states="draft"
+                                class="oe_highlight" type="object"/>
+                        <button name="act_approve" string="Approve" states="confirm"
+                                type="object" class="oe_highlight" groups=""/>
+                        <button name="act_draft" string="Reject" states="confirm"
+                                groups="" type="object"/>
+                        <field name="state" widget="statusbar" statusbar="draft,approve,confirm"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="description"/>
+                            </group>
+                            <group>
+                                <field name="request_id" states="confirm"
+                                       options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
+                                <field name="request_date" states="confirm"/>
+                                <field name="approver_id" states="approve"
+                                       options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
+                                <field name="approve_date" states="approve"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Items">
+                                <field name="line_ids">
+                                    <tree string="Products" editable="bottom">
+                                        <field name="product_id"
+                                               options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
+                                        <field name="model"/>
+                                        <field name="serial_no"/>
+                                        <field name="quantity" groups=""/>
+                                        <field name="product_uom" string="UoM" readonly="True"
+                                               options="{'no_create':True,'no_open':True,'no_create_edit':True}"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id='action_gate_pass_draft' model='ir.actions.act_window'>
+            <field name="name">Gate Pass</field>
+            <field name="res_model">stock.inventory.gate.pass</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','draft')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new Gate Pass.
+                </p>
+            </field>
+        </record>
+
+        <record id='action_gate_pass_confirm' model='ir.actions.act_window'>
+            <field name="name">Gate Pass</field>
+            <field name="res_model">stock.inventory.gate.pass</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','confirm')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No Gate Pass for Confirm.
+                </p>
+            </field>
+        </record>
+
+        <record id='action_gate_pass_approve' model='ir.actions.act_window'>
+            <field name="name">Gate Pass</field>
+            <field name="res_model">stock.inventory.gate.pass</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','approve')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No Gate Pass for Approval.
+                </p>
+            </field>
+        </record>
+
+        <record id='action_gate_pass_reject' model='ir.actions.act_window'>
+            <field name="name">Gate Pass</field>
+            <field name="res_model">stock.inventory.gate.pass</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','reject')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    No Gate Pass for Approval.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_inventory_gate_pass" name="Inventory Gate Pass" sequence="22"
+                  parent="stock.menu_stock_root"
+                  groups="inventory_user.grp_inv_store_executive,inventory_user.grp_inv_department_executive"/>
+
+        <menuitem action="action_gate_pass_draft" name="Gate Pass (Draft)"
+                  parent="menu_inventory_gate_pass" id="menu_stock_inventory_gate_pass_raise" sequence="5"
+                  groups="inventory_user.grp_inv_store_executive,inventory_user.grp_inv_department_executive"/>
+
+        <menuitem action="action_gate_pass_confirm" name="Gate Pass (Confirmed)"
+                  parent="menu_inventory_gate_pass" id="menu_stock_inventory_gate_pass"
+                  sequence="10"
+                  groups="inventory_user.grp_inv_store_executive,inventory_user.grp_inv_department_executive"/>
+
+        <menuitem action="action_gate_pass_approve" name="Gate Pass (Approved)"
+                  parent="menu_inventory_gate_pass" id="menu_indent_waiting_for_approval"
+                  sequence="15"
+                  groups="inventory_user.grp_inv_store_executive,inventory_user.grp_inv_department_executive"/>
+
+        <menuitem action="action_gate_pass_reject" name="Gate Pass (Rejected)"
+                  parent="menu_inventory_gate_pass" id="menu_indent_reject" sequence="20"
+                  groups="inventory_user.grp_inv_store_executive,inventory_user.grp_inv_department_executive"/>
+    </data>
+</odoo>

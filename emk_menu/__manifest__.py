@@ -35,10 +35,13 @@
         'account',
         'purchase',
         'appointment_menu',
+        'security_make_invisible',
+        'stock',
     ],
     'data': [
         'views/main_menu_view.xml',
         'views/hr_menu_view.xml',
+        'views/inventory_menu_view.xml',
     ],
     'installable': True,
     'application': True,
