@@ -16,8 +16,6 @@
                         <field name="shipment_selected" invisible="1"/>
                         <field name="journal_entry_created" invisible="1"/>
                         <field name="include_product_purchase_cost" invisible="1"/>
-                        <field name="currency_rate"  attrs="{'invisible': ['|',('shipment_selected', '=', False),('include_product_purchase_cost', '=', False)]}"/>
-                        <field name="hidden_currency_rate"  attrs="{'invisible': ['|',('shipment_selected', '=', False),('include_product_purchase_cost', '=', False)]}" invisible="1"/>
                     </xpath>
                 </data>
             </field>

@@ -3,7 +3,7 @@ from odoo import fields, models, api
 class UtilityStockMove(models.TransientModel):
     _name = 'stock.move.utility'
 
-    def update_move_price_unit(self, po_ids, move, _from, currency_rate):
+    def update_move_price_unit(self, po_ids, move, _from, currency_rate, shipment_rate):
         if _from == 'product_gate_in_window':
             for po in po_ids:
                 if po.invoice_ids:
@@ -17,14 +17,16 @@ class UtilityStockMove(models.TransientModel):
                             move.write({'price_unit': updated_price_unit})
 
         elif _from == 'landed_cost_window':
-            for po in po_ids:
-                for line in po.order_line.filtered(lambda l: l.product_id.id == move.product_id.id):
-                    po_price_unit = line.price_unit
-                    updated_move_price_unit = po_price_unit * currency_rate
-
-                    # update all moves same to origin
-                    moves = self.env['stock.move'].sudo().search(
-                        [('origin', '=', move.origin), ('product_id', '=', line.product_id.id)])
-                    for a_move in moves:
-                        a_move.write({'price_unit': updated_move_price_unit})
+            updated_move_price_unit = move.price_unit/shipment_rate
+            move.write({'price_unit': updated_move_price_unit*currency_rate})
+            # for po in po_ids:
+            #     for line in po.order_line.filtered(lambda l: l.product_id.id == move.product_id.id):
+            #         po_price_unit = line.price_unit
+            #         updated_move_price_unit = po_price_unit * currency_rate
+            #
+            #         # update all moves same to origin
+            #         moves = self.env['stock.move'].sudo().search(
+            #             [('origin', '=', move.origin), ('product_id', '=', line.product_id.id)])
+            #         for a_move in moves:
+            #             a_move.write({'price_unit': updated_move_price_unit})
 
