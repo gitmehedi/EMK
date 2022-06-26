@@ -15,7 +15,6 @@ This application allows you to easily maintain access rights of purchase order p
         'account_parent',
     ],
     'data': [
-        'security/ir_security.xml',
         'views/menu.xml'
     ],
     'installable': True,

@@ -80,7 +80,7 @@
                             <page string="Personal Information" autofocus="autofocus">
                                 <group>
                                     <group string="Basic Information">
-                                        <field name="gender" options="{'no_create_edit':True,'no_open':True}"/>
+                                        <field name="gender" required="0" options="{'no_create_edit':True,'no_open':True}"/>
                                         <field name="function" string="Occupation"
                                                options="{'no_create_edit':True,'no_open':True}"/>
                                         <field name="current_employee"/>
@@ -94,7 +94,7 @@
                                 <group>
                                     <group name='tax_information' string="Tax Information">
                                         <field name="tin" required="True"/>
-                                        <field name="tax_zone" invisible="1"/>
+                                        <field name="tax_zone"/>
                                         <field name="tax_circle"/>
                                         <field name="tax_location"/>
                                     </group>

@@ -11,7 +11,7 @@ class AccountAssetCategory(models.Model):
     _inherit = ['account.asset.category', 'mail.thread']
     _order = 'code ASC'
 
-    code = fields.Char(string='Code', size=4, required=True)
+    code = fields.Char(string='Code', size=20, required=True)
     active = fields.Boolean(default=True, track_visibility='onchange')
     name = fields.Char(required=True, index=True, string="Asset Type", size=200, track_visibility='onchange')
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True,
@@ -85,14 +85,14 @@ class AccountAssetCategory(models.Model):
             if self.depreciation_year < 1:
                 raise ValidationError(_('Asset Life cann\'t be zero or negative value.'))
 
-    @api.onchange("code")
-    def onchange_code(self):
-        if self.code:
-            filter = str(self.code.strip())
-            if self.parent_id:
-                self.code = self.parent_id.code + filter[2:]
-            elif not self.parent_id:
-                self.code = filter
+    # @api.onchange("code")
+    # def onchange_code(self):
+    #     if self.code:
+    #         filter = str(self.code.strip())
+    #         if self.parent_id:
+    #             self.code = self.parent_id.code + filter[2:]
+    #         elif not self.parent_id:
+    #             self.code = filter
 
     @api.constrains('name', 'code')
     def _check_unique_constrain(self):
@@ -110,10 +110,10 @@ class AccountAssetCategory(models.Model):
                 raise ValidationError(_(Message.UNIQUE_WARNING))
 
         if self.code:
-            if self.parent_id and (len(self.code) != 4 or not self.code.isdigit()):
-                raise Warning(_('[Value Error] Code must be 4 digit!'))
-            elif not self.parent_id and (len(self.code) != 2 or not self.code.isdigit()):
-                raise Warning(_('[Value Error] Code must be 2 digit!'))
+            # if self.parent_id and (len(self.code) != 4 or not self.code.isdigit()):
+            #     raise Warning(_('[Value Error] Code must be 4 digit!'))
+            # elif not self.parent_id and (len(self.code) != 2 or not self.code.isdigit()):
+            #     raise Warning(_('[Value Error] Code must be 2 digit!'))
 
             if self.parent_id:
                 code = self.search(
