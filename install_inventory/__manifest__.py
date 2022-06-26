@@ -23,6 +23,7 @@
         "stock",
         "stock_account",
         "account_fam_install",
+        "stock_inventory_gate_pass",
     ],
     'installable': True,
     'application': True,

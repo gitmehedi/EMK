@@ -78,9 +78,9 @@
                                     <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
                                            readonly="0" string="Branch"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
-                                           />
+                                    />
                                     <field name="company_id" invisible="1"/>
-<!--                                    <field name="operating_unit_domain_ids" invisible="1" widget="many2many_tags"/>-->
+                                    <!--                                    <field name="operating_unit_domain_ids" invisible="1" widget="many2many_tags"/>-->
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
                                            domain="[('company_id', '=', parent.company_id)]"/>
@@ -107,15 +107,15 @@
                                         <field name="tax_line_ids" groups="base.group_system">
                                             <tree editable="bottom" string="Taxes">
                                                 <field name="name"/>
-                                                <field name="tax_id" />
-                                                <field name="sequence" />
-                                                <field name="manual" />
+                                                <field name="tax_id"/>
+                                                <field name="sequence"/>
+                                                <field name="manual"/>
                                                 <field name="account_id" groups="account.group_account_invoice"/>
                                                 <field name="account_analytic_id" string="Cost Centre"
                                                        domain="[('company_id', '=', parent.company_id)]"
                                                        groups="analytic.group_analytic_accounting"/>
                                                 <field name="amount"/>
-                                                <field name="currency_id" />
+                                                <field name="currency_id"/>
                                             </tree>
                                         </field>
                                     </div>
