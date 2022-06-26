@@ -7,8 +7,8 @@ from odoo.exceptions import UserError, ValidationError
 def date_subtract_date_to_days(date1, date2):
     days = 0
     if date1 and date2:
-        d1 = datetime.strptime(date1, "%Y-%m-%d")
-        d2 = datetime.strptime(date2, "%Y-%m-%d")
+        d1 = datetime.strptime(date1, "%d-%m-%Y")
+        d2 = datetime.strptime(date2, "%d-%m-%Y")
         days = (d2 - d1).days
     return days
 
@@ -78,36 +78,42 @@ class LcRegisterXLSX(ReportXlsx):
                 return amount
 
     def get_delivery_detail(self, shipment_id):
-        query = """select * from lc_shipment_invoice_rel where shipment_id = %s""" % shipment_id
-        self.env.cr.execute(query)
-        purchase_shipment_invoices = self.env.cr.dictfetchall()
+        if shipment_id:
 
-        ReportUtility = self.env['report.utility']
-        if purchase_shipment_invoices:
-            tu_purchase_shipment_invoices = tuple(purchase_shipment_invoices)
-        
-            query = """
-                    select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, sol.qty_delivered as qty_delivered from sale_order as so
-                    LEFT JOIN sale_order_line as sol ON sol.order_id = so.id
-                    LEFT JOIN delivery_order as deor ON deor.sale_order_id = so.id
-                    LEFT JOIN stock_picking as sp ON sp.id = deor.sale_order_id
-                    LEFT JOIN account_invoice ai ON ai.so_id = so.id
-                    where ai.id in %s order by sp.date_done DESC
-                    """ % tu_purchase_shipment_invoices
+            query = """select * from lc_shipment_invoice_rel where shipment_id = %s""" % shipment_id
             self.env.cr.execute(query)
-            query_res = self.env.cr.dictfetchall()
-            lc_delivery_details_str = ""
-            for data in query_res:
-                name = data['name']
-                min_date = ReportUtility.get_date_time_from_string(data['min_date'])
-                qty = data["qty_delivered"]
-    
-                lc_delivery_details_str = str(name) + ", " + min_date + ", " + str(qty) + "\n"
-    
-            date_done = ReportUtility.get_date_time_from_string(query_res[0]['date_done'])
-            return lc_delivery_details_str, str(date_done)
-        else:
-            return '', ''
+            purchase_shipment_invoices = self.env.cr.dictfetchall()
+
+            ReportUtility = self.env['report.utility']
+            if purchase_shipment_invoices:
+                purchase_shipment_inv = purchase_shipment_invoices[0]['invoice_id']
+
+                query = """
+                        select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, sol.qty_delivered as qty_delivered from sale_order as so
+                        LEFT JOIN sale_order_line as sol ON sol.order_id = so.id
+                        LEFT JOIN delivery_order as deor ON deor.sale_order_id = so.id
+                        LEFT JOIN stock_picking as sp ON sp.id = deor.sale_order_id
+                        LEFT JOIN account_invoice ai ON ai.so_id = so.id
+                        where ai.id in (%s) order by sp.date_done DESC
+                        """ % purchase_shipment_inv
+                self.env.cr.execute(query)
+                query_res = self.env.cr.dictfetchall()
+                lc_delivery_details_str = ""
+                for data in query_res:
+                    name = data['name'] if data['name'] is not None else ''
+                    min_date = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date() if 'min_date' is data else ''
+                    min_date_format = ReportUtility.get_date_from_string(str(min_date))
+                    qty = data["qty_delivered"] if data["qty_delivered"] is not None else '0'
+
+                    lc_delivery_details_str = str(name) + ", " + str(min_date_format) + ", " + str(qty) + "\n"
+                date_done = ''
+                if query_res:
+                    date_done_uniformat = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date() if 'min_date' is data else ''
+                    if date_done_uniformat:
+                        date_done = ReportUtility.get_date_from_string(str(date_done_uniformat))
+                return lc_delivery_details_str, str(date_done)
+
+        return '', ''
 
     def get_lc_qty_n_delivery_qty(self, lc_id):
         if not lc_id:
@@ -150,16 +156,18 @@ class LcRegisterXLSX(ReportXlsx):
         return lc_so_ids
 
     def get_delivered_qty(self, lc_id):
-        lc_id = self.env['letter.credit'].search([('id', '=', lc_id)])
-        delivered_qty = 0
-        for pi_id in lc_id.pi_ids_temp:
-            so_ids = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
-            for so_id in so_ids:
-                sols = so_id.order_line
-                for sol in sols:
-                    delivered_qty += sol.qty_delivered
-        return delivered_qty
-
+        if lc_id:
+            lc_id = self.env['letter.credit'].search([('id', '=', lc_id)])
+            delivered_qty = 0
+            for pi_id in lc_id.pi_ids_temp:
+                so_ids = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
+                for so_id in so_ids:
+                    sols = so_id.order_line
+                    for sol in sols:
+                        delivered_qty += sol.qty_delivered
+            return delivered_qty
+        else:
+            return 0
     def get_sheet_header(self, sheet, docs, workbook, filter_by_text, type_text):
         title_format_center = workbook.add_format({'align': 'center', 'bold': False, 'size': 22, 'text_wrap': True})
         title_format_center.set_font_name('Times New Roman')
@@ -241,8 +249,10 @@ class LcRegisterXLSX(ReportXlsx):
             sheet.write(row, 20, delivery_details_date_of_trans[1], name_border_format_colored)
             sheet.write(row, 21, delivery_details_date_of_trans[0], name_border_format_colored)
             sheet.write(row, 22, ReportUtility.get_date_from_string(data['doc_preparation_date']) if 'doc_preparation_date' in data else '', name_border_format_colored_text_right)
-            sheet.write(row, 23, date_subtract_date_to_days(data['doc_preparation_date'] if 'doc_preparation_date' in data else '', delivery_details_date_of_trans[1]),
-                        name_border_format_colored_text_right)
+            if 'doc_preparation_date' in data:
+                sheet.write(row, 23, date_subtract_date_to_days(ReportUtility.get_date_from_string(data['doc_preparation_date']), delivery_details_date_of_trans[1]), name_border_format_colored_text_right)
+            else:
+                sheet.write(row, 23, '', name_border_format_colored_text_right)
 
             if region_type == 'local':
                 sheet.write(row, 24, ReportUtility.get_date_from_string(data['doc_dispatch_to_party_date']) if 'doc_dispatch_to_party_date' in data else '', name_border_format_colored_text_right)
@@ -263,7 +273,7 @@ class LcRegisterXLSX(ReportXlsx):
                 sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
 
             if str(obj.filter_by) == "percentage_of_first_acceptance_collection":
-                if int(abs(aging_days)) > int(obj.acceptance_default_value):
+                if int(aging_days) > int(obj.acceptance_default_value):
                     condition_above_row += 1
 
             if region_type == 'local':
@@ -292,7 +302,7 @@ class LcRegisterXLSX(ReportXlsx):
             sheet.write(row, 35, data['payment_rec_amount'] if 'payment_rec_amount' in data else '', name_border_format_colored_text_right)
             sheet.write(row, 36, data['payment_charge'] if 'payment_charge' in data else '', name_border_format_colored_text_right)
             sheet.write(row, 37, data['comment'] if 'comment' in data else '', name_border_format_colored)
-            sheet.write(row, 38, date_subtract_date_to_days(data['shipment_done_date'] if 'shipment_done_date' in data else '', data['maturity_date'] if 'maturity_date' in data else ''),
+            sheet.write(row, 38, date_subtract_date_to_days(ReportUtility.get_date_from_string(data['shipment_done_date']) if 'shipment_done_date' in data else '', ReportUtility.get_date_from_string(data['maturity_date']) if 'maturity_date' in data else ''),
                         name_border_format_colored_text_right)
             sheet.write(row, 39, data['bank_code'] if 'bank_code' in data else '', name_border_format_colored)
             sheet.write(row, 40, data['samuda_bank_name'] if 'samuda_bank_name' in data else '', name_border_format_colored)
@@ -300,7 +310,7 @@ class LcRegisterXLSX(ReportXlsx):
             sheet.write(row, 42, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
 
         # footer
-        if str(obj.filter_by) == "percentage_of_first_acceptance_collection":
+        if str(obj.filter_by) == "percentage_of_first_acceptance_collection" and condition_above_row > 0:
             sheet.write(row+1, 26, ((condition_above_row / sl)/100), name_border_format_colored_text_right)
 
     def generate_xlsx_report(self, workbook, data, obj):
@@ -382,37 +392,6 @@ class LcRegisterXLSX(ReportXlsx):
             type_text = 'Foreign'
             where += " and lc.region_type = 'foreign'"
 
-        query = '''
-                SELECT distinct ps.id as shipment_id, rp.name as party_name,rp2.name as executive_name,lpl.name as product_name, lc.name as lc_number, 
-                ps.name as shipment_no, spl.product_qty as shipment_qty, ps.invoice_value as shipment_amount, lc.tenure as tenure,
-                ps.bl_date as doc_dispatch_to_party_date_foreign,(ps.to_first_acceptance_date-ps.bl_date) as aging_first_acceptance_days_foreign,
-                date(ps.to_first_acceptance_date + INTERVAL '7 day') as to_buyer_bank_date_foreign,
-                ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_seller_bank_date as second_acceptance_date,
-                (ps.to_buyer_bank_date-ps.to_seller_bank_date) as aging_2nd_acceptance_days, 
-                rc.name as currency, 
-                lc.id as lc_id, lc.shipment_date as shipment_date, lc.expiry_date as expiry_date, ps.doc_preparation_date as doc_preparation_date,
-                lc.issue_date as lc_date,lc.lc_value as lc_amount,lc.region_type as region_type,
-                ps.to_buyer_date as doc_dispatch_to_party_date, ps.to_first_acceptance_date as first_acceptance_doc_submission_date,
-                (ps.to_first_acceptance_date-ps.to_buyer_date) as aging_first_acceptance_days,ps.to_maturity_date as maturity_date, 
-                ps.shipment_done_date as shipment_done_date, 
-                ps.discrepancy_amount as discrepancy_amount, ps.ait_amount as ait_amount, ps.payment_rec_date, ps.payment_rec_amount as payment_rec_amount, ps.payment_charge as payment_charge, 
-                ps.comment as comment, concat(lc.bank_code, '-', lc.bank_branch) as bank_code, rb.bic as samuda_bank_name,
-                pu.name as packing_type, ps.bill_id as bill_id_no
-                FROM purchase_shipment AS ps 
-                LEFT JOIN letter_credit AS lc ON ps.lc_id = lc.id
-                LEFT JOIN res_partner AS rp ON rp.id = lc.second_party_applicant
-                LEFT JOIN res_users AS ru ON ru.id = rp.user_id
-                LEFT JOIN res_partner AS rp2 ON rp2.id = ru.partner_id
-                LEFT JOIN lc_product_line AS lpl ON lpl.lc_id = ps.lc_id
-                LEFT JOIN res_currency as rc ON rc.id = lc.currency_id
-                LEFT JOIN shipment_product_line AS spl ON ps.id = spl.shipment_id
-                LEFT JOIN res_partner_bank AS rpb ON rpb.id = lc.first_party_bank_acc
-                LEFT JOIN res_bank AS rb ON rb.id = rpb.bank_id
-                LEFT JOIN product_uom AS pu ON pu.id = ps.count_uom ''' + where + '''
-                '''
-        self.env.cr.execute(query)
-        datas_excel = self.env.cr.dictfetchall()
-
         if filter_by == 'goods_delivered_but_lc_not_received':
             filter_by_text = 'Goods Delivered but LC not received'
 
@@ -432,7 +411,38 @@ class LcRegisterXLSX(ReportXlsx):
             '''
             self.env.cr.execute(query)
             datas_excel = self.env.cr.dictfetchall()
-            #datas_excel = []
+        else:
+            query = '''
+                    SELECT distinct ps.id as shipment_id, rp.name as party_name,rp2.name as executive_name,lpl.name as product_name, lc.name as lc_number, 
+                    ps.name as shipment_no, spl.product_qty as shipment_qty, ps.invoice_value as shipment_amount, lc.tenure as tenure,
+                    ps.bl_date as doc_dispatch_to_party_date_foreign,(ps.to_first_acceptance_date-ps.bl_date) as aging_first_acceptance_days_foreign,
+                    date(ps.to_first_acceptance_date + INTERVAL '7 day') as to_buyer_bank_date_foreign,
+                    ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_seller_bank_date as second_acceptance_date,
+                    (ps.to_buyer_bank_date-ps.to_seller_bank_date) as aging_2nd_acceptance_days, 
+                    rc.name as currency, 
+                    lc.id as lc_id, lc.shipment_date as shipment_date, lc.expiry_date as expiry_date, ps.doc_preparation_date as doc_preparation_date,
+                    lc.issue_date as lc_date,lc.lc_value as lc_amount,lc.region_type as region_type,
+                    ps.to_buyer_date as doc_dispatch_to_party_date, ps.to_first_acceptance_date as first_acceptance_doc_submission_date,
+                    (ps.to_first_acceptance_date-ps.to_buyer_date) as aging_first_acceptance_days,ps.to_maturity_date as maturity_date, 
+                    ps.shipment_done_date as shipment_done_date, 
+                    ps.discrepancy_amount as discrepancy_amount, ps.ait_amount as ait_amount, ps.payment_rec_date, ps.payment_rec_amount as payment_rec_amount, ps.payment_charge as payment_charge, 
+                    ps.comment as comment, concat(lc.bank_code, '-', lc.bank_branch) as bank_code, rb.bic as samuda_bank_name,
+                    pu.name as packing_type, ps.bill_id as bill_id_no
+                    FROM purchase_shipment AS ps 
+                    LEFT JOIN letter_credit AS lc ON ps.lc_id = lc.id
+                    LEFT JOIN res_partner AS rp ON rp.id = lc.second_party_applicant
+                    LEFT JOIN res_users AS ru ON ru.id = rp.user_id
+                    LEFT JOIN res_partner AS rp2 ON rp2.id = ru.partner_id
+                    LEFT JOIN lc_product_line AS lpl ON lpl.lc_id = ps.lc_id
+                    LEFT JOIN res_currency as rc ON rc.id = lc.currency_id
+                    LEFT JOIN shipment_product_line AS spl ON ps.id = spl.shipment_id
+                    LEFT JOIN res_partner_bank AS rpb ON rpb.id = lc.first_party_bank_acc
+                    LEFT JOIN res_bank AS rb ON rb.id = rpb.bank_id
+                    LEFT JOIN product_uom AS pu ON pu.id = ps.count_uom ''' + where + '''
+                    '''
+            self.env.cr.execute(query)
+            datas_excel = self.env.cr.dictfetchall()
+
 
         # SHEET HEADER
         self.get_sheet_header(sheet, docs, workbook, filter_by_text, type_text)
