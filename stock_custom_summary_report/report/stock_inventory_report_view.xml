@@ -100,7 +100,7 @@
                                                     </td>
                                                     <t t-if="'OS' in record['report_type']">
                                                         <td class="text-right">
-                                                            <t t-esc="'{0:,.8f}'.format((line['qty_dk']))"/>
+                                                            <t t-esc="'{0:,.3f}'.format((line['qty_dk']))"/>
 <!--                                                            <t t-esc="line['qty_dk']"/>-->
                                                         </td>
                                                         <td class="text-right">
@@ -135,7 +135,7 @@
                                                     <t t-if="'CS' in record['report_type']">
                                                         <td class="text-right">
 <!--                                                            <t t-esc="line['qty_ck']"/>-->
-                                                            <t t-esc="'{0:,.8f}'.format((line['qty_ck']))"/>
+                                                            <t t-esc="'{0:,.3f}'.format((line['qty_ck']))"/>
                                                         </td>
                                                         <td class="text-right">
                                                             <t t-esc="line['rate_ck']"/>
@@ -154,7 +154,7 @@
                                                     <t t-if="'OS' in record['report_type']">
                                                         <td class="text-right">
 <!--                                                            <t t-esc="data_value['sub-total']['total_dk_qty']"/>-->
-                                                            <t t-esc="'{0:,.8f}'.format((data_value['sub-total']['total_dk_qty']))"/>
+                                                            <t t-esc="'{0:,.3f}'.format((data_value['sub-total']['total_dk_qty']))"/>
 
                                                         </td>
                                                         <td></td>
@@ -182,7 +182,7 @@
                                                     </t>
                                                     <t t-if="'CS' in record['report_type']">
                                                         <td class="text-right">
-                                                            <t t-esc="'{0:,.8f}'.format((data_value['sub-total']['total_ck_qty']))"/>
+                                                            <t t-esc="'{0:,.3f}'.format((data_value['sub-total']['total_ck_qty']))"/>
 <!--                                                            <t t-esc="data_value['sub-total']['total_ck_qty']"/>-->
                                                         </td>
                                                         <td></td>
@@ -205,7 +205,7 @@
                                         <t t-if="'OS' in record['report_type']">
                                             <td class="text-right">
 <!--                                                <t t-esc="total['total_dk_qty']"/>-->
-                                                <t t-esc="'{0:,.8f}'.format((total['total_dk_qty']))"/>
+                                                <t t-esc="'{0:,.3f}'.format((total['total_dk_qty']))"/>
                                             </td>
                                             <td></td>
                                             <td class="text-right">
@@ -233,7 +233,7 @@
                                         <t t-if="'CS' in record['report_type']">
                                             <td class="text-right">
 <!--                                                <t t-esc="total['total_ck_qty']"/>-->
-                                                <t t-esc="'{0:,.8f}'.format((total['total_ck_qty']))"/>
+                                                <t t-esc="'{0:,.3f}'.format((total['total_ck_qty']))"/>
                                             </td>
                                             <td></td>
                                             <td class="text-right">
