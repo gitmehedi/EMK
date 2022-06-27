@@ -388,7 +388,7 @@ class LcRegisterXLSX(ReportXlsx):
             where += "where ps.create_date >= '" + obj.date_from + "' and ps.create_date <= '" + obj.date_to + "' "
         elif filter_by == 'lc_history':
             filter_by_text = 'LC History'
-            where = ''
+            where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' "
         elif filter_by == 'lc_number':
             filter_by_text = 'LC Number: ' + obj.lc_number.name
             where += "where lc.id ='" + str(obj.lc_number.id) + "'"
