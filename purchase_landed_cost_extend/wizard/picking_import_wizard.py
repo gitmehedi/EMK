@@ -20,9 +20,18 @@ class PickingImportWizard(models.TransientModel):
                     [('lc_id', '=', rec.lc_id.id)])
                 if purchase_cost_dist_obj:
                     for cost_dist in purchase_cost_dist_obj:
-                        if cost_dist.account_move_id:
-                            rec.journal_entry_created = True
+                        if cost_dist.id != self.env.context['active_id']:
+                            if cost_dist.account_move_id:
+                                rec.journal_entry_created = True
+                            else:
+                                rec.journal_entry_created = False
                         else:
-                            rec.journal_entry_created = False
+                            rec.journal_entry_created = True
 
     journal_entry_created = fields.Boolean(compute='_journal_entry_created')
+
+    imported_pickings =fields.Many2many('stock.picking')
+    # pickings = fields.Many2many(
+    #     comodel_name='stock.picking',
+    #     relation='distribution_import_picking_rel', column1='wizard_id',
+    #     column2='picking_id', string='Incoming shipments', required=True)

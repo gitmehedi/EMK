@@ -10,7 +10,7 @@
                     <button name="button_advance_payment" type="object" string="Advance Payment"
                             style="background-color:#D4BC43;color:#EADDCA;"
                             groups="purchase.group_purchase_user,gbs_samuda_service_order.group_service_order_user_unit,gbs_samuda_service_order.group_service_order_user_ho"
-                            states="done"/>
+                            attrs="{'invisible':['|',('region_type','=', 'foreign'),('state','not in', 'done')]}"/>
                 </xpath>
                 <notebook position="inside">
                     <page string="Vendor Advances">

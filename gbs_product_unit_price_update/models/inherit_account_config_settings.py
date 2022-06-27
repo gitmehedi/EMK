@@ -3,7 +3,7 @@ from odoo import fields, models, api
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    include_product_purchase_cost = fields.Boolean(string='Include Product Purchase Cost')
+    include_product_purchase_cost = fields.Boolean(string='Include Product Purchase Cost', default=True)
 
 class InheritedAccountConfigSettings(models.TransientModel):
     _inherit = 'account.config.settings'

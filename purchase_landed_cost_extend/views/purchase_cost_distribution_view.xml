@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
+        <record id="purchase_cost_distribution_tree_inherit" model="ir.ui.view">
+            <field name="name">purchase.cost.distribution.tree.inherit.extend</field>
+            <field name="model">purchase.cost.distribution</field>
+            <field name="inherit_id" ref="purchase_landed_cost.view_purchase_cost_distribution_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
         <record id="purchase_cost_distribution_form" model="ir.ui.view">
             <field name="name">purchase.cost.distribution.form.inherit.extend</field>
             <field name="model">purchase.cost.distribution</field>
@@ -15,9 +27,7 @@
                 <xpath expr="//form" position="attributes">
                     <attribute name="duplicate">0</attribute>
                 </xpath>
-                <xpath expr="//field[@name='date']" position="after">
-                    <field name="lc_id" readonly="1"/>
-                </xpath>
+
                 <xpath expr="//field[@name='total_expense']" position="after">
                     <field name="percentage_of_lcost"/>
                 </xpath>
@@ -44,9 +54,10 @@
                            options="{'no_open': 1,'no_create': 1, 'no_create_edit': 1}"/>
                     <field name="field_readonly" invisible="1"/>
                 </xpath>
-                <!--                <xpath expr="//field[@name='cost_lines']" position="attributes">-->
-                <!--                    <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>-->
-                <!--                </xpath>-->
+                <xpath expr="//field[@name='operating_unit_id']" position="after">
+                    <field name="currency_rate" readonly="1" string="Rate used"/>
+                </xpath>
+
                 <xpath expr="//field[@name='cost_lines']/tree/field[@name='picking_id']" position="after">
                     <field name="date_done"/>
                 </xpath>
@@ -83,13 +94,11 @@
 
 
                 <xpath expr="//field[@name='currency_id']" position="after">
-                    <field name="debit_account" readonly="1"/>
+                    <field name="lc_id" readonly="1"/>
+                    <field name="debit_account" readonly="1" attrs="{'invisible': [('debit_account', '=', False)]}"/>
                     <field name="account_move_id" invisible="1"/>
                 </xpath>
 
-                <xpath expr="//field[@name='operating_unit_id']" position="after">
-                    <field name="currency_rate" string='Rate Used' readonly="1"/>
-                </xpath>
 
                 <xpath expr="//field[@name='name']" position="before">
                     <div class="oe_button_box" name="button_box">
@@ -103,19 +112,33 @@
                 <xpath expr="//header/button[@name='action_calculate']" position="replace">
                     <button name="action_calculate"
                             string="Calculate"
-                            states="draft,error"
+                            states="rate_update"
                             type="object"
                             confirm="Are you sure that you want to calculate landed cost?"
                             class="oe_highlight"/>
                 </xpath>
 
 
-                <xpath expr="//header/button[@name='action_calculate']" position="after">
-                    <button name="post_journal_entry"
-                            string="Post Journal Entry"
+                <xpath expr="//header/button[@name='%(purchase_landed_cost.action_picking_import_wizard)d']"
+                       position="replace">
+                    <button name="%(purchase_landed_cost.action_picking_import_wizard)d"
+                            string="Import incoming shipment"
+                            states="draft" type="action"
+                            class="oe_highlight"/>
+                </xpath>
+
+                <xpath expr="//header/button[@name='action_draft']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+
+
+
+                <xpath expr="//header" position="inside">
+                    <button name="action_update_rate"
+                            string="Confirm"
+                            states="draft"
                             type="object"
-                            attrs="{'invisible':['|',('account_move_id','!=',False), ('state','!=','done')]}"
-                            confirm="Are you sure that you want to post journal entry?"
                             class="oe_highlight"/>
                 </xpath>
 
