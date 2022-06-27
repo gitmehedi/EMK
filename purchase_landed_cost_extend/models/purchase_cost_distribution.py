@@ -11,7 +11,14 @@ class PurchaseCostDistribution(models.Model):
     _name = "purchase.cost.distribution"
     _inherit = ["purchase.cost.distribution", "mail.thread"]
 
-    state = fields.Selection(selection_add=[('rate_update', 'Confirmed')])
+    state = fields.Selection(
+        [('draft', 'Draft'),
+         ('rate_update', 'Confirmed'),
+         ('calculated', 'Calculated'),
+         ('done', 'Done'),
+         ('error', 'Error'),
+         ('cancel', 'Cancel')], string='Status', readonly=True,
+        default='draft')
 
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True, readonly=True,
                                         states={'draft': [('readonly', False)]},

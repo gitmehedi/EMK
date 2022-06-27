@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
+        <record id="purchase_cost_distribution_tree_inherit" model="ir.ui.view">
+            <field name="name">purchase.cost.distribution.tree.inherit.extend</field>
+            <field name="model">purchase.cost.distribution</field>
+            <field name="inherit_id" ref="purchase_landed_cost.view_purchase_cost_distribution_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
         <record id="purchase_cost_distribution_form" model="ir.ui.view">
             <field name="name">purchase.cost.distribution.form.inherit.extend</field>
             <field name="model">purchase.cost.distribution</field>
@@ -105,6 +117,8 @@
                             confirm="Are you sure that you want to calculate landed cost?"
                             class="oe_highlight"/>
                 </xpath>
+
+
                 <xpath expr="//header/button[@name='%(purchase_landed_cost.action_picking_import_wizard)d']"
                        position="replace">
                     <button name="%(purchase_landed_cost.action_picking_import_wizard)d"
@@ -116,6 +130,8 @@
                 <xpath expr="//header/button[@name='action_draft']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+
+
 
 
                 <xpath expr="//header" position="inside">
