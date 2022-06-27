@@ -60,7 +60,10 @@ class VendorAdvance(models.Model):
 
     @api.model
     def create(self, vals):
-
+        if 'operating_unit_id' in vals and 'purchase_order_id' in vals:
+            purchase_order_obj = self.env['purchase.order'].browse(vals['purchase_order_id'])
+            if purchase_order_obj.operating_unit_id.id != vals['operating_unit_id']:
+                raise UserError(_("Purchase order and operating unit not same !"))
         vals['name'] = self.env['ir.sequence'].next_by_code('vendor.advance') or self.name
         return super(VendorAdvance, self).create(vals)
 
