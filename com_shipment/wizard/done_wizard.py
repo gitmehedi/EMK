@@ -46,8 +46,6 @@ class DoneWizard(models.TransientModel):
         invoice_value = 0
         if shipment:
             invoice_value = shipment.invoice_value
-
-        #
         return invoice_value
 
     @api.onchange('ait_amount', 'payment_charge', 'discrepancy_amount')
