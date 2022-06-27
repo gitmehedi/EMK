@@ -12,12 +12,15 @@
                            domain="[('partner_id', 'child_of', supplier),
                                     ('location_id.usage', '=', 'supplier'),
                                     ('state', '=', 'done'),
-                                    ('shipment_id.lc_id', '=', lc_id)]"
+                                    ('shipment_id.lc_id', '=', lc_id),
+                                    ('id', 'not in', prev_pickings and prev_pickings[0] and prev_pickings[0][2])
+                                    ]"
                            attrs="{'invisible':['|' ,('lc_id', '=', False),('journal_entry_created','=',False)]}"
                     />
                 </xpath>
                 <xpath expr="//field[@name='pickings']" position="after">
                     <field name="operating_unit_id" invisible="1"/>
+                    <field name="prev_pickings" widget="many2many_tags" invisible="1"/>
                 </xpath>
             </field>
         </record>

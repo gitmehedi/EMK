@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from odoo import models, fields, api,_
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
@@ -9,33 +9,39 @@ class ProductGateIn(models.Model):
     _order = 'date desc, name desc, id desc'
 
     name = fields.Char(string='Name', index=True, readonly=True)
-    create_by = fields.Char('Carried By',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
-    received = fields.Char('To Whom Received',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
+    create_by = fields.Char('Carried By', size=100, readonly=True, states={'draft': [('readonly', False)]},
+                            required=True)
+    received = fields.Char('To Whom Received', size=100, readonly=True, states={'draft': [('readonly', False)]},
+                           required=True)
 
-    challan_bill_no = fields.Char('Challan Bill No',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
-    truck_no = fields.Char('Truck/Vehicle No',size=100, readonly=True, states={'draft': [('readonly', False)]},required=True)
+    challan_bill_no = fields.Char('Challan Bill No', size=100, readonly=True, states={'draft': [('readonly', False)]},
+                                  required=True)
+    truck_no = fields.Char('Truck/Vehicle No', size=100, readonly=True, states={'draft': [('readonly', False)]},
+                           required=True)
 
-    shipping_line_ids = fields.One2many('product.gate.line','parent_id',required=True,readonly=True,states={'draft': [('readonly', False)]})
+    shipping_line_ids = fields.One2many('product.gate.line', 'parent_id', required=True, readonly=True,
+                                        states={'draft': [('readonly', False)]})
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id,
                                         readonly=True, states={'draft': [('readonly', False)]})
-    company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]},
+    company_id = fields.Many2one('res.company', string='Company', readonly=True,
+                                 states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
     ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',
                               states={'confirm': [('readonly', True)]},
                               domain="['&','&','&',('operating_unit_id','=',operating_unit_id),('state','in',('cnf_clear', 'gate_in', 'done')),('lc_id.state','!=','done'),('lc_id.state','!=','cancel')]")
     partner_id = fields.Many2one('res.partner', string='Supplier')
 
-    date = fields.Date(string="Date",readonly=True, states={'draft': [('readonly', False)]},required=True)
+    date = fields.Date(string="Date", readonly=True, states={'draft': [('readonly', False)]}, required=True)
     receive_type = fields.Selection([('lc', "LC"), ('others', "Others")], readonly=True,
-                                    required=True,states={'draft': [('readonly', False)]}, track_visibility='onchange')
+                                    required=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
 
     picking_id = fields.Many2one('stock.picking', 'Picking')
 
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Confirm"),
-    ], default='draft',track_visibility='onchange')
+    ], default='draft', track_visibility='onchange')
 
     # NSF=Not Store Field
     lc_id = fields.Many2one('letter.credit', string='LC Number', store=False, search='_search_shipment_lc_id')
@@ -55,7 +61,7 @@ class ProductGateIn(models.Model):
     def action_confirm(self):
         self.state = 'confirm'
         self.shipping_line_ids.write({'state': 'confirm'})
-        self.ship_id.write({'state':'gate_in'})
+        self.ship_id.write({'state': 'gate_in'})
         include_product_purchase_cost = self.env['ir.values'].get_default('account.config.settings',
                                                                           'include_product_purchase_cost')
 
@@ -65,7 +71,8 @@ class ProductGateIn(models.Model):
                 if self.ship_id and self.ship_id.lc_id and self.ship_id.lc_id.po_ids:
                     for po in self.ship_id.lc_id.po_ids:
                         if not po.invoice_ids:
-                            raise UserError('Vendor Bill is not created for this shipment. Please contact your Accounting Department !')
+                            raise UserError(
+                                'Vendor Bill is not created for this shipment. Please contact your Accounting Department !')
                         else:
                             invoice_states = po.invoice_ids.mapped('state')
                             if not ('open' in invoice_states or 'paid' in invoice_states):
@@ -78,11 +85,12 @@ class ProductGateIn(models.Model):
 
             if self.shipping_line_ids:
                 picking_id = self._create_pickings_and_procurements()
-                picking_objs = self.env['stock.picking'].search([('id','=',picking_id)])
-                moves = self.env['stock.move'].search([('picking_id','=',picking_id)])
-                for move in moves:
-                    stock_move_utility.update_move_price_unit(self.ship_id.lc_id.po_ids,move, 'product_gate_in_window',False)
-
+                picking_objs = self.env['stock.picking'].search([('id', '=', picking_id)])
+                if not include_product_purchase_cost:
+                    moves = self.env['stock.move'].search([('picking_id', '=', picking_id)])
+                    for move in moves:
+                        stock_move_utility.update_move_price_unit(self.ship_id.lc_id.po_ids, move, 'product_gate_in_window',
+                                                                  False, False)
 
                 picking_objs.action_confirm()
                 picking_objs.force_assign()
@@ -180,7 +188,6 @@ class ProductGateIn(models.Model):
         if self.date < self.ship_id.shipment_date:
             raise UserError('Gate In Date can not be less then Shipment date!!!')
 
-
     # change data and line data depands on ship_id
     @api.onchange('ship_id')
     def set_products_info_automatically(self):
@@ -210,10 +217,10 @@ class ProductGateIn(models.Model):
     @api.constrains('challan_bill_no')
     def _check_unique_constraint(self):
         if self.partner_id and self.challan_bill_no:
-            filters = [['challan_bill_no', '=ilike', self.challan_bill_no],['partner_id', '=', self.partner_id.id]]
+            filters = [['challan_bill_no', '=ilike', self.challan_bill_no], ['partner_id', '=', self.partner_id.id]]
             bill_no = self.search(filters)
             if len(bill_no) > 1:
-                raise UserError(_('[Unique Error] Challan Bill must be unique for %s !')% self.partner_id.name)
+                raise UserError(_('[Unique Error] Challan Bill must be unique for %s !') % self.partner_id.name)
 
     @api.constrains('shipping_line_ids')
     def _check_shipping_line_ids(self):
@@ -223,9 +230,9 @@ class ProductGateIn(models.Model):
     ####################################################
     # Override methods
     ####################################################
-    #For create secquence
+    # For create secquence
     @api.model
-    def create(self,vals):
+    def create(self, vals):
         requested_date = datetime.today().date()
         new_seq = self.env['ir.sequence'].next_by_code_new('product.gate.in', requested_date) or '/'
         vals['name'] = new_seq
@@ -246,9 +253,9 @@ class ShipmentProductLine(models.Model):
 
     name = fields.Text(string='Description')
     product_id = fields.Many2one('product.product', string='Product',
-                                change_default=True)
+                                 change_default=True)
     date_planned = fields.Date(string='Scheduled Date', index=True)
-    product_uom = fields.Many2one(related='product_id.uom_id',comodel='product.uom',string='UOM',store=True)
+    product_uom = fields.Many2one(related='product_id.uom_id', comodel='product.uom', string='UOM', store=True)
     price_unit = fields.Float(string='Unit Price')
     product_qty = fields.Float(string='Quantity')
     parent_id = fields.Many2one('product.gate.in',
@@ -278,5 +285,6 @@ class ShipmentProductLine(models.Model):
         if line.product_uom.id != line.product_id.uom_id.id:
             price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
         if gate_in.ship_id.lc_id.currency_id != gate_in.company_id.currency_id:
-            price_unit = gate_in.ship_id.lc_id.currency_id.compute(price_unit, gate_in.company_id.currency_id, round=False)
+            price_unit = gate_in.ship_id.lc_id.currency_id.compute(price_unit, gate_in.company_id.currency_id,
+                                                                   round=False)
         return price_unit

@@ -11,6 +11,8 @@ class PurchaseCostDistribution(models.Model):
     _name = "purchase.cost.distribution"
     _inherit = ["purchase.cost.distribution", "mail.thread"]
 
+    state = fields.Selection(selection_add=[('rate_update', 'Confirmed')])
+
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True, readonly=True,
                                         states={'draft': [('readonly', False)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
@@ -30,6 +32,7 @@ class PurchaseCostDistribution(models.Model):
         digits=dp.get_precision('Account'), string='Total Landed Cost')
 
     lc_id = fields.Many2one("letter.credit", string='LC Number', readonly=True)
+    currency_rate = fields.Float()
 
     @api.depends('cost_lines', 'cost_lines.total_amount','expense_lines', 'expense_lines.expense_amount')
     def _compute_lcost_per(self):
@@ -56,37 +59,16 @@ class PurchaseCostDistribution(models.Model):
 
         return super(PurchaseCostDistribution, self).action_calculate()
 
-    @api.multi
     def action_done(self):
-        context = dict(self.env.context)
-        context.update({
-            'datetime_of_price_history': self.date + ' ' + datetime.now().strftime("%H:%M:%S"),
-            'operating_unit_id': self.cost_lines[0].picking_id.operating_unit_id.id
-        })
-        self.env.context = frozendict(context)
+        return {
+            'name': 'Update Product Cost & Post Journal Entry',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'journal.entry.post.wizard',
+            'target': 'new',
+        }
 
-        self.ensure_one()
-        if self.cost_update_type != 'direct':
-            return
-        d = {}
-        for line in self.cost_lines:
-            product = line.move_id.product_id
-            if (product.cost_method != 'average' or
-                    line.move_id.location_id.usage != 'supplier'):
-                continue
-            line.move_id.quant_ids._price_update(line.standard_price_new)
-            d.setdefault(product, [])
-            d[product].append(
-                (line.move_id,
-                 line.standard_price_new - line.standard_price_old, line.standard_price_new),
-            )
-        for product, vals_list in d.items():
-            self._product_price_update(product, vals_list)
-            for vals in vals_list:
-                vals[0].product_price_update_after_done()
-        self.state = 'done'
-
-        #super(PurchaseCostDistribution, self).action_done()
 
     @api.multi
     def action_cancel(self):
@@ -190,14 +172,13 @@ class PurchaseCostDistribution(models.Model):
             'target': 'new'
         }
 
-
-    def post_journal_entry(self):
-        return {
-            'name': 'Post Journal Entry',
+    def action_update_rate(self):
+        return{
+            'name': 'Update Rate',
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'journal.entry.post.wizard',
+            'res_model': 'update.rate.wizard',
             'target': 'new',
         }
 
@@ -213,7 +194,6 @@ class PurchaseCostDistribution(models.Model):
         }
 
 
-    currency_rate = fields.Float('Currency Rate')
 
 class PurchaseCostDistributionLine(models.Model):
     _inherit = 'purchase.cost.distribution.line'
