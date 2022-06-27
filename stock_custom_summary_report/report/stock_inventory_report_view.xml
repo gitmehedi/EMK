@@ -112,7 +112,8 @@
                                                     </t>
                                                     <t t-if="'IWS' in record['report_type']">
                                                         <td class="text-right">
-                                                            <t t-esc="line['qty_in_tk']"/>
+                                                            <t t-esc="'{0:,.3f}'.format((line['qty_in_tk']))"/>
+<!--                                                            <t t-esc="line['qty_in_tk']"/>-->
                                                         </td>
                                                         <td class="text-right">
                                                             <t t-esc="line['rate_in']"/>
@@ -123,7 +124,8 @@
                                                     </t>
                                                     <t t-if="'OWS' in record['report_type']">
                                                         <td class="text-right">
-                                                            <t t-esc="line['qty_out_tk']"/>
+                                                            <t t-esc="'{0:,.3f}'.format((line['qty_out_tk']))"/>
+<!--                                                            <t t-esc="line['qty_out_tk']"/>-->
                                                         </td>
                                                         <td class="text-right">
                                                             <t t-esc="line['rate_out']"/>
@@ -155,7 +157,6 @@
                                                         <td class="text-right">
 <!--                                                            <t t-esc="data_value['sub-total']['total_dk_qty']"/>-->
                                                             <t t-esc="'{0:,.3f}'.format((data_value['sub-total']['total_dk_qty']))"/>
-
                                                         </td>
                                                         <td></td>
                                                         <td class="text-right">
@@ -164,7 +165,8 @@
                                                     </t>
                                                     <t t-if="'IWS' in record['report_type']">
                                                         <td class="text-right">
-                                                            <t t-esc="data_value['sub-total']['total_in_qty']"/>
+                                                            <t t-esc="'{0:,.3f}'.format((data_value['sub-total']['total_in_qty']))"/>
+<!--                                                            <t t-esc="data_value['sub-total']['total_in_qty']"/>-->
                                                         </td>
                                                         <td></td>
                                                         <td class="text-right">
@@ -173,7 +175,8 @@
                                                     </t>
                                                     <t t-if="'OWS' in record['report_type']">
                                                         <td class="text-right">
-                                                            <t t-esc="data_value['sub-total']['total_out_qty']"/>
+<!--                                                            <t t-esc="data_value['sub-total']['total_out_qty']"/>-->
+                                                            <t t-esc="'{0:,.3f}'.format((data_value['sub-total']['total_out_qty']))"/>
                                                         </td>
                                                         <td></td>
                                                         <td class="text-right">
@@ -214,7 +217,8 @@
                                         </t>
                                         <t t-if="'IWS' in record['report_type']">
                                             <td class="text-right">
-                                                <t t-esc="total['total_in_qty']"/>
+<!--                                                <t t-esc="total['total_in_qty']"/>-->
+                                                <t t-esc="'{0:,.3f}'.format((total['total_in_qty']))"/>
                                             </td>
                                             <td></td>
                                             <td class="text-right">
@@ -223,7 +227,8 @@
                                         </t>
                                         <t t-if="'OWS' in record['report_type']">
                                             <td class="text-right">
-                                                <t t-esc="total['total_out_qty']"/>
+                                                <t t-esc="'{0:,.3f}'.format((total['total_out_qty']))"/>
+<!--                                                <t t-esc="total['total_out_qty']"/>-->
                                             </td>
                                             <td></td>
                                             <td class="text-right">
