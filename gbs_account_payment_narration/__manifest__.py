@@ -8,9 +8,11 @@
         'account_operating_unit',
         'gbs_collection_batch',
         'gbs_vendor_payment',
+        'gbs_cheque_management'
     ],
     'data': [
         'views/inherited_account_payment_view.xml',
+        'views/inherited_cheque_print_wizard_view.xml'
     ],
 
     'summary': 'Add the narration field on Customer Collection, Customer Collection Batch and Vendor Payment page.',

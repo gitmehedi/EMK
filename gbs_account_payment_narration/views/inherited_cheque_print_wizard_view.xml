@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="inherited_cheque_print_form">
+            <field name="name">inherited.cheque.print.wizard</field>
+            <field name="model">cheque.print.wizard</field>
+            <field name="inherit_id" ref="gbs_cheque_management.cheque_print_wizard_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//footer" position="replace">
+                    <footer>
+						<button name ="button_print_pdf" string="Print In PDF" type="object" class="oe_highlight"/>
+                        <!--<button name ="button_print_on_printer" string="Print Cheque" type="object" class="oe_highlight"/>-->
+                        <button name="action_cancel" string="Cancel" type="object" />
+                    </footer>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

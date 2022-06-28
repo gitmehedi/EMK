@@ -25,8 +25,8 @@
                 <xpath expr="//sheet/group/group/field[@name='communication']" position="after">
                     <field name="payment_narration"/>
                 </xpath>
-                <xpath expr="//button[@name='post']" position="after">
-                    <button string="Cheque Print" name="action_cheque_print" attrs="{'invisible': [('payment_method_code', '!=', 'check_printing')]}"  class="oe_highlight" type="object"/>
+                <xpath expr="//footer" position="inside">
+                    <button string="Cheque Print" name="action_cheque_print" attrs="{'invisible': [('payment_method_code', '!=', 'check_printing')]}"  class="oe_highlight" style="text-align:right;background-color:#008000;color:white;" type="object"/>
 
                 </xpath>
 
