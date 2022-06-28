@@ -13,9 +13,9 @@
                             attrs="{'invisible':['|',('region_type','=', 'foreign'),('state','not in', 'done')]}"/>
                 </xpath>
                 <notebook position="inside">
-                    <page string="Vendor Advances">
+                    <page string="Advance Info">
                         <field name="vendor_advance_line" widget="one2many_list" readonly="1">
-                            <tree string="Vendor Advances">
+                            <tree string="Advance Info">
                                 <field name="name" string="REF #"/>
                                 <field name="partner_id" string="Vendor"/>
                                 <field name="purchase_order_id" string="Order"/>

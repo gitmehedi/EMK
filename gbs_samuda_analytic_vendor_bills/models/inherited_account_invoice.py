@@ -20,7 +20,7 @@ class InheritedAccountInvoice(models.Model):
                         total_tds = total_tds + line.amount
                 rec.tds_value = total_tds
 
-    tds_value = fields.Monetary(string='TDS', store=False, readonly=True, compute='calculate_tds_value')
+    tds_value = fields.Monetary(string='TDS & Other Adjustment', store=False, readonly=True, compute='calculate_tds_value')
 
     @api.depends('tax_line_ids')
     def calculate_vds_value(self):
