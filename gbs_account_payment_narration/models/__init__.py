@@ -1,1 +1,2 @@
 import inherited_account_payment
+from . import inherit_cheque_print_wizard
