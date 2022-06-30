@@ -93,8 +93,8 @@
                                     <tr>
                                         <td class="text-left" colspan="5"></td>
                                         <td class="text-right"><strong>Total</strong></td>
-                                        <td class="text-right"><strong t-esc="formatLang(data['sum_of_credit'])"/></td>
                                         <td class="text-right"><strong t-esc="formatLang(data['sum_of_debit'])"/></td>
+                                        <td class="text-right"><strong t-esc="formatLang(data['sum_of_credit'])"/></td>
                                     </tr>
                                 </tbody>
                             </table>
