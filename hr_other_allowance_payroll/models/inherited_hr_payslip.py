@@ -1,6 +1,6 @@
 from odoo import api, fields, models, tools, _
 
-class InheritHRPayslipInput(models.Model):
+class InheritHROthersPayslipInput(models.Model):
     _inherit = 'hr.payslip.input'
 
     ref = fields.Char('Reference')
@@ -9,12 +9,12 @@ class InheritHRPayslipInput(models.Model):
 
     @api.multi
     def action_payslip_done(self):
-        res = super(InheritHRPayslipInput, self).action_payslip_done()
+        res = super(InheritHROthersPayslipInput, self).action_payslip_done()
 
         other_ids = []
-        for input in self.input_line_ids:
-            if input.code == 'OAS':
-                other_ids.append(int(input.ref))
+        for li in self.input_line_ids:
+            if li.code == 'OAS':
+                other_ids.append(int(li.ref))
 
         other_line_pool = self.env['hr.other.allowance.line']
         other_data = other_line_pool.browse(other_ids)

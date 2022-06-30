@@ -10,13 +10,13 @@ class InheritedHrPayrollAbsentPayslip(models.Model):
     def action_payslip_done(self):
         res = super(InheritedHrPayrollAbsentPayslip, self).action_payslip_done()
 
-        tcb_ids = []
-        for line in self.input_line_ids:
-            if input.code == 'HMPA':
-                tcb_ids.append(int(line.ref))
+        hmpa_ids = []
+        for li in self.input_line_ids:
+            if li.code == 'HMPA':
+                hmpa_ids.append(int(li.ref))
 
-        tcb_data = self.env['hr.employee.payroll.absence.line'].browse(tcb_ids)
-        tcb_data.write({'state': 'adjusted'})
+        hmpa_data = self.env['hr.employee.payroll.absence.line'].browse(hmpa_ids)
+        hmpa_data.write({'state': 'adjusted'})
 
         return res
 

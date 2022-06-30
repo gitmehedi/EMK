@@ -154,13 +154,9 @@
                 sequence="100"
                 groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_manager"/>
 
-        <record id="make_invisible" model="res.groups">
-            <field name="name">Invisible</field>
-        </record>
-
         <record id="hr_recruitment.menu_crm_case_categ0_act_job02" model="ir.ui.menu">
             <field name="action" eval="False"/>
-            <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('user_access_invisible.user_invisible')])]"/>
         </record>
 
         <menuitem name="Manpower Requisition"

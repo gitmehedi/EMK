@@ -3,7 +3,7 @@
 <odoo>
     <data>
         <record id="stock.menu_stock_inventory_control" model="ir.ui.menu">
-            <field name="groups_id" eval="[(6, 0, [ref('security_make_invisible.main_make_invisible')])]"/>
+            <field name="groups_id" eval="[(6, 0, [ref('user_access_invisible.user_invisible')])]"/>
         </record>
     </data>
 </odoo>

@@ -92,11 +92,18 @@
                                     <field name="uom_id" groups="product.group_uom"
                                            options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
                                     <field name="price_unit"/>
+                                    <!--                                    <field name="account_tds_id"-->
+                                    <!--                                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>-->
+
                                     <field name="discount" groups="base.group_no_one" invisible="1"/>
-                                    <field name="invoice_line_tax_ids" widget="many2many_tags"
-                                           context="{'type':parent.type}"
+                                    <field name="invoice_line_tax_ids" string="VAT" widget="many2many_tags"
+                                           context="{'type':parent.type}" invisible="1"
                                            domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"
                                            options="{'no_create': True}"/>
+                                    <field name="vat_id" domain="[('is_vat', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="tds_id" domain="[('is_tds', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True}"/>
                                     <field name="price_subtotal"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
@@ -125,11 +132,14 @@
                                     <field name="amount_tax"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                    <field name="amount_tds" widget="monetary"/>
+                                    <field name="amount_vat_payable" widget="monetary"/>
                                     <field name="residual" class="oe_subtotal_footer_separator"
                                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                     <field name="reconciled" invisible="1"/>
                                     <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
                                            widget="payment" invisible="1"/>
+
                                 </group>
                             </group>
                             <div>

@@ -26,12 +26,6 @@
                    eval="[(4, ref('event_user.group_event_officer')),(4, ref('base.group_no_one'))]"/>
         </record>
 
-        <menuitem id="account.menu_finance_receivables" name="Sales" parent="account.menu_finance" sequence="2"
-                  groups="base.group_no_one"/>
-
-        <menuitem id="account.menu_finance_payables" name="Purchases" parent="account.menu_finance" sequence="3"
-                  groups="base.group_no_one"/>
-
         <record id="event.menu_event_event" model="ir.ui.menu">
             <field name="parent_id" eval="ref('menu_event_general')"/>
             <field name="sequence">10</field>
