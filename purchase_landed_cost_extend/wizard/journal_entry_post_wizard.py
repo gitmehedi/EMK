@@ -102,18 +102,18 @@ class JournalEntryPost(models.TransientModel):
         context = dict(self.env.context)
         context.update({
             'datetime_of_price_history': self.distribution_id.date + ' ' + datetime.now().strftime("%H:%M:%S"),
-            'operating_unit_id': self.distribution_id.cost_lines[0].picking_id.operating_unit_id.id
+            'operating_unit_id': self.distribution_id.operating_unit_id.id
         })
         self.distribution_id.env.context = frozendict(context)
 
         self.distribution_id.ensure_one()
         if self.distribution_id.cost_update_type != 'direct':
             return
+
         d = {}
         for line in self.distribution_id.cost_lines:
             product = line.move_id.product_id
-            if (product.cost_method != 'average' or
-                    line.move_id.location_id.usage != 'supplier'):
+            if product.cost_method != 'average':
                 continue
             line.move_id.quant_ids._price_update(line.standard_price_new)
             d.setdefault(product, [])
@@ -121,6 +121,7 @@ class JournalEntryPost(models.TransientModel):
                 (line.move_id,
                  line.standard_price_new - line.standard_price_old, line.standard_price_new),
             )
+
         for product, vals_list in d.items():
             self.distribution_id._product_price_update(product, vals_list)
             for vals in vals_list:

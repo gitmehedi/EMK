@@ -15,7 +15,9 @@
         'gbs_application_group',
         'base',
         'gbs_samuda_analytic_vendor_bills',
-        'product_gate_in'
+        'product_gate_in',
+        'stock_picking_mrr',
+        'account_currency_wrapper'
     ],
     'data': [
         'security/security.xml',
@@ -32,7 +34,9 @@
         'security/ir.model.access.csv',
         'views/remove_existing_landed_cost_options.xml',
         'views/inherited_vendor_bill.xml',
-        'wizard/update_rate_wizard.xml'
+        'wizard/update_rate_wizard.xml',
+        'views/update_product_cost_transient.xml',
+        'wizard/success_wizard.xml',
     ],
     'installable': True,
     'application': False

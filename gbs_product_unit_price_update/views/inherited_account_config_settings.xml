@@ -15,8 +15,11 @@
                         <div groups="account.group_account_user">
                             <div>
                                 <field name="include_product_purchase_cost" class="oe_inline"/>
-                                <!--                                <field name="module_account_reports" class="oe_inline" widget="upgrade_boolean"/>-->
                                 <label for="include_product_purchase_cost"/>
+                            </div>
+                            <div>
+                                <field name="exclude_used_mrr" class="oe_inline"/>
+                                <label for="exclude_used_mrr" string="Exclude Used MRR"/>
                             </div>
                         </div>
 
