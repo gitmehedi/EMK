@@ -83,7 +83,7 @@ class HrTedCafeBill(models.Model):
 
 class HrTedCafeBillLine(models.Model):
     _name = 'hr.ted.cafe.bill.line'
-    _description = 'HR mobile bill line'
+    _description = 'HR Ted Cafe Bill Line'
 
     @api.model
     def _get_contract_employee(self):
@@ -116,9 +116,9 @@ class InheritedHrTedCafePayslip(models.Model):
         res = super(InheritedHrTedCafePayslip, self).action_payslip_done()
 
         tcb_ids = []
-        for line in self.input_line_ids:
-            if input.code == 'TCB':
-                tcb_ids.append(int(line.ref))
+        for li in self.input_line_ids:
+            if li.code == 'TCB':
+                tcb_ids.append(int(li.ref))
 
         tcb_data = self.env['hr.ted.cafe.bill.line'].browse(tcb_ids)
         tcb_data.write({'state': 'adjusted'})

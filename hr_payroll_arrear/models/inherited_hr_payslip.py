@@ -12,9 +12,9 @@ class InheritHRPayslipInput(models.Model):
         res = super(InheritHRPayslipInput, self).action_payslip_done()
 
         arrear_ids = []
-        for input in self.input_line_ids:
-            if input.code == 'ARS':
-                arrear_ids.append(int(input.ref))
+        for li in self.input_line_ids:
+            if li.code == 'ARS':
+                arrear_ids.append(int(li.ref))
 
         arrear_line_pool = self.env['hr.payroll.arrear.line']
         arrear_data  = arrear_line_pool.browse(arrear_ids)

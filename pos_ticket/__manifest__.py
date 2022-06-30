@@ -13,7 +13,6 @@
                 ],
     'data': [
         "views/pos_templates.xml",
-        "views/pos_config.xml",
         "views/operating_unit_view.xml",
     ],
     "qweb": [

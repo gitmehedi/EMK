@@ -107,22 +107,22 @@ class HrTedCafeCreditSaleLine(models.Model):
                               ], default='draft')
 
 
-class InheritedHrTedCafePayslip(models.Model):
+class InheritedHrTedCafeCreditPayslip(models.Model):
     _inherit = "hr.payslip"
 
     ref = fields.Char('Reference')
 
     @api.multi
     def action_payslip_done(self):
-        res = super(InheritedHrTedCafePayslip, self).action_payslip_done()
+        res = super(InheritedHrTedCafeCreditPayslip, self).action_payslip_done()
 
-        tcb_ids = []
-        for line in self.input_line_ids:
-            if input.code == 'TCCS':
-                tcb_ids.append(int(line.ref))
+        tccs_ids = []
+        for li in self.input_line_ids:
+            if li.code == 'TCCS':
+                tccs_ids.append(int(li.ref))
 
-        tcb_data = self.env['hr.ted.cafe.credit.sale.line'].browse(tcb_ids)
-        tcb_data.write({'state': 'adjusted'})
+        tccs_data = self.env['hr.ted.cafe.credit.sale.line'].browse(tccs_ids)
+        tccs_data.write({'state': 'adjusted'})
 
         return res
 
@@ -130,7 +130,7 @@ class InheritedHrTedCafePayslip(models.Model):
     def onchange_employee(self):
         if self.employee_id:
             self.input_line_ids = 0
-            super(InheritedHrTedCafePayslip, self).onchange_employee()
+            super(InheritedHrTedCafeCreditPayslip, self).onchange_employee()
 
             line_ids = self.input_line_ids
             lines = self.env['hr.ted.cafe.credit.sale.line'].search([('employee_id', '=', self.employee_id.id),
