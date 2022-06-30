@@ -13,6 +13,7 @@
                         <button string="Reset to Draft" name="action_draft" type="object" states="confirmed" class="oe_read_only" groups="base_technical_features.group_technical_features"/>
                         <button string="Amendment" name="action_amendment" class="oe_read_only" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done', 'cancel'))]}"/>
                         <button string="New Shipment" name="action_shipment_export" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'done', 'cancel'))]}" class="oe_highlight oe_read_only"/>
+                        <button string="Reopen" name="action_shipment_reopen_foreign" type="object" attrs="{'invisible': [('state', 'in', ('draft', 'open', 'confirmed', 'amendment', 'progress', 'cancel'))]}" class="oe_highlight oe_read_only" groups="base_technical_features.group_technical_features,samuda_custom_letter_of_credit.group_commercial_adviser_export"/>
                         <button string="Done" name="action_lc_done_export" class="oe_read_only" type="object" states="progress" confirm="Are you sure you want to continue?"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
                         <button string="Update LC Number" name="action_update_lc_number" class="btn-primary btn-info mr24 pull-right oe_read_only" type="object" groups="commercial.group_commercial_manager_export" states="confirmed,progress"/>

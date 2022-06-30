@@ -99,6 +99,10 @@ class LetterOfCreditCommon(models.Model):
         self.env['letter.credit'].search([('id', '=', self.id)])
         return result
 
+    @api.multi
+    def action_shipment_reopen_foreign(self):
+        self.write({'state': 'progress'})
+        self.message_post(body="LC Reopened")
 
     @api.multi
     def action_amendment_foreign(self):
