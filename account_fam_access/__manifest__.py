@@ -13,6 +13,7 @@ This application allows you to easily maintain access rights of mtbl process.
         'base',
         'account',
         'account_parent',
+        'user_access_invisible',
     ],
     'data': [
         'security/ir_security.xml',

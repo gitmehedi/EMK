@@ -24,6 +24,7 @@
         "stock_account",
         "account_fam_install",
         "stock_inventory_gate_pass",
+        "account_emk_menu",
     ],
     'installable': True,
     'application': True,

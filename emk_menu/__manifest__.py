@@ -37,6 +37,7 @@
         'appointment_menu',
         'security_make_invisible',
         'stock',
+        'user_access_invisible',
     ],
     'data': [
         'views/main_menu_view.xml',

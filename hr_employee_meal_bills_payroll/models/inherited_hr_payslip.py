@@ -13,9 +13,9 @@ class InheritHRPayslip(models.Model):
         res = super(InheritHRPayslip, self).action_payslip_done()
 
         meal_ids = []
-        for input in self.input_line_ids:
-            if input.code == 'MEAL':
-                meal_ids.append(int(input.ref))
+        for li in self.input_line_ids:
+            if li.code == 'MEAL':
+                meal_ids.append(int(li.ref))
 
         meal_line_pool = self.env['hr.meal.bill.line']
         meal_data  = meal_line_pool.browse(meal_ids)

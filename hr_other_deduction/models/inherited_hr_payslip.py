@@ -13,9 +13,9 @@ class InheritHRPayslip(models.Model):
         res = super(InheritHRPayslip, self).action_payslip_done()
 
         od_ids = []
-        for input in self.input_line_ids:
-            if input.code == 'ODS':
-                od_ids.append(int(input.ref))
+        for li in self.input_line_ids:
+            if li.code == 'ODS':
+                od_ids.append(int(li.ref))
 
         od_line_pool = self.env['hr.other.deduction.line']
         od_data  = od_line_pool.browse(od_ids)

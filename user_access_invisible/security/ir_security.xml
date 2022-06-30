@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="user_invisible" model="res.groups">
+            <field name="name">Invisible Group</field>
+        </record>
+    </data>
+</odoo>

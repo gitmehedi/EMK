@@ -11,9 +11,9 @@ class InheritedEmployeeIouPayslip(models.Model):
         res = super(InheritedEmployeeIouPayslip, self).action_payslip_done()
 
         iou_ids = []
-        for input in self.input_line_ids:
-            if input.code == 'IOU':
-                iou_ids.append(int(input.ref))
+        for li in self.input_line_ids:
+            if li.code == 'IOU':
+                iou_ids.append(int(li.ref))
 
         iou_pool = self.env['hr.employee.iou']
         iou_line_pool = self.env['hr.employee.iou.line']
