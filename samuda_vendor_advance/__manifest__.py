@@ -10,7 +10,7 @@
         'account_accountant',
         'purchase',
         'gbs_samuda_service_order',
-        'gbs_purchase_quotation_cnf'
+        'gbs_purchase_quotation_cnf', 'stock', 'commercial'
     ],
     'data': [
         'data/data_vendor_advance.xml',
