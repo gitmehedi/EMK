@@ -51,11 +51,12 @@ class InheritedPickingImportWizard(models.TransientModel):
 
     include_product_purchase_cost = fields.Boolean(compute='compute_include_purchase_cost')
 
-    @api.multi
-    def action_import_picking(self):
+    # @api.multi
+    # def action_import_picking(self):
+    #
+    #     purchase_cost_distribution_obj = self.env['purchase.cost.distribution'].browse(self.env.context['active_id'])
+    #     if purchase_cost_distribution_obj:
+    #         purchase_cost_distribution_obj.write({'lc_id': self.lc_id.id})
+    #     super(InheritedPickingImportWizard, self).action_import_picking()
 
-        purchase_cost_distribution_obj = self.env['purchase.cost.distribution'].browse(self.env.context['active_id'])
-        if purchase_cost_distribution_obj:
-            purchase_cost_distribution_obj.write({'lc_id': self.lc_id.id})
-        super(InheritedPickingImportWizard, self).action_import_picking()
 
