@@ -26,7 +26,7 @@ class InheritHROthersPayslipInput(models.Model):
     def onchange_employee(self):
         if self.employee_id:
             self.input_line_ids = 0
-            super(InheritHRPayslipInput, self).onchange_employee()
+            super(InheritHROthersPayslipInput, self).onchange_employee()
 
             """
             Incorporate other payroll data
