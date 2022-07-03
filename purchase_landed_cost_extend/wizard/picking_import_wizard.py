@@ -178,7 +178,8 @@ class PickingImportWizard(models.TransientModel):
                                                               ])
 
         if stock_picking_obj:
-            for move in stock_picking_obj.move_lines:
-                if move not in previous_moves:
-                    self.env['purchase.cost.distribution.line'].create(
-                        self._prepare_distribution_line(move))
+            for pickin in stock_picking_obj:
+                for move in pickin.move_lines:
+                    if move not in previous_moves:
+                        self.env['purchase.cost.distribution.line'].create(
+                            self._prepare_distribution_line(move))
