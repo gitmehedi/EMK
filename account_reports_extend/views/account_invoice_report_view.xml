@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+            string="Vendor Bills"
+            id="action_report_vendor_bill"
+            model="account.invoice"
+            report_type="qweb-pdf"
+            name="account_reports_extend.report_vendor_bill_document"
+            file="account_reports_extend.report_vendor_bill_document"
+            menu="False"
+        />
+
+    <report
+            id="account.account_invoices"
+            model="account.invoice"
+            string="Invoices"
+            report_type="qweb-pdf"
+            name="account.report_invoice"
+            file="account.report_invoice"
+            attachment_use="True"
+            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            menu="False"
+        />
+
+    <record id="view_account_invoice_vendor_bill_form_inherit" model="ir.ui.view">
+        <field name="name">account.invoice.vendor.bill.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_invoice_open']" position="before">
+                <button name="print_account_invoice_vendor_bill" style="background-color: #39B05F;color:white;" type="object" string="Print"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_account_invoice_customer_invoice_form_inherit" model="ir.ui.view">
+        <field name="name">account.invoice.customer.invoice.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_invoice_open']" position="before">
+                <button name="%(account.account_invoices)d" style="background-color: #39B05F;color:white;" type="action" string="Print"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+</odoo>

@@ -13,7 +13,9 @@ Accounting Reports
     'depends': ['base', 'account_reports', 'gbs_application_group'],
     'data': [
         'data/inherit_account_financial_report_data.xml',
-        'views/account_financial_report_view.xml'
+        'report/report_account_invoice_vendor_bill.xml',
+        'views/account_financial_report_view.xml',
+        'views/account_invoice_report_view.xml',
     ],
     'installable': True,
     'application': False,
