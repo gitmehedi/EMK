@@ -7,6 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
 import openerp.addons.decimal_precision as dp
 
+
 class PurchaseCostDistribution(models.Model):
     _name = "purchase.cost.distribution"
     _inherit = ["purchase.cost.distribution", "mail.thread"]
@@ -31,7 +32,8 @@ class PurchaseCostDistribution(models.Model):
         lc_pad_account = self.env['ir.values'].get_default('account.config.settings', 'lc_pad_account')
         for distribution in self:
             distribution.total_expense = sum([x.expense_amount for x in
-                                              distribution.expense_lines.filtered(lambda x: x.account_id.id != lc_pad_account)])
+                                              distribution.expense_lines.filtered(
+                                                  lambda x: x.account_id.id != lc_pad_account)])
 
     total_purchase = fields.Float(string='Total Product Cost')
     total_expense = fields.Float(
@@ -41,15 +43,16 @@ class PurchaseCostDistribution(models.Model):
     lc_id = fields.Many2one("letter.credit", string='LC Number', readonly=True)
     currency_rate = fields.Float()
 
-    @api.depends('cost_lines', 'cost_lines.total_amount','expense_lines', 'expense_lines.expense_amount')
+    @api.depends('cost_lines', 'cost_lines.total_amount', 'expense_lines', 'expense_lines.expense_amount')
     def _compute_lcost_per(self):
         for rec in self:
             if rec.cost_lines and rec.expense_lines:
                 lc_pad_account = self.env['ir.values'].get_default('account.config.settings', 'lc_pad_account')
                 total_purchase = sum([x.total_amount for x in rec.cost_lines])
-                total_expense = sum([x.expense_amount for x in rec.expense_lines.filtered(lambda x: x.account_id.id != lc_pad_account)])
+                total_expense = sum(
+                    [x.expense_amount for x in rec.expense_lines.filtered(lambda x: x.account_id.id != lc_pad_account)])
                 if total_purchase != 0:
-                    rec.percentage_of_lcost = (total_expense / (total_purchase+total_expense)) * 100
+                    rec.percentage_of_lcost = (total_expense / (total_purchase + total_expense)) * 100
                 else:
                     rec.percentage_of_lcost = False
             else:
@@ -76,7 +79,6 @@ class PurchaseCostDistribution(models.Model):
             'target': 'new',
         }
 
-
     @api.multi
     def action_cancel(self):
         """Perform all moves that touch the same product in batch."""
@@ -87,8 +89,7 @@ class PurchaseCostDistribution(models.Model):
         d = {}
         for line in self.cost_lines:
             product = line.move_id.product_id
-            if (product.cost_method != 'average' or
-                    line.move_id.location_id.usage != 'supplier'):
+            if product.cost_method != 'average':
                 continue
             if self.currency_id.compare_amounts(
                     line.move_id.quant_ids[0].cost,
@@ -120,7 +121,36 @@ class PurchaseCostDistribution(models.Model):
             moves_total_qty += move.product_qty
             moves_total_diff_price += move.product_qty * price_diff
             product_unit_cost = standard_price_new
-        prev_qty_available = product.qty_available - moves_total_qty
+
+        ##################### getting product available qty#################
+        ledger_report_utility = self.env['product.ledger.report.utility']
+
+        location = self.env['stock.location'].search(
+            [('operating_unit_id', '=', self.operating_unit_id.id), ('name', '=', 'Stock')], limit=1)
+
+        now = str(datetime.now())[:10]
+        start_date = now + ' 00:00:01'
+
+        end_date = now + ' 23:59:59'
+        location_outsource = "(" + str(location.id) + ")"
+
+        if product:
+            product_param = "(" + str(product.id) + ")"
+        datewise_opening_closing_stocklist = ledger_report_utility.get_opening_closing_stock(start_date, end_date,
+                                                                                             location_outsource,
+                                                                                             product_param)
+
+        product_qty_available = 0
+        if datewise_opening_closing_stocklist:
+            for opening_closing_stock in datewise_opening_closing_stocklist:
+                if opening_closing_stock['closing_stock']:
+                    product_qty_available = float(opening_closing_stock['closing_stock'])
+
+        prev_qty_available = product_qty_available - moves_total_qty
+        #########################################################################
+
+        # prev_qty_available = product.qty_available - moves_total_qty
+
         if prev_qty_available <= 0:
             prev_qty_available = 0
         total_available = prev_qty_available + moves_total_qty
@@ -131,15 +161,21 @@ class PurchaseCostDistribution(models.Model):
         ####################EDITED#####################
 
         if include_product_purchase_cost:
-            new_std_price = ((product.standard_price * prev_qty_available) + (product_unit_cost * moves_total_qty)) / total_available
+            new_std_price = ((product.standard_price * prev_qty_available) + (
+                    product_unit_cost * moves_total_qty)) / total_available
             self.message_post(
-                body="%s : New Cost Price %s = ((Prev Cost Price %s *  Prev Qty %s) + (Total Cost Per Unit %s * New Qty %s)) / Qty(After Stock Update) %s" % (product.name,new_std_price, product.standard_price,prev_qty_available,product_unit_cost,moves_total_qty,total_available))
+                body="%s : New Cost Price %s = ((Prev Cost Price %s *  Prev Qty %s) + (Total Cost Per Unit %s * New Qty %s)) / Qty(After Stock Update) %s" % (
+                    product.name, round(new_std_price, 2), product.standard_price, prev_qty_available,
+                    product_unit_cost,
+                    moves_total_qty, total_available))
         else:
             new_std_price = ((total_available * product.standard_price + moves_total_diff_price) / total_available)
             self.message_post(
-                body="%s : New Cost Price %s = ((Qty(After Stock Update) %s * Prev Cost Price %s + Total Landed Cost %s) /Qty(After Stock Update) %s)" % (product.name,new_std_price,total_available,product.standard_price,moves_total_diff_price,total_available))
-        # Write the standard price, as SUPERUSER_ID, because a
-        # warehouse manager may not have the right to write on products
+                body="%s : New Cost Price %s = ((Qty(After Stock Update) %s * Prev Cost Price %s + Total Landed Cost %s) /Qty(After Stock Update) %s)" % (
+                    product.name, round(new_std_price, 2), total_available, product.standard_price,
+                    moves_total_diff_price,
+                    total_available))
+
         product.sudo().write({'standard_price': new_std_price})
 
     # override _prepare_expense_line to add account_id in return
@@ -180,7 +216,7 @@ class PurchaseCostDistribution(models.Model):
         }
 
     def action_update_rate(self):
-        return{
+        return {
             'name': 'Update Rate',
             'type': 'ir.actions.act_window',
             'view_type': 'form',
@@ -201,13 +237,13 @@ class PurchaseCostDistribution(models.Model):
         }
 
 
-
 class PurchaseCostDistributionLine(models.Model):
     _inherit = 'purchase.cost.distribution.line'
 
     date_done = fields.Datetime(string='Date of Transfer', related='move_id.picking_id.date_done')
 
     cost_ratio = fields.Float(string="Landed Cost Per Unit")
+    prev_product_price_unit = fields.Float(string="Previous Product Cost Per Unit")
 
     product_price_unit = fields.Float(string="Product Cost Per Unit")
 
@@ -222,3 +258,21 @@ class PurchaseCostDistributionLine(models.Model):
                 rec.distribution_state = rec.distribution.state
 
     distribution_state = fields.Char(compute='compute_dist_state')
+
+    @api.multi
+    @api.depends('product_price_unit')
+    def _compute_standard_price_old(self):
+        # res = super(PurchaseCostDistributionLine, self)._compute_standard_price_old()
+        for dist_line in self:
+            dist_line.standard_price_old = (dist_line.product_price_unit or 0.0)
+
+    def action_update_product_cost(self):
+        return {
+            'name': 'Update Product Cost',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'context': {'line_id': self.id},
+            'res_model': 'update.product.cost',
+            'target': 'new',
+        }

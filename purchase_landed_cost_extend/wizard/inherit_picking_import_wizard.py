@@ -24,6 +24,14 @@ class InheritedPickingImportWizard(models.TransientModel):
                                 raise UserError(
                                     "Landed Cost already added for this LC. You need to post journal entry for that Landed Cost First!")
 
+    @api.depends('lc_id')
+    def compute_lc_name(self):
+        for rec in self:
+            if rec.lc_id :
+                rec.lc_name = rec.lc_id.name
+
+    lc_name = fields.Char(compute='compute_lc_name')
+
     @api.depends('pickings')
     def compute_shipment_selected(self):
         for rec in self:
@@ -43,10 +51,12 @@ class InheritedPickingImportWizard(models.TransientModel):
 
     include_product_purchase_cost = fields.Boolean(compute='compute_include_purchase_cost')
 
-    @api.multi
-    def action_import_picking(self):
+    # @api.multi
+    # def action_import_picking(self):
+    #
+    #     purchase_cost_distribution_obj = self.env['purchase.cost.distribution'].browse(self.env.context['active_id'])
+    #     if purchase_cost_distribution_obj:
+    #         purchase_cost_distribution_obj.write({'lc_id': self.lc_id.id})
+    #     super(InheritedPickingImportWizard, self).action_import_picking()
 
-        purchase_cost_distribution_obj = self.env['purchase.cost.distribution'].browse(self.env.context['active_id'])
-        if purchase_cost_distribution_obj:
-            purchase_cost_distribution_obj.write({'lc_id': self.lc_id.id})
-        super(InheritedPickingImportWizard, self).action_import_picking()
+

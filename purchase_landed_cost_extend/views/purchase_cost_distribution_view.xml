@@ -57,6 +57,9 @@
                 <xpath expr="//field[@name='operating_unit_id']" position="after">
                     <field name="currency_rate" readonly="1" string="Rate used"/>
                 </xpath>
+                <xpath expr="//field[@name='cost_lines']/tree/field[@name='product_price_unit']" position="before">
+                    <field name="prev_product_price_unit"/>
+                </xpath>
 
                 <xpath expr="//field[@name='cost_lines']/tree/field[@name='picking_id']" position="after">
                     <field name="date_done"/>
@@ -64,6 +67,7 @@
                 <xpath expr="//field[@name='cost_lines']/tree/field[@name='standard_price_old']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+
                 <xpath expr="//field[@name='cost_lines']/tree/field[@name='total_amount']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
@@ -165,7 +169,7 @@
                             <field name="calculation_method"/>
                             <field name="ref"/>
                             <field name="expense_amount"/>
-                            <field name="analytic_account_id"/>
+                            <field name="analytic_account_id" invisible="1"/>
                             <field name="imported_lines"
                                    invisible="1"/>
                             <field name="affected_lines"
@@ -174,6 +178,14 @@
                                    options="{'no_create': true, 'create_edit': false}" invisible="1"/>
                         </tree>
                     </field>
+                </xpath>
+
+                <xpath expr="//field[@name='cost_lines']/tree/field[@name='standard_price_new']" position="after">
+                    <field name="distribution_state" invisible="1"/>
+                    <button name="action_update_product_cost"
+                            string="Update" type="object"
+                            attrs="{'invisible':[('distribution_state','!=','rate_update')]}"
+                            icon="fa-edit" style="color:#FF1414;"/>
                 </xpath>
 
             </field>

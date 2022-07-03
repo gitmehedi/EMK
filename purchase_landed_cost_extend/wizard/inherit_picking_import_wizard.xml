@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='supplier']" position="after">
-                        <field name="lc_id" required="1" attrs="{'invisible':[('supplier', '=', False)]}" domain="[('second_party_beneficiary', '=', supplier),('operating_unit_id', '=', operating_unit_id)]"/>
+                        <field name="lc_id" required="1" attrs="{'invisible':[('supplier', '=', False)]}" domain="[('second_party_beneficiary', '=', supplier),('operating_unit_id', '=', operating_unit_id),('state', '!=', 'done'),('state', '!=', 'cancel')]"/>
                     </xpath>
                     <xpath expr="//field[@name='pickings']" position="after">
                         <field name="shipment_selected" invisible="1"/>

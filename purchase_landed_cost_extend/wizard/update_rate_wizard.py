@@ -48,6 +48,8 @@ class UpdateWizard(models.TransientModel):
                             else:
                                 raise UserError("Unit Price for a product found 0!")
                     total_currency_rate = total_currency_rate + rate_in_move
+            else:
+                raise UserError(_('You need to cost to complete this operation!'))
             res['shipment_rate'] = total_currency_rate / len(rec.cost_lines)
         return res
 
@@ -79,7 +81,9 @@ class UpdateWizard(models.TransientModel):
                 # stock move need to be updated
                 for rec in purchase_cost_distribution_obj:
                     for move in rec.cost_lines.mapped('move_id'):
-                        stock_move_utility.update_move_price_unit(False, move, 'landed_cost_window', self.final_rate,
-                                                                  self.shipment_rate)
+                        po_unit_price = stock_move_utility.get_po_unit_price(move.product_id, purchase_cost_distribution_obj.lc_id)
+                        if po_unit_price:
+                            stock_move_utility.update_move_price_unit(False, move, 'landed_cost_window', self.final_rate,
+                                                                      po_unit_price)
 
                 purchase_cost_distribution_obj.write({'state': 'rate_update', 'currency_rate': self.final_rate})
