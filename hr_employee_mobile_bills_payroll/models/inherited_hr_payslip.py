@@ -15,9 +15,9 @@ class InheritedHrMobilePayslip(models.Model):
         res = super(InheritedHrMobilePayslip, self).action_payslip_done()
 
         mobile_ids = []
-        for input in self.input_line_ids:
-            if input.code == 'MOBILE':
-                mobile_ids.append(int(input.ref))
+        for li in self.input_line_ids:
+            if li.code == 'MOBILE':
+                mobile_ids.append(int(li.ref))
 
         mobile_line_pool = self.env['hr.mobile.bill.line']
         mobile_data = mobile_line_pool.browse(mobile_ids)

@@ -15,6 +15,8 @@
         'account_fam_category',
         'account_fam_menu',
         'account_fam_vendor_bills',
+        'account_vendor_bills',
+        'l10n_bd_account_tax',
     ],
     'installable': True,
     'application': True,

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="main_make_invisible" model="res.groups">
-            <field name="name">Invisible Group</field>
-        </record>
+
     </data>
 </odoo>
