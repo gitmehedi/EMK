@@ -121,7 +121,36 @@ class PurchaseCostDistribution(models.Model):
             moves_total_qty += move.product_qty
             moves_total_diff_price += move.product_qty * price_diff
             product_unit_cost = standard_price_new
-        prev_qty_available = product.qty_available - moves_total_qty
+
+        ##################### getting product available qty#################
+        ledger_report_utility = self.env['product.ledger.report.utility']
+
+        location = self.env['stock.location'].search(
+            [('operating_unit_id', '=', self.operating_unit_id.id), ('name', '=', 'Stock')], limit=1)
+
+        now = str(datetime.now())[:10]
+        start_date = now + ' 00:00:01'
+
+        end_date = now + ' 23:59:59'
+        location_outsource = "(" + str(location.id) + ")"
+
+        if product:
+            product_param = "(" + str(product.id) + ")"
+        datewise_opening_closing_stocklist = ledger_report_utility.get_opening_closing_stock(start_date, end_date,
+                                                                                             location_outsource,
+                                                                                             product_param)
+
+        product_qty_available = 0
+        if datewise_opening_closing_stocklist:
+            for opening_closing_stock in datewise_opening_closing_stocklist:
+                if opening_closing_stock['closing_stock']:
+                    product_qty_available = float(opening_closing_stock['closing_stock'])
+
+        prev_qty_available = product_qty_available - moves_total_qty
+        #########################################################################
+
+        # prev_qty_available = product.qty_available - moves_total_qty
+
         if prev_qty_available <= 0:
             prev_qty_available = 0
         total_available = prev_qty_available + moves_total_qty
@@ -133,17 +162,19 @@ class PurchaseCostDistribution(models.Model):
 
         if include_product_purchase_cost:
             new_std_price = ((product.standard_price * prev_qty_available) + (
-                        product_unit_cost * moves_total_qty)) / total_available
+                    product_unit_cost * moves_total_qty)) / total_available
             self.message_post(
                 body="%s : New Cost Price %s = ((Prev Cost Price %s *  Prev Qty %s) + (Total Cost Per Unit %s * New Qty %s)) / Qty(After Stock Update) %s" % (
-                product.name, round(new_std_price, 2), product.standard_price, prev_qty_available, product_unit_cost,
-                moves_total_qty, total_available))
+                    product.name, round(new_std_price, 2), product.standard_price, prev_qty_available,
+                    product_unit_cost,
+                    moves_total_qty, total_available))
         else:
             new_std_price = ((total_available * product.standard_price + moves_total_diff_price) / total_available)
             self.message_post(
                 body="%s : New Cost Price %s = ((Qty(After Stock Update) %s * Prev Cost Price %s + Total Landed Cost %s) /Qty(After Stock Update) %s)" % (
-                product.name, round(new_std_price, 2), total_available, product.standard_price, moves_total_diff_price,
-                total_available))
+                    product.name, round(new_std_price, 2), total_available, product.standard_price,
+                    moves_total_diff_price,
+                    total_available))
 
         product.sudo().write({'standard_price': new_std_price})
 
@@ -231,10 +262,9 @@ class PurchaseCostDistributionLine(models.Model):
     @api.multi
     @api.depends('product_price_unit')
     def _compute_standard_price_old(self):
-        #res = super(PurchaseCostDistributionLine, self)._compute_standard_price_old()
+        # res = super(PurchaseCostDistributionLine, self)._compute_standard_price_old()
         for dist_line in self:
             dist_line.standard_price_old = (dist_line.product_price_unit or 0.0)
-
 
     def action_update_product_cost(self):
         return {
@@ -242,7 +272,7 @@ class PurchaseCostDistributionLine(models.Model):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'context': {'line_id':self.id},
+            'context': {'line_id': self.id},
             'res_model': 'update.product.cost',
             'target': 'new',
         }

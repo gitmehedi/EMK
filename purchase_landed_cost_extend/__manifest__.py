@@ -17,7 +17,8 @@
         'gbs_samuda_analytic_vendor_bills',
         'product_gate_in',
         'stock_picking_mrr',
-        'account_currency_wrapper'
+        'account_currency_wrapper',
+        'goods_movement_ledger_reports'
     ],
     'data': [
         'security/security.xml',
