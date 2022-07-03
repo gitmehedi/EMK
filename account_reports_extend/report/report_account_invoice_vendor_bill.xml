@@ -103,7 +103,7 @@
                                 <td><strong>Sub Total</strong></td>
                                 <td class="text-right" style="width:10%;"><span t-esc="total_payable_amount" /></td>
                             </tr>
-                            <tr t-if="data['tax_and_other_adjustment']">
+                            <tr t-if="data['tax_and_other_adjustment'] != '0.00'">
                                 <td style="width:5%;border-top-style: none;"></td>
                                 <td><strong>Tax &#38; Other Adjustment</strong></td>
                                 <td class="text-right"><t t-esc="data['tax_and_other_adjustment']"/></td>
@@ -113,23 +113,23 @@
                                 <td><strong>Net Payable</strong></td>
                                 <td class="text-right"><t t-esc="data['net_payable']"/></td>
                             </tr>
-                            <tr t-if="data['total_advance_adjustment']">
+                            <tr t-if="data['total_advance_adjustment'] != '0.00'">
                                 <td style="width:5%;border-top-style: none;"></td>
                                 <td><strong>Total Advance Adjustment</strong></td>
                                 <td class="text-right" style="width:10%;"><t t-esc="data['total_advance_adjustment']"/></td>
                             </tr>
 
-                            <tr t-if="data['total_amount_due_outstanding']">
+                            <tr t-if="data['total_advance_adjustment'] != '0.00'">
                                 <td style="width:5%;border-top-style: none;"></td>
                                 <td><strong>Total Amount Due/Outstanding</strong></td>
                                 <td class="text-right"><t t-esc="data['total_amount_due_outstanding']"/></td>
                             </tr>
-                            <tr>
+                            <tr t-if="data['payment'] != '0.00'">
                                 <td style="width:5%;border-top-style: none;"></td>
                                 <td><strong>Payment (Full/Partial)</strong></td>
                                 <td class="text-right"><t t-esc="data['payment']"/></td>
                             </tr>
-                            <tr>
+                            <tr t-if="data['net_amount_due_outstanding'] != '0.00'">
                                 <td style="width:5%;border-top-style: none;"></td>
                                 <td><strong>Net Amount Due/Outstanding</strong></td>
                                 <td class="text-right"><t t-esc="data['net_amount_due_outstanding']"/></td>

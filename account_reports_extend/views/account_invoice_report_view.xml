@@ -22,6 +22,17 @@
             menu="False"
         />
 
+    <report
+            id="account.account_invoice_action_report_duplicate"
+            model="account.invoice"
+            string="Duplicates"
+            report_type="qweb-pdf"
+            name="account.account_invoice_report_duplicate_main"
+            file="account.report_invoice_duplicate"
+            attachment_use="False"
+            menu="False"
+        />
+
     <record id="view_account_invoice_vendor_bill_form_inherit" model="ir.ui.view">
         <field name="name">account.invoice.vendor.bill.inherit</field>
         <field name="model">account.invoice</field>
