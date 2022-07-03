@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="report_vendor_bill_document">
+        <t t-call="report.html_container">
+            <t t-call="report_layout.gbs_po_layout">
+                <div class="page" style="page-break-inside: auto">
+                    <style>
+                        .signed-by { display: inline-block; border-top: 1px solid #333; padding: 5px; margin-top: 60px; }
+                    </style>
+                    <div class="clearfix">
+
+                        <h3 class="text-center mt-0">Vendor Bill</h3>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p t-if="data['number']" class="mb-5"><b>Bill No: </b><t t-esc="data['number']"/></p>
+                                <p t-if="data['origin']" class="mb-5"><b>Source: </b><t t-esc="data['origin']"/></p>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <p t-if="data['date_invoice']" class="mb-5"><b>Date: </b><t t-esc="data['date_invoice']"/></p>
+                                <p t-if="data['reference']"><b>Reference: <t t-esc="data['reference']"/></b></p>
+                            </div>
+                        </div>
+
+                        <hr class="hr-xs mt-0"/>
+
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p t-if="data['partner_name']"><b>Supplier : <t t-esc="data['partner_name']"/></b></p>
+                                <p t-if="data['partner_address']">
+                                    <b>Address: </b>
+                                    <t t-esc="data['partner_address']"/>
+                                </p>
+                            </div>
+                            <div class="col-xs-6 text-left">
+                                <p t-if="data['company_name']"><b>Consignee : </b> <t t-esc="data['company_name']"/></p>
+                                <p t-if="data['operating_unit']"><b>Unit : </b> <t t-esc="data['operating_unit']"/></p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <table class="table table-report table-bordered table-striped" style="margin-bottom:0px;">
+                            <thead>
+                                <tr class="odo-bg-gray">
+                                    <th class="text-center">SL</th>
+                                    <th class="text-center">Description/Specification/Origin</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Unit</th>
+                                    <th class="text-center">Unit Rate</th>
+                                    <th class="text-center">Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="invoice_line_ids" t-as="l">
+                                    <tr style="page-break-inside: avoid">
+                                        <td><span t-esc="l_index+1"/></td>
+                                        <td><t t-esc="l['product_name']"/></td>
+                                        <td class="text-right"><span t-esc="l['product_qty']"/></td>
+                                        <td class="text-right"><span t-esc="l['product_uom']"/></td>
+                                        <td class="text-right"><span t-esc="l['price_unit']"/></td>
+                                        <td class="text-right"><span t-esc="l['price_subtotal']"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-report">
+                            <tr>
+                                <td colspan="4" rowspan="7">
+                                    <t t-set="tax_sub_total" t-value="0"/>
+                                    <t t-if="tax_line_ids">
+                                        <table class="table table-report table-bordered table-striped" style="margin-top:40px;">
+                                            <thead>
+                                                <tr class="odo-bg-gray">
+                                                    <th class="text-center">GL Name</th>
+                                                    <th class="text-center">Narration</th>
+                                                    <th class="text-center">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="tax_line_ids" t-as="t">
+                                                    <tr style="page-break-inside: avoid">
+                                                        <td class="text-left" style="width:50%"><span t-esc="t['gl_name']"/></td>
+                                                        <td class="text-left"><span t-esc="t['narration']"/></td>
+                                                        <td class="text-right"><span t-esc="t['amount']"/></td>
+                                                    </tr>
+                                                </t>
+                                                <tr>
+                                                    <td style="width:10%"></td>
+                                                    <td><strong>Total:</strong></td>
+                                                    <td class="text-right"><t t-esc="tax_line_total"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <td style="width:5%;"></td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="width:60%;"></td>
+                                    </t>
+                                </td>
+
+                                <td><strong>Sub Total</strong></td>
+                                <td class="text-right" style="width:10%;"><span t-esc="total_payable_amount" /></td>
+                            </tr>
+                            <tr t-if="data['tax_and_other_adjustment']">
+                                <td style="width:5%;border-top-style: none;"></td>
+                                <td><strong>Tax &#38; Other Adjustment</strong></td>
+                                <td class="text-right"><t t-esc="data['tax_and_other_adjustment']"/></td>
+                            </tr>
+                            <tr>
+                                <td style="width:5%;border-top-style: none;"></td>
+                                <td><strong>Net Payable</strong></td>
+                                <td class="text-right"><t t-esc="data['net_payable']"/></td>
+                            </tr>
+                            <tr t-if="data['total_advance_adjustment']">
+                                <td style="width:5%;border-top-style: none;"></td>
+                                <td><strong>Total Advance Adjustment</strong></td>
+                                <td class="text-right" style="width:10%;"><t t-esc="data['total_advance_adjustment']"/></td>
+                            </tr>
+
+                            <tr t-if="data['total_amount_due_outstanding']">
+                                <td style="width:5%;border-top-style: none;"></td>
+                                <td><strong>Total Amount Due/Outstanding</strong></td>
+                                <td class="text-right"><t t-esc="data['total_amount_due_outstanding']"/></td>
+                            </tr>
+                            <tr>
+                                <td style="width:5%;border-top-style: none;"></td>
+                                <td><strong>Payment (Full/Partial)</strong></td>
+                                <td class="text-right"><t t-esc="data['payment']"/></td>
+                            </tr>
+                            <tr>
+                                <td style="width:5%;border-top-style: none;"></td>
+                                <td><strong>Net Amount Due/Outstanding</strong></td>
+                                <td class="text-right"><t t-esc="data['net_amount_due_outstanding']"/></td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span t-esc="data['comment']"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 text-left">
+                            <span class="signed-by"><b>Prepare by :</b></span>
+                            <p style="margin:0"><t t-esc="data['prepare_by']"/></p>
+                            <p><t t-esc="data['prepare_by_designation']"/></p>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <span class="signed-by"><b>Checked by :</b></span>
+                            <p style="margin:0"><t t-esc="data['checked_by']"/></p>
+                            <p><t t-esc="data['checked_by_designation']"/></p>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <span class="signed-by"><b>Verified by :</b></span>
+                            <p style="margin:0"><t t-esc="data['verified_by']"/></p>
+                            <p><t t-esc="data['verified_by_designation']"/></p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>
