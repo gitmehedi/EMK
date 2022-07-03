@@ -15,7 +15,7 @@ class AccountInvoiceVendorBill(models.AbstractModel):
             self._cr.execute(query)
             fetched_data = self._cr.dictfetchall()[0]
             checked_by_id = fetched_data['write_uid']
-            hr_employee = self.env['hr.employee'].search([('user_id', '=', checked_by_id)])
+            hr_employee = self.env['hr.employee'].sudo().search([('user_id', '=', checked_by_id)])
             e_name = hr_employee.name
             designation = hr_employee.job_id.name
         return e_name, designation
@@ -92,8 +92,8 @@ class AccountInvoiceVendorBill(models.AbstractModel):
         data['total_amount_due_outstanding'] = formatLang(self.env, net_payable-advance_amount)
         data['payment'] = formatLang(self.env, payment_amount)
         data['net_amount_due_outstanding'] = formatLang(self.env, docs.residual)
-        data['prepare_by'] = docs.create_uid.name
-        hr_employee = self.env['hr.employee'].search([('user_id', '=', docs.create_uid.id)])
+        data['prepare_by'] = docs.sudo().create_uid.name
+        hr_employee = self.env['hr.employee'].sudo().search([('user_id', '=', docs.create_uid.id)])
         data['prepare_by_designation'] = ""
         if hr_employee:
             data['prepare_by_designation'] = hr_employee.job_id.name
