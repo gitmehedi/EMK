@@ -9,7 +9,7 @@ class PickingImportWizard(models.TransientModel):
     def default_get(self, field_list):
         """Get pickings previously imported."""
         res = super(PickingImportWizard, self).default_get(field_list)
-        exclude_used_mrr = self.env['ir.values'].get_default('account.config.settings', 'exclude_used_mrr')
+        exclude_used_mrr = True
 
         if self.env.context.get('active_id') and 'prev_pickings' in field_list:
             distribution = self.env['purchase.cost.distribution'].browse(
@@ -68,7 +68,7 @@ class PickingImportWizard(models.TransientModel):
                     if all(x in moves for x in _line.picking_id.move_lines):
                         _pickings |= _line.picking_id
             rec.prev_pickings_from_landed_cost = _pickings.ids
-            exclude_used_mrr = self.env['ir.values'].get_default('account.config.settings', 'exclude_used_mrr')
+            exclude_used_mrr = True
 
             if not exclude_used_mrr:
                 rec.prev_pickings_from_landed_cost = False
@@ -86,7 +86,7 @@ class PickingImportWizard(models.TransientModel):
     @api.multi
     @api.onchange('lc_id')
     def onchange_lc_pickings(self):
-        exclude_used_mrr = self.env['ir.values'].get_default('account.config.settings', 'exclude_used_mrr')
+        exclude_used_mrr = True
 
         if self.env.context.get('active_id'):
             distribution = self.env['purchase.cost.distribution'].browse(
@@ -137,7 +137,7 @@ class PickingImportWizard(models.TransientModel):
 
     @api.multi
     def action_import_picking(self):
-        exclude_used_mrr = self.env['ir.values'].get_default('account.config.settings', 'exclude_used_mrr')
+        exclude_used_mrr = True
 
         self.ensure_one()
         distribution = self.env['purchase.cost.distribution'].browse(

@@ -13,7 +13,7 @@ class StockMove(models.Model):
         tmpl_dict = defaultdict(lambda: 0.0)
         std_price_update = {}
         # Start Custom Logic For GBS : Unit Price will not update for Foreign Purchase (LC & TT). Because landed cost are not added on PO
-        include_product_purchase_cost = self.env['ir.values'].get_default('account.config.settings', 'include_product_purchase_cost')
+        include_product_purchase_cost = True
         moves = self.filtered(lambda move: move.location_id.usage in ('supplier', 'production') and move.product_id.cost_method == 'average')
         move_length = len(moves)
         count = 0

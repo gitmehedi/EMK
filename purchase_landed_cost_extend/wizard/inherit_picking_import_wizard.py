@@ -62,8 +62,7 @@ class InheritedPickingImportWizard(models.TransientModel):
 
     @api.depends('supplier')
     def compute_include_purchase_cost(self):
-        include_product_purchase_cost = self.env['ir.values'].get_default('account.config.settings',
-                                                                          'include_product_purchase_cost')
+        include_product_purchase_cost = True
         for rec in self:
             rec.include_product_purchase_cost = include_product_purchase_cost
 

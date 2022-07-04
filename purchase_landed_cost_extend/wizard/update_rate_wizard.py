@@ -74,8 +74,7 @@ class UpdateWizard(models.TransientModel):
         if not purchase_cost_distribution_obj.expense_lines:
             raise UserError(_('You need to expense to complete this operation!'))
 
-        include_product_purchase_cost = self.env['ir.values'].get_default('account.config.settings',
-                                                                          'include_product_purchase_cost')
+        include_product_purchase_cost = True
 
         stock_move_utility = self.env['stock.move.utility']
         if include_product_purchase_cost:
