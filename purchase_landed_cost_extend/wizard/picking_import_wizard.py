@@ -98,33 +98,43 @@ class PickingImportWizard(models.TransientModel):
                 if all(x in moves for x in line.picking_id.move_lines):
                     pickings |= line.picking_id
             prev_pickings = pickings.ids
+	    print('lc_id',self.lc_id.id)
+	    for rec in self:
+		print('lc',rec.lc_id)
 
             other_distribution = self.env['purchase.cost.distribution'].search(
                 [('lc_id', '=', self.lc_id.id), ('id', '!=', distribution.id)])
+            print('other',other_distribution)
             _moves = []
             for dist in other_distribution:
                 if dist.cost_lines:
                     for cost_line in dist.cost_lines:
                         _moves.append(cost_line.move_id)
             _pickings = self.env['stock.picking']
-            for dis in other_distribution:
+            print('moves',_moves)
+	    for dis in other_distribution:
                 for _line in dis.cost_lines:
                     if _line.picking_id in _pickings:
                         continue
                     if all(x in _moves for x in _line.picking_id.move_lines):
                         _pickings |= _line.picking_id
             prev_pickings_from_landed_cost = _pickings.ids
-
+	    print('prev',prev_pickings)
+            print('prevL',prev_pickings_from_landed_cost)
+            print('exclude_used_mrr',exclude_used_mrr)
             if not exclude_used_mrr:
                 prev_pickings = []
                 prev_pickings_from_landed_cost = []
-        stock_picking_obj = self.env['stock.picking'].search([('check_mrr_button', '=', True),
+       
+	    print('prev_',prev_pickings_from_landed_cost) 
+            stock_picking_obj = self.env['stock.picking'].search([('check_mrr_button', '=', True),
                                                               ('state', '=', 'done'),
                                                               ('origin', '=', self.lc_name),
                                                               ('id', 'not in', prev_pickings),
                                                               ('id', 'not in', prev_pickings_from_landed_cost)
                                                               ])
 
+	print(stock_picking_obj)        
         if stock_picking_obj:
             self.pickings = stock_picking_obj.ids
         else:
