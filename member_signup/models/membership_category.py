@@ -4,7 +4,7 @@
 from psycopg2 import IntegrityError
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-from odoo.addons.opa_utility.helper.utility import Utility,Message
+from odoo.addons.opa_utility.helper.utility import Utility, Message
 
 
 class InheritedMembershipCategory(models.Model):
@@ -13,6 +13,8 @@ class InheritedMembershipCategory(models.Model):
     _description = 'Membership Category'
 
     name = fields.Char(track_visibility='onchange')
+    type = fields.Selection([('free', 'Free'), ('paid', 'Paid')], required=True, default='free',
+                            string='Membership Type', track_visibility='onchange')
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',
@@ -71,6 +73,7 @@ class InheritedMembershipCategory(models.Model):
                 return super(InheritedMembershipCategory, rec).unlink()
             except IntegrityError:
                 raise ValidationError(_(Message.UNLINK_INT_WARNING))
+
 
 class InheritedProductTemplate(models.Model):
     _name = 'product.template'

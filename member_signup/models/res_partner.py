@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
-import logging
-import random
-import werkzeug
-from datetime import datetime, timedelta
+import base64, logging, random, werkzeug
+from datetime import datetime, date, timedelta
 
 from odoo import api, fields, models, _
-from odoo.addons.opa_utility.helper.utility import Utility,Message
+from odoo.addons.opa_utility.helper.utility import Utility, Message
 from urlparse import urljoin
 from odoo.exceptions import UserError, ValidationError
 
@@ -74,12 +71,19 @@ class ResPartner(models.Model):
                                               track_visibility="onchange")
     rejection_reason = fields.Text(string="Rejection Reason", track_visibility="onchange")
 
-    membership_status = fields.Selection(
-        [('active', 'Active'), ('inactive', 'In-Active'), ('restricted', 'Restricted')], string='Membership Status')
+    membership_cat_id = fields.Many2one('product.template', string='Membership Category',
+                                        domain=[('type', '=', 'service'),
+                                                ('membership', '=', True),
+                                                ('membership_status', '=', False)],
+                                        track_visibility="onchange")
+    membership_status = fields.Selection([('active', 'Active'),
+                                          ('inactive', 'In-Active'),
+                                          ('restricted', 'Restricted')], string='Membership Status')
 
-    state = fields.Selection(
-        [('application', 'Application'), ('invoice', 'Invoiced'),
-         ('member', 'Membership'), ('reject', 'Reject')], default='application', track_visibility="onchange")
+    state = fields.Selection([('application', 'Application'),
+                              ('invoice', 'Invoiced'),
+                              ('member', 'Membership'),
+                              ('reject', 'Reject')], default='application', track_visibility="onchange")
 
     @api.onchange('birth_date')
     def validate_birthdate(self):
@@ -261,6 +265,41 @@ class ResPartner(models.Model):
         if 'application' in self.state:
             self._create_invoice()
 
+    @api.multi
+    def act_approve_member(self):
+        if self.state == 'application':
+            self.state = 'invoice'
+
+        # if 'application' in self.state:
+        #     self._create_invoice()
+
+    @api.multi
+    def act_confirm_member(self):
+        if self.state == 'invoice':
+            today = date.today()
+            days = self.membership_cat_id.membership_interval_qty*365
+            next_year = today + timedelta(days=days)
+            vals = {
+                'date': today,
+                'date_from': today,
+                'date_to': next_year,
+                'state': 'free',
+                'member_price': 0,
+                'partner': self.id,
+                'membership_id': self.membership_cat_id.id,
+            }
+            self.write({'state': 'member',
+                        'member_sequence': '',
+                        'application_ref': '',
+                        'free_member': True,
+                        'membership_status': 'active',
+                        'membership_state': 'free',
+                        'membership_start': today,
+                        'membership_last_start': next_year,
+                        'membership_stop': next_year,
+                        'member_lines': [(0, 0, vals)],
+                        })
+
     @api.one
     def member_reject(self):
         if 'application' in self.state:
@@ -410,3 +449,10 @@ class ResPartner(models.Model):
             [('name', 'in', val['group']), ('category_id.name', '=', val['category'])])
         emails = [str(rec.email) for rec in groups.users if len(rec.create_uid) > 0]
         return ", ".join(emails)
+
+    def _membership_member_states(self):
+        """Inherit this method to define membership states
+
+        List of membership line states that define a partner as member
+        """
+        return ('invoiced', 'paid', 'free')
