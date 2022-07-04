@@ -33,6 +33,7 @@
         'wizard/set_membership_views.xml',
         'wizard/reject_membership_views.xml',
         'views/application_views.xml',
+        'views/application_internal_member_views.xml',
         'views/applicant_profile_views.xml',
         'views/member_views.xml',
         'views/membership_types_views.xml',
