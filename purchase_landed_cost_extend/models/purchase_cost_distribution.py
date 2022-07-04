@@ -155,8 +155,7 @@ class PurchaseCostDistribution(models.Model):
             prev_qty_available = 0
         total_available = prev_qty_available + moves_total_qty
 
-        include_product_purchase_cost = self.env['ir.values'].get_default('account.config.settings',
-                                                                          'include_product_purchase_cost')
+        include_product_purchase_cost = True
 
         ####################EDITED#####################
 

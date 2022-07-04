@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError, ValidationError
 
 
 class PickingImportWizard(models.TransientModel):
@@ -8,7 +9,7 @@ class PickingImportWizard(models.TransientModel):
     def default_get(self, field_list):
         """Get pickings previously imported."""
         res = super(PickingImportWizard, self).default_get(field_list)
-        exclude_used_mrr = self.env['ir.values'].get_default('account.config.settings', 'exclude_used_mrr')
+        exclude_used_mrr = True
 
         if self.env.context.get('active_id') and 'prev_pickings' in field_list:
             distribution = self.env['purchase.cost.distribution'].browse(
@@ -67,7 +68,7 @@ class PickingImportWizard(models.TransientModel):
                     if all(x in moves for x in _line.picking_id.move_lines):
                         _pickings |= _line.picking_id
             rec.prev_pickings_from_landed_cost = _pickings.ids
-            exclude_used_mrr = self.env['ir.values'].get_default('account.config.settings', 'exclude_used_mrr')
+            exclude_used_mrr = True
 
             if not exclude_used_mrr:
                 rec.prev_pickings_from_landed_cost = False
@@ -79,13 +80,13 @@ class PickingImportWizard(models.TransientModel):
         return {
             'distribution': self.env.context['active_id'],
             'move_id': move.id,
-            'prev_product_price_unit':move.price_unit
+            'prev_product_price_unit': move.price_unit
         }
 
     @api.multi
     @api.onchange('lc_id')
     def onchange_lc_pickings(self):
-        exclude_used_mrr = self.env['ir.values'].get_default('account.config.settings', 'exclude_used_mrr')
+        exclude_used_mrr = True
 
         if self.env.context.get('active_id'):
             distribution = self.env['purchase.cost.distribution'].browse(
@@ -100,8 +101,12 @@ class PickingImportWizard(models.TransientModel):
             prev_pickings = pickings.ids
 
             other_distribution = self.env['purchase.cost.distribution'].search(
-                [('lc_id', '=', self.lc_id.id)])
-            _moves = other_distribution.mapped('cost_lines.move_id')
+                [('lc_id', '=', self.lc_id.id), ('id', '!=', distribution.id)])
+            _moves = []
+            for dist in other_distribution:
+                if dist.cost_lines:
+                    for cost_line in dist.cost_lines:
+                        _moves.append(cost_line.move_id)
             _pickings = self.env['stock.picking']
             for dis in other_distribution:
                 for _line in dis.cost_lines:
@@ -110,16 +115,15 @@ class PickingImportWizard(models.TransientModel):
                     if all(x in _moves for x in _line.picking_id.move_lines):
                         _pickings |= _line.picking_id
             prev_pickings_from_landed_cost = _pickings.ids
-
             if not exclude_used_mrr:
                 prev_pickings = []
                 prev_pickings_from_landed_cost = []
-        stock_picking_obj = self.env['stock.picking'].search([('check_mrr_button', '=', True),
-                                                              ('state', '=', 'done'),
-                                                              ('origin', '=', self.lc_name),
-                                                              ('id', 'not in', prev_pickings),
-                                                              ('id', 'not in', prev_pickings_from_landed_cost)
-                                                              ])
+            stock_picking_obj = self.env['stock.picking'].search([('check_mrr_button', '=', True),
+                                                                  ('state', '=', 'done'),
+                                                                  ('origin', '=', self.lc_name),
+                                                                  ('id', 'not in', prev_pickings),
+                                                                  ('id', 'not in', prev_pickings_from_landed_cost)
+                                                                  ])
 
         if stock_picking_obj:
             self.pickings = stock_picking_obj.ids
@@ -133,7 +137,7 @@ class PickingImportWizard(models.TransientModel):
 
     @api.multi
     def action_import_picking(self):
-        exclude_used_mrr = self.env['ir.values'].get_default('account.config.settings', 'exclude_used_mrr')
+        exclude_used_mrr = True
 
         self.ensure_one()
         distribution = self.env['purchase.cost.distribution'].browse(
@@ -156,8 +160,13 @@ class PickingImportWizard(models.TransientModel):
             prev_pickings = pickings.ids
 
             other_distribution = self.env['purchase.cost.distribution'].search(
-                [('lc_id', '=', self.lc_id.id)])
-            _moves = other_distribution.mapped('cost_lines.move_id')
+                [('lc_id', '=', self.lc_id.id), ('id', '!=', distribution.id)])
+            _moves = []
+            for dist in other_distribution:
+                if dist.cost_lines:
+                    for cost_line in dist.cost_lines:
+                        _moves.append(cost_line.move_id)
+
             _pickings = self.env['stock.picking']
             for dis in other_distribution:
                 for _line in dis.cost_lines:
@@ -177,7 +186,9 @@ class PickingImportWizard(models.TransientModel):
                                                               ('id', 'not in', prev_pickings_from_landed_cost)
                                                               ])
 
-        if stock_picking_obj:
+        if not stock_picking_obj:
+            raise UserError("Stock not found for this LC")
+        else:
             for pickin in stock_picking_obj:
                 for move in pickin.move_lines:
                     if move not in previous_moves:

@@ -11,9 +11,10 @@ class UpdateWizard(models.TransientModel):
         purchase_cost_distribution_obj = self.env['purchase.cost.distribution'].browse(
             self.env.context['active_id'])
         vb_rate = 0.0
+        total_invoice = 0
         for rec in purchase_cost_distribution_obj:
             if rec.lc_id:
-                total_invoice = 0
+
                 for po in rec.lc_id.po_ids:
                     if po.invoice_ids:
                         invoice_states = po.invoice_ids.mapped('state')
@@ -28,6 +29,8 @@ class UpdateWizard(models.TransientModel):
                     else:
                         raise UserError("Vendor Bills not create for related Purchase Order!")
 
+        if total_invoice == 0:
+            raise UserError('Vendor Bill total found zero!')
         res['invoice_avg_currency_rate'] = vb_rate / total_invoice
         res['final_rate'] = vb_rate / total_invoice
 
@@ -71,8 +74,7 @@ class UpdateWizard(models.TransientModel):
         if not purchase_cost_distribution_obj.expense_lines:
             raise UserError(_('You need to expense to complete this operation!'))
 
-        include_product_purchase_cost = self.env['ir.values'].get_default('account.config.settings',
-                                                                          'include_product_purchase_cost')
+        include_product_purchase_cost = True
 
         stock_move_utility = self.env['stock.move.utility']
         if include_product_purchase_cost:

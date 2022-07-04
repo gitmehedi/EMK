@@ -62,8 +62,7 @@ class ProductGateIn(models.Model):
         self.state = 'confirm'
         self.shipping_line_ids.write({'state': 'confirm'})
         self.ship_id.write({'state': 'gate_in'})
-        include_product_purchase_cost = self.env['ir.values'].get_default('account.config.settings',
-                                                                          'include_product_purchase_cost')
+        include_product_purchase_cost = True
 
         stock_move_utility = self.env['stock.move.utility']
         if self.receive_type == 'lc':
