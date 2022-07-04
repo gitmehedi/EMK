@@ -21,9 +21,12 @@ class InheritedPickingImportWizard(models.TransientModel):
                     raise UserError(
                         "Select Operating Unit First!")
 
+                location_id = self.env['stock.location'].search(
+                    [('operating_unit_id', '=', purchase_cost_distribution_obj.operating_unit_id.id), ('name', '=', 'Stock')],
+                    limit=1).id
                 pickings = self.env['stock.picking'].search(
-                    [('origin', '=', rec.lc_id.name), ('name', '=', 'Stock'), ('state', '=', 'done'),
-                     ('operating_unit_id', '=', purchase_cost_distribution_obj.operating_unit_id.id)])
+                    [('origin', '=', rec.lc_id.name), ('state', '=', 'done'),
+                     ('location_dest_id', '=', location_id)])
 
                 for picking in pickings:
                     if not picking.mrr_no:

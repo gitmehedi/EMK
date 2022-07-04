@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-
+from odoo.exceptions import UserError, ValidationError
 
 class PickingImportWizard(models.TransientModel):
     _inherit = "picking.import.wizard"
@@ -100,8 +100,12 @@ class PickingImportWizard(models.TransientModel):
             prev_pickings = pickings.ids
 
             other_distribution = self.env['purchase.cost.distribution'].search(
-                [('lc_id', '=', self.lc_id.id)])
-            _moves = other_distribution.mapped('cost_lines.move_id')
+                [('lc_id', '=', self.lc_id.id), ('id', '!=', distribution.id)])
+            _moves = []
+            for dist in other_distribution:
+                if dist.cost_lines:
+                    for cost_line in dist.cost_lines:
+                        _moves.append(cost_line.move_id)
             _pickings = self.env['stock.picking']
             for dis in other_distribution:
                 for _line in dis.cost_lines:
@@ -155,9 +159,15 @@ class PickingImportWizard(models.TransientModel):
                     pickings |= line.picking_id
             prev_pickings = pickings.ids
 
+
             other_distribution = self.env['purchase.cost.distribution'].search(
-                [('lc_id', '=', self.lc_id.id)])
-            _moves = other_distribution.mapped('cost_lines.move_id')
+                [('lc_id', '=', self.lc_id.id), ('id', '!=', distribution.id)])
+            _moves = []
+            for dist in other_distribution:
+                if dist.cost_lines:
+                    for cost_line in dist.cost_lines:
+                        _moves.append(cost_line.move_id)
+
             _pickings = self.env['stock.picking']
             for dis in other_distribution:
                 for _line in dis.cost_lines:
@@ -177,7 +187,9 @@ class PickingImportWizard(models.TransientModel):
                                                               ('id', 'not in', prev_pickings_from_landed_cost)
                                                               ])
 
-        if stock_picking_obj:
+        if not stock_picking_obj:
+            raise UserError("Stock not found for this LC")
+        else:
             for pickin in stock_picking_obj:
                 for move in pickin.move_lines:
                     if move not in previous_moves:
