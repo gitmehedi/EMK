@@ -67,7 +67,7 @@ class VendorAdvance(models.Model):
         vals['name'] = self.env['ir.sequence'].next_by_code('vendor.advance') or self.name
         return super(VendorAdvance, self).create(vals)
 
-    @api.constrains('payable_to_supplier')
+    @api.constrains('advance_amount')
     def _check_payable_to_supplier(self):
         if self.purchase_order_id:
             if self.purchase_order_id.currency_id.name == 'BDT':
@@ -77,7 +77,7 @@ class VendorAdvance(models.Model):
                 po_total_amount = self.purchase_order_id.amount_total / rate_usd
             total_payable_to_supplier = 0
             for va in self.purchase_order_id.vendor_advance_line:
-                total_payable_to_supplier = total_payable_to_supplier + va.payable_to_supplier
+                total_payable_to_supplier = total_payable_to_supplier + va.advance_amount
             if total_payable_to_supplier > po_total_amount:
                 raise ValidationError(_('Order outstanding amount exceeds! Difference: %s. You need to input %s or less.' % (str(total_payable_to_supplier-po_total_amount), str(self.payable_to_supplier-(total_payable_to_supplier-po_total_amount)))))
 
