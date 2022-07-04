@@ -12,6 +12,8 @@ class SetMembershipWizard(models.TransientModel):
             partner_ins = self.env['res.partner']
             member = partner_ins.browse(self._context['active_id'])
             member.write({'rejection_reason': self.reason, 'state': 'reject'})
+            member.user_ids.write({'active': False})
+
             vals = {
                 'template': 'member_signup.member_rejection_email_template',
                 'email_to': member.email,

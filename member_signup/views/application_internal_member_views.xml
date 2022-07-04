@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 <odoo>
-    <record id="member_app_tree_view" model="ir.ui.view">
+    <record id="member_internal_app_tree_view" model="ir.ui.view">
         <field name="name">Members</field>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <tree string="Members" decoration-bf="state == 'invoice'"
-                  decoration-success="state in ('application','invoice')" decoration-muted="state == 'reject'">
+                  decoration-info="state in ('application')"
+                  decoration-success="state in ('invoice',)"
+                  decoration-muted="state in ('member',)"
+                  decoration-danger="state == 'reject'">
                 <field name="member_sequence"/>
                 <field name="name"/>
                 <field name="phone"/>
@@ -19,20 +22,20 @@
             </tree>
         </field>
     </record>
-    <record id="member_app_form_view" model="ir.ui.view">
+
+    <record id="member_internal_app_form_view" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Partners">
                 <header>
-                    <button string="Approve" type="object" name="member_invoiced" class="btn btn-sm oe_highlight"
+                    <button string="Approve" type="object" name="act_approve_member" class="btn btn-sm oe_highlight"
                             states="application" groups="member_user.group_mem_user_officer"/>
-                    <button string="Reject" type="action" name="%(action_reject_membership)d" class="btn btn-sm"
-                            states="application" groups="member_user.group_mem_user_officer"/>
+                    <button string="Confirm" type="object" name="act_confirm_member" class="btn btn-sm oe_highlight"
+                            states="invoice" groups="member_user.group_mem_user_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="application,invoice,member"/>
                 </header>
-
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button type="object"
@@ -51,7 +54,6 @@
                             </div>
                         </button>
                     </div>
-
                     <field name="image" widget='image' class="oe_avatar"
                            options='{"preview_image": "image_medium", "size": [90, 90]}'/>
                     <div class="oe_title">
@@ -121,8 +123,11 @@
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                             <field name="birth_date"/>
+                            <field name="membership_cat_id" required="True"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."
                                    options="{'no_create_edit': True}" invisible="True"/>
+
                         </group>
                         <group>
 
@@ -132,7 +137,7 @@
                             <field name="mobile" widget="phone" placeholder="8801900000000"/>
                             <field name="fax" invisible="True"/>
                             <field name="user_ids" invisible="1"/>
-                            <field name="email" widget="email" required="True" readonly="True"/>
+                            <field name="email" widget="email" required="True"/>
                             <field name="title" options='{"no_open": True}' invisible="True"
                                    attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="lang" invisible="True"/>
@@ -187,7 +192,8 @@
             </form>
         </field>
     </record>
-    <record id="member_app_kanban_view" model="ir.ui.view">
+
+    <record id="member_internal_app_kanban_view" model="ir.ui.view">
         <field name="name">member.res.partner.kanban</field>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
@@ -270,56 +276,56 @@
                                 <div class="oe_kanban_partner_links"/>
                             </div>
                         </div>
-
                     </t>
                 </templates>
             </kanban>
         </field>
     </record>
 
-    <record id="action_member_app_pending" model="ir.actions.act_window">
+    <record id="action_member_internal_app_pending" model="ir.actions.act_window">
         <field name="name">Pending Application</field>
         <field name="res_model">res.partner</field>
+        <field name="domain">[('supplier','!=','False'),('customer','!=','False'),('state','in',('application',))]</field>
+        <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
-        <field name="domain">[('is_applicant','=',True),('state','=','application')]</field>
-        <field name="context">{'mcount':'application','default_is_applicant':True}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Application
             </p>
         </field>
     </record>
-    <record id="action_member_app_pending_view_tree" model="ir.actions.act_window.view">
+    <record id="action_member_internal_app_pending_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="member_app_tree_view"/>
-        <field name="act_window_id" ref="action_member_app_pending"/>
+        <field name="view_id" ref="member_internal_app_tree_view"/>
+        <field name="act_window_id" ref="action_member_internal_app_pending"/>
     </record>
-    <record id="action_member_app_pending_view_form" model="ir.actions.act_window.view">
+    <record id="action_member_internal_app_pending_view_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="member_app_form_view"/>
-        <field name="act_window_id" ref="action_member_app_pending"/>
+        <field name="view_id" ref="member_internal_app_form_view"/>
+        <field name="act_window_id" ref="action_member_internal_app_pending"/>
     </record>
-    <record id="action_member_app_pending_view_kanban" model="ir.actions.act_window.view">
+    <record id="action_member_internal_app_pending_view_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="member_app_kanban_view"/>
-        <field name="act_window_id" ref="action_member_app_pending"/>
+        <field name="view_id" ref="member_internal_app_kanban_view"/>
+        <field name="act_window_id" ref="action_member_internal_app_pending"/>
     </record>
-    <menuitem id="menu_member_app_pending" sequence="5" parent="menu_member_app"
-              action="action_member_app_pending"
+    <menuitem id="menu_member_internal_app_pending" sequence="5" parent="menu_member_internal_app"
+              action="action_member_internal_app_pending"
               groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
 
-    <record id="member_app_apr_rej_tree_view" model="ir.ui.view">
+    <record id="member_internal_app_apr_rej_tree_view" model="ir.ui.view">
         <field name="name">Members</field>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <tree string="Members" decoration-bf="state == 'invoice'"
-                  decoration-success="state in ('application','invoice')"
-                  decoration-muted="state == 'reject'"
-                  create="0" delete="0" edit="0">
+                  decoration-info="state in ('application')"
+                  decoration-success="state in ('invoice',)"
+                  decoration-muted="state in ('member',)"
+                  decoration-danger="state == 'reject'" create="0" delete="0" edit="0">
                 <field name="member_sequence"/>
                 <field name="name"/>
                 <field name="phone"/>
@@ -333,20 +339,20 @@
             </tree>
         </field>
     </record>
-    <record id="member_app_apr_rej_form_view" model="ir.ui.view">
+
+    <record id="member_internal_app_apr_rej_form_view" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Partners" create="0" delete="0" edit="0">
                 <header>
-                    <button string="Approve" type="object" name="member_invoiced" class="btn btn-sm oe_highlight"
+                    <button string="Approve" type="object" name="act_approve_member" class="btn btn-sm oe_highlight"
                             states="application" groups="member_user.group_mem_user_officer"/>
-                    <button string="Reject" type="action" name="%(action_reject_membership)d" class="btn btn-sm"
-                            states="application" groups="member_user.group_mem_user_officer"/>
+                    <button string="Confirm" type="object" name="act_confirm_member" class="btn btn-sm oe_highlight"
+                            states="invoice" groups="member_user.group_mem_user_officer"/>
                     <field name="state" widget="statusbar" statusbar_visible="application,invoice,member"/>
                 </header>
-
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button type="object"
@@ -365,7 +371,6 @@
                             </div>
                         </button>
                     </div>
-
                     <field name="image" widget='image' class="oe_avatar"
                            options='{"preview_image": "image_medium", "size": [90, 90]}'/>
                     <div class="oe_title">
@@ -435,8 +440,11 @@
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                             <field name="birth_date"/>
+                            <field name="membership_cat_id" required="True"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."
                                    options="{'no_create_edit': True}" invisible="True"/>
+
                         </group>
                         <group>
 
@@ -446,7 +454,7 @@
                             <field name="mobile" widget="phone" placeholder="8801900000000"/>
                             <field name="fax" invisible="True"/>
                             <field name="user_ids" invisible="1"/>
-                            <field name="email" widget="email" required="True" readonly="True"/>
+                            <field name="email" widget="email" required="True"/>
                             <field name="title" options='{"no_open": True}' invisible="True"
                                    attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="lang" invisible="True"/>
@@ -502,71 +510,69 @@
         </field>
     </record>
 
-    <record id="action_member_app_approved" model="ir.actions.act_window">
+    <record id="action_member_internal_app_approved" model="ir.actions.act_window">
         <field name="name">Approved Application</field>
         <field name="res_model">res.partner</field>
+        <field name="domain">[('supplier','!=','False'),('customer','!=','False'),('state','in',('invoice','member'))]</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
-        <field name="domain">[('free_member','=',False),('state','in',['invoice','member'])]</field>
-        <field name="context">{'mcount':'invoice'}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Application
             </p>
         </field>
     </record>
-    <record id="action_member_app_approved_view_tree" model="ir.actions.act_window.view">
+    <record id="action_member_internal_app_approved_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="member_app_apr_rej_tree_view"/>
-        <field name="act_window_id" ref="action_member_app_approved"/>
+        <field name="view_id" ref="member_internal_app_apr_rej_tree_view"/>
+        <field name="act_window_id" ref="action_member_internal_app_approved"/>
     </record>
-    <record id="action_member_app_approved_view_form" model="ir.actions.act_window.view">
+    <record id="action_member_internal_app_approved_view_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="member_app_apr_rej_form_view"/>
-        <field name="act_window_id" ref="action_member_app_approved"/>
+        <field name="view_id" ref="member_internal_app_apr_rej_form_view"/>
+        <field name="act_window_id" ref="action_member_internal_app_approved"/>
     </record>
-    <record id="action_member_app_approved_view_kanban" model="ir.actions.act_window.view">
+    <record id="action_member_internal_app_approved_view_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="member_app_kanban_view"/>
-        <field name="act_window_id" ref="action_member_app_approved"/>
+        <field name="view_id" ref="member_internal_app_kanban_view"/>
+        <field name="act_window_id" ref="action_member_internal_app_approved"/>
     </record>
-    <menuitem id="menu_member_app_approved" sequence="10" parent="menu_member_app"
-              action="action_member_app_approved"
+    <menuitem id="menu_member_internal_app_approved" sequence="10" parent="menu_member_internal_app"
+              action="action_member_internal_app_approved"
               groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
-    <record id="action_member_app_reject" model="ir.actions.act_window">
+    <record id="action_member_internal_app_reject" model="ir.actions.act_window">
         <field name="name">Rejected Application</field>
         <field name="res_model">res.partner</field>
+        <field name="domain">[('supplier','!=','False'),('customer','!=','False'),('state','in',('reject',))]</field>
         <field name="search_view_id" ref="membership.view_res_partner_member_filter"/>
-        <field name="domain">[('is_applicant','=',True),('state','=','reject')]</field>
-        <field name="context">{'mcount':'reject'}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Application
             </p>
         </field>
     </record>
-    <record id="action_member_app_reject_view_tree" model="ir.actions.act_window.view">
+    <record id="action_member_internal_app_reject_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="member_app_apr_rej_tree_view"/>
-        <field name="act_window_id" ref="action_member_app_reject"/>
+        <field name="view_id" ref="member_internal_app_apr_rej_tree_view"/>
+        <field name="act_window_id" ref="action_member_internal_app_reject"/>
     </record>
-    <record id="action_member_app_reject_view_form" model="ir.actions.act_window.view">
+    <record id="action_member_internal_app_reject_view_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="member_app_apr_rej_form_view"/>
-        <field name="act_window_id" ref="action_member_app_reject"/>
+        <field name="view_id" ref="member_internal_app_apr_rej_form_view"/>
+        <field name="act_window_id" ref="action_member_internal_app_reject"/>
     </record>
-    <record id="action_member_app_reject_view_kanban" model="ir.actions.act_window.view">
+    <record id="action_member_internal_app_reject_view_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="member_app_kanban_view"/>
-        <field name="act_window_id" ref="action_member_app_reject"/>
+        <field name="view_id" ref="member_internal_app_kanban_view"/>
+        <field name="act_window_id" ref="action_member_internal_app_reject"/>
     </record>
-    <menuitem id="menu_member_app_reject" sequence="15" parent="menu_member_app"
-              action="action_member_app_reject"
+    <menuitem id="menu_member_internal_app_reject" sequence="15" parent="menu_member_internal_app"
+              action="action_member_internal_app_reject"
               groups="member_user.group_mem_user_officer,member_user.group_user_member,membership_extension.group_membership_manager"/>
 </odoo>

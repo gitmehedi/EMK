@@ -22,7 +22,10 @@
     <menuitem name="Members" id="menu_member_general" sequence="0" parent="membership.menu_association"
               groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
-    <menuitem name="Applications" id="menu_member_app" sequence="0" parent="membership.menu_association"
+    <menuitem name="Membership Applications" id="menu_member_app" sequence="0" parent="membership.menu_association"
+              groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+
+    <menuitem name="Membership Operations" id="menu_member_internal_app" sequence="0" parent="membership.menu_association"
               groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
     <menuitem name="Application" id="menu_main_applicant" sequence="0"
