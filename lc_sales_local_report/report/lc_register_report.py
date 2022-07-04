@@ -96,16 +96,15 @@ class LcRegisterXLSX(ReportXlsx):
                 lc_delivery_details_str = ""
                 for data in query_res:
                     name = data['name'] if data['name'] is not None else ''
-                    min_date = datetime.strptime(data['min_date'],
-                                                 '%Y-%m-%d %H:%M:%S').date() if 'min_date' is data else ''
-                    min_date_format = ReportUtility.get_date_from_string(str(min_date))
+                    # min_date = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date()
+                    min_date = data['date_done'] if data['date_done'] is not None else ''
+                    min_date_format = ReportUtility.get_date_time_from_string(str(min_date))
                     qty = data["qty_delivered"] if data["qty_delivered"] is not None else '0'
 
                     lc_delivery_details_str = str(name) + ", " + str(min_date_format) + ", " + str(qty) + "\n"
                 date_done = ''
                 if query_res:
-                    date_done_uniformat = datetime.strptime(data['min_date'],
-                                                            '%Y-%m-%d %H:%M:%S').date() if 'min_date' is data else ''
+                    date_done_uniformat = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date() if data['min_date'] is not None else ''
                     if date_done_uniformat:
                         date_done = ReportUtility.get_date_from_string(str(date_done_uniformat))
                 return lc_delivery_details_str, str(date_done)
@@ -125,7 +124,7 @@ class LcRegisterXLSX(ReportXlsx):
         return '', ''
 
     def get_lc_pi_no(self, lc_id):
-        if not lc_id:
+        if lc_id:
             query = """
             select name from proforma_invoice as pi LEFT JOIN pi_lc_rel AS plr ON pi.id = plr.pi_id where plr.lc_id='%s'
             """ % lc_id
@@ -227,7 +226,7 @@ class LcRegisterXLSX(ReportXlsx):
             sheet.write(row, 3, data['product_name'], name_border_format_colored)
             sheet.write(row, 4, self.get_lc_pi_no(lc_id) if lc_id != '' else data['pi_name'], name_border_format_colored)
             sheet.write(row, 5, self.get_lc_so_no(lc_id) if lc_id != '' else data['so_name'], name_border_format_colored)
-            sheet.write(row, 6, str(data['lc_number']) if 'lc_number' in data else '', name_border_format_colored)
+            sheet.write(row, 6, data['lc_number'] if 'lc_number' in data else '', name_border_format_colored)
             sheet.write(row, 7, ReportUtility.get_date_from_string(data['lc_date']) if 'lc_date' in data else '', name_border_format_colored_text_right)
             sheet.write(row, 8, lc_and_delivered_qty[0], name_border_format_colored_text_right)
             sheet.write(row, 9, data['lc_amount'] if 'lc_amount' in data else '', name_border_format_colored_text_right)
@@ -366,6 +365,7 @@ class LcRegisterXLSX(ReportXlsx):
              'text_wrap': True})
         sub_header_format_left.set_font_name('Times New Roman')
 
+        lc_static_issue_date = '01/06/2022'
         where = ''
         filter_by_text = ''
         if filter_by == 'goods_delivered_doc_not_prepared':
@@ -374,24 +374,22 @@ class LcRegisterXLSX(ReportXlsx):
 
         elif filter_by == 'first_acceptance':
             filter_by_text = '1st Acceptance'
-            where += "where (CURRENT_DATE-Date(ps.to_first_acceptance_date)) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
+            where += "where (Date(ps.to_first_acceptance_date)-CURRENT_DATE) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
 
         elif filter_by == 'second_acceptance':
             filter_by_text = "2nd Acceptance"
-            where += "where (CURRENT_DATE-ps.to_seller_bank_date) > " + acceptance_default_value + " and ps.state='to_buyer_bank' "
+            where += "where (ps.to_seller_bank_date-CURRENT_DATE) > " + acceptance_default_value + " and ps.state='to_buyer_bank' "
 
         elif filter_by == 'maturated_but_amount_not_collect':
             filter_by_text = 'Matured but Amount not collected'
             where += "where payment_rec_date is null and ps.to_seller_bank_date is not null "
         elif filter_by == 'percentage_of_first_acceptance_collection':
             filter_by_text = 'Percentage of First Acceptance Collection'
-            where += "where ps.create_date >= '" + obj.date_from + "' and ps.create_date <= '" + obj.date_to + "' "
+            where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' "
         elif filter_by == 'lc_history':
             filter_by_text = 'LC History'
             where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' "
-        elif filter_by == 'lc_number':
-            filter_by_text = 'LC Number: ' + obj.lc_number.name
-            where += "where lc.id ='" + str(obj.lc_number.id) + "'"
+
 
         type_text = ''
         where_so = ''
@@ -407,6 +405,12 @@ class LcRegisterXLSX(ReportXlsx):
             type_text = 'Foreign'
             where += " and lc.region_type = 'foreign'"
             where_so += " and so.region_type = 'foreign'"
+
+        if filter_by == 'lc_number':
+            filter_by_text = 'LC Number: ' + obj.lc_number.name
+            where += "where lc.id ='" + str(obj.lc_number.id) + "'"
+        else:
+            where += " and lc.issue_date >='" + lc_static_issue_date + "' "
 
         if filter_by == 'goods_delivered_but_lc_not_received':
             filter_by_text = 'Goods Delivered but LC not received'
