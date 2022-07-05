@@ -378,7 +378,7 @@ class LcRegisterXLSX(ReportXlsx):
 
         elif filter_by == 'second_acceptance':
             filter_by_text = "2nd Acceptance"
-            where += "where CURRENT_DATE - (Date(ps.to_first_acceptance_date)) > " + acceptance_default_value + " and ps.state='to_buyer_bank' "
+            where += "where CURRENT_DATE - (Date(ps.to_second_acceptance_date)) > " + acceptance_default_value + " "
 
         elif filter_by == 'maturated_but_amount_not_collect':
             filter_by_text = 'Matured but Amount not collected'
