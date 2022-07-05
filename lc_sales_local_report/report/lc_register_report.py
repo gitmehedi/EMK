@@ -374,11 +374,11 @@ class LcRegisterXLSX(ReportXlsx):
 
         elif filter_by == 'first_acceptance':
             filter_by_text = '1st Acceptance'
-            where += "where (Date(ps.to_first_acceptance_date)-CURRENT_DATE) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
+            where += "where CURRENT_DATE-(Date(ps.to_first_acceptance_date)) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
 
         elif filter_by == 'second_acceptance':
             filter_by_text = "2nd Acceptance"
-            where += "where (ps.to_seller_bank_date-CURRENT_DATE) > " + acceptance_default_value + " and ps.state='to_buyer_bank' "
+            where += "where CURRENT_DATE - (Date(ps.to_first_acceptance_date)) > " + acceptance_default_value + " and ps.state='to_buyer_bank' "
 
         elif filter_by == 'maturated_but_amount_not_collect':
             filter_by_text = 'Matured but Amount not collected'
