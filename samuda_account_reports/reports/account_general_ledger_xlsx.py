@@ -98,20 +98,41 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         filters = filters.replace('account_move_line__move_id', 'm').replace('account_move_line', 'l')
 
         # Get move lines base on sql query and Calculate the total balance of move lines
-        sql = ('''SELECT l.id AS lid, l.account_id AS account_id, l.date AS ldate, j.code AS lcode, l.currency_id, l.amount_currency, l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance,\
-                    m.name AS move_name, c.symbol AS currency_code, p.name AS partner_name,\
-                    ou.name AS operating_unit_name, aaa.name AS analytic_name, d.name AS department_name, cc.name AS cost_center_name\
-                    FROM account_move_line l\
-                    JOIN account_move m ON (l.move_id=m.id)\
-                    LEFT JOIN res_currency c ON (l.currency_id=c.id)\
-                    LEFT JOIN res_partner p ON (l.partner_id=p.id)\
-                    JOIN account_journal j ON (l.journal_id=j.id)\
-                    JOIN account_account acc ON (l.account_id = acc.id)\
-                    LEFT JOIN operating_unit ou ON ou.id=l.operating_unit_id\
-                    LEFT JOIN account_analytic_account aaa ON aaa.id=l.analytic_account_id\
-                    LEFT JOIN hr_department d ON d.id=l.department_id\
-                    LEFT JOIN account_cost_center cc ON cc.id=l.cost_center_id\
-                    WHERE l.account_id IN %s ''' + filters + ''' GROUP BY l.id, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name, ou.name, aaa.name, d.name, cc.name ORDER BY l.date, l.move_id''')
+        # sql = ('''SELECT l.id AS lid, l.account_id AS account_id, l.date AS ldate, j.code AS lcode, l.currency_id, l.amount_currency, l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance,\
+        #             m.name AS move_name, c.symbol AS currency_code, p.name AS partner_name,\
+        #             ou.name AS operating_unit_name, aaa.name AS analytic_name, d.name AS department_name, cc.name AS cost_center_name\
+        #             FROM account_move_line l\
+        #             JOIN account_move m ON (l.move_id=m.id)\
+        #             LEFT JOIN res_currency c ON (l.currency_id=c.id)\
+        #             LEFT JOIN res_partner p ON (l.partner_id=p.id)\
+        #             JOIN account_journal j ON (l.journal_id=j.id)\
+        #             JOIN account_account acc ON (l.account_id = acc.id)\
+        #             LEFT JOIN operating_unit ou ON ou.id=l.operating_unit_id\
+        #             LEFT JOIN account_analytic_account aaa ON aaa.id=l.analytic_account_id\
+        #             LEFT JOIN hr_department d ON d.id=l.department_id\
+        #             LEFT JOIN account_cost_center cc ON cc.id=l.cost_center_id\
+        #             WHERE l.account_id IN %s ''' + filters + ''' GROUP BY l.id, l.account_id, l.date, j.code, l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name, ou.name, aaa.name, d.name, cc.name ORDER BY l.date, l.move_id''')
+
+        sql = ('''SELECT l.id AS lid, l.account_id AS account_id, l.date AS ldate, j.code AS lcode, l.currency_id, l.amount_currency, l.ref AS lref, COALESCE(ap.payment_narration,l.name) AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) AS balance,\
+                            m.name AS move_name, c.symbol AS currency_code, p.name AS partner_name,\
+                            ou.name AS operating_unit_name, aaa.name AS analytic_name, d.name AS department_name, cc.name AS cost_center_name\
+                            FROM account_move_line l\
+                            JOIN account_move m ON (l.move_id=m.id)\
+                            LEFT JOIN account_payment ap ON (l.name=ap.name)\
+                            LEFT JOIN res_currency c ON (l.currency_id=c.id)\
+                            LEFT JOIN res_partner p ON (l.partner_id=p.id)\
+                            JOIN account_journal j ON (l.journal_id=j.id)\
+                            JOIN account_account acc ON (l.account_id = acc.id)\
+                            LEFT JOIN operating_unit ou ON ou.id=l.operating_unit_id\
+                            LEFT JOIN account_analytic_account aaa ON aaa.id=l.analytic_account_id\
+                            LEFT JOIN hr_department d ON d.id=l.department_id\
+                            LEFT JOIN account_cost_center cc ON cc.id=l.cost_center_id\
+                            WHERE l.account_id IN %s ''' + filters + '''GROUP BY l.id, l.account_id, l.date, j.code,
+                            l.currency_id, l.amount_currency, l.ref, l.name, m.name, c.symbol, p.name, ou.name,
+                            aaa.name, d.name, cc.name,ap.payment_narration ORDER BY l.date, l.move_id''')
+
+
+
         params = (tuple(accounts.ids),) + tuple(where_params)
         cr.execute(sql, params)
 
@@ -238,6 +259,8 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
         row += 1
         for account in accounts_result:
             for rec in account['move_lines']:
+
+
                 if rec['lid'] == 0:
                     sheet.merge_range(row, col, row, col + 9, rec['lname'], td_cell_center_bold)
                     sheet.write(row, col + 10, rec['debit'], total_format)
@@ -246,6 +269,7 @@ class AccountGeneralLedgerXLSX(ReportXlsx):
                     sheet.write(row, col + 13, rec['amount_currency'], total_format)
                     row += 1
                 else:
+
                     if rec['amount_currency'] > 0:
                         amount_currency_str = formatLang(self.env, rec['amount_currency'])
                         amount_currency_str += ' ' + rec['currency_code']

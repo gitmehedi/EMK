@@ -62,6 +62,11 @@ class LetterOfCreditCommon(models.Model):
         return result
 
     @api.multi
+    def action_shipment_reopen_foreign(self):
+        self.write({'state': 'progress'})
+        self.message_post(body="LC Reopened")
+
+    @api.multi
     def action_amendment(self):
         res = self.env.ref('lc_sales_product_local.lc_amendment_wizard')
         result = {

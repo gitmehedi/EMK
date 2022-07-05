@@ -63,7 +63,7 @@
     <record model="ir.actions.act_window" id="action_cheque_list_not_honoured_from_accounting">
         <field name="name">Cheques Not Honoured</field>
         <field name="res_model">accounting.cheque.received</field>
-        <field name="domain">[('state','!=','honoured')]</field>
+        <field name="domain">[('state','!=','honoured'),('received_from', '=', 'ho')]</field>
         <field name="view_mode">tree,form</field>
           <field name="view_ids"
                    eval="[(5, 0, 0),

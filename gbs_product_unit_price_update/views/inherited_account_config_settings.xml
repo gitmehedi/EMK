@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="_inherited_account_config_form_inherit_" model="ir.ui.view">
+            <field name="name">account.config.settings.form.inhertt</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]" position="after">
+
+                    <group string="Landed Cost" name="landed_cost">
+                        <label for="id" string="Foreign Purchase" groups="account.group_account_user"/>
+                        <div groups="account.group_account_user">
+                            <div>
+                                <field name="include_product_purchase_cost" class="oe_inline"/>
+                                <label for="include_product_purchase_cost"/>
+                            </div>
+                            <div>
+                                <field name="exclude_used_mrr" class="oe_inline"/>
+                                <label for="exclude_used_mrr" string="Exclude Used MRR"/>
+                            </div>
+                        </div>
+
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

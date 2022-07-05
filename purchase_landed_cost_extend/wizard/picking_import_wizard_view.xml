@@ -6,16 +6,24 @@
             <field name="model">picking.import.wizard</field>
             <field name="inherit_id" ref="purchase_landed_cost.picking_import_wizard_view"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='supplier']" position="after">
+                    <field name="lc_name" invisible="1"/>
+                </xpath>
+<!--                <xpath expr="//field[@name='pickings']" position="replace">-->
+<!--                    <field name="pickings" widget="many2many_tags" string="MRR No."-->
+<!--                           options="{'no_open':1,'no_create_edit':1,'no_create':1}" context="{'display_mrr_no': True}"-->
+<!--                           domain="[('check_mrr_button', '=', True), ('state', '=', 'done'), ('origin', '=', lc_name), ('id', 'not in', prev_pickings and prev_pickings[0] and prev_pickings[0][2]), ('id', 'not in', prev_pickings_from_landed_cost and prev_pickings_from_landed_cost[0] and prev_pickings_from_landed_cost[0][2])]"-->
+<!--                           attrs="{'invisible':['|' ,('lc_id', '=', False),('journal_entry_created','=',False)]}"/>-->
+<!--                </xpath>-->
                 <xpath expr="//field[@name='pickings']" position="replace">
-                    <field name="pickings" widget="many2many_tags"
-                           options="{'no_open':1,'no_create_edit':1,'no_create':1}"
-                           domain="[('partner_id', 'child_of', supplier),
-                                    ('location_id.usage', '=', 'supplier'),
-                                    ('state', '=', 'done'),
-                                    ('shipment_id.lc_id', '=', lc_id)]"/>
+                    <field name="pickings" widget="many2many_tags" string="MRR No. "  readonly="1"
+                           options="{'no_open':1,'no_create_edit':1,'no_create':1}" context="{'display_mrr_no': True}"
+                           attrs="{'invisible':['|' ,('lc_id', '=', False),('journal_entry_created','=',False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='pickings']" position="after">
                     <field name="operating_unit_id" invisible="1"/>
+                    <field name="prev_pickings" widget="many2many_tags" invisible="1"/>
+                    <field name="prev_pickings_from_landed_cost" widget="many2many_tags" invisible="1"/>
                 </xpath>
             </field>
         </record>

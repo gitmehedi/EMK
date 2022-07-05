@@ -9,8 +9,7 @@ class VendorAdvance(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     name = fields.Char(string='Name', default='/', required=True, copy=False, track_visibility='onchange')
-    description = fields.Char(string='Narration', readonly=True, states={'draft': [('readonly', False)]},
-                              track_visibility='onchange')
+    description = fields.Char(string='Narration', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     date = fields.Date(string='Date ', default=fields.Date.today(), required=True, track_visibility='onchange',
                        readonly=True, states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', string='Vendor', ondelete='restrict', required=True,
@@ -47,14 +46,40 @@ class VendorAdvance(models.Model):
                                  states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id.id)
     journal_id = fields.Many2one('account.journal', string='Account Journal', copy=False,
-                                 readonly=True, states={'draft': [('readonly', False)]})
+                                 readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     move_id = fields.Many2one('account.move', string='Journal Entry', readonly=True, copy=False)
+
+    purchase_order_id = fields.Many2one('purchase.order', string='Order Reference', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+
     state = fields.Selection([
         ('draft', "Draft"),
         ('confirm', "Waiting for Approval"),
         ('approve', 'Open'),
         ('done', "Closed"),
         ('cancel', "Canceled")], default='draft', string="Status", copy=False, track_visibility='onchange')
+
+    @api.model
+    def create(self, vals):
+        if 'operating_unit_id' in vals and 'purchase_order_id' in vals:
+            purchase_order_obj = self.env['purchase.order'].browse(vals['purchase_order_id'])
+            if purchase_order_obj.operating_unit_id.id != vals['operating_unit_id']:
+                raise UserError(_("Purchase order and operating unit not same !"))
+        vals['name'] = self.env['ir.sequence'].next_by_code('vendor.advance') or self.name
+        return super(VendorAdvance, self).create(vals)
+
+    @api.constrains('advance_amount')
+    def _check_payable_to_supplier(self):
+        if self.purchase_order_id:
+            if self.purchase_order_id.currency_id.name == 'BDT':
+                po_total_amount = self.purchase_order_id.amount_total
+            else:
+                rate_usd = self.env['res.currency'].search([('name', '=', self.purchase_order_id.currency_id.name)], limit=1).rate
+                po_total_amount = self.purchase_order_id.amount_total / rate_usd
+            total_payable_to_supplier = 0
+            for va in self.purchase_order_id.vendor_advance_line:
+                total_payable_to_supplier = total_payable_to_supplier + va.advance_amount
+            if total_payable_to_supplier > po_total_amount:
+                raise ValidationError(_('Order outstanding amount exceeds! Difference: %s. You need to input %s or less.' % (str(total_payable_to_supplier-po_total_amount), str(self.payable_to_supplier-(total_payable_to_supplier-po_total_amount)))))
 
     @api.depends('advance_amount', 'security_deposit', 'vat_amount', 'tds_amount')
     def _compute_payable_to_supplier(self):
@@ -109,10 +134,6 @@ class VendorAdvance(models.Model):
             vals = {
                 'state': 'confirm'
             }
-
-            if self.name == '/':
-                vals['name'] = self.env['ir.sequence'].next_by_code('vendor.advance') or self.name
-
             self.write(vals)
 
     @api.one
@@ -135,7 +156,7 @@ class VendorAdvance(models.Model):
     @api.multi
     def action_cancel(self):
         if self.state == 'confirm':
-            self.write({'state': 'cancel'})
+            self.write({'purchase_order_id': False, 'state': 'cancel'})
 
     def _generate_move(self):
         line_ids = []
@@ -147,7 +168,8 @@ class VendorAdvance(models.Model):
 
         # credit part
         # bank
-        bank_aml_dict = self._generate_credit_move_line(self.journal_id.default_debit_account_id.id, self.payable_to_supplier, self.description)
+        bank_aml_dict = self._generate_credit_move_line(self.journal_id.default_debit_account_id.id,
+                                                        self.payable_to_supplier, self.description)
         line_ids.append([0, 0, bank_aml_dict])
         # vat
         if self.vat_amount > 0:
@@ -179,10 +201,10 @@ class VendorAdvance(models.Model):
             'date_maturity': self.date,
             'amount_currency': 0,
             'credit': credit,
-            'debit':  False,
+            'debit': False,
             'ref': self.name,
             'name': description or 'Vendor Advance',
-            'operating_unit_id':  self.operating_unit_id.id,
+            'operating_unit_id': self.operating_unit_id.id,
             'partner_id': self.partner_id.id
         }
 
