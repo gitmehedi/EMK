@@ -10,7 +10,7 @@ Accounting Reports
     "website": "http://www.genweb2.com",
     'version': '10.0.0.1',
     'category': 'Accounting',
-    'depends': ['base', 'account_reports', 'gbs_application_group'],
+    'depends': ['base', 'account_reports', 'gbs_application_group', 'report_layout'],
     'data': [
         'data/inherit_account_financial_report_data.xml',
         'report/report_account_invoice_vendor_bill.xml',
