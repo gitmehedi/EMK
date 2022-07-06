@@ -16,8 +16,13 @@ class AccountInvoiceVendorBill(models.AbstractModel):
             fetched_data = self._cr.dictfetchall()[0]
             checked_by_id = fetched_data['write_uid']
             hr_employee = self.env['hr.employee'].sudo().search([('user_id', '=', checked_by_id)])
-            e_name = hr_employee.name
-            designation = hr_employee.job_id.name
+            if hr_employee:
+                e_name = hr_employee.name
+                designation = hr_employee.job_id.name
+            else:
+                res_users = self.env['res.users'].sudo().search([('id', '=', checked_by_id)])
+                e_name = res_users.name
+                designation = ""
         return e_name, designation
 
     @api.multi
