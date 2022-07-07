@@ -97,14 +97,14 @@ class LcRegisterXLSX(ReportXlsx):
                 for data in query_res:
                     name = data['name'] if data['name'] is not None else ''
                     # min_date = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date()
-                    min_date = data['date_done'] if data['date_done'] is not None else ''
+                    min_date = data['min_date'] if data['min_date'] is not None else ''
                     min_date_format = ReportUtility.get_date_time_from_string(str(min_date))
                     qty = data["qty_delivered"] if data["qty_delivered"] is not None else '0'
 
                     lc_delivery_details_str = str(name) + ", " + str(min_date_format) + ", " + str(qty) + "\n"
                 date_done = ''
                 if query_res:
-                    date_done_uniformat = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date() if data['min_date'] is not None else ''
+                    date_done_uniformat = datetime.strptime(data['date_done'], '%Y-%m-%d %H:%M:%S').date() if data['date_done'] is not None else ''
                     if date_done_uniformat:
                         date_done = ReportUtility.get_date_from_string(str(date_done_uniformat))
                 return lc_delivery_details_str, str(date_done)
@@ -315,7 +315,7 @@ class LcRegisterXLSX(ReportXlsx):
             sheet.write(row, 37, data['comment'] if 'comment' in data else '', name_border_format_colored)
             sheet.write(row, 38, date_subtract_date_to_days(ReportUtility.get_date_from_string(data['shipment_done_date']) if 'shipment_done_date' in data else '',
                                                             ReportUtility.get_date_from_string(data['maturity_date']) if 'maturity_date' in data else ''), name_border_format_colored_text_right)
-            sheet.write(row, 39, data['bank_code'] if 'bank_code' in data else '', name_border_format_colored)
+            sheet.write(row, 39, data['second_party_bank'] if 'second_party_bank' in data else '', name_border_format_colored)
             sheet.write(row, 40, data['samuda_bank_name'] if 'samuda_bank_name' in data else '', name_border_format_colored)
             sheet.write(row, 41, data['packing_type'] if 'packing_type' in data else '', name_border_format_colored)
             sheet.write(row, 42, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
@@ -416,13 +416,15 @@ class LcRegisterXLSX(ReportXlsx):
             filter_by_text = 'Goods Delivered but LC not received'
 
             query = '''
-                select rp.name as party_name, rp2.name as executive_name,sol.name as product_name, so.region_type as region_type, so.name as so_name, 
+                select rp.name as party_name, rp2.name as executive_name, sol.name as product_name, 
+                so.region_type as region_type, so.name as so_name, 
                 pi.name as pi_name,rc.name as currency, sol.qty_delivered as qty_delivery
                 from sale_order as so 
                 LEFT JOIN sale_order_type as sot on so.type_id = sot.id 
                 LEFT JOIN sale_order_line as sol on so.id = sol.order_id
-                LEFT JOIN res_partner as rp on so.partner_id = rp.id
-                LEFT JOIN res_partner as rp2 on so.user_id = rp2.id
+                LEFT JOIN res_partner as rp on rp.id = so.partner_id
+                LEFT JOIN res_users as ru on ru.id = so.user_id
+                LEFT JOIN res_partner as rp2 on rp2.id = ru.partner_id
                 LEFT JOIN proforma_invoice as pi on pi.id = so.pi_id
                 LEFT JOIN product_pricelist as ppl on ppl.id = so.pricelist_id
                 LEFT JOIN res_currency as rc on rc.id = ppl.currency_id
@@ -446,7 +448,7 @@ class LcRegisterXLSX(ReportXlsx):
                     (ps.to_first_acceptance_date-ps.to_buyer_date) as aging_first_acceptance_days,ps.to_maturity_date as maturity_date, 
                     ps.shipment_done_date as shipment_done_date, 
                     ps.discrepancy_amount as discrepancy_amount, ps.ait_amount as ait_amount, ps.payment_rec_date, ps.payment_rec_amount as payment_rec_amount, ps.payment_charge as payment_charge, 
-                    ps.comment as comment, concat(lc.bank_code, '-', lc.bank_branch) as bank_code, rb.bic as samuda_bank_name,
+                    ps.comment as comment, lc.second_party_bank as second_party_bank, rb.bic as samuda_bank_name,
                     pu.name as packing_type, ps.bill_id as bill_id_no
                     FROM purchase_shipment AS ps 
                     LEFT JOIN letter_credit AS lc ON ps.lc_id = lc.id

@@ -34,13 +34,13 @@ class LcRegisterWizard(models.Model):
 
         if self.filter_by == 'percentage_of_first_acceptance_collection' or self.filter_by == 'lc_history':
             if self.date_from > self.date_to:
-                raise UserError('From date can\'t be gather than To date')
+                raise UserError('From date can\'t be greater than To date')
 
             ReportUtility = self.env['report.utility']
             date_to = datetime.strptime(ReportUtility.get_date_from_string(self.date_to), '%d-%m-%Y')
             date_from = datetime.strptime(ReportUtility.get_date_from_string(self.date_from), '%d-%m-%Y')
             diff_days = date_to - date_from
             if diff_days.days > 180:
-                raise UserError('You can\'t generate report gather than 6 months')
+                raise UserError('You can\'t generate report greater than 6 months')
 
         return self.env['report'].get_action(self, 'lc_sales_local_report.lc_register_report')

@@ -148,6 +148,7 @@
                                        attrs="{'readonly': [('state','!=','draft'), ('state','!=','receive_doc')]}"/>
                                 <field name="feright_value" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                                 <field name="fob_value" readonly="1"/>
+                               <field name="doc_preparation_date" readonly="1"/>
                                 <field name="invoice_qty" readonly="1" invisible="1"/>
                                 <field name="is_print_cfr" required="1" invisible="1"
                                        attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
