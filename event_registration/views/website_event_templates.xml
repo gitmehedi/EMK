@@ -164,31 +164,35 @@
                                         </select>
                                     </div>
                                 </div>
-                                <t t-if="event.specific_question_ids">
-                                    <div class="col-md-7" style="margin-top: 25px;">
-                                        <h2>Questions:</h2>
-                                        <div t-foreach='event.specific_question_ids' t-as='question'>
-                                            <div class="form-group form-field">
-                                                <label for="gender" class="control-label">
-                                                    <t t-esc="question.title"/>
-                                                </label>
-                                                <select t-attf-name="#{counter}-answer_ids-#{question.id}"
-                                                        class="form-control input-sm reqfield o_specific_answer"
-                                                        required="true">
-                                                    <t t-foreach='question.answer_ids' t-as="answer">
-                                                        <option t-esc='answer.name' t-att-value='answer.id'/>
-                                                    </t>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </t>
+
                                 <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id"
                                        t-attf-value="#{ticket['id']}"/>
                             </div>
                         </t>
                         <t t-set="counter_type" t-value="counter_type + 1"/>
                     </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template inherit_id="website_event_questions.registration_attendee_details_questions">
+        <xpath expr="//t[@name='attendee_loop']/div" position="replace">
+            <div class="col-md-7" style="margin-top: 25px;">
+                <h2>Questions:</h2>
+                <div t-foreach='event.specific_question_ids' t-as='question'>
+                    <div class="form-group form-field">
+                        <label for="gender" class="control-label">
+                            <t t-esc="question.title"/>
+                        </label>
+                        <select t-attf-name="#{counter}-answer_ids-#{question.id}"
+                                class="form-control input-sm reqfield o_specific_answer"
+                                required="true">
+                            <t t-foreach='question.answer_ids' t-as="answer">
+                                <option t-esc='answer.name' t-att-value='answer.id'/>
+                            </t>
+                        </select>
+                    </div>
                 </div>
             </div>
         </xpath>

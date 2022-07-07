@@ -88,7 +88,7 @@ class WebsiteRegistration(WebsiteEventController):
         qctx['paid_attendee'] = 'no' if 'paid_attendee' not in qctx else qctx['paid_attendee']
         qctx['attendee_number'] = None if 'attendee_number' not in qctx else qctx['attendee_number']
         qctx['participating_amount'] = None if 'participating_amount' not in qctx else qctx['participating_amount']
-        qctx['target_audience_group'] = 'paid' if 'target_audience_group' not in qctx else qctx['target_audience_group']
+        qctx['target_audience_group'] = None if 'target_audience_group' not in qctx else qctx['target_audience_group']
         qctx['target_age'] = None if 'target_age' not in qctx else qctx['target_age']
         qctx['outreach_plan'] = None if 'outreach_plan' not in qctx else qctx['outreach_plan']
         qctx['outreach_plan_other'] = None if 'outreach_plan_other' not in qctx else qctx['outreach_plan_other']
@@ -111,7 +111,7 @@ class WebsiteRegistration(WebsiteEventController):
             qctx['poc_type_ids'] = self.generateDropdown('event.poc.type')
 
         if 'facilities' not in qctx:
-            qctx['facilities'] = self.generateDropdown('event.service.type')
+            qctx['facilities'] = self.generateDropdown('event.service.type',('service_type', 'in', ['external']))
 
         if 'event_type_ids' not in qctx:
             qctx['event_type_ids'] = self.generateDropdown('event.type')
@@ -130,9 +130,6 @@ class WebsiteRegistration(WebsiteEventController):
 
         if 'snakes_ids' not in qctx:
             qctx['snakes_ids'] = helper.snacks_required
-
-        if 'target_audience_group_ids' not in qctx:
-            qctx['target_audience_group_ids'] = helper.target_audience_group
 
         if 'paid_attendee_ids' not in qctx:
             qctx['paid_attendee_ids'] = helper.paid_attendee

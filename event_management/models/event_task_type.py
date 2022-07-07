@@ -2,7 +2,7 @@
 from psycopg2 import IntegrityError
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.opa_utility.helper.utility import Utility,Message
+from odoo.addons.opa_utility.helper.utility import Utility, Message
 
 
 class EventTaskType(models.Model):
@@ -84,6 +84,8 @@ class EventServiceType(models.Model):
     _description = 'Event Service'
 
     name = fields.Char('Service Name', required=True, translate=True, track_visibility='onchange')
+    service_type = fields.Selection([('internal', 'Internal'), ('external', 'External')], default='internal',
+                                    required=True, translate=True, track_visibility='onchange')
     active = fields.Boolean(string='Active', default=False, track_visibility='onchange')
     pending = fields.Boolean(string='Pending', default=True, track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'), ('approve', 'Approved'), ('reject', 'Rejected')], default='draft',

@@ -88,13 +88,12 @@ class EventEvent(models.Model):
     purpose_of_event = fields.Html(string="Purpose of Event", track_visibility='onchange', sanitize=False,
                                    readonly=True,
                                    states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    target_audience_group = fields.Selection(helper.target_audience_group, default='yes', required=True,
-                                             string="Target Audience Group", readonly=True,
+    target_audience_group = fields.Char(string="Target Audience Group", readonly=True,
                                              states={'draft': [('readonly', False)],
                                                      'mark_close': [('readonly', False)]})
-    target_age = fields.Integer(string="Target Age", required=True, readonly=True,
+    target_age = fields.Char(string="Target Age", required=True, readonly=True,
                                 states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    outreach_plan = fields.Selection(helper.outreach_plan, string="Outreach Plan", required=True, readonly=True,
+    outreach_plan = fields.Many2many('event.outreach.plan',string="Outreach Plan", required=True, readonly=True,
                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True,
                                       states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})

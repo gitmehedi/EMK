@@ -1,4 +1,5 @@
 reservation_state = [('draft', 'Draft'),
+                    ('reservation', 'Reservation'),
                     ('approve', 'Approve'),
                     ('on_process', 'On Process'),
                     ('confirm', 'Confirmed'),
@@ -22,5 +23,4 @@ payment_type = [('free', 'Free'), ('paid', 'Paid')]
 space_id = [('yes', 'Yes'), ('no', 'No')]
 seats_availability = [('limited', 'Limited'), ('unlimited', 'Unlimited')]
 snacks_required = [('yes', 'Yes'), ('no', 'No')]
-target_audience_group = [('yes', 'Yes'), ('no', 'No')]
 url = "/event/event-reservation/register"
