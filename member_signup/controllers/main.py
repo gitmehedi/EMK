@@ -186,6 +186,11 @@ class MemberApplicationContoller(Home):
         if 'gender_ids' not in qcontext:
             qcontext['gender_ids'] = self.generateDropdown('res.gender')
 
+        qcontext['gender_other'] = None if 'gender_other' not in qcontext else qcontext['gender_other']
+        qcontext['occupation_other'] = None if 'occupation_other' not in qcontext else qcontext['occupation_other']
+        qcontext['subject_of_interest_others'] = None if 'subject_of_interest_others' not in qcontext else qcontext['subject_of_interest_others']
+        qcontext['highest_certification_other'] = None if 'highest_certification_other' not in qcontext else qcontext['highest_certification_other']
+
         return request.render('member_signup.signup', qcontext)
 
     def get_signup_context(self):
@@ -297,6 +302,7 @@ class MemberApplicationContoller(Home):
             'zipcode',
             'country_id',
             'gender',
+            'gender_other',
             'phone',
             'mobile',
             'email',
