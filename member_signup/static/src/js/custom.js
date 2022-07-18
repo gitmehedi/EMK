@@ -46,14 +46,14 @@ $(function () {
         $("input:checkbox[name=subject_of_interest]:checked").each(function(){
            vals.push($(this).parent().text().trim());
         });
-        
-        if(vals.indexOf('Other')>-1){
-            selector.attr('required','required');
-            selector.parent().show();
-        }else{
-            selector.val('').removeAttr('required');
-            selector.parent().hide();
-        }
+
+        // if(vals.indexOf('Others')>-1){
+        //     selector.attr('required','required');
+        //     selector.parent().show();
+        // }else{
+        //     selector.val('').removeAttr('required');
+        //     selector.parent().hide();
+        // }
         cbx_group = $("input[name=subject_of_interest]");
 
         cbx_group.prop('required', true);

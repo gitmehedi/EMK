@@ -195,23 +195,23 @@
                             </label>
                             <div class="mar-btm required">
                                 <t t-foreach="subject_of_interest_ids" t-as='label'>
-
                                     <input type="checkbox" required="required"
                                            name="subject_of_interest"
                                            t-att-value="label_value[0]"
                                            t-att-checked="'checked' if label_value[0] in subject_of_interest else None"/>
                                     <t t-esc="label_value[1]"/>
-
                                 </t>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group form-field"
-                             style="display: none;">
+                        <label for="subject_of_interest_others" id="subject_of_interest_others" class="control-label">
+                            Others Subject of Interest (If select others in Subject of Interest mention here)
+                        </label>
+                        <div class="form-group form-field">
                             <input type="text" name="subject_of_interest_others"
                                    t-att-value="subject_of_interest_others" id="subject_of_interest_others"
-                                   class="form-control input-sm reqfield"/>
+                                   class="form-control input-sm"/>
                         </div>
                     </div>
 
@@ -420,7 +420,7 @@
                                     <tr>
                                         <td>
                                             <input type="file" class="attachment" name="attachment"
-                                            accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"/>
+                                                   accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"/>
                                         </td>
                                         <td>
                                             <a href="#" class="remove_field btn btn-danger btn-xs">Remove</a>

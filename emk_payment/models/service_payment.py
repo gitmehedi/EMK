@@ -48,7 +48,7 @@ class ServicePayment(models.Model):
     payment_type_id = fields.Many2one('product.template', string='Payment Type', required=True,
                                       track_visibility='onchange',
                                       domain=[('type', '=', 'service'), ('purchase_ok', '=', False),
-                                              ('sale_ok', '=', False), ('service_type', '!=', False)],
+                                              ('sale_ok', '=', False)],
                                       readonly=True, states={'open': [('readonly', False)]})
     payment_id = fields.Many2one('account.payment', readonly=True, states={'open': [('readonly', False)]},
                                  string="Payment", track_visibility='onchange')
