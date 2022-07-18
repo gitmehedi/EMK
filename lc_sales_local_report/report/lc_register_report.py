@@ -82,13 +82,16 @@ class LcRegisterXLSX(ReportXlsx):
 
             ReportUtility = self.env['report.utility']
             if purchase_shipment_invoices:
-                purchase_shipment_inv = purchase_shipment_invoices[0]['invoice_id']
+                purchase_shipment_inv = ''
+                for ship_inv in purchase_shipment_invoices:
+                   purchase_shipment_inv += str(ship_inv['invoice_id']) + ','
+                purchase_shipment_inv = purchase_shipment_inv[:-1]
                 query = """
-                        select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, sol.qty_delivered as qty_delivered from sale_order as so
+                        select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, sol.qty_delivered as qty_delivered 
+                        from sale_order as so
                         LEFT JOIN sale_order_line as sol ON sol.order_id = so.id
-                        LEFT JOIN delivery_order as deor ON deor.sale_order_id = so.id
-                        LEFT JOIN stock_picking as sp ON sp.id = deor.sale_order_id
                         LEFT JOIN account_invoice ai ON ai.so_id = so.id
+                        LEFT JOIN stock_picking as sp ON sp.origin = ai.origin
                         where ai.id in (%s) order by sp.date_done DESC
                         """ % purchase_shipment_inv
                 self.env.cr.execute(query)
@@ -97,14 +100,15 @@ class LcRegisterXLSX(ReportXlsx):
                 for data in query_res:
                     name = data['name'] if data['name'] is not None else ''
                     # min_date = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date()
-                    min_date = data['min_date'] if data['min_date'] is not None else ''
-                    min_date_format = ReportUtility.get_date_time_from_string(str(min_date))
+                    min_date = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date() if data['min_date'] is not None else ''
+                    # min_date_format = ReportUtility.get_date_time_from_string(str(min_date))
                     qty = data["qty_delivered"] if data["qty_delivered"] is not None else '0'
+                    delivery_date = ReportUtility.get_date_from_string(str(min_date))
 
-                    lc_delivery_details_str = str(name) + ", " + str(min_date_format) + ", " + str(qty) + "\n"
+                    lc_delivery_details_str += str(name) + ", " + str(qty) + ", " + str(delivery_date) + "\n"
                 date_done = ''
                 if query_res:
-                    date_done_uniformat = datetime.strptime(data['date_done'], '%Y-%m-%d %H:%M:%S').date() if data['date_done'] is not None else ''
+                    date_done_uniformat = datetime.strptime(query_res[0]['date_done'], '%Y-%m-%d %H:%M:%S').date() if data['date_done'] is not None else ''
                     if date_done_uniformat:
                         date_done = ReportUtility.get_date_from_string(str(date_done_uniformat))
                 return lc_delivery_details_str, str(date_done)
