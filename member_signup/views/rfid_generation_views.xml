@@ -10,6 +10,7 @@
                 <header>
                     <button string='Print RFID' name="rfid_print" type='object' class="oe_highlight"
                             states="draft"/>
+                    <button string='Generated' name="act_generate" type='object' states="draft"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
