@@ -45,5 +45,5 @@ access_membership_membership_line_membership_manager,membership.membership_line 
 
 access_product_membership_manager,product.template.user,model_product_template,base.group_user,1,1,1,0
 
-acc_mem_mail_channel_member,acc_mem_mail_channel_member,base.model_mail_channel,member_user.group_user_member,1,1,1,0
-acc_mem_mail_alias_member,acc_mem_mail_alias_member,base.model_mail_alias,member_user.group_user_member,1,1,1,0
+acc_mem_mail_channel_member,acc_mem_mail_channel_member,mail.model_mail_channel,member_user.group_user_member,1,1,1,0
+acc_mem_mail_alias_member,acc_mem_mail_alias_member,mail.model_mail_alias,member_user.group_user_member,1,1,1,0
