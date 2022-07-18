@@ -74,7 +74,7 @@ class LcRegisterXLSX(ReportXlsx):
         sheet.write(7, 41, "Packing Type", header_format_left)
         sheet.write(7, 42, "Bill ID NO", header_format_left)
 
-    def get_delivery_detail(self, shipment_id):
+    def get_delivery_detail(self, lc_id, shipment_id):
         if shipment_id:
             query = """select * from lc_shipment_invoice_rel where shipment_id = %s""" % shipment_id
             self.env.cr.execute(query)
@@ -214,7 +214,7 @@ class LcRegisterXLSX(ReportXlsx):
             row = row + 1
             lc_id = data['lc_id'] if 'lc_id' in data else ''
             shipment_id = data['shipment_id'] if 'shipment_id' in data else ''
-            delivery_details_date_of_trans = self.get_delivery_detail(shipment_id)
+            delivery_details_date_of_trans = self.get_delivery_detail(lc_id, shipment_id)
             lc_and_delivered_qty = self.get_lc_qty_n_delivery_qty(lc_id)
             region_type = data['region_type'] if 'region_type' in data else ''
             lc_qty = lc_and_delivered_qty[0]
@@ -420,16 +420,16 @@ class LcRegisterXLSX(ReportXlsx):
             filter_by_text = 'Goods Delivered but LC not received'
 
             query = '''
-                select rp.name as party_name, rp2.name as executive_name, sol.name as product_name, 
+                select so.id,rp.name as party_name, rp2.name as executive_name, sol.name as product_name, 
                 so.region_type as region_type, so.name as so_name, 
                 pi.name as pi_name,rc.name as currency, sol.qty_delivered as qty_delivery
                 from sale_order as so 
                 LEFT JOIN sale_order_type as sot on so.type_id = sot.id 
                 LEFT JOIN sale_order_line as sol on so.id = sol.order_id
                 LEFT JOIN res_partner as rp on rp.id = so.partner_id
-                LEFT JOIN res_users as ru on ru.id = so.user_id
-                LEFT JOIN res_partner as rp2 on rp2.id = ru.partner_id
+                LEFT JOIN res_users as ru on ru.id = rp.user_id
                 LEFT JOIN proforma_invoice as pi on pi.id = so.pi_id
+                LEFT JOIN res_partner as rp2 on rp2.id = ru.partner_id
                 LEFT JOIN product_pricelist as ppl on ppl.id = so.pricelist_id
                 LEFT JOIN res_currency as rc on rc.id = ppl.currency_id
                 where so.lc_id is null
