@@ -14,11 +14,11 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
-<!--                            <button name="toggle_status" type="object"-->
-<!--                                    class="oe_stat_button" icon="fa-archive">-->
-<!--                                <field name="status" widget="boolean_button"-->
-<!--                                       options='{"terminology": "archive"}'/>-->
-<!--                            </button>-->
+                            <!--                            <button name="toggle_status" type="object"-->
+                            <!--                                    class="oe_stat_button" icon="fa-archive">-->
+                            <!--                                <field name="status" widget="boolean_button"-->
+                            <!--                                       options='{"terminology": "archive"}'/>-->
+                            <!--                            </button>-->
                         </div>
                         <group>
                             <group>
@@ -94,16 +94,16 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
-<!--                            <button name="toggle_status" type="object"-->
-<!--                                    class="oe_stat_button" icon="fa-archive">-->
-<!--                                <field name="status" widget="boolean_button"-->
-<!--                                       options='{"terminology": "archive"}'/>-->
-<!--                            </button>-->
+                            <!--                            <button name="toggle_status" type="object"-->
+                            <!--                                    class="oe_stat_button" icon="fa-archive">-->
+                            <!--                                <field name="status" widget="boolean_button"-->
+                            <!--                                       options='{"terminology": "archive"}'/>-->
+                            <!--                            </button>-->
                         </div>
                         <group>
                             <group>
                                 <field name="name"/>
-
+                                <field name="service_type"/>
                             </group>
                         </group>
                     </sheet>
@@ -123,6 +123,7 @@
                       decoration-danger="state=='reject'"
                       decoration-bf="state in ('approve',)">
                     <field name="name"/>
+                    <field name="service_type"/>
                     <field name="state"/>
                 </tree>
             </field>

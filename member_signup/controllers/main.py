@@ -10,7 +10,7 @@ from odoo import http, tools, _
 from odoo.addons.member_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
 from odoo.http import request, Response
-from odoo.addons.opa_utility.helper.utility import Utility,Message
+from odoo.addons.opa_utility.helper.utility import Utility, Message
 
 _logger = logging.getLogger(__name__)
 
@@ -209,7 +209,7 @@ class MemberApplicationContoller(Home):
         """ Shared helper that creates a res.partner out of a token """
         # values = {key: values.get(key) for key in authorized_fields}
         for field_name, field_value in values.items():
-            if hasattr(field_value, 'filename'):
+            if hasattr(field_value, 'filename') and field_name != 'attachment':
                 field_name = field_name.rsplit('[', 1)[0]
                 field_value.field_name = field_name
                 data[field_name] = base64.encodestring(field_value.read())
@@ -258,24 +258,23 @@ class MemberApplicationContoller(Home):
                 'member_seq': res_id.partner_id.member_sequence}
 
     def upload_attachment(self, files, id):
-        Attachments = request.env['ir.attachment']
-        for file in files:
-            name = file.filename
-            attachment = file.read()
-            Attachments.sudo().create({
+        for fl in files:
+            name = (fl.filename.replace(" ", "_")).lower()
+            content = fl.read()
+            datas = base64.b64encode(content)
+            request.env['ir.attachment'].sudo().create({
                 'name': name,
                 'datas_fname': name,
                 'res_name': name,
                 'type': 'binary',
                 'res_model': 'res.partner',
                 'res_id': id,
-                'datas': base64.b64encode(attachment),
+                'datas': datas,
             })
-
-
+            
     def generateDropdown(self, model, status=False):
         data = []
-        status = [('active', '=', True),('pending', '=', False)] if status else []
+        status = [('active', '=', True), ('pending', '=', False)] if status else []
         record = request.env[model].sudo().search(status, order='id ASC')
         for rec in record:
             if status:

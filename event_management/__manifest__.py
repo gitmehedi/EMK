@@ -37,6 +37,8 @@
         'views/event_event_view.xml',
         'views/event_registration_view.xml',
         'views/event_task_list_view.xml',
+        'views/event_outreach_plan_view.xml',
+        'views/event_social_media_content_view.xml',
         # 'views/event_close_view.xml',
         'views/event_poc_views.xml',
         'views/event_reservation_view.xml',

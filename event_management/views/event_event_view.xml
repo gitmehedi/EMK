@@ -137,7 +137,8 @@
                             <field name="event_share" filename="event_share_name"/>
                         </group>
                         <group>
-                            <field name="outreach_plan"/>
+                            <field name="outreach_plan" widget="many2many_tags"
+                                       options="{'no_create':True,'no_open':True}"/>
                             <field name="outreach_plan_other"/>
                             <field name="snacks_required" widget="radio"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True,'horizontal': true}"/>
