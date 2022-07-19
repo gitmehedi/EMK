@@ -54,6 +54,7 @@ class ResPartner(models.Model):
     info_about_emk = fields.Text(string="How did you learn about the EMK Center?", track_visibility="onchange")
     application_ref = fields.Text(string="Application Ref", track_visibility="onchange")
     gender = fields.Many2one('res.gender', string='Gender', required=True, track_visibility='onchange')
+    gender_other = fields.Char(string='Gender Others', required=True, track_visibility='onchange')
     usa_work_or_study = fields.Selection([('yes', 'Yes'), ('no', 'No')], default='no',
                                          string="Have you worked, or studied in the U.S?", track_visibility="onchange")
     usa_work_or_study_place = fields.Text(string="If yes, where in the U.S have you worked, or studied?",

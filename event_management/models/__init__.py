@@ -14,3 +14,5 @@ from . import event_poc_type
 # from . import event_close
 from . import event_reservation
 from . import event_reservation
+from . import event_outreach_plan
+from . import event_social_media_content

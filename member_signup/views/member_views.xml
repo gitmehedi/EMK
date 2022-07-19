@@ -21,7 +21,7 @@
             </xpath>
             <xpath expr="//form/header" position="after">
                 <field name="state" invisible="True"/>
-                <field name="company_id"/>
+                <field name="company_id" invisible="True"/>
                 <div attrs="{'invisible': [('state','!=','member'),('free_member','=',False)]}">
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px; text-align:center;"
                          attrs="{'invisible': ['|',('membership_days_remaining','&gt;',30),('membership_days_remaining','=',0)]}">

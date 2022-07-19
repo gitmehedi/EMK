@@ -48,7 +48,7 @@ class ServicePayment(models.Model):
     payment_type_id = fields.Many2one('product.template', string='Payment Type', required=True,
                                       track_visibility='onchange',
                                       domain=[('type', '=', 'service'), ('purchase_ok', '=', False),
-                                              ('sale_ok', '=', False), ('service_type', '!=', False)],
+                                              ('sale_ok', '=', False)],
                                       readonly=True, states={'open': [('readonly', False)]})
     payment_id = fields.Many2one('account.payment', readonly=True, states={'open': [('readonly', False)]},
                                  string="Payment", track_visibility='onchange')
@@ -68,11 +68,18 @@ class ServicePayment(models.Model):
         self.event_id = None
         self.check_type = self.payment_type_id.service_type
         if self.payment_type_id.service_type == 'card':
-            member = self.env['member.card.replacement'].search([('state', '=', 'approve')])
+            member = self.env['member.card.replacement'].sudo().search([('state', '=', 'approve')])
             ids = [rec.membership_id.id for rec in member]
             res['domain'] = {
                 'authority_id': [('id', 'in', ids)],
             }
+        if self.payment_type_id.service_type != 'card':
+            member = self.env['res.partner'].sudo().search([('state', '=', 'member')])
+            # ids = [rec.membership_id.id for rec in member]
+            res['domain'] = {
+                'authority_id': [('id', 'in', member.ids)],
+            }
+
         return res
 
     # @api.onchange('event_id')
@@ -110,6 +117,8 @@ class ServicePayment(models.Model):
                 rec.paid_amount = rec.payment_type_id.list_price
             if rec.payment_type_id.service_type == 'event_fee' and rec.event_id:
                 rec.paid_amount = rec.event_id.participating_amount
+            else:
+                rec.paid_amount = rec.payment_type_id.list_price
 
     @api.model
     def _needaction_domain_get(self):
@@ -131,9 +140,12 @@ class ServicePayment(models.Model):
                     raise UserError(_('Please Configure Event Participant User.'))
                 vals['partner_id'] = participant.id
                 vals['communication'] = "Event Fee Payment"
-            if self.payment_type_id.service_type == 'card':
+            elif self.payment_type_id.service_type == 'card':
                 vals['partner_id'] = self.authority_id.id
                 vals['communication'] = "Member Payment"
+            else:
+                vals['partner_id'] = self.authority_id.id
+                vals['communication'] = self.payment_type_id.name
 
             payment = self.create_payment(vals)
             if payment:
@@ -143,6 +155,7 @@ class ServicePayment(models.Model):
                     'payment_id': payment.id,
                     'name': seq
                 })
+
                 card = self.env['member.card.replacement'].search(
                     [('membership_id', '=', self.authority_id.id), ('state', '=', 'approve')])
                 if card:

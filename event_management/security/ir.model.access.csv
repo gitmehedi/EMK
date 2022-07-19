@@ -69,6 +69,18 @@ evt_theme_usr,evt_theme_usr,model_event_theme,event.group_event_user,1,0,0,0
 evt_theme_adm,evt_theme_adm,model_event_theme,event_user.group_event_officer,1,1,1,1
 evt_theme_mng,evt_theme_mng,model_event_theme,event.group_event_manager,1,1,1,1
 
+evt_theme_usr,evt_theme_usr,model_event_theme,event.group_event_user,1,0,0,0
+evt_theme_adm,evt_theme_adm,model_event_theme,event_user.group_event_officer,1,1,1,1
+evt_theme_mng,evt_theme_mng,model_event_theme,event.group_event_manager,1,1,1,1
 
+evt_outreach_plan_usr,evt_outreach_plan_usr,model_event_outreach_plan,event.group_event_user,1,0,0,0
+evt_outreach_plan_adm,evt_outreach_plan_adm,model_event_outreach_plan,event_user.group_event_officer,1,1,1,1
+evt_outreach_plan_mng,evt_outreach_plan_mng,model_event_outreach_plan,event.group_event_manager,1,1,1,1
 
+evt_social_content_usr,evt_social_content_usr,model_event_social_content,event.group_event_user,1,0,0,0
+evt_social_content_adm,evt_social_content_adm,model_event_social_content,event_user.group_event_officer,1,1,1,1
+evt_social_content_mng,evt_social_content_mng,model_event_social_content,event.group_event_manager,1,1,1,1
 
+evt_social_media_content_usr,evt_social_media_content_usr,model_event_social_media_content,event.group_event_user,1,0,0,0
+evt_social_media_content_adm,evt_social_media_content_adm,model_event_social_media_content,event_user.group_event_officer,1,1,1,1
+evt_social_media_content_mng,evt_social_media_content_mng,model_event_social_media_content,event.group_event_manager,1,1,1,1

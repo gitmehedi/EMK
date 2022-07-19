@@ -44,21 +44,6 @@
                                     <div class="col-md-6">
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
-                                                <label for="poc_type_id" class="control-label">PoC Type</label>
-                                                <select class="form-control input-sm reqfield" name="poc_type_id"
-                                                        id="poc_type_id" required="required">
-                                                    <option value="">--Please Select--</option>
-                                                    <t t-foreach="poc_type_ids" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if poc_type_id==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
                                                 <label for="facilities_ids" class="control-label">Facilities Requested
                                                 </label>
                                                 <div class="mar-btm required">
@@ -72,24 +57,8 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label for="event_type_id" class="control-label">Event Type</label>
-                                                <select class="form-control input-sm reqfield" name="event_type_id"
-                                                        id="event_type_id" required="required">
-                                                    <option value="">--Please Select--</option>
-                                                    <t t-foreach="event_type_ids" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if event_type_id==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
-                                            </div>
-                                        </div>
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
                                                 <label for="space_id" class="control-label">Need EMK Space?</label>
@@ -276,14 +245,13 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <div class="form-group form-field">
+                                            <div class="form-group form-field" style="display: none;">
                                                 <label for="participating_amount" class="control-label">Participation
                                                     Amount
                                                 </label>
                                                 <input type="text" name="participating_amount"
                                                        t-att-value="participating_amount" id="participating_amount"
-                                                       class="form-control input-sm reqfield number "
-                                                       />
+                                                       class="form-control input-sm number"/>
                                             </div>
                                         </div>
                                     </div>
@@ -300,26 +268,17 @@
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
                                                 <label for="target_audience_group" class="control-label">Target Audience
-                                                    Group
-                                                </label>
-                                                <select class="form-control input-sm reqfield"
-                                                        name="target_audience_group"
-                                                        id="target_audience_group" required="required">
-                                                    <option value="">--Please Select--</option>
-                                                    <t t-foreach="target_audience_group_ids" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if target_audience_group==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
+                                                    Group</label>
+                                                <input type="text" name="target_audience_group" t-att-value="target_audience_group"
+                                                       class="form-control input-sm reqfield"
+                                                       id="target_audience_group" required="required"/>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
                                                 <label for="target_age" class="control-label">Target Age</label>
                                                 <input type="text" name="target_age" t-att-value="target_age"
-                                                       class="form-control input-sm reqfield number"
+                                                       class="form-control input-sm"
                                                        id="target_age" required="required"/>
                                             </div>
                                         </div>
@@ -327,19 +286,36 @@
                                     <div class="col-md-6">
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
-                                                <label for="outreach_plan" class="control-label">Outreach Plan</label>
-                                                <select class="form-control input-sm reqfield" name="outreach_plan"
-                                                        id="outreach_plan" required="required">
-                                                    <option value="">--Please Select--</option>
+                                                <label for="outreach_plan_ids" class="control-label">Outreach Plan
+                                                </label>
+                                                <div class="mar-btm required">
                                                     <t t-foreach="outreach_plan_ids" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if outreach_plan==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
+                                                        <input type="checkbox"
+                                                               name="outreach_plan"
+                                                               t-att-value="label_value[0]"
+                                                               t-att-checked="'checked' if label_value[0] in facilities_ids else None"/>
+                                                        <t t-esc="label_value[1]"/>
                                                     </t>
-                                                </select>
+                                                </div>
                                             </div>
                                         </div>
+
+<!--                                        <div class="col-md-12">-->
+<!--                                            -->
+<!--                                            <div class="form-group form-field">-->
+<!--                                                <label for="outreach_plan" class="control-label"></label>-->
+<!--                                                <select class="form-control input-sm reqfield" name="outreach_plan"-->
+<!--                                                        id="outreach_plan" required="required">-->
+<!--                                                    <option value="">&#45;&#45;Please Select&#45;&#45;</option>-->
+<!--                                                    <t t-foreach="outreach_plan_ids" t-as='label'>-->
+<!--                                                        <option t-att-value="label_value[0]"-->
+<!--                                                                t-att-selected="'selected' if outreach_plan==label_value[0] else None">-->
+<!--                                                            <t t-esc="label_value[1]"/>-->
+<!--                                                        </option>-->
+<!--                                                    </t>-->
+<!--                                                </select>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
                                                 <label for="outreach_plan_other" class="control-label">Outreach Plan
@@ -348,7 +324,7 @@
                                                 <input type="text" name="outreach_plan_other"
                                                        t-att-value="outreach_plan_other"
                                                        id="outreach_plan_other"
-                                                       class="form-control input-sm reqfield" required="required"/>
+                                                       class="form-control input-sm"/>
                                             </div>
                                         </div>
                                         <div class="col-md-12">

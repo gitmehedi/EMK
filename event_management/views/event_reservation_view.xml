@@ -8,20 +8,21 @@
                 <form>
                     <header>
                         <button name="send_reservation" string="Send Reservation Email" type="object"
-                                class="oe_highlight"
-                                attrs="{'invisible':[('state','!=','draft'),('reserv_url','!=',False)]}"/>
-                        <button name="act_approve" string="Approve" type="object" class="oe_highlight"
+                                class="oe_highlight" states="draft"/>
+                        <button name="act_reservation" string="Reservation" type="object" class="oe_highlight"
                                 states="draft"/>
+                        <button name="act_approve" string="Approve" type="object" class="oe_highlight"
+                                states="reservation"/>
                         <button name="act_on_process" string="On Process" type="object" class="oe_highlight"
                                 states="approve"/>
                         <button name="act_confirm" string="Confirm" type="object" class="oe_highlight"
                                 states="on_process"/>
                         <button name="act_set_approve" string="Set To Approve" type="object"
                                 states="on_process"/>
-                        <button name="act_draft" string="Reset to Draft" type="object" states="approve"/>
+                        <button name="act_draft" string="Reset to Draft" type="object" states="reservation"/>
                         <button name="act_cancel" string="Cancel" type="object" states="draft"/>
                         <field name="state" widget="statusbar"
-                               statusbar_visible="draft,approve,on_process,confirm"/>
+                               statusbar_visible="draft,approve,reservation,on_process,confirm"/>
                     </header>
                     <sheet>
                         <field name="image_medium" widget='image' class="oe_avatar"/>
@@ -39,8 +40,6 @@
                                 <field name="work_email"/>
                                 <field name="poc_type_id" domain="[('state','=','approve')]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                <field name="facilities_ids" widget="many2many_tags"
-                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="event_id" attrs="{'invisible':[('state','in',['draft','on_process'])]}"/>
                                 <field name="reserv_url" invisible="True"/>
                             </group>
@@ -51,7 +50,7 @@
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="pillar_id" domain="[('state','=','approve')]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                                 <field name="event_category_id" domain="[('state','=','approve')]"
+                                <field name="event_category_id" domain="[('state','=','approve')]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                                 <field name="theme_id" domain="[('state','=','approve')]"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
@@ -97,7 +96,8 @@
                                 <field name="event_details" filename="event_details_name"/>
                             </group>
                             <group>
-                                <field name="outreach_plan"/>
+                                <field name="outreach_plan" widget="many2many_tags"
+                                       options="{'no_create':True,'no_open':True}"/>
                                 <field name="outreach_plan_other"/>
                                 <field name="snacks_required" widget="radio"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True,'horizontal': true}"/>
@@ -114,6 +114,30 @@
                                 <separator string="Purpose of Events"/>
                                 <field name="purpose_of_event" nolabel="1"/>
                             </page>
+                            <page string="Facilities" name="facilities">
+                                <field name="facilities_ids"
+                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            </page>
+                            <page string="Social Media Content" name="social_content">
+                                <field name="social_content_ids">
+                                    <tree editable="top">
+                                        <field name="name"/>
+                                        <field name="content_description"/>
+                                        <field name="content"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="name"/>
+                                                <field name="content_description"/>
+                                            </group>
+                                            <group>
+                                                <field name="content"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
@@ -125,7 +149,7 @@
         </record>
 
         <record id="event_reservation_tree_view" model="ir.ui.view">
-            <field name="name"> event.reservation.tree.view</field>
+            <field name="name">event.reservation.tree.view</field>
             <field name="model">event.reservation</field>
             <field name="arch" type="xml">
                 <tree decoration-bf="state in ['draft','on_process','confirm']"
