@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-
+from datetime import datetime
 
 class InvoiceExportWizard(models.TransientModel):
     _name = 'invoice.export.wizard.foreign'
@@ -49,7 +49,8 @@ class InvoiceExportWizard(models.TransientModel):
                                 'is_print_cfr': self.is_print_cfr,
                                 'invoice_ids': self.invoice_ids,
                                 'invoice_value': total_amount,
-                                'invoice_qty': total_qty
+                                'invoice_qty': total_qty,
+                                'doc_preparation_date': datetime.now()
                                 })
             shipment_obj.message_post(subject='Added invoice and value', body='Invoice Ids: %s, qty: %s and values: %s'% ([str(x.number) for x in self.invoice_ids], str(total_qty), str(total_amount)))
             return {'type': 'ir.actions.act_window_close'}

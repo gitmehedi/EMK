@@ -87,11 +87,11 @@ class LcRegisterXLSX(ReportXlsx):
                    purchase_shipment_inv += str(ship_inv['invoice_id']) + ','
                 purchase_shipment_inv = purchase_shipment_inv[:-1]
                 query = """
-                        select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, sol.qty_delivered as qty_delivered 
-                        from sale_order as so
-                        LEFT JOIN sale_order_line as sol ON sol.order_id = so.id
-                        LEFT JOIN account_invoice ai ON ai.so_id = so.id
-                        LEFT JOIN stock_picking as sp ON sp.origin = ai.origin
+                        select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, spo.qty_done as qty_delivered 
+                        from stock_picking as sp
+                        LEFT JOIN account_invoice_stock_picking_rel as aispr ON aispr.stock_picking_id = sp.id 
+                        LEFT JOIN account_invoice ai ON ai.id = aispr.account_invoice_id
+                        LEFT JOIN stock_pack_operation as spo ON spo.picking_id = sp.id
                         where ai.id in (%s) order by sp.date_done DESC
                         """ % purchase_shipment_inv
                 self.env.cr.execute(query)

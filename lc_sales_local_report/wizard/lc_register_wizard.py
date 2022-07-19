@@ -18,6 +18,24 @@ class LcRegisterWizard(models.Model):
     date_to = fields.Date(string='To', default=fields.Datetime.now)
     is_type_hide = fields.Boolean(string='is type hide', default=False)
 
+    @api.model
+    def default_get(self, fields):
+        res = super(LcRegisterWizard, self).default_get(fields)
+        self._onchange_lc_number()
+        return res
+
+    @api.onchange('lc_number', 'type')
+    def _onchange_lc_number(self):
+        lc_list = []
+        if self.type == 'all':
+            domain = [('region_type', '=', 'local'), ('region_type', '=', 'foreign')]
+        else:
+            domain = [('region_type', '=', self.type)]
+        letter_credit = self.env['letter.credit'].search(domain)
+        for acc_inv in letter_credit:
+            lc_list.append(acc_inv.id)
+        return {'domain': {'lc_number': [('id', 'in', lc_list)]}}
+
     @api.onchange('filter_by')
     def onchange_filter_by(self):
         if self.filter_by == 'first_acceptance':
