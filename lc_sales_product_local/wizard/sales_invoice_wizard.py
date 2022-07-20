@@ -6,18 +6,16 @@ class InvoiceExportWizard(models.TransientModel):
     _name = 'invoice.export.wizard'
 
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
-    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers')
+    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers', domain=[('state', '=', '1')])
     invoice_qty = fields.Float(string='Invoice QTY')
     invoice_value = fields.Float(string='Invoice Value')
 
     shipment_id = fields.Many2one('purchase.shipment', default=lambda self: self.env.context.get('active_id'))
 
-    @api.model
-    def default_get(self, fields):
-        res = super(InvoiceExportWizard, self).default_get(fields)
-        purchase_shipment = self.env['purchase.shipment'].search([('id', '=', res.get('shipment_id'))])
-        self._onchange_shipment_id()
-        return res
+    # @api.model
+    # def default_get(self, fields):
+    #     res = super(InvoiceExportWizard, self).default_get(fields)
+    #     return res
 
     @api.multi
     def save_action(self):
@@ -58,7 +56,8 @@ class InvoiceExportWizard(models.TransientModel):
     #
     #     return {'domain': {'invoice_id': [('id', 'in', domain_id_list)]}}
 
-    @api.onchange('shipment_id')
+    @api.onchange('invoice_ids')
+    @api.multi
     def _onchange_shipment_id(self):
         so_list = []
         for pi_id in self.shipment_id.lc_id.pi_ids_temp:

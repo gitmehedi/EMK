@@ -6,7 +6,7 @@ class InvoiceExportWizard(models.TransientModel):
 
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
     invoice_value = fields.Float(string='Invoice Value', track_visibility='onchange')
-    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers', track_visibility='onchange')
+    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers', track_visibility='onchange', domain=[('state', '=', 'proforma')])
     invoice_qty = fields.Float(string='Invoice QTY')
     shipment_id = fields.Many2one('purchase.shipment', default=lambda self: self.env.context.get('active_id'))
 
@@ -14,11 +14,11 @@ class InvoiceExportWizard(models.TransientModel):
     fob_value= fields.Float(string='FOB Value', compute='_compute_fob_value', store=False)
     is_print_cfr = fields.Boolean(string='Is Print CFR')
 
-    @api.model
-    def default_get(self, fields):
-        res = super(InvoiceExportWizard, self).default_get(fields)
-        self._onchange_shipment_id()
-        return res
+    # @api.model
+    # def default_get(self, fields):
+    #     res = super(InvoiceExportWizard, self).default_get(fields)
+    #     self._onchange_shipment_id()
+    #     return res
 
     @api.one
     def _compute_fob_value(self):
@@ -55,7 +55,7 @@ class InvoiceExportWizard(models.TransientModel):
             shipment_obj.message_post(subject='Added invoice and value', body='Invoice Ids: %s, qty: %s and values: %s'% ([str(x.number) for x in self.invoice_ids], str(total_qty), str(total_amount)))
             return {'type': 'ir.actions.act_window_close'}
 
-    @api.onchange('shipment_id')
+    @api.onchange('invoice_ids')
     def _onchange_shipment_id(self):
         so_list = []
         for pi_id in self.shipment_id.lc_id.pi_ids_temp:

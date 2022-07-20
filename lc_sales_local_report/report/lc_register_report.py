@@ -7,7 +7,7 @@ def date_subtract_date_to_days(date1, date2):
     if date1 and date2:
         d1 = datetime.strptime(date1, "%d-%m-%Y")
         d2 = datetime.strptime(date2, "%d-%m-%Y")
-        days = (d2 - d1).days
+        days = (d1 - d2).days
     return days
 
 class LcRegisterXLSX(ReportXlsx):
