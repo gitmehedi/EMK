@@ -6,7 +6,7 @@ class InvoiceExportWizard(models.TransientModel):
     _name = 'invoice.export.wizard'
 
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
-    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers', domain=[('state', '=', '1')])
+    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers')
     invoice_qty = fields.Float(string='Invoice QTY')
     invoice_value = fields.Float(string='Invoice Value')
 
@@ -58,7 +58,7 @@ class InvoiceExportWizard(models.TransientModel):
 
     @api.onchange('invoice_ids')
     @api.multi
-    def _onchange_shipment_id(self):
+    def refresh_invoice_ids_data(self):
         so_list = []
         for pi_id in self.shipment_id.lc_id.pi_ids_temp:
             sale_order = self.env['sale.order'].sudo().search([('pi_id', '=', pi_id.id)])

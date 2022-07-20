@@ -6,7 +6,7 @@ class InvoiceExportWizard(models.TransientModel):
 
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
     invoice_value = fields.Float(string='Invoice Value', track_visibility='onchange')
-    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers', track_visibility='onchange', domain=[('state', '=', 'proforma')])
+    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers')
     invoice_qty = fields.Float(string='Invoice QTY')
     shipment_id = fields.Many2one('purchase.shipment', default=lambda self: self.env.context.get('active_id'))
 
