@@ -87,7 +87,7 @@ class EventReservation(models.Model):
                                states={'draft': [('readonly', False)],
                                        'reservation': [('readonly', False), ('required', True)]})
     refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2), track_visibility='onchange',
-                                     readonly=True, states={'draft': [('readonly', False)],
+                                     readonly=True, states={'draft': [('readonly', False),('required', False)],
                                                             'reservation': [('readonly', False), ('required', True)]})
     approved_budget = fields.Float(string='Approved Budget', digits=(12, 2), track_visibility='onchange', readonly=True,
                                    states={'draft': [('readonly', False)],
@@ -115,7 +115,7 @@ class EventReservation(models.Model):
                                      'reservation': [('readonly', False), ('required', True)]})
     outreach_plan = fields.Many2many('event.outreach.plan', track_visibility='onchange', string="Outreach Plan",
                                      readonly=True, states={'draft': [('readonly', False)],
-                                                            'reservation': [('readonly', False), ('required', True)]})
+                                                            'reservation': [('readonly', False), ('required', False)]})
     outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True, track_visibility='onchange',
                                       states={'draft': [('readonly', False)],
                                               'reservation': [('readonly', False)]})
@@ -173,9 +173,9 @@ class EventReservation(models.Model):
                 if not self.paid_amount:
                     raise ValidationError(
                         _('Paid amount should have value when event type is [Paid]'.format(self.payment_type)))
-        if self.refundable_amount <= 0.0:
-            raise ValidationError(
-                _('Refundable amount should have value'.format(self.payment_type)))
+            if self.refundable_amount <= 0.0:
+                raise ValidationError(
+                    _('Refundable amount should have value'.format(self.payment_type)))
 
     @api.constrains('paid_attendee')
     def _check_participating_amount(self):

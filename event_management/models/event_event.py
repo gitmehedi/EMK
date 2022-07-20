@@ -93,7 +93,7 @@ class EventEvent(models.Model):
                                                      'mark_close': [('readonly', False)]})
     target_age = fields.Char(string="Target Age", required=True, readonly=True,
                                 states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    outreach_plan = fields.Many2many('event.outreach.plan',string="Outreach Plan", required=True, readonly=True,
+    outreach_plan = fields.Many2many('event.outreach.plan', string="Outreach Plan", readonly=True,
                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True,
                                       states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
