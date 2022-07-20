@@ -28,9 +28,9 @@ class LcRegisterWizard(models.Model):
     def _onchange_lc_number(self):
         lc_list = []
         if self.type == 'all':
-            domain = [('region_type', '=', 'local'), ('region_type', '=', 'foreign')]
+            domain = [('region_type', '=', 'local'), ('region_type', '=', 'foreign'), ('state', '!=', 'cancel')]
         else:
-            domain = [('region_type', '=', self.type)]
+            domain = [('region_type', '=', self.type), ('state', '!=', 'cancel')]
         letter_credit = self.env['letter.credit'].search(domain)
         for acc_inv in letter_credit:
             lc_list.append(acc_inv.id)
