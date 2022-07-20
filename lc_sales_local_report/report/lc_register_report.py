@@ -412,7 +412,7 @@ class LcRegisterXLSX(ReportXlsx):
 
         if filter_by == 'lc_number':
             filter_by_text = 'LC Number: ' + obj.lc_number.name
-            where += "where lc.id ='" + str(obj.lc_number.id) + "'"
+            where += " where lc.id ='" + str(obj.lc_number.id) + "'"
         else:
             where += " and lc.issue_date >='" + lc_static_issue_date + "' "
 
