@@ -46,6 +46,7 @@
                     <field name="profession_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"
                            attrs="{'readonly' : [('state','=','done')]}"/>
                     <field name="card_number" attrs="{'readonly' : [('state','=','done')]}"/>
+                    <field name="event_fee" readonly="True" attrs="{'invisible' : [('state','!=','done')]}"/>
                 </xpath>
             </field>
         </record>
@@ -62,6 +63,7 @@
                         <field name="name"/>
                         <field name="phone"/>
                         <field name="email"/>
+                        <field name="event_fee" sum="event_fee"/>
                         <field name="state"/>
                         <field name="message_needaction" invisible="1"/>
                         <button name="confirm_registration" string="Confirm Registration" states="draft" type="object"
