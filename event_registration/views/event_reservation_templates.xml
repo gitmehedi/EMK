@@ -279,7 +279,7 @@
                                                 <label for="target_age" class="control-label">Target Age</label>
                                                 <input type="text" name="target_age" t-att-value="target_age"
                                                        class="form-control input-sm"
-                                                       id="target_age" required="required"/>
+                                                       id="target_age"/>
                                             </div>
                                         </div>
                                     </div>

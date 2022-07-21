@@ -4,7 +4,7 @@ import datetime
 from odoo import models, fields, api, _
 from odoo.addons.event_management.data import helper
 from odoo.addons.opa_utility.helper.utility import Message
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from psycopg2 import IntegrityError
 
 
@@ -93,7 +93,7 @@ class EventEvent(models.Model):
                                                      'mark_close': [('readonly', False)]})
     target_age = fields.Char(string="Target Age", required=True, readonly=True,
                                 states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    outreach_plan = fields.Many2many('event.outreach.plan',string="Outreach Plan", required=True, readonly=True,
+    outreach_plan = fields.Many2many('event.outreach.plan', string="Outreach Plan", readonly=True,
                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True,
                                       states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
@@ -116,12 +116,19 @@ class EventEvent(models.Model):
     event_share = fields.Binary(string="Event Share Upload", attachment=True, track_visibility='onchange',
                                   states={'draft': [('readonly', False)],
                                           'approve': [('readonly', False), ('required', True)]})
+    total_participation_amount = fields.Float(string="Total Participation Amount", compute='compute_total_collection')
     state = fields.Selection(helper.event_state, string="State")
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):
         for record in self:
             record.total_seat_available = sum([rec.seat_no for rec in record.event_book_ids])
+
+    @api.depends('event_book_ids')
+    def compute_total_collection(self):
+        for record in self:
+            record.total_participation_amount = sum([reg.event_fee for reg in record.registration_ids])
+
 
     # @api.onchange('event_book_ids')
     # def onchange_event_book_ids(self):
@@ -223,10 +230,16 @@ class EventRegistration(models.Model):
     gender = fields.Many2one('res.gender', required=True, string='Gender')
     profession_id = fields.Many2one('attendee.profession', string='Profession', default=False)
     card_number = fields.Char(string='Card Number')
+    event_fee = fields.Float(string='Event Participation Amount')
 
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['draft', 'open'])]
+
+    @api.one
+    def button_reg_close(self):
+        res = super(EventRegistration, self).button_reg_close()
+        self.write({'event_fee':self.event_id.participating_amount})
 
 
 class AttendeeProfession(models.Model):
