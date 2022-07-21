@@ -12,10 +12,12 @@ class InvoiceExportWizard(models.TransientModel):
 
     shipment_id = fields.Many2one('purchase.shipment', default=lambda self: self.env.context.get('active_id'))
 
-    # @api.model
-    # def default_get(self, fields):
-    #     res = super(InvoiceExportWizard, self).default_get(fields)
-    #     return res
+    @api.model
+    def default_get(self, fields):
+        res = super(InvoiceExportWizard, self).default_get(fields)
+        purchase_shipment = self.env['purchase.shipment'].search([('id', '=', res['shipment_id'])])
+        self.refresh_invoice_ids_data(purchase_shipment)
+        return res
 
     @api.multi
     def save_action(self):
@@ -46,11 +48,12 @@ class InvoiceExportWizard(models.TransientModel):
 
 
     @api.onchange('invoice_ids')
-    @api.multi
-    def refresh_invoice_ids_data(self):
+    def refresh_invoice_ids_data(self, shipment=None):
         so_list = []
-        for pi_id in self.shipment_id.lc_id.pi_ids_temp:
-            sale_order = self.env['sale.order'].sudo().search([('pi_id', '=', pi_id.id)])
+        if shipment is None:
+            shipment = self.shipment_id
+        for pi_id in shipment.lc_id.pi_ids_temp:
+            sale_order = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
             so_list.append(sale_order.id)
 
         inv_list = []

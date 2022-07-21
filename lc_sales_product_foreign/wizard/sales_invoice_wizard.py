@@ -14,11 +14,12 @@ class InvoiceExportWizard(models.TransientModel):
     fob_value= fields.Float(string='FOB Value', compute='_compute_fob_value', store=False)
     is_print_cfr = fields.Boolean(string='Is Print CFR')
 
-    # @api.model
-    # def default_get(self, fields):
-    #     res = super(InvoiceExportWizard, self).default_get(fields)
-    #     self._onchange_shipment_id()
-    #     return res
+    @api.model
+    def default_get(self, fields):
+        res = super(InvoiceExportWizard, self).default_get(fields)
+        purchase_shipment = self.env['purchase.shipment'].search([('id', '=', res['shipment_id'])])
+        self.refresh_invoice_ids_data(purchase_shipment)
+        return res
 
     @api.one
     def _compute_fob_value(self):
@@ -56,9 +57,11 @@ class InvoiceExportWizard(models.TransientModel):
             return {'type': 'ir.actions.act_window_close'}
 
     @api.onchange('invoice_ids')
-    def _onchange_shipment_id(self):
+    def refresh_invoice_ids_data(self, shipment=None):
         so_list = []
-        for pi_id in self.shipment_id.lc_id.pi_ids_temp:
+        if shipment is None:
+            shipment = self.shipment_id
+        for pi_id in shipment.lc_id.pi_ids_temp:
             sale_order = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
             so_list.append(sale_order.id)
 
