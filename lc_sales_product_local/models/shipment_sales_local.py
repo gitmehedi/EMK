@@ -17,7 +17,7 @@ class ShipmentLocal(models.Model):
             'res_model': 'doc.receive.wizard.export',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
-            'target': 'new',
+            'target': 'new'
         }
         return result
 
