@@ -17,8 +17,9 @@ class InvoiceExportWizard(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(InvoiceExportWizard, self).default_get(fields)
-        purchase_shipment = self.env['purchase.shipment'].search([('id', '=', res['shipment_id'])])
-        self.refresh_invoice_ids_data(purchase_shipment)
+        if res:
+            purchase_shipment = self.env['purchase.shipment'].search([('id', '=', res['shipment_id'])])
+            self.refresh_invoice_ids_data(purchase_shipment)
         return res
 
     @api.one
