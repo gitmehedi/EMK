@@ -20,6 +20,7 @@
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'views/proforma_invoice_view.xml',
+        'wizards/update_pi_number_confirmation.xml',
         'report/proforma_invoice_report.xml',
         'data/pi_sequence.xml',
     ],

@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons import decimal_precision as dp
 
@@ -244,7 +244,23 @@ class ProformaInvoice(models.Model):
     def _check_multiple_products_line(self):
         if len(self.line_ids) > 1:
             raise ValidationError("You can't add multiple products")
-
+    
+    def action_update_pi_number(self):
+        vals = {
+            'pi_id': self.id,
+        }
+        message_id = self.env['update.pi.number.confirmation'].create({
+            'current_pi_number': self.name
+        })
+        return {
+            'name': _('Confirmation : Are you sure to update this PI Number?'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'update.pi.number.confirmation',
+            'context': vals,
+            'res_id': message_id.id,
+            'target': 'new'
+        }
 
 
 # ---------------------------------------------------------------------------------------------------------------------------------
