@@ -18,6 +18,24 @@ class LcRegisterWizard(models.Model):
     date_to = fields.Date(string='To', default=fields.Datetime.now)
     is_type_hide = fields.Boolean(string='is type hide', default=False)
 
+    @api.model
+    def default_get(self, fields):
+        res = super(LcRegisterWizard, self).default_get(fields)
+        self._onchange_lc_number()
+        return res
+
+    @api.onchange('lc_number', 'type')
+    def _onchange_lc_number(self):
+        lc_list = []
+        if self.type == 'all':
+            domain = [('region_type', '=', 'local'), ('region_type', '=', 'foreign'), ('state', '!=', 'cancel')]
+        else:
+            domain = [('region_type', '=', self.type), ('state', '!=', 'cancel')]
+        letter_credit = self.env['letter.credit'].search(domain)
+        for acc_inv in letter_credit:
+            lc_list.append(acc_inv.id)
+        return {'domain': {'lc_number': [('id', 'in', lc_list)]}}
+
     @api.onchange('filter_by')
     def onchange_filter_by(self):
         if self.filter_by == 'first_acceptance':
@@ -34,13 +52,13 @@ class LcRegisterWizard(models.Model):
 
         if self.filter_by == 'percentage_of_first_acceptance_collection' or self.filter_by == 'lc_history':
             if self.date_from > self.date_to:
-                raise UserError('From date can\'t be gather than To date')
+                raise UserError('From date can\'t be greater than To date')
 
             ReportUtility = self.env['report.utility']
             date_to = datetime.strptime(ReportUtility.get_date_from_string(self.date_to), '%d-%m-%Y')
             date_from = datetime.strptime(ReportUtility.get_date_from_string(self.date_from), '%d-%m-%Y')
             diff_days = date_to - date_from
             if diff_days.days > 180:
-                raise UserError('You can\'t generate report gather than 6 months')
+                raise UserError('You can\'t generate report greater than 6 months')
 
         return self.env['report'].get_action(self, 'lc_sales_local_report.lc_register_report')

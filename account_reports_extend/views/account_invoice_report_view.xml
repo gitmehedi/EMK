@@ -8,6 +8,7 @@
             name="account_reports_extend.report_vendor_bill_document"
             file="account_reports_extend.report_vendor_bill_document"
             menu="False"
+            paperformat="report_layout.paperformat_backend_portrait"
         />
 
     <report

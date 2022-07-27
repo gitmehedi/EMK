@@ -54,14 +54,15 @@ class InheritedHrPayslip(models.Model):
     @api.multi
     def action_payslip_done(self):
         res = super(InheritedHrPayslip, self).action_payslip_done()
-        loan_data = self.env['hr.employee.loan.line'].search([('employee_id', '=', self.employee_id.id),
-                                                              ('schedule_date', '>=', self.date_from),
-                                                              ('schedule_date', '<=', self.date_to),
-                                                              ('state', '=', 'pending')])
-        for line_state in loan_data:
-            if self.contract_id.id and line_state.parent_id.state=='disbursed':
-                line_state.write({'state': 'done'})
-                line_state.parent_id.write({'remaining_loan_amount': line_state.parent_id.remaining_loan_amount - line_state.installment})
+        if self.type == '0':
+            loan_data = self.env['hr.employee.loan.line'].search([('employee_id', '=', self.employee_id.id),
+                                                                  ('schedule_date', '>=', self.date_from),
+                                                                  ('schedule_date', '<=', self.date_to),
+                                                                  ('state', '=', 'pending')])
+            for line_state in loan_data:
+                if self.contract_id.id and line_state.parent_id.state=='disbursed':
+                    line_state.write({'state': 'done'})
+                    line_state.parent_id.write({'remaining_loan_amount': line_state.parent_id.remaining_loan_amount - line_state.installment})
 
         return res
 

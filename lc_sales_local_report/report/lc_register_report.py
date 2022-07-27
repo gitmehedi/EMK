@@ -7,7 +7,7 @@ def date_subtract_date_to_days(date1, date2):
     if date1 and date2:
         d1 = datetime.strptime(date1, "%d-%m-%Y")
         d2 = datetime.strptime(date2, "%d-%m-%Y")
-        days = (d2 - d1).days
+        days = (d1 - d2).days
     return days
 
 class LcRegisterXLSX(ReportXlsx):
@@ -74,7 +74,7 @@ class LcRegisterXLSX(ReportXlsx):
         sheet.write(7, 41, "Packing Type", header_format_left)
         sheet.write(7, 42, "Bill ID NO", header_format_left)
 
-    def get_delivery_detail(self, shipment_id):
+    def get_delivery_detail(self, lc_id, shipment_id):
         if shipment_id:
             query = """select * from lc_shipment_invoice_rel where shipment_id = %s""" % shipment_id
             self.env.cr.execute(query)
@@ -82,13 +82,16 @@ class LcRegisterXLSX(ReportXlsx):
 
             ReportUtility = self.env['report.utility']
             if purchase_shipment_invoices:
-                purchase_shipment_inv = purchase_shipment_invoices[0]['invoice_id']
+                purchase_shipment_inv = ''
+                for ship_inv in purchase_shipment_invoices:
+                   purchase_shipment_inv += str(ship_inv['invoice_id']) + ','
+                purchase_shipment_inv = purchase_shipment_inv[:-1]
                 query = """
-                        select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, sol.qty_delivered as qty_delivered from sale_order as so
-                        LEFT JOIN sale_order_line as sol ON sol.order_id = so.id
-                        LEFT JOIN delivery_order as deor ON deor.sale_order_id = so.id
-                        LEFT JOIN stock_picking as sp ON sp.id = deor.sale_order_id
-                        LEFT JOIN account_invoice ai ON ai.so_id = so.id
+                        select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, spo.qty_done as qty_delivered 
+                        from stock_picking as sp
+                        LEFT JOIN account_invoice_stock_picking_rel as aispr ON aispr.stock_picking_id = sp.id 
+                        LEFT JOIN account_invoice ai ON ai.id = aispr.account_invoice_id
+                        LEFT JOIN stock_pack_operation as spo ON spo.picking_id = sp.id
                         where ai.id in (%s) order by sp.date_done DESC
                         """ % purchase_shipment_inv
                 self.env.cr.execute(query)
@@ -97,14 +100,15 @@ class LcRegisterXLSX(ReportXlsx):
                 for data in query_res:
                     name = data['name'] if data['name'] is not None else ''
                     # min_date = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date()
-                    min_date = data['date_done'] if data['date_done'] is not None else ''
-                    min_date_format = ReportUtility.get_date_time_from_string(str(min_date))
+                    min_date = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date() if data['min_date'] is not None else ''
+                    # min_date_format = ReportUtility.get_date_time_from_string(str(min_date))
                     qty = data["qty_delivered"] if data["qty_delivered"] is not None else '0'
+                    delivery_date = ReportUtility.get_date_from_string(str(min_date))
 
-                    lc_delivery_details_str = str(name) + ", " + str(min_date_format) + ", " + str(qty) + "\n"
+                    lc_delivery_details_str += str(name) + ", " + str(qty) + ", " + str(delivery_date) + "\n"
                 date_done = ''
                 if query_res:
-                    date_done_uniformat = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date() if data['min_date'] is not None else ''
+                    date_done_uniformat = datetime.strptime(query_res[0]['date_done'], '%Y-%m-%d %H:%M:%S').date() if data['date_done'] is not None else ''
                     if date_done_uniformat:
                         date_done = ReportUtility.get_date_from_string(str(date_done_uniformat))
                 return lc_delivery_details_str, str(date_done)
@@ -210,7 +214,7 @@ class LcRegisterXLSX(ReportXlsx):
             row = row + 1
             lc_id = data['lc_id'] if 'lc_id' in data else ''
             shipment_id = data['shipment_id'] if 'shipment_id' in data else ''
-            delivery_details_date_of_trans = self.get_delivery_detail(shipment_id)
+            delivery_details_date_of_trans = self.get_delivery_detail(lc_id, shipment_id)
             lc_and_delivered_qty = self.get_lc_qty_n_delivery_qty(lc_id)
             region_type = data['region_type'] if 'region_type' in data else ''
             lc_qty = lc_and_delivered_qty[0]
@@ -315,7 +319,7 @@ class LcRegisterXLSX(ReportXlsx):
             sheet.write(row, 37, data['comment'] if 'comment' in data else '', name_border_format_colored)
             sheet.write(row, 38, date_subtract_date_to_days(ReportUtility.get_date_from_string(data['shipment_done_date']) if 'shipment_done_date' in data else '',
                                                             ReportUtility.get_date_from_string(data['maturity_date']) if 'maturity_date' in data else ''), name_border_format_colored_text_right)
-            sheet.write(row, 39, data['bank_code'] if 'bank_code' in data else '', name_border_format_colored)
+            sheet.write(row, 39, data['second_party_bank'] if 'second_party_bank' in data else '', name_border_format_colored)
             sheet.write(row, 40, data['samuda_bank_name'] if 'samuda_bank_name' in data else '', name_border_format_colored)
             sheet.write(row, 41, data['packing_type'] if 'packing_type' in data else '', name_border_format_colored)
             sheet.write(row, 42, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
@@ -365,7 +369,7 @@ class LcRegisterXLSX(ReportXlsx):
              'text_wrap': True})
         sub_header_format_left.set_font_name('Times New Roman')
 
-        lc_static_issue_date = '01/06/2022'
+        lc_static_issue_date = '01/01/2022'
         where = ''
         filter_by_text = ''
         if filter_by == 'goods_delivered_doc_not_prepared':
@@ -374,11 +378,11 @@ class LcRegisterXLSX(ReportXlsx):
 
         elif filter_by == 'first_acceptance':
             filter_by_text = '1st Acceptance'
-            where += "where (Date(ps.to_first_acceptance_date)-CURRENT_DATE) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
+            where += "where CURRENT_DATE-(Date(ps.to_first_acceptance_date)) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
 
         elif filter_by == 'second_acceptance':
             filter_by_text = "2nd Acceptance"
-            where += "where (ps.to_seller_bank_date-CURRENT_DATE) > " + acceptance_default_value + " and ps.state='to_buyer_bank' "
+            where += "where CURRENT_DATE - (Date(ps.to_second_acceptance_date)) > " + acceptance_default_value + " "
 
         elif filter_by == 'maturated_but_amount_not_collect':
             filter_by_text = 'Matured but Amount not collected'
@@ -408,7 +412,7 @@ class LcRegisterXLSX(ReportXlsx):
 
         if filter_by == 'lc_number':
             filter_by_text = 'LC Number: ' + obj.lc_number.name
-            where += "where lc.id ='" + str(obj.lc_number.id) + "'"
+            where += " where lc.id ='" + str(obj.lc_number.id) + "'"
         else:
             where += " and lc.issue_date >='" + lc_static_issue_date + "' "
 
@@ -416,14 +420,16 @@ class LcRegisterXLSX(ReportXlsx):
             filter_by_text = 'Goods Delivered but LC not received'
 
             query = '''
-                select rp.name as party_name, rp2.name as executive_name,sol.name as product_name, so.region_type as region_type, so.name as so_name, 
+                select so.id,rp.name as party_name, rp2.name as executive_name, sol.name as product_name, 
+                so.region_type as region_type, so.name as so_name, 
                 pi.name as pi_name,rc.name as currency, sol.qty_delivered as qty_delivery
                 from sale_order as so 
                 LEFT JOIN sale_order_type as sot on so.type_id = sot.id 
                 LEFT JOIN sale_order_line as sol on so.id = sol.order_id
-                LEFT JOIN res_partner as rp on so.partner_id = rp.id
-                LEFT JOIN res_partner as rp2 on so.user_id = rp2.id
+                LEFT JOIN res_partner as rp on rp.id = so.partner_id
+                LEFT JOIN res_users as ru on ru.id = rp.user_id
                 LEFT JOIN proforma_invoice as pi on pi.id = so.pi_id
+                LEFT JOIN res_partner as rp2 on rp2.id = ru.partner_id
                 LEFT JOIN product_pricelist as ppl on ppl.id = so.pricelist_id
                 LEFT JOIN res_currency as rc on rc.id = ppl.currency_id
                 where so.lc_id is null
@@ -433,12 +439,12 @@ class LcRegisterXLSX(ReportXlsx):
             datas_excel = self.env.cr.dictfetchall()
         else:
             query = '''
-                    SELECT distinct ps.id as shipment_id, rp.name as party_name,rp2.name as executive_name,lpl.name as product_name, lc.name as lc_number, 
+                    SELECT distinct on (ps.id) ps.id as shipment_id, rp.name as party_name,rp2.name as executive_name,lpl.name as product_name, lc.name as lc_number, 
                     ps.name as shipment_no, spl.product_qty as shipment_qty, ps.invoice_value as shipment_amount, lc.tenure as tenure,
                     ps.bl_date as doc_dispatch_to_party_date_foreign,(ps.to_first_acceptance_date-ps.bl_date) as aging_first_acceptance_days_foreign,
                     date(ps.to_first_acceptance_date + INTERVAL '7 day') as to_buyer_bank_date_foreign,
-                    ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_seller_bank_date as second_acceptance_date,
-                    (ps.to_buyer_bank_date-ps.to_seller_bank_date) as aging_2nd_acceptance_days, 
+                    ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_second_acceptance_date as second_acceptance_date,
+                    (ps.to_second_acceptance_date-ps.to_buyer_bank_date) as aging_2nd_acceptance_days, 
                     rc.name as currency, 
                     lc.id as lc_id, lc.shipment_date as shipment_date, lc.expiry_date as expiry_date, ps.doc_preparation_date as doc_preparation_date,
                     lc.issue_date as lc_date,lc.lc_value as lc_amount,lc.region_type as region_type,
@@ -446,7 +452,7 @@ class LcRegisterXLSX(ReportXlsx):
                     (ps.to_first_acceptance_date-ps.to_buyer_date) as aging_first_acceptance_days,ps.to_maturity_date as maturity_date, 
                     ps.shipment_done_date as shipment_done_date, 
                     ps.discrepancy_amount as discrepancy_amount, ps.ait_amount as ait_amount, ps.payment_rec_date, ps.payment_rec_amount as payment_rec_amount, ps.payment_charge as payment_charge, 
-                    ps.comment as comment, concat(lc.bank_code, '-', lc.bank_branch) as bank_code, rb.bic as samuda_bank_name,
+                    ps.comment as comment, lc.second_party_bank as second_party_bank, rb.bic as samuda_bank_name,
                     pu.name as packing_type, ps.bill_id as bill_id_no
                     FROM purchase_shipment AS ps 
                     LEFT JOIN letter_credit AS lc ON ps.lc_id = lc.id

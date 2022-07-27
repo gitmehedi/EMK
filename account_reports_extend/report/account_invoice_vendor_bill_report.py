@@ -16,8 +16,13 @@ class AccountInvoiceVendorBill(models.AbstractModel):
             fetched_data = self._cr.dictfetchall()[0]
             checked_by_id = fetched_data['write_uid']
             hr_employee = self.env['hr.employee'].sudo().search([('user_id', '=', checked_by_id)])
-            e_name = hr_employee.name
-            designation = hr_employee.job_id.name
+            if hr_employee:
+                e_name = hr_employee.name
+                designation = hr_employee.job_id.name
+            else:
+                res_users = self.env['res.users'].sudo().search([('id', '=', checked_by_id)])
+                e_name = res_users.name
+                designation = ""
         return e_name, designation
 
     @api.multi
@@ -67,6 +72,7 @@ class AccountInvoiceVendorBill(models.AbstractModel):
         data['tax_and_other_adjustment'] = formatLang(self.env, tax_line_total)
         net_payable = total_payable_amount - tax_line_total
         data['net_payable'] = formatLang(self.env, net_payable)
+        data['address'] = report_utility_pool.getBranchAddress(docs.company_id)
 
         payment_amount = advance_amount = 0
         payment_move_line_ids = docs.payment_move_line_ids
@@ -92,15 +98,20 @@ class AccountInvoiceVendorBill(models.AbstractModel):
         data['total_amount_due_outstanding'] = formatLang(self.env, net_payable-advance_amount)
         data['payment'] = formatLang(self.env, payment_amount)
         data['net_amount_due_outstanding'] = formatLang(self.env, docs.residual)
-        data['prepare_by'] = docs.sudo().create_uid.name
+
         hr_employee = self.env['hr.employee'].sudo().search([('user_id', '=', docs.create_uid.id)])
-        data['prepare_by_designation'] = ""
+
         if hr_employee:
+            data['prepare_by'] = hr_employee.name
             data['prepare_by_designation'] = hr_employee.job_id.name
+        else:
+            data['prepare_by'] = docs.sudo().create_uid.name
+            data['prepare_by_designation'] = ""
 
         checked_by_name_designation = self._get_checked_by_name_designation(docs.id, docs.number)
-        data['checked_by'] = checked_by_name_designation[0]
-        data['checked_by_designation'] = checked_by_name_designation[1]
+        if checked_by_name_designation:
+            data['checked_by'] = checked_by_name_designation[0]
+            data['checked_by_designation'] = checked_by_name_designation[1]
         data['verified_by'] = ""
         data['verified_by_designation'] = ""
         data['comment'] = docs.comment

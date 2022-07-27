@@ -1,12 +1,12 @@
 from odoo import api, fields, models
-
+from datetime import datetime
 
 class InvoiceExportWizard(models.TransientModel):
     _name = 'invoice.export.wizard.foreign'
 
     invoice_id = fields.Many2one("account.invoice", string='Invoice Number')
     invoice_value = fields.Float(string='Invoice Value', track_visibility='onchange')
-    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers', track_visibility='onchange')
+    invoice_ids = fields.Many2many("account.invoice", string='Invoice Numbers')
     invoice_qty = fields.Float(string='Invoice QTY')
     shipment_id = fields.Many2one('purchase.shipment', default=lambda self: self.env.context.get('active_id'))
 
@@ -17,7 +17,9 @@ class InvoiceExportWizard(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(InvoiceExportWizard, self).default_get(fields)
-        self._onchange_shipment_id()
+        if res:
+            purchase_shipment = self.env['purchase.shipment'].search([('id', '=', res['shipment_id'])])
+            self.refresh_invoice_ids_data(purchase_shipment)
         return res
 
     @api.one
@@ -49,15 +51,18 @@ class InvoiceExportWizard(models.TransientModel):
                                 'is_print_cfr': self.is_print_cfr,
                                 'invoice_ids': self.invoice_ids,
                                 'invoice_value': total_amount,
-                                'invoice_qty': total_qty
+                                'invoice_qty': total_qty,
+                                'doc_preparation_date': datetime.now()
                                 })
             shipment_obj.message_post(subject='Added invoice and value', body='Invoice Ids: %s, qty: %s and values: %s'% ([str(x.number) for x in self.invoice_ids], str(total_qty), str(total_amount)))
             return {'type': 'ir.actions.act_window_close'}
 
-    @api.onchange('shipment_id')
-    def _onchange_shipment_id(self):
+    @api.onchange('invoice_ids')
+    def refresh_invoice_ids_data(self, shipment=None):
         so_list = []
-        for pi_id in self.shipment_id.lc_id.pi_ids_temp:
+        if shipment is None:
+            shipment = self.shipment_id
+        for pi_id in shipment.lc_id.pi_ids_temp:
             sale_order = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
             so_list.append(sale_order.id)
 
