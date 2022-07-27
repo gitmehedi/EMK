@@ -11,6 +11,7 @@ class AccountAccountType(models.Model):
     department_required = fields.Boolean(string='Department', track_visibility='onchange')
     cost_center_required = fields.Boolean(string='Cost Center', track_visibility='onchange')
     is_bank_type = fields.Boolean(string='Is Bank Type?', track_visibility='onchange')
+    is_ibp_loan = fields.Boolean(string='Is IBP Loan?', track_visibility='onchange')
 
     name = fields.Char(string='Account Type', required=True, translate=True, track_visibility='onchange')
     type = fields.Selection([

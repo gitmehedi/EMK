@@ -1,6 +1,7 @@
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons import decimal_precision as dp
+from datetime import datetime
 
 
 class LCReceivablePayment(models.Model):
@@ -77,6 +78,8 @@ class LCReceivablePayment(models.Model):
                                                       string='Miscellaneous', readonly=True,
                                                       states={'draft': [('readonly', False)]})
     narration = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
+    ibp_loan = fields.Float(string='IBP Loan', store=True, digits=dp.get_precision('Account'),)
+
 
     @api.constrains('lc_receivable_collection_ids')
     def constrains_lc_receivable_collection_ids(self):
@@ -396,6 +399,8 @@ class LCReceivablePayment(models.Model):
             lc = self.env['letter.credit'].search([('id', '=', vals['lc_id'])])
             vals['operating_unit_id'] = lc.operating_unit_id.id
 
+        if 'ibp_loan' not in vals:
+            vals['ibp_loan'] = self._get_value_ibp_load(vals['analytic_account_id'], vals['date'])
         return super(LCReceivablePayment, self).create(vals)
 
     @api.multi
@@ -417,6 +422,43 @@ class LCReceivablePayment(models.Model):
     def _needaction_domain_get(self):
         return [('state', '=', 'confirm')]
 
+    @api.onchange('analytic_account_id')
+    def _get_value_ibp_load(self, _analytic_account_id=None, _date=None):
+
+        analytic_account_id = _analytic_account_id
+        date = _date
+        ReportUtility = self.env['report.utility']
+        if date is None:
+            date = self.date
+        str_date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S').date()
+        date = ReportUtility.get_date_from_string(str(str_date))
+        if analytic_account_id is None:
+            analytic_account_id = self.analytic_account_id.id
+        query = """select dr.date_start as date_start, dr.date_end as date_end from date_range as dr
+                                        LEFT JOIN date_range_type as drt ON drt.id = dr.type_id 
+                                        where fiscal_year=True 
+                                        and '%s' between dr.date_start and dr.date_end""" % date
+        self.env.cr.execute(query)
+        fiscal_year_date = self.env.cr.dictfetchall()
+        start_date = ReportUtility.get_date_from_string(fiscal_year_date[0]['date_start'])
+        end_date = ReportUtility.get_date_from_string(fiscal_year_date[0]['date_end'])
+
+        if analytic_account_id:
+            query = ("select SUM(aml.debit)-SUM(aml.credit) as ibp_loan from account_move_line as aml "
+                     "LEFT JOIN account_move as am ON am.id = aml.move_id "
+                    "LEFT JOIN account_account as aa ON aa.id=aml.account_id "
+                    "LEFT JOIN account_account_type as aat ON aat.id = aa.user_type_id "
+                    "WHERE aml.analytic_account_id={0} and aat.is_ibp_loan=True and am.state='posted' and '{1}' between '{2}' and '{3}'").format(analytic_account_id, date, start_date, end_date)
+            self.env.cr.execute(query)
+            ibp_loan_data = self.env.cr.dictfetchall()
+
+            ibp_loan = ibp_loan_data[0]['ibp_loan']
+            if not ibp_loan:
+                ibp_loan = 0
+            if _analytic_account_id is None:
+                self.ibp_loan = ibp_loan
+            else:
+                return ibp_loan
 
 class LCReceivableCollection(models.Model):
     _name = 'lc.receivable.collection'
@@ -547,3 +589,4 @@ class LCReceivableMiscellaneous(models.Model):
     def _onchange_amount_in_company_currency(self):
         if self.amount_in_currency and self.currency_rate and self.currency_id.id:
             self.amount_in_company_currency = self.amount_in_currency * self.currency_rate
+
