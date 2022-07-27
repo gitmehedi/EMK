@@ -66,7 +66,7 @@ class MonthlyLoanDeduction(models.AbstractModel):
         for rec in dpt_payslips_list:
             if rec['val']:
                 for value in rec['val']:
-                    if value['LOAN'] != 0:
+                    if 'LOAN' in value and value['LOAN'] != 0:
                         loan_val.append(value)
 
         for rule in rule_list:
