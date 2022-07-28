@@ -18,8 +18,8 @@
 
                     </group>
                     <footer>
-                        <button name="action_update_pi_number" string="Yes" type="object" default_focus="1" class="oe_highlight"/>
-                        <button name="action_no" string="No" type="object" default_focus="1" class="btn-danger"/>
+                        <button name="action_update_pi_number" string="Update" type="object" default_focus="1" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
                     </footer>
                 </form>
             </field>
