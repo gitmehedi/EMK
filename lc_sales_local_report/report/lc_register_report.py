@@ -369,7 +369,7 @@ class LcRegisterXLSX(ReportXlsx):
              'text_wrap': True})
         sub_header_format_left.set_font_name('Times New Roman')
 
-        lc_static_issue_date = '01/06/2022'
+        lc_static_issue_date = '01/01/2022'
         where = ''
         filter_by_text = ''
         if filter_by == 'goods_delivered_doc_not_prepared':
