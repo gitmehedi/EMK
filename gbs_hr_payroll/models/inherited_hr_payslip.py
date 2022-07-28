@@ -31,6 +31,12 @@ class HrPayslipEmployees(models.TransientModel):
             if not payslip.contract_id:
                 payslip.unlink()
 
+            net_amount = 0
+            for line_id in payslip.line_ids:
+                if line_id.code == 'NET':
+                    net_amount = line_id.amount
+            if net_amount <= 0:
+                payslip.unlink()
         return res
 
 
