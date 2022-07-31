@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="event_lists_report_form_view" model="ir.ui.view">
+            <field name="name">event.report.wizard</field>
+            <field name="model">event.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Events Report">
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                        </group>
+                        <group>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="button_export_xlsx" type="object" string="Generate" class="oe_highlight"/>
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_event_lists_report_view" model="ir.actions.act_window">
+            <field name="name">Events Lists</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="src_model">event.event</field>
+            <field name="res_model">event.report.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="event_lists_report_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_event_lists_report_xlsx" model="ir.actions.report.xml">
+            <field name="name">Events Lists</field>
+            <field name="model">event.report.wizard</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="report_name">event_management.events_xls</field>
+            <field name="report_type">xlsx</field>
+            <field name="auto" eval="False"/>
+        </record>
+
+        <menuitem id="event_report_menu" groups="event_user.group_event_officer"
+                  parent="event.menu_reporting_events" sequence="10" action="action_event_lists_report_view"/>
+    </data>
+</odoo>
