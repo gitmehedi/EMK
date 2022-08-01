@@ -369,7 +369,7 @@ class SaleOrder(models.Model):
             stock_amt_list = []
             for stock_picking in stock_pick_pool:
                 for move in stock_picking.move_lines:
-                    product_qty = move.ordered_qty
+                    product_qty = move.product_qty
                     product_id = move.product_id
                     for sale_order_line in stock_picking.sale_id.order_line:
                         if sale_order_line.product_id == product_id:
