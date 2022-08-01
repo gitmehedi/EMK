@@ -5,7 +5,7 @@ acc_mem_certification_mem,member_certification_mem,model_member_certification,me
 acc_mem_certification_off,member_certification_off,model_member_certification,member_user.group_mem_user_officer,1,1,1,1
 
 acc_mem_occupation_app,mem_occupation_app,model_member_occupation,member_user.group_mem_user_applicant,1,0,0,0
-acc_mem_occupation_mem,mem_occupation_mem,model_member_occupation,member_user.group_user_member,1,0,0,1
+acc_mem_occupation_mem,mem_occupation_mem,model_member_occupation,member_user.group_user_member,1,1,0,1
 acc_mem_occupation_off,mem_occupation_off,model_member_occupation,member_user.group_mem_user_officer,1,1,1,1
 
 acc_mem_subject_interest_app,member_subject_interest_app,model_member_subject_interest,member_user.group_mem_user_applicant,1,0,0,0
@@ -47,3 +47,9 @@ access_product_membership_manager,product.template.user,model_product_template,b
 
 acc_mem_mail_channel_member,acc_mem_mail_channel_member,mail.model_mail_channel,member_user.group_user_member,1,1,1,0
 acc_mem_mail_alias_member,acc_mem_mail_alias_member,mail.model_mail_alias,member_user.group_user_member,1,1,1,0
+
+acc_mem_mail_thread_member,mem_mail_thread_member,mail.model_mail_thread,member_user.group_user_member,1,0,0,0
+acc_mem_mail_mess_member,mem_mail_mess_member,mail.model_mail_message,member_user.group_user_member,1,0,0,0
+acc_mem_mail_mess_sub_member,mem_mail_mess_sub_member,mail.model_mail_message_subtype,member_user.group_user_member,1,0,0,0
+
+acc_mem_res_users_member,mem_res_users_member,base.model_res_users,member_user.group_user_member,1,1,0,0

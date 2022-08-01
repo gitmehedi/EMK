@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_membership_profile_update_wizard_form" model="ir.ui.view">
+        <field name="name">membership.profile.update.wizard.form</field>
+        <field name="model">membership.profile.update.wizard</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Personal Information">
+                <group>
+                    <group>
+                        <label for="street" string="Address"/>
+                        <div class="o_address_format">
+                            <field name="street" placeholder="Street..." class="o_address_street"/>
+                            <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                            <field name="city" placeholder="City" class="o_address_city"/>
+                            <field name="state_id" class="o_address_state" placeholder="State"
+                                   options='{"no_open": True}'/>
+                            <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                            <field name="country_id" placeholder="Country" class="o_address_country"
+                                   options='{"no_open": True, "no_create": True}'/>
+                        </div>
+                        <field name="website" widget="url"/>
+                    </group>
+                    <group>
+                        <field name="phone" placeholder="8801910000000"/>
+                        <field name="mobile" placeholder="8801910000000"/>
+                    </group>
+                </group>
+                <group string="Basic Information">
+                    <group>
+                        <field name="occupation"
+                               options="{'no_create_edit':True,'no_open':True}"/>
+                        <field name="occupation_other"/>
+                    </group>
+                    <group>
+                        <field name="subject_of_interest" widget="many2many_tags"
+                               options="{'no_create_edit':True,'no_open':True}"/>
+                        <field name="subject_of_interest_others"/>
+                    </group>
+                </group>
+                <group string="Educational Information">
+                    <group>
+                        <field name="alumni_institute"/>
+                        <field name="last_place_of_study"/>
+                        <field name="highest_certification"
+                               options="{'no_create_edit':True,'no_open':True}"/>
+                        <field name="highest_certification_other"
+                               options="{'no_create_edit':True,'no_open':True}"/>
+                    </group>
+                    <group>
+                        <field name="field_of_study"/>
+                        <field name="place_of_study"/>
+                        <field name="usa_work_or_study" widget="radio" options="{'horizontal': true}"/>
+                        <field name="usa_work_or_study_place"
+                               attrs="{'invisible':[('usa_work_or_study','=','no')],'required':[('usa_work_or_study','=','yes')]}"/>
+                        <field name="alumni_institute"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Additional Information">
+                        <field name="current_employee"/>
+                        <field name="work_title"/>
+                        <field name="work_phone"/>
+                        <field name="info_about_emk"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string='Confirm' name="update_profile" type='object' class="oe_highlight"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_membership_profile_update" model="ir.actions.act_window">
+        <field name="name">Member Profile Update</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">membership.profile.update.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

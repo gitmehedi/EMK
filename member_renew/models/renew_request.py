@@ -1,7 +1,7 @@
 import base64
 
 from odoo import models, fields, api, _
-from odoo.addons.opa_utility.helper.utility import Utility,Message
+from odoo.addons.opa_utility.helper.utility import Utility, Message
 from odoo.exceptions import ValidationError, Warning
 
 
@@ -30,8 +30,8 @@ class RenewRequest(models.Model):
                                track_visibility="onchange", readonly=True, states={'request': [('readonly', False)]})
     payment_ids = fields.Many2many('account.payment', string='Payment')
     payment_amount = fields.Float(string='Payment Amount')
-    renew_amount = fields.Float(string="Renew Amount", track_visibility="onchange", required=True,
-                                readonly=True, states={'request': [('readonly', False)]})
+    renew_amount = fields.Float(string="Renew Amount", compute='_compute_renew_amount',
+                                track_visibility="onchange", store=True)
     approve_date = fields.Date(string='Approve Date', default=fields.Date.today(), track_visibility="onchange",
                                readonly=True, states={'request': [('readonly', False)]})
     invoice_id = fields.Many2one('account.invoice', string='Invoice', track_visibility="onchange", readonly=True)
@@ -60,13 +60,17 @@ class RenewRequest(models.Model):
         }
         return res
 
+    @api.depends('membership_type_id', 'membership_duration')
+    def _compute_renew_amount(self):
+        for rec in self:
+            rec.renew_amount = rec.membership_duration * rec.membership_type_id.list_price
+
     @api.onchange('membership_type_id', 'membership_id', 'membership_duration')
     def onchange_membership_type(self):
         if self.membership_id and self.membership_type_id:
             self.membership_state_date = Utility.next_date(self.membership_id.membership_stop, 1, 'days')
             self.membership_end_date = Utility.next_date(self.membership_id.membership_stop,
                                                          self.membership_duration)
-            self.renew_amount = self.membership_duration * self.membership_type_id.list_price
 
     @api.onchange('payment_ids')
     def onchange_payment_ids(self):
