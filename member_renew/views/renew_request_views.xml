@@ -27,9 +27,9 @@
                             <field name="membership_state_date"/>
                             <field name="membership_end_date"/>
                         </group>
-                        <group string="Payment Information">
+                        <group string="Payment Information" >
                             <field name="renew_amount"/>
-                            <field name="request_date"/>
+                            <field name="request_date" readonly="1"/>
                             <field name="invoice_id" states="invoice"
                                    options="{'no_create':True,'no_create_edit':True}"/>
                             <field name="payment_ids" widget="many2many_tags" states="done"/>
