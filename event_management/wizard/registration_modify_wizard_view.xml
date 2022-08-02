@@ -11,7 +11,7 @@
                             <field name="last_date_reg"/>
                         </group>
                         <group>
-                            <field name="close_registration"/>
+                            <field name="close_registration" widget="radio" options="{'horizontal': true}"/>
                         </group>
                     </group>
                     <footer>
