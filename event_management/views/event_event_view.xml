@@ -120,7 +120,7 @@
                             <field name="date_begin"/>
                             <field name="date_end"/>
                             <field name="last_date_reg"/>
-                            <field name="close_registration"/>
+                            <field name="close_registration" widget="radio" options="{'horizontal': true}"/>
                         </group>
                     </group>
                     <group string="Payments Information">

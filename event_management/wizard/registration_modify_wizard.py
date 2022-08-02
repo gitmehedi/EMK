@@ -5,7 +5,7 @@ class WizardMonthlyEvent(models.TransientModel):
     _name = "registration.modify.wizard"
 
     last_date_reg = fields.Datetime(string='Expected Registration Date')
-    close_registration = fields.Boolean(String='Close Registration')
+    close_registration = fields.Selection([('open', 'Open'), ('close', 'Close')], string='Close Registration')
 
     @api.multi
     def act_registration(self):

@@ -118,7 +118,8 @@ class EventEvent(models.Model):
                                         'approve': [('readonly', False), ('required', True)]})
     total_participation_amount = fields.Float(string="Total Participation Amount", compute='compute_total_collection')
     state = fields.Selection(helper.event_state, string="State")
-    close_registration = fields.Boolean(String='Close Registration', track_visibility='onchange', readonly=True, default=False)
+    close_registration = fields.Selection([('open', 'Open'), ('close', 'Close')], string='Close Registration',
+                                          track_visibility='onchange', readonly=True, default='open')
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):
