@@ -4,7 +4,6 @@
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/opa_utility/static/src/js/bootstrap.validator.js"></script>
             <script type="text/javascript" src="/opa_utility/static/src/js/utils.js"></script>
-            <script type="text/javascript" src="/event_registration/static/src/js/custom.js"></script>
             <link rel="stylesheet" href="/event_registration/static/src/css/style.css"/>
         </xpath>
     </template>

@@ -19,6 +19,7 @@
         'opa_utility',
     ],
     'data': [
+        'views/static_templates.xml',
         'views/event_reservation_templates.xml',
         'views/website_event_templates.xml',
         'data/email_template.xml',

@@ -78,9 +78,9 @@ class MembershipProfileUpdateWizard(models.TransientModel):
         if self.city:
             vals['city'] = self.city
         if self.state_id:
-            vals['state_id'] = self.state_id
+            vals['state_id'] = self.state_id.id
         if self.country_id:
-            vals['country_id'] = self.country_id
+            vals['country_id'] = self.country_id.id
         if self.phone:
             vals['phone'] = self.phone
         if self.mobile:

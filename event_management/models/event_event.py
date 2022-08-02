@@ -89,10 +89,10 @@ class EventEvent(models.Model):
                                    readonly=True,
                                    states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     target_audience_group = fields.Char(string="Target Audience Group", readonly=True,
-                                             states={'draft': [('readonly', False)],
-                                                     'mark_close': [('readonly', False)]})
+                                        states={'draft': [('readonly', False)],
+                                                'mark_close': [('readonly', False)]})
     target_age = fields.Char(string="Target Age", required=True, readonly=True,
-                                states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
+                             states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     outreach_plan = fields.Many2many('event.outreach.plan', string="Outreach Plan", readonly=True,
                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True,
@@ -114,10 +114,11 @@ class EventEvent(models.Model):
                                states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     event_share_name = fields.Char()
     event_share = fields.Binary(string="Event Share Upload", attachment=True, track_visibility='onchange',
-                                  states={'draft': [('readonly', False)],
-                                          'approve': [('readonly', False), ('required', True)]})
+                                states={'draft': [('readonly', False)],
+                                        'approve': [('readonly', False), ('required', True)]})
     total_participation_amount = fields.Float(string="Total Participation Amount", compute='compute_total_collection')
     state = fields.Selection(helper.event_state, string="State")
+    close_registration = fields.Boolean(String='Close Registration', track_visibility='onchange', readonly=True, default=False)
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):
@@ -128,7 +129,6 @@ class EventEvent(models.Model):
     def compute_total_collection(self):
         for record in self:
             record.total_participation_amount = sum([reg.event_fee for reg in record.registration_ids])
-
 
     # @api.onchange('event_book_ids')
     # def onchange_event_book_ids(self):
@@ -239,7 +239,7 @@ class EventRegistration(models.Model):
     @api.one
     def button_reg_close(self):
         res = super(EventRegistration, self).button_reg_close()
-        self.write({'event_fee':self.event_id.participating_amount})
+        self.write({'event_fee': self.event_id.participating_amount})
 
 
 class AttendeeProfession(models.Model):

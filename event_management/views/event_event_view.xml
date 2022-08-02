@@ -42,6 +42,8 @@
                                 groups="event_user.group_event_officer"/>
                         <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"
                                 groups="event_user.group_event_officer"/>
+                        <button string="Registration Modify" name="%(action_registration_modify_wizard)d" states="confirm" type="action"
+                                groups="event_user.group_event_officer"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,approve,confirm"/>
                     </header>
                 </xpath>
@@ -118,6 +120,7 @@
                             <field name="date_begin"/>
                             <field name="date_end"/>
                             <field name="last_date_reg"/>
+                            <field name="close_registration"/>
                         </group>
                     </group>
                     <group string="Payments Information">
