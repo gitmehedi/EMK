@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="wizard_registration_modify_wizard_form_view" model="ir.ui.view">
+            <field name="name">registration.modify.wizard</field>
+            <field name="model">registration.modify.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Monthly Event Report">
+                    <group>
+                        <group>
+                            <field name="last_date_reg"/>
+                        </group>
+                        <group>
+                            <field name="close_registration"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="act_registration" type="object"
+                                string="Submit" class="oe_highlight"/>
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_registration_modify_wizard" model="ir.actions.act_window">
+            <field name="name">Registration Modify</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">registration.modify.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template inherit_id="website.assets_frontend" id="event_common_assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/opa_utility/static/src/css/style.css"/>
+            <script type="text/javascript" src="/opa_utility/static/src/js/bootstrap.validator.js"></script>
+            <script type="text/javascript" src="/event_registration/static/src/js/custom.js"></script>
+        </xpath>
+    </template>
+</odoo>
