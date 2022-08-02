@@ -26,6 +26,7 @@
         'data/ir_sequence.xml',
         'wizard/wizard_monthly_event_view.xml',
         'wizard/data_import_wizard_view.xml',
+        'wizard/registration_modify_wizard_view.xml',
         'views/menu_view.xml',
         'views/event_type_view.xml',
         'views/event_category_view.xml',
