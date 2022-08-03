@@ -146,10 +146,7 @@
                                                        id="request_date" placeholder="1960-12-31" readonly="readonly"
                                                        class="form-control input-sm reqfield" required="required"/>
                                             </div>
-                                            <!--                                                         <input type="text" name="phone" t-att-value="phone" id="phone"-->
-                                            <!--                                                       placeholder="8801900000000" maxlength="13" minlength="13"-->
-                                            <!--                                                       class="form-control input-sm reqfield number" pattern="(880)([0-9]{10})"-->
-                                            <!--                                                       data-minlength="13" data-maxlength="13" required="required"/>-->
+
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
@@ -261,36 +258,19 @@
                                     <div class="col-md-6">
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
-                                                <label for="outreach_plan_ids" class="control-label">Outreach Plan
+                                                <label for="outreach_plan" class="control-label">Outreach Plan
                                                 </label>
                                                 <div class="mar-btm required">
                                                     <t t-foreach="outreach_plan_ids" t-as='label'>
                                                         <input type="checkbox"
                                                                name="outreach_plan"
                                                                t-att-value="label_value[0]"
-                                                               t-att-checked="'checked' if label_value[0] in facilities_ids else None"/>
+                                                               t-att-checked="'checked' if label_value[0] in outreach_plan else None"/>
                                                         <t t-esc="label_value[1]"/>
                                                     </t>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!--                                        <div class="col-md-12">-->
-                                        <!--                                            -->
-                                        <!--                                            <div class="form-group form-field">-->
-                                        <!--                                                <label for="outreach_plan" class="control-label"></label>-->
-                                        <!--                                                <select class="form-control input-sm reqfield" name="outreach_plan"-->
-                                        <!--                                                        id="outreach_plan" required="required">-->
-                                        <!--                                                    <option value="">&#45;&#45;Please Select&#45;&#45;</option>-->
-                                        <!--                                                    <t t-foreach="outreach_plan_ids" t-as='label'>-->
-                                        <!--                                                        <option t-att-value="label_value[0]"-->
-                                        <!--                                                                t-att-selected="'selected' if outreach_plan==label_value[0] else None">-->
-                                        <!--                                                            <t t-esc="label_value[1]"/>-->
-                                        <!--                                                        </option>-->
-                                        <!--                                                    </t>-->
-                                        <!--                                                </select>-->
-                                        <!--                                            </div>-->
-                                        <!--                                        </div>-->
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
                                                 <label for="outreach_plan_other" class="control-label">Outreach Plan
@@ -338,7 +318,6 @@
                                                     <tr>
                                                         <td>
                                                             <input type="file" class="attachment" name="event_details"
-                                                                   required="required"
                                                                    accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"/>
                                                         </td>
                                                     </tr>
