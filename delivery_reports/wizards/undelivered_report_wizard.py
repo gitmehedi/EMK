@@ -6,7 +6,8 @@ from odoo import api, fields, models, _
 class UndeliveredReportWizard(models.TransientModel):
     _name = 'undelivered.report.wizard'
 
-    date_today = fields.Date(string='Date', readonly=True, default=datetime.datetime.today())
+    # date_today = fields.Date(string='Date', readonly=True, default=datetime.datetime.today())
+    date_today = fields.Date(string='Date', readonly=True, default=datetime.datetime.now(pytz.timezone('Asia/Dhaka')))
     partner_id = fields.Many2one('res.partner', string='Customer', domain="([('customer','=','True')])")
     product_tmpl_id = fields.Many2one('product.template', string='Product', domain="([('sale_ok','=','True')])")
     product_id = fields.Many2one('product.product', string='Product Variant', domain="([('sale_ok','=','True')])")
