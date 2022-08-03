@@ -1,85 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-  <data>
+<odoo>
     <!-- Tree View -->
-	<record id="hr_import_attendance_tree" model="ir.ui.view">
-			<field name="name">hr_import_attendance_tree</field>
-			<field name="model">hr.attendance.import</field>
-			<field name="arch" type="xml">
-				<tree string="Import Attendance">
-					<field name= "name" />					
-					<field name="import_creation_date_time" />
-				</tree>
-			</field>
-		</record>
-		
-		<!-- Form View -->
-		<record id="hr_import_attendance_form" model="ir.ui.view">
-			<field name="name">hr_import_attendance_form</field>
-			<field name="model">hr.attendance.import</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Import Attendance" delete ="0" create = "0">
-				 	<header>
-	                    <button name="hr_attendance_import.hr_earned_leave_encashment_wizard_action_view"
-							states="draft,confirmed" type="action" string="Browse" /> 
-					 	<button name="validated" type="object" string="Import" states="draft,confirmed"/>
-					 	<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,imported"/>                    	
-					 	
-                	</header>				
-                	
-					<sheet>
+	<record id="hr_import_attendance_tree_view" model="ir.ui.view">
+		<field name="name">hr_import_attendance_tree</field>
+		<field name="model">hr.attendance.import</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Import Attendance">
+				<field name= "name" />
+				<field name="import_creation_date_time" />
+			</tree>
+		</field>
+	</record>
+
+	<!-- Form View -->
+	<record id="hr_import_attendance_form" model="ir.ui.view">
+		<field name="name">hr_import_attendance_form</field>
+		<field name="model">hr.attendance.import</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Import Attendance" delete ="0" create = "0">
+				<header>
+					<button name="action_validate" type="object"
+							string="Validate" states="draft"
+							class="oe_highlight"/>
+
+					<button name="action_confirm" type="object"
+							string="Apply" states="validate"
+							class="oe_highlight"/>
+
+					<button name="action_reset_to_draft" type="object"
+							string="Reset to Draft" states="validate"
+							class="oe_highlight"/>
+
+					<button name="action_approve" type="object"
+							string="Approve" states="confirmed"
+							class="oe_highlight"/>
+
+					<button name="hr_attendance_import.hr_import_attendance_wizard_action_view"
+							type="action" string="Upload Excel"
+							attrs="{'invisible': [('state','!=','draft')]}"
+							class="btn-info"/>
+
+					<field name="state" widget="statusbar" statusbar_visible="draft,validate,confirmed,imported"/>
+
+				</header>
+
+				<sheet>
+					<group>
 						<group>
-							<group>
-								<field name="name" />					
-								<field name="import_creation_date_time" readonly="1"/>
-							</group>								
+							<field name="name" />
+							<field name="company_id" />
+							<field name="import_creation_date_time" readonly="1"/>
 						</group>
-						<notebook position="inside">
-							<page string="Raw Input">
-								<field name="import_temp">
-									<tree string="List" editable="bottom">
-										<field name="employee_code"/>
-										<field name="check_in"/>
-										<field name="check_out"/>				
-									</tree>
-								</field>	
-							</page>
-							<page string="Error Data">
-								<field name="import_error_lines">
-									<tree string="List" editable="bottom">
-										<field name="employee_code"/>
-										<field name="check_in"/>
-										<field name="check_out"/>				
-									</tree>
-								</field>
-							</page>
-							<page string="Ready to Import">
-								<field name="lines">
-									<tree string="List" editable="bottom">
-										<field name="employee_id"/>
-										<field name="check_in"/>
-										<field name="check_out"/>				
-									</tree>
-								</field>	
-							</page>
-					</notebook>
-	                </sheet>	                
-				</form>
-			</field>
-		</record>
+						<group>
+							<field name="operating_unit_id" />
+						</group>
+					</group>
+					<notebook position="inside">
+<!--						<page string="Raw Input">-->
+<!--							<field name="import_temp">-->
+<!--								<tree string="List" editable="bottom">-->
+<!--									<field name="employee_code"/>-->
+<!--									<field name="check_in"/>-->
+<!--									<field name="check_out"/>-->
+<!--								</tree>-->
+<!--							</field>-->
+<!--						</page>-->
+						<page string="Import Data">
+							<field name="lines">
+								<tree string="List" editable="bottom" create="false" delete="false">
+									<field name="employee_id"/>
+									<field name="acc_no"/>
+									<field name="check_in"/>
+									<field name="check_out"/>
+								</tree>
+							</field>
+						</page>
+						<page string="Error Data">
+							<field name="import_error_lines">
+								<tree string="List" editable="bottom" create="false" delete="false">
+									<field name="employee_id"/>
+									<field name="acc_no"/>
+									<field name="check_in"/>
+									<field name="check_out"/>
+								</tree>
+							</field>
+						</page>
+
+				</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
     
     
-    <record id="hr_attendance_import_ac" model="ir.actions.act_window">
+    <record id="hr_attendance_import_action" model="ir.actions.act_window">
 			<field name="name">Import Attendance</field>
 			<field name="res_model">hr.attendance.import</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr_import_attendance_tree_view"/>
 	</record>
 	
-	
     <!-- Menu Item -->
-	<!--<menuitem id="menu_hr_attendance_import" name="Import Attendance" parent="hr_attendance.menu_hr_attendance_manage_attendances"-->
-				<!--groups="hr.group_hr_user" action="hr_attendance_import_ac" />-->
-    
-  </data>
-</openerp>
+	<menuitem id="menu_hr_attendance_import" name="Import Attendance" parent="hr_manual_attendance.menu_hr_manual_attendance"
+				groups="hr.group_hr_user" action="hr_attendance_import.hr_attendance_import_action" />
+</odoo>
