@@ -41,13 +41,14 @@ class EventEvent(models.Model):
     facilities_ids = fields.Many2many('event.service.type', string="Facilities Requested", track_visibility='onchange',
                                       required=True, readonly=True,
                                       states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    invoice_ids = fields.Many2many('account.invoice', string="Invoices", track_visibility='onchange')
+    invoice_ids = fields.Many2many('account.invoice', string="Invoices", track_visibility='onchange',readonly=True,
+                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     total_seat_available = fields.Integer(string="Total Seat Available", compute='compute_total_seat')
-    event_book_ids = fields.One2many('event.room.book', 'event_id', string='Event Rooms', readonly=False,
+    event_book_ids = fields.One2many('event.room.book', 'event_id', string='Event Rooms', readonly=True,
                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    event_task_ids = fields.One2many('event.task.list', 'event_id', string='Event Tasks', readonly=False,
+    event_task_ids = fields.One2many('event.task.list', 'event_id', string='Event Tasks', readonly=True,
                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    date_begin = fields.Datetime(string='Start Date', required=True, track_visibility='onchange',
+    date_begin = fields.Datetime(string='Start Date', required=True, track_visibility='onchange', readonly=True,
                                  states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     payment_type = fields.Selection(helper.payment_type, required=True,
                                     default='free', string='Type', readonly=True,
@@ -112,14 +113,19 @@ class EventEvent(models.Model):
                                states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     date_end = fields.Datetime(readonly=True,
                                states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
+    event_category_id = fields.Many2one('event.category', string='Event Category', track_visibility='onchange',
+                                        readonly=True,states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     event_share_name = fields.Char()
-    event_share = fields.Binary(string="Event Share Upload", attachment=True, track_visibility='onchange',
-                                states={'draft': [('readonly', False)],
-                                        'approve': [('readonly', False), ('required', True)]})
+    event_share = fields.Binary(string="Event Details", attachment=True, track_visibility='onchange',
+                                readonly=True, states={'draft': [('readonly', False)],
+                                        'approve': [('readonly', False)]})
     total_participation_amount = fields.Float(string="Total Participation Amount", compute='compute_total_collection')
     state = fields.Selection(helper.event_state, string="State")
     close_registration = fields.Selection([('open', 'Open'), ('close', 'Close')], string='Close Registration',
                                           track_visibility='onchange', readonly=True, default='open')
+    social_content_ids = fields.One2many('event.social.content.reservation', 'line_id',readonly=True,
+                                         states={'draft': [('readonly', False)],
+                                                 'reservation': [('readonly', False), ('required', True)]})
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):
@@ -308,3 +314,14 @@ class AttendeeProfession(models.Model):
                 return super(AttendeeProfession, rec).unlink()
             except IntegrityError:
                 raise ValidationError(_(Message.UNLINK_INT_WARNING))
+
+
+class EventSocialContentReservation(models.Model):
+    _name = 'event.social.content.reservation'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Event Social Content'
+
+    name = fields.Char('Content Title', required=True, translate=True, track_visibility='onchange')
+    content = fields.Binary('Content Upload', translate=True, track_visibility='onchange')
+    content_description = fields.Char('Content Description', translate=True, track_visibility='onchange')
+    line_id = fields.Many2one('event.event', ondelete='cascade', translate=True, track_visibility='onchange')

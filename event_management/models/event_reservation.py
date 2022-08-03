@@ -82,12 +82,12 @@ class EventReservation(models.Model):
     mode_of_payment = fields.Many2one('account.journal', string='Mode of Payment',
                                       track_visibility='onchange', domain=[('type', 'in', ['bank', 'cash'])],
                                       readonly=True, states={'draft': [('readonly', False)],
-                                            'reservation': [('readonly', False), ('required', True)]})
+                                                             'reservation': [('readonly', False), ('required', True)]})
     paid_amount = fields.Float(string='Paid Amount', digits=(12, 2), track_visibility='onchange', readonly=True,
                                states={'draft': [('readonly', False)],
                                        'reservation': [('readonly', False), ('required', True)]})
     refundable_amount = fields.Float(string='Refundable Amount', digits=(12, 2), track_visibility='onchange',
-                                     readonly=True, states={'draft': [('readonly', False),('required', False)],
+                                     readonly=True, states={'draft': [('readonly', False), ('required', False)],
                                                             'reservation': [('readonly', False), ('required', True)]})
     approved_budget = fields.Float(string='Approved Budget', digits=(12, 2), track_visibility='onchange', readonly=True,
                                    states={'draft': [('readonly', False)],
@@ -145,11 +145,13 @@ class EventReservation(models.Model):
     reserv_url = fields.Char(string='Reservation URL', track_visibility='onchange', )
     event_details_name = fields.Char()
     event_details = fields.Binary(string="Event Details", attachment=True, track_visibility='onchange',
-                                  states={'draft': [('readonly', False)],
-                                          'reservation': [('readonly', False), ('required', True)]})
+                                  readonly=True, states={'draft': [('readonly', False)],
+                                          'reservation': [('readonly', False)]})
     social_content_ids = fields.One2many('event.social.content', 'line_id',
                                          states={'draft': [('readonly', False)],
                                                  'reservation': [('readonly', False), ('required', True)]})
+    event_room_ids = fields.Many2many('event.room', 'reservation_id', 'event_id', string='Event Room',
+                                      track_visibility='onchange')
     state = fields.Selection(helper.reservation_state, string="State", default="draft", track_visibility='onchange')
 
     @api.constrains('start_date', 'end_date', 'last_date_reg')
@@ -256,6 +258,17 @@ class EventReservation(models.Model):
     @api.one
     def act_confirm(self):
         if self.state == 'on_process':
+            room = [(0, 0, {'room_id': val.id,
+                            'seat_no': val.max_seat,
+                            'event_id': self.id,
+                            'event_start': self.start_date,
+                            'event_stop': self.end_date}) for val in self.event_room_ids]
+            sm_content = [(0, 0, {'name': val.name,
+                            'content': val.content,
+                            'content_description': val.content_description,
+                            'line_id': self.id,
+                            }) for val in self.social_content_ids]
+
             vals = {
                 'name': self.event_name,
                 'organizer_id': self.poc_id.id,
@@ -292,6 +305,11 @@ class EventReservation(models.Model):
                 'notes': self.notes,
                 'purpose_of_event': self.purpose_of_event,
                 'ref_reservation': self.name,
+                'event_category_id': self.event_category_id.id,
+                'event_share': self.event_details,
+                'event_share_name': self.event_details_name,
+                'event_book_ids': room,
+                'social_content_ids': sm_content,
                 'event_mail_ids': [
                     (0, 0, {
                         'interval_unit': 'now',
@@ -300,7 +318,9 @@ class EventReservation(models.Model):
                             'event_registration.event_confirmation_registration')}),
                 ]
             }
+
             event = self.env['event.event'].create(vals)
+
             if event:
                 seq = self.env['ir.sequence'].next_by_code('event.reservation')
                 self.write({
