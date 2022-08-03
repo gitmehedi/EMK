@@ -72,6 +72,7 @@ class WebsiteRegistration(WebsiteEventController):
         qctx['event_name'] = None if 'event_name' not in qctx else qctx['event_name']
         qctx['poc_type_id'] = None if 'poc_type_id' not in qctx else int(qctx['poc_type_id'])
         qctx['facilities_ids'] = None if 'facilities_ids' not in qctx else int(qctx['facilities_ids'])
+        qctx['event_room_ids'] = None if 'event_room_ids' not in qctx else int(qctx['event_room_ids'])
         qctx['event_type_id'] = None if 'event_type_id' not in qctx else int(qctx['event_type_id'])
         qctx['space_id'] = 'yes' if 'space_id' not in qctx else qctx['space_id']
         qctx['seats_available'] = 'limited' if 'seats_available' not in qctx else qctx['seats_available']
@@ -90,7 +91,7 @@ class WebsiteRegistration(WebsiteEventController):
         qctx['participating_amount'] = None if 'participating_amount' not in qctx else qctx['participating_amount']
         qctx['target_audience_group'] = None if 'target_audience_group' not in qctx else qctx['target_audience_group']
         qctx['target_age'] = None if 'target_age' not in qctx else qctx['target_age']
-        qctx['outreach_plan'] = None if 'outreach_plan' not in qctx else qctx['outreach_plan']
+        qctx['outreach_plan'] = None if 'outreach_plan' not in qctx else int(qctx['outreach_plan'])
         qctx['outreach_plan_other'] = None if 'outreach_plan_other' not in qctx else qctx['outreach_plan_other']
         qctx['snakes_required'] = 'yes' if 'snakes_required' not in qctx else qctx['snakes_required']
         qctx['description'] = None if 'description' not in qctx else qctx['description'].strip()
@@ -104,6 +105,12 @@ class WebsiteRegistration(WebsiteEventController):
             qctx['facilities_ids'] = [int(val) for val in
                                       request.httprequest.form.getlist('facilities_ids')]
 
+        if 'event_room_ids' not in qctx:
+            qctx['event_room_ids'] = []
+        else:
+            qctx['event_room_ids'] = [int(val) for val in
+                                      request.httprequest.form.getlist('event_room_ids')]
+
         if 'poc_ids' not in qctx:
             qctx['poc_ids'] = self.generateDropdown('res.partner')
 
@@ -112,6 +119,9 @@ class WebsiteRegistration(WebsiteEventController):
 
         if 'facilities' not in qctx:
             qctx['facilities'] = self.generateDropdown('event.service.type',('service_type', 'in', ['external']))
+
+        if 'room_ids' not in qctx:
+            qctx['room_ids'] = self.generateDropdown('event.room')
 
         if 'event_type_ids' not in qctx:
             qctx['event_type_ids'] = self.generateDropdown('event.type')
@@ -179,6 +189,8 @@ class WebsiteRegistration(WebsiteEventController):
             data['event_details_name'] = values['event_details'].filename
             vals = [int(val) for val in request.httprequest.form.getlist('facilities_ids')]
             data['facilities_ids'] = [(6, 0, vals)]
+            room = [int(val) for val in request.httprequest.form.getlist('event_room_ids')]
+            data['event_room_ids'] = [(6, 0, room)]
 
         assert values.values(), "The form was not properly filled in."
 
@@ -193,6 +205,7 @@ class WebsiteRegistration(WebsiteEventController):
             'poc_id',
             'poc_type_id',
             'facilities_ids',
+            'event_room_ids',
             'event_type_id',
             'space_id',
             'seats_available',
