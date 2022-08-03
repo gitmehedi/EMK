@@ -127,7 +127,8 @@
                                     <tree editable="top">
                                         <field name="name"/>
                                         <field name="content_description"/>
-                                        <field name="content"/>
+                                        <field name="content_name" invisible="True"/>
+                                        <field name="content" filename="content_name"/>
                                     </tree>
                                     <form>
                                         <group>
@@ -136,7 +137,8 @@
                                                 <field name="content_description"/>
                                             </group>
                                             <group>
-                                                <field name="content"/>
+                                                <field name="content_name" invisible="True"/>
+                                                <field name="content" filename="content_name"/>
                                             </group>
                                         </group>
                                     </form>

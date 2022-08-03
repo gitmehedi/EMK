@@ -264,6 +264,7 @@ class EventReservation(models.Model):
                             'event_start': self.start_date,
                             'event_stop': self.end_date}) for val in self.event_room_ids]
             sm_content = [(0, 0, {'name': val.name,
+                            'content_name': val.content_name,
                             'content': val.content,
                             'content_description': val.content_description,
                             'line_id': self.id,
@@ -443,6 +444,7 @@ class EventSocialContent(models.Model):
     _description = 'Event Social Content'
 
     name = fields.Char('Content Title', required=True, translate=True, track_visibility='onchange')
+    content_name = fields.Char(track_visibility='onchange')
     content = fields.Binary('Content Upload', translate=True, track_visibility='onchange')
     content_description = fields.Char('Content Description', translate=True, track_visibility='onchange')
     line_id = fields.Many2one('event.reservation', ondelete='cascade', translate=True, track_visibility='onchange')

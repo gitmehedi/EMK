@@ -322,6 +322,7 @@ class EventSocialContentReservation(models.Model):
     _description = 'Event Social Content'
 
     name = fields.Char('Content Title', required=True, translate=True, track_visibility='onchange')
+    content_name = fields.Char(track_visibility='onchange')
     content = fields.Binary('Content Upload', translate=True, track_visibility='onchange')
     content_description = fields.Char('Content Description', translate=True, track_visibility='onchange')
     line_id = fields.Many2one('event.event', ondelete='cascade', translate=True, track_visibility='onchange')
