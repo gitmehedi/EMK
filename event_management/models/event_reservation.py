@@ -146,7 +146,7 @@ class EventReservation(models.Model):
     event_details_name = fields.Char()
     event_details = fields.Binary(string="Event Details", attachment=True, track_visibility='onchange',
                                   readonly=True, states={'draft': [('readonly', False)],
-                                          'reservation': [('readonly', False)]})
+                                                         'reservation': [('readonly', False)]})
     social_content_ids = fields.One2many('event.social.content', 'line_id',
                                          states={'draft': [('readonly', False)],
                                                  'reservation': [('readonly', False), ('required', True)]})
@@ -264,11 +264,11 @@ class EventReservation(models.Model):
                             'event_start': self.start_date,
                             'event_stop': self.end_date}) for val in self.event_room_ids]
             sm_content = [(0, 0, {'name': val.name,
-                            'content_name': val.content_name,
-                            'content': val.content,
-                            'content_description': val.content_description,
-                            'line_id': self.id,
-                            }) for val in self.social_content_ids]
+                                  'content_name': val.content_name,
+                                  'content': val.content,
+                                  'content_description': val.content_description,
+                                  'line_id': self.id,
+                                  }) for val in self.social_content_ids]
 
             vals = {
                 'name': self.event_name,
@@ -356,6 +356,7 @@ class EventReservation(models.Model):
             journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
             account_id = self.env['account.account'].search(
                 [('internal_type', '=', 'receivable'), ('deprecated', '=', False)])
+            analytic_acc = self.env['account.analytic.account'].search([('name', '=', 'EMK Cost Center')], limit=1)
 
             acc_invoice = {
                 'partner_id': self.poc_id.id,
@@ -363,6 +364,7 @@ class EventReservation(models.Model):
                 'date_due': datetime.strptime(self.start_date, '%Y-%m-%d %H:%M:%S') - timedelta(days=1),
                 'user_id': self.env.user.id,
                 'origin': self.name,
+                'reference': self.name + vals['subject'],
                 'account_id': account_id.id,
                 'state': 'draft',
                 'invoice_line_ids': [
@@ -370,6 +372,7 @@ class EventReservation(models.Model):
                         'name': service.name,
                         'product_id': service.id,
                         'price_unit': vals['amount'],
+                        'account_analytic_id': analytic_acc.id,
                         'account_id': journal_id.default_debit_account_id.id,
                     })]
             }

@@ -42,11 +42,17 @@
                 </xpath>
                 <xpath expr="//field[@name='email']" position="after">
                     <field name="date_of_birth" required="True" attrs="{'readonly' : [('state','=','done')]}"/>
-                    <field name="gender" attrs="{'readonly' : [('state','=','done')]}" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                    <field name="gender" attrs="{'readonly' : [('state','=','done')]}"
+                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                     <field name="profession_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"
                            attrs="{'readonly' : [('state','=','done')]}"/>
                     <field name="card_number" attrs="{'readonly' : [('state','=','done')]}"/>
-                    <field name="event_fee" readonly="True" attrs="{'invisible' : [('state','!=','done')]}"/>
+                    <field name="event_fee" readonly="True" attrs="{'invisible' : [('event_fee','=',0.00)]}"/>
+                </xpath>
+                <xpath expr="//button[@name='button_reg_close']" position="after">
+                    <button name="button_reg_payment" string="Pay Event Fee" type="object"
+                            attrs="{'invisible': [('event_fee', '!=', 0.00)]}"
+                            class="oe_highlight"/>
                 </xpath>
             </field>
         </record>
@@ -152,7 +158,8 @@
             <field name="name">attendee.profession.tree</field>
             <field name="model">attendee.profession</field>
             <field name="arch" type="xml">
-               <tree string="Attendee Profession" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                <tree string="Attendee Profession" decoration-info="state=='draft'"
+                      decoration-success="state=='approve'"
                       decoration-danger="state=='reject'"
                       decoration-bf="state in ('approve',)">
                     <field name="name"/>

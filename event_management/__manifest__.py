@@ -44,6 +44,7 @@
         'views/event_poc_views.xml',
         'views/event_reservation_view.xml',
         'views/event_poc_type_view.xml',
+        # 'views/event_session_view.xml',
         'report/report_event_completion_form.xml',
         'report/monthly_event_report_view.xml',
     ],

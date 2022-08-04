@@ -38,6 +38,8 @@
                                 class="oe_highlight" groups="event_user.group_event_officer"/>
                         <button string="Finish Event" name="button_done" states="mark_close" type="object"
                                 class="oe_highlight" groups="event_user.group_event_officer"/>
+                        <button string="Refund Amount"  name="act_refund" states="mark_close" type="object"
+                                class="oe_highlight" groups="event_user.group_event_officer"/>
                         <button string="Set To Draft" name="button_draft" states="cancel" type="object"
                                 groups="event_user.group_event_officer"/>
                         <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"
