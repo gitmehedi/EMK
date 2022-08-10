@@ -118,12 +118,17 @@
                                 <field name="facilities_ids"
                                        options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                             </page>
+                            <page string="Event Room" name="event_room">
+                                <field name="event_room_ids"
+                                       options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            </page>
                             <page string="Social Media Content" name="social_content">
                                 <field name="social_content_ids">
                                     <tree editable="top">
                                         <field name="name"/>
                                         <field name="content_description"/>
-                                        <field name="content"/>
+                                        <field name="content_name" invisible="True"/>
+                                        <field name="content" filename="content_name"/>
                                     </tree>
                                     <form>
                                         <group>
@@ -132,7 +137,8 @@
                                                 <field name="content_description"/>
                                             </group>
                                             <group>
-                                                <field name="content"/>
+                                                <field name="content_name" invisible="True"/>
+                                                <field name="content" filename="content_name"/>
                                             </group>
                                         </group>
                                     </form>

@@ -18,6 +18,7 @@
         'website_event_filter_selector',
         'create_partner_user',
         'gbs_gender',
+        'report_xlsx',
     ],
     'data': [
         'data/email_template.xml',
@@ -26,6 +27,7 @@
         'data/ir_sequence.xml',
         'wizard/wizard_monthly_event_view.xml',
         'wizard/data_import_wizard_view.xml',
+        'wizard/registration_modify_wizard_view.xml',
         'views/menu_view.xml',
         'views/event_type_view.xml',
         'views/event_category_view.xml',
@@ -39,7 +41,6 @@
         'views/event_task_list_view.xml',
         'views/event_outreach_plan_view.xml',
         'views/event_social_media_content_view.xml',
-        # 'views/event_close_view.xml',
         'views/event_poc_views.xml',
         'views/event_reservation_view.xml',
         'views/event_poc_type_view.xml',

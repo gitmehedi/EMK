@@ -49,7 +49,7 @@
                     </tbody>
                 </table>
                 <button type="submit"
-                        t-if="event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
+                        t-if="event.website_published == true and event.close_registration == 'open' and (event.last_date_reg &gt; datetime.datetime.now().strftime('%%Y-%%m-%%d %%H:%%M:%%S')) and event.state == 'confirm' and (event.seats_availability == 'unlimited' or event.seats_available)"
                         class="btn btn-success pull-left a-submit" t-attf-id="#{event.id}">
                     <i class="fa fa-user-plus">Register Now</i>
                 </button>
@@ -97,9 +97,10 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group form-field">
-                                        <label for="email" class="control-label">Email</label>
+                                        <label for="email" class="control-label">E-mail</label>
                                         <input type="email" t-attf-name="#{counter}-email" id="email"
                                                placeholder="Email" required="required"
+                                               pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
                                                class="form-control input-sm reqfield" data-minlength="2"
                                                data-maxlength="100"/>
 
@@ -108,10 +109,11 @@
                                 <div class="col-sm-6">
                                     <div class="form-group form-field">
                                         <label for="tel" class="control-label">Mobile Phone</label>
-                                        <input type="tel" t-attf-name="#{counter}-phone" id="tel"
-                                               placeholder="Mobile Phone" required="required"
-                                               class="form-control input-sm number reqfield" data-minlength="11"
-                                               data-maxlength="14"/>
+                                        <input type="tel" t-attf-name="#{counter}-phone" id="tel" required="required"
+                                               placeholder="8801900000000" minlength="13" maxlength="13"
+                                               pattern="(880)([0-9]{10})"
+                                               class="form-control input-sm number reqfield" data-minlength="13"
+                                               data-maxlength="13"/>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -125,11 +127,11 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group form-field">
-                                        <label for="birth_date" class="control-label">Date of Birth</label>
+                                        <label for="date_of_birth" class="control-label">Date of Birth</label>
                                         <input type="date" t-attf-name="#{counter}-date_of_birth" maxlength="10"
                                                placeholder="1960-12-31"
                                                minlength="10" class="form-control input-sm reqfield"
-                                               id="birth_date" required="required"/>
+                                               id="date_of_birth" required="required"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

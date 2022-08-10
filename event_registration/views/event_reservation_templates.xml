@@ -4,7 +4,6 @@
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/opa_utility/static/src/js/bootstrap.validator.js"></script>
             <script type="text/javascript" src="/opa_utility/static/src/js/utils.js"></script>
-            <script type="text/javascript" src="/event_registration/static/src/js/custom.js"></script>
             <link rel="stylesheet" href="/event_registration/static/src/css/style.css"/>
         </xpath>
     </template>
@@ -75,6 +74,21 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="event_room_ids" class="control-label">Event Room
+                                                </label>
+                                                <div class="mar-btm required">
+                                                    <t t-foreach="room_ids" t-as='label'>
+                                                        <input type="checkbox"
+                                                               name="event_room_ids"
+                                                               t-att-value="label_value[0]"
+                                                               t-att-checked="'checked' if label_value[0] in event_room_ids else None"/>
+                                                        <t t-esc="label_value[1]"/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -86,6 +100,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="col-md-6">
+
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
                                                 <label for="seats_available" class="control-label">Available Seats
@@ -131,10 +146,7 @@
                                                        id="request_date" placeholder="1960-12-31" readonly="readonly"
                                                        class="form-control input-sm reqfield" required="required"/>
                                             </div>
-                                            <!--                                                         <input type="text" name="phone" t-att-value="phone" id="phone"-->
-                                            <!--                                                       placeholder="8801900000000" maxlength="13" minlength="13"-->
-                                            <!--                                                       class="form-control input-sm reqfield number" pattern="(880)([0-9]{10})"-->
-                                            <!--                                                       data-minlength="13" data-maxlength="13" required="required"/>-->
+
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
@@ -175,50 +187,6 @@
                                     <div class="col-md-6">
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
-                                                <label for="mode_of_payment" class="control-label">Mode of Payment
-                                                </label>
-                                                <select class="form-control input-sm reqfield" name="mode_of_payment"
-                                                        id="mode_of_payment"
-                                                        required="required">
-                                                    <option value="">--Please Select--</option>
-                                                    <t t-foreach="payment_ids" t-as='label'>
-                                                        <option t-att-value="label_value[0]"
-                                                                t-att-selected="'selected' if mode_of_payment==label_value[0] else None">
-                                                            <t t-esc="label_value[1]"/>
-                                                        </option>
-                                                    </t>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label for="payment_type" class="control-label">Type</label>
-                                                <div class="mar-btm">
-                                                    <t t-foreach="payment_type_ids" t-as='label'>
-                                                        <label class="radio-inline">
-                                                            <input type="radio" name="payment_type"
-                                                                   t-att-value="label_value[0]"
-                                                                   t-att-checked="'checked' if label_value[0]==payment_type else None"
-                                                                   required="required"/>
-                                                            <t t-esc="label_value[1]"/>
-                                                        </label>
-                                                    </t>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label for="date_of_payment" class="control-label">Date for Payment
-                                                </label>
-                                                <input type="text" name="date_of_payment" t-att-value="date_of_payment"
-                                                       id="date_of_payment" placeholder="1960-12-31"
-                                                       class="form-control input-sm reqfield" required="required"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
                                                 <label for="proposed_budget" class="control-label">Proposed Budget
                                                 </label>
                                                 <input type="text" name="proposed_budget" t-att-value="proposed_budget"
@@ -227,6 +195,8 @@
                                                        required="required"/>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-md-6">
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
                                                 <label for="paid_attendee" class="control-label">Participation Charge
@@ -268,8 +238,10 @@
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
                                                 <label for="target_audience_group" class="control-label">Target Audience
-                                                    Group</label>
-                                                <input type="text" name="target_audience_group" t-att-value="target_audience_group"
+                                                    Group
+                                                </label>
+                                                <input type="text" name="target_audience_group"
+                                                       t-att-value="target_audience_group"
                                                        class="form-control input-sm reqfield"
                                                        id="target_audience_group" required="required"/>
                                             </div>
@@ -286,36 +258,19 @@
                                     <div class="col-md-6">
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
-                                                <label for="outreach_plan_ids" class="control-label">Outreach Plan
+                                                <label for="outreach_plan" class="control-label">Outreach Plan
                                                 </label>
                                                 <div class="mar-btm required">
                                                     <t t-foreach="outreach_plan_ids" t-as='label'>
                                                         <input type="checkbox"
                                                                name="outreach_plan"
                                                                t-att-value="label_value[0]"
-                                                               t-att-checked="'checked' if label_value[0] in facilities_ids else None"/>
+                                                               t-att-checked="'checked' if label_value[0] in outreach_plan else None"/>
                                                         <t t-esc="label_value[1]"/>
                                                     </t>
                                                 </div>
                                             </div>
                                         </div>
-
-<!--                                        <div class="col-md-12">-->
-<!--                                            -->
-<!--                                            <div class="form-group form-field">-->
-<!--                                                <label for="outreach_plan" class="control-label"></label>-->
-<!--                                                <select class="form-control input-sm reqfield" name="outreach_plan"-->
-<!--                                                        id="outreach_plan" required="required">-->
-<!--                                                    <option value="">&#45;&#45;Please Select&#45;&#45;</option>-->
-<!--                                                    <t t-foreach="outreach_plan_ids" t-as='label'>-->
-<!--                                                        <option t-att-value="label_value[0]"-->
-<!--                                                                t-att-selected="'selected' if outreach_plan==label_value[0] else None">-->
-<!--                                                            <t t-esc="label_value[1]"/>-->
-<!--                                                        </option>-->
-<!--                                                    </t>-->
-<!--                                                </select>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
                                         <div class="col-md-12">
                                             <div class="form-group form-field">
                                                 <label for="outreach_plan_other" class="control-label">Outreach Plan
@@ -356,14 +311,14 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="col-md-12">
-                                        <h4>Upload Event Details</h4>
+                                        <h4>Event Details</h4>
                                         <div class="input_fields_wrap">
                                             <div>
                                                 <table class="table table-hover" id="uploadtable">
                                                     <tr>
                                                         <td>
-                                                            <input type="file" class="attachment"  name="event_details" required="required"
-                                                            accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"/>
+                                                            <input type="file" class="attachment" name="event_details"
+                                                                   accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf"/>
                                                         </td>
                                                     </tr>
                                                 </table>

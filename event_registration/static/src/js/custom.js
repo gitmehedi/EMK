@@ -8,11 +8,21 @@ $(function () {
         changeYear: true,
         dateFormat: 'yy-mm-dd'
     });
+    $("#date_of_birth").datepicker({
+        minDate: new Date(1900,1-1,1), maxDate: '-16Y',
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:-15",
+        dateFormat: dateformat
+    });
 
     $('#start_date,#end_date,#last_date_reg,#date_of_payment').datepicker("option", "dateFormat", dateformat);
 
-    $('#birth_date').change(function(){
+    $('#date_of_birth').datepicker("option", "dateFormat", dateformat);
+
+    $('#date_of_birth').on('change',function(){
      var currDate = $(this).val();
+     console.log('There are no one');
      if (currDate){
         var serverDate = new Date().getTime();
         var birthDate = new Date(currDate).getTime();
@@ -22,6 +32,8 @@ $(function () {
         }
      }
     });
+
+
 
     $('#end_date').change(function(){
     var endDate = $(this).val();
