@@ -1,24 +1,78 @@
 <?xml version="1.0"?>
 <odoo>
-    <record id="inherit_view_event_session_form" model="ir.ui.view">
-        <field name="name">event.session.form</field>
+<!--    <record id="inherit_view_event_session_form" model="ir.ui.view">-->
+<!--        <field name="name">event.session.form</field>-->
+<!--        <field name="model">event.session</field>-->
+<!--        <field name="inherit_id" ref="event_sessions.view_event_session_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//form/sheet" position="before">-->
+
+<!--            </xpath>-->
+<!--            <xpath expr="//notebook/page[@name='registrations']" position="replace"></xpath>-->
+<!--            <xpath expr="//button[@name='button_open_registration']" position="after">-->
+
+<!--            </xpath>-->
+<!--            <xpath expr="//notebook/page[1]" position="before">-->
+
+
+<!--            </xpath>-->
+<!--            <xpath expr="//form/sheet/group" position="replace">-->
+
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id="view_dashboard_event_session_calendar" model="ir.ui.view">
+        <field name="name">event.session.calendar</field>
         <field name="model">event.session</field>
-        <field name="inherit_id" ref="event_sessions.view_event_session_form"/>
+        <field eval="2" name="priority"/>
         <field name="arch" type="xml">
-            <xpath expr="//form/sheet" position="before">
-
-            </xpath>
-            <xpath expr="//notebook/page[@name='registrations']" position="replace"></xpath>
-            <xpath expr="//button[@name='button_open_registration']" position="after">
-
-            </xpath>
-            <xpath expr="//notebook/page[1]" position="before">
-
-
-            </xpath>
-            <xpath expr="//form/sheet/group" position="replace">
-
-            </xpath>
+            <calendar color="event_id" date_start="event_begin_date" date_stop="event_end_date"
+                      string="Event Registration">
+                <field name="event_id"/>
+                <field name="origin"/>
+            </calendar>
         </field>
     </record>
+
+    <!--    <record model="ir.ui.view" id="view_dashboard_event_session_search">-->
+    <!--        <field name="name">event.session.search</field>-->
+    <!--        <field name="model">event.session</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <search string="Event Registration">-->
+    <!--                <field name="id" string="Registration ID"/>-->
+    <!--                <filter string="Unread Messages" name="message_needaction"-->
+    <!--                        domain="[('message_needaction','=',True)]"/>-->
+    <!--                <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>-->
+    <!--                <separator/>-->
+    <!--                <field name="event_id"/>-->
+    <!--                <group expand="0" string="Group By">-->
+    <!--                    <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>-->
+    <!--                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>-->
+    <!--                    <filter string="Registration Day" domain="[]" context="{'group_by': 'create_date:day'}"/>-->
+    <!--                    <filter string="Registration Month" domain="[]" context="{'group_by': 'create_date:month'}"/>-->
+    <!--                </group>-->
+    <!--            </search>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <record id="action_event_session_calendar" model="ir.actions.act_window">
+        <field name="name">Event Session</field>
+        <field name="res_model">event.session</field>
+        <field name="view_type">calendar_form</field>
+        <field name="domain"></field>
+        <field name="view_mode">calendar</field>
+        <!--        <field name="search_view_id" ref="view_dashboard_event_session_search"/>-->
+    </record>
+
+    <record id="action_view_calendar_event_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_dashboard_event_session_calendar"/>
+        <field name="act_window_id" ref="action_event_session_calender"/>
+    </record>
+
+    <menuitem id="menu_event_session_calendar" action="action_event_session_calendar"
+              name="Events Calendar" parent="event.event_main_menu" sequence="1"
+              groups="event_user.group_event_organizer,event.group_event_user,event_user.group_event_officer"/>
 </odoo>
