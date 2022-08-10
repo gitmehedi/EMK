@@ -128,6 +128,52 @@ class EventEvent(models.Model):
                                          states={'draft': [('readonly', False)],
                                                  'reservation': [('readonly', False), ('required', True)]})
 
+    # Fields used in reports
+    activity_duration = fields.Integer(string='Activity Duration', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    off_total_participant = fields.Integer(string='Total Participants', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    off_male = fields.Integer(string='Male', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    off_female = fields.Integer(string='Female', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    off_transgender = fields.Integer(string='Transgender', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    off_not_say = fields.Integer(string='Prefer Not to Say', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    on_total_participant = fields.Integer(string='Total Participants', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    on_male = fields.Integer(string='Male', readonly=True,
+                              states={'mark_close': [('readonly', False)]})
+    on_female = fields.Integer(string='Female', readonly=True,
+                                states={'mark_close': [('readonly', False)]})
+    on_transgender = fields.Integer(string='Transgender', readonly=True,
+                                     states={'mark_close': [('readonly', False)]})
+    on_not_say = fields.Integer(string='Prefer Not to Say', readonly=True,
+                                 states={'mark_close': [('readonly', False)]})
+
+    live_total_participant = fields.Integer(string='Total Participants', readonly=True,
+                                          states={'mark_close': [('readonly', False)]})
+    live_male = fields.Integer(string='Male', readonly=True,
+                             states={'mark_close': [('readonly', False)]})
+    live_female = fields.Integer(string='Female', readonly=True,
+                               states={'mark_close': [('readonly', False)]})
+    live_transgender = fields.Integer(string='Transgender', readonly=True,
+                                    states={'mark_close': [('readonly', False)]})
+    live_not_say = fields.Integer(string='Prefer Not to Say', readonly=True,
+                                states={'mark_close': [('readonly', False)]})
+
+    view_total_participant = fields.Integer(string='Total Participants', readonly=True,
+                                            states={'mark_close': [('readonly', False)]})
+    view_male = fields.Integer(string='Male', readonly=True,
+                               states={'mark_close': [('readonly', False)]})
+    view_female = fields.Integer(string='Female', readonly=True,
+                                 states={'mark_close': [('readonly', False)]})
+    view_transgender = fields.Integer(string='Transgender', readonly=True,
+                                      states={'mark_close': [('readonly', False)]})
+    view_not_say = fields.Integer(string='Prefer Not to Say', readonly=True,
+                                  states={'mark_close': [('readonly', False)]})
+
     @api.depends('event_book_ids')
     def compute_total_seat(self):
         for record in self:
@@ -243,7 +289,7 @@ class EventRegistration(models.Model):
     gender = fields.Many2one('res.gender', required=True, string='Gender')
     profession_id = fields.Many2one('attendee.profession', string='Profession', default=False)
     card_number = fields.Char(string='Card Number')
-    event_fee = fields.Float(string='Event Participation Amount')
+    event_fee = fields.Float(string='Participation Amount')
 
     @api.model
     def _needaction_domain_get(self):

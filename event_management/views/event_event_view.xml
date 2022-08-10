@@ -38,13 +38,14 @@
                                 class="oe_highlight" groups="event_user.group_event_officer"/>
                         <button string="Finish Event" name="button_done" states="mark_close" type="object"
                                 class="oe_highlight" groups="event_user.group_event_officer"/>
-                        <button string="Refund Amount"  name="act_refund" states="mark_close" type="object"
+                        <button string="Refund Amount" name="act_refund" states="mark_close" type="object"
                                 class="oe_highlight" groups="event_user.group_event_officer"/>
                         <button string="Set To Draft" name="button_draft" states="cancel" type="object"
                                 groups="event_user.group_event_officer"/>
                         <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"
                                 groups="event_user.group_event_officer"/>
-                        <button string="Registration Modify" name="%(action_registration_modify_wizard)d" states="confirm" type="action"
+                        <button string="Registration Modify" name="%(action_registration_modify_wizard)d"
+                                states="confirm" type="action"
                                 groups="event_user.group_event_officer"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,approve,confirm"/>
                     </header>
@@ -158,6 +159,7 @@
                             <field name="outreach_plan_other"/>
                             <field name="snacks_required" widget="radio"
                                    options="{'no_open':True,'no_create':True,'no_create_edit':True,'horizontal': true}"/>
+                            <field name="activity_duration" states="mark_close,done"/>
                         </group>
                     </group>
                 </xpath>
@@ -208,9 +210,44 @@
                     <page string="Social Media Contents">
                         <field name="social_content_ids"/>
                     </page>
+                    <page string="Participant Statistics" states="mark_close,done">
+                        <group>
+                            <group string="Offline Participant">
+                                <field name="off_total_participant"/>
+                                <field name="off_male"/>
+                                <field name="off_female"/>
+                                <field name="off_transgender"/>
+                                <field name="off_not_say"/>
+                            </group>
+                            <group string="Online Engagement">
+                                <field name="on_total_participant"/>
+                                <field name="on_male"/>
+                                <field name="on_female"/>
+                                <field name="on_transgender"/>
+                                <field name="on_not_say"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Live Audience">
+                                <field name="live_total_participant"/>
+                                <field name="live_male"/>
+                                <field name="live_female"/>
+                                <field name="live_transgender"/>
+                                <field name="live_not_say"/>
+                            </group>
+                            <group string="Online View">
+                                <field name="view_total_participant"/>
+                                <field name="view_male"/>
+                                <field name="view_female"/>
+                                <field name="view_transgender"/>
+                                <field name="view_not_say"/>
+                            </group>
+                        </group>
+                    </page>
                 </xpath>
             </field>
         </record>
+
         <record model="ir.ui.view" id="inherit_view_event_tree">
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_tree"/>

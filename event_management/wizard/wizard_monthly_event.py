@@ -14,4 +14,14 @@ class WizardMonthlyEvent(models.TransientModel):
         data['date_from'] = self.start_date
         data['date_to'] = self.end_date
 
-        return self.env['report'].get_action(self, 'event_management.report_event_monthly', data=data)
+        if 'pdf' in self._context:
+            return self.env['report'].get_action(self, 'event_management.report_event_monthly', data=data)
+
+        if 'xlsx' in self._context:
+            return self.env['report'].get_action(self, report_name='event_management.monthly_event_xlsx',data=data)
+
+
+
+
+
+

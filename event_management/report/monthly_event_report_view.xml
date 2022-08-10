@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Custom report. -->
 <odoo>
     <data>
         <template id="report_event_monthly">
@@ -9,10 +8,10 @@
                         <div class="row" style="padding-top:5px;">
                             <style type="text/css">
                                 .report-title { text-align:center; }
-                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; text-align:center; }
                             </style>
                             <div class="clearfix">
-                                <h3 class="report-title">Monthly Event Report</h3>
+                                <h3 class="report-title">Monthly Event</h3>
                                 <br/>
                                 <div class="row">
                                     <div class="col-xs-8 text-left">
@@ -32,45 +31,167 @@
                             <table class="table table-report-xs table-bordered table-condensed">
                                 <thead>
                                     <tr class="odo-bg-gray">
-                                        <th>Event Name</th>
-                                        <th>Session</th>
-                                        <th>Start Time</th>
-                                        <th>End Time</th>
+                                        <th rowspan="2">Event Name</th>
+                                        <th rowspan="2">Program Date</th>
+                                        <th rowspan="2">Program Time</th>
+                                        <th rowspan="2">Event Type</th>
+                                        <th rowspan="2">Event Pillar</th>
+                                        <th rowspan="2">Event Category</th>
+                                        <th rowspan="2">Event Theme</th>
+                                        <th rowspan="2">Event Room</th>
+                                        <th rowspan="2">Organizer Name</th>
+                                        <th rowspan="2">PoC Name</th>
+                                        <th rowspan="2">PoC Type</th>
+                                        <th rowspan="2">Session</th>
+                                        <th rowspan="2">Start Time</th>
+                                        <th rowspan="2">End Time</th>
+                                        <th rowspan="2">Target Audience Group</th>
+                                        <th rowspan="2">Target Age</th>
+                                        <th rowspan="2">Activity Duration</th>
+                                        <th colspan="5">Offline Participant</th>
+                                        <th colspan="5">Online Engagement</th>
+                                        <th colspan="5">Live Audience</th>
+                                        <th colspan="5">Online View</th>
+                                    </tr>
+                                    <tr>
                                         <th>Total Participants</th>
                                         <th>Male</th>
                                         <th>Female</th>
+                                        <th>Transgender</th>
+                                        <th>Prefer Not to Say</th>
+                                        <th>Total Participants</th>
+                                        <th>Male</th>
+                                        <th>Female</th>
+                                        <th>Transgender</th>
+                                        <th>Prefer Not to Say</th>
+                                        <th>Total Participants</th>
+                                        <th>Male</th>
+                                        <th>Female</th>
+                                        <th>Transgender</th>
+                                        <th>Prefer Not to Say</th>
+                                        <th>Total Participants</th>
+                                        <th>Male</th>
+                                        <th>Female</th>
+                                        <th>Transgender</th>
+                                        <th>Prefer Not to Say</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="lists" t-as="l">
-                                        <td>
-                                            <span t-esc="l"/>
-                                        </td>
-                                        <t t-foreach="l_value['item']" t-as="line">
-                                            <!--<t t-if="line['session_name']">-->
-                                            <tr style="page-break-inside: avoid">
-                                                <td></td>
-                                                <td>
-                                                    <span t-esc="line['session_name']"/>
-                                                </td>
-                                                <td>
-                                                    <span t-esc="line['start_date']"/>
-                                                </td>
-                                                <td>
-                                                    <span t-esc="line['end_date']"/>
-                                                </td>
-                                                <td>
-                                                    <span t-esc="line['total_participant']"/>
-                                                </td>
-                                                <td>
-                                                    <span t-esc="line['total_participant']"/>
-                                                </td>
-                                                <td>
-                                                    <span t-esc="line['total_participant']"/>
-                                                </td>
-                                            </tr>
-                                            <!--</t>-->
-                                        </t>
+                                    <t t-foreach="lists" t-as="line">
+                                        <tr style="page-break-inside: avoid">
+                                            <td>
+                                                <span t-esc="line['event_name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['program_date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['program_time']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['event_type']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['event_pillar']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['event_category']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['event_theme']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['event_room']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['event_organizer']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['poc_name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['poc_type']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['event_session']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['start_time']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['end_time']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['activity_duration']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['target_audience_group']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['target_age']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['off_total_participant']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['off_male']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['off_female']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['off_transgender']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['off_not_say']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['on_total_participant']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['on_male']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['on_female']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['on_transgender']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['on_not_say']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['live_total_participant']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['live_male']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['live_female']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['live_transgender']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['live_not_say']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['view_total_participant']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['view_male']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['view_female']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['view_transgender']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['view_not_say']"/>
+                                            </td>
+
+                                        </tr>
                                     </t>
                                 </tbody>
                             </table>
@@ -80,15 +201,38 @@
                 </t>
             </t>
         </template>
-        <report
-                id="action_report_monthly_report"
-                model="event.event"
-                string="Event Monthly Report"
-                report_type="qweb-pdf"
-                name="event_management.report_event_monthly"
-                file="event_management.report_event_monthly"
-                paperformat="report_layout.paperformat_backend_landscape"
-                groups="event_user.group_event_officer"
-        />
+
+        <record id="paper_format_backend_landscape" model="report.paperformat">
+            <field name="name">Backend Reports Landscape</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">25</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">25</field>
+            <field name="dpi">250</field>
+        </record>
+
+        <record id="event_monthly_report" model="ir.actions.report.xml">
+            <field name="name">Event Monthly Report</field>
+            <field name="model">report.event_management.report_event_monthly</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">event_management.report_event_monthly</field>
+            <field name="paperformat_id" ref="paper_format_backend_landscape"/>
+        </record>
+
+        <record id="action_monthly_event_report_xlsx" model="ir.actions.report.xml">
+            <field name="name">Event Monthly Report</field>
+            <field name="model">wizard.monthly.report</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="report_name">event_management.monthly_event_xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="auto" eval="False"/>
+        </record>
+
+
     </data>
 </odoo>
