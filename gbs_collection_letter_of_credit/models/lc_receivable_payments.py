@@ -430,8 +430,9 @@ class LCReceivablePayment(models.Model):
         ReportUtility = self.env['report.utility']
         if date is None:
             date = self.date
-        str_date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S').date()
-        date = ReportUtility.get_date_from_string(str(str_date))
+        # a = ReportUtility.get_date_from_string(date)
+        #
+        date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S').date()
         if analytic_account_id is None:
             analytic_account_id = self.analytic_account_id.id
         query = """select dr.date_start as date_start, dr.date_end as date_end from date_range as dr
