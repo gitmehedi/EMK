@@ -25,7 +25,7 @@
                 <button string="Cancel" class="oe_link" special="cancel"/>
                 <div style="float:right;">
                     <strong>Download Sample:</strong>
-                    <a role="button" href="/hr_attendance_import/static/sample_import_data/import_attendance_template.xlsx"
+                    <a role="button" href="/hr_attendance_import/static/sample_import_data/import_attendance_template.xls"
                        class="btn-primary"
                        style="font-size: 12px;line-height: 1.5;border-radius: 3px;padding: 8px 10px;color: #FFFFFF;">
                         <i class="fa fa-download"/>
