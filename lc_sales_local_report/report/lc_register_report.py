@@ -109,185 +109,37 @@ class LcRegisterXLSX(ReportXlsx):
         footer_ait_amount = 0.0
         footer_payment_charge = 0.0
         footer_payment_rec_amount = 0.0
+        footer_payment_rec_amount_in_bdt = 0.0
         sl = 0
         row = 7
         condition_above_row = 0
         lc_list = []
         for data in datas:
+            export_excel = True
             lc_id = data['lc_id'] if 'lc_id' in data else ''
             delivered_qty = self.get_delivered_qty(lc_id)
+            if delivered_qty == 0.0:
+                export_excel = False
 
-            document_qty = self.get_document_qty(lc_id)
+            if export_excel:
+                document_qty = self.get_document_qty(lc_id)
 
-            un_shipment_qty = float(delivered_qty) - float(document_qty)
+                un_shipment_qty = float(delivered_qty) - float(document_qty)
 
-            shipment_id = data['shipment_id'] if 'shipment_id' in data else ''
-            delivery_details_date_of_trans = self.get_delivery_detail(lc_id, shipment_id)
-            lc_qty = self.get_lc_qty(lc_id)
+                shipment_id = data['shipment_id'] if 'shipment_id' in data else ''
+                delivery_details_date_of_trans = self.get_delivery_detail(lc_id, shipment_id)
+                lc_qty = self.get_lc_qty(lc_id)
 
-            region_type = data['region_type'] if 'region_type' in data else ''
+                region_type = data['region_type'] if 'region_type' in data else ''
 
-            if lc_qty and delivered_qty:
-                undelivered_qty = lc_qty - delivered_qty
-            else:
-                undelivered_qty = 0
+                if lc_qty and delivered_qty:
+                    undelivered_qty = lc_qty - delivered_qty
+                else:
+                    undelivered_qty = 0
 
-            sl = sl + 1
-            row = row + 1
-
-            sheet.write(row, 0, sl, name_format_left_int)
-            sheet.write(row, 1, data['party_name'], name_border_format_colored)
-            sheet.write(row, 2, data['executive_name'], name_border_format_colored)
-            sheet.write(row, 3, data['product_name'], name_border_format_colored)
-            sheet.write(row, 4, self.get_lc_pi_no(lc_id) if lc_id != '' else data['pi_name'],
-                        name_border_format_colored)
-            sheet.write(row, 5, self.get_lc_so_no(lc_id) if lc_id != '' else data['so_name'],
-                        name_border_format_colored)
-            sheet.write(row, 6, data['lc_number'] if 'lc_number' in data else '', name_border_format_colored)
-            sheet.write(row, 7, ReportUtility.get_date_from_string(data['lc_date']) if 'lc_date' in data else '',
-                        name_border_format_colored_text_right)
-            sheet.write(row, 8, lc_qty, name_border_format_colored_text_right)
-            footer_lc_quantity += float(lc_qty)
-            sheet.write(row, 9, data['lc_amount'] if 'lc_amount' in data else '', name_border_format_colored_text_right)
-            footer_lc_amount += float(data['lc_amount'] if 'lc_amount' in data else 0)
-            sheet.write(row, 10, data['currency'] if 'currency' in data else '', name_border_format_colored)
-            sheet.write(row, 11, str(delivered_qty), name_border_format_colored_text_right)
-            footer_lc_delivery_qty += delivered_qty
-            sheet.write(row, 12, data['shipment_no'] if 'shipment_no' in data else '', name_border_format_colored)
-            sheet.write(row, 13, data['shipment_qty'] if 'shipment_qty' in data else '0',
-                        name_border_format_colored_text_right)
-            footer_shipment_qty += float(data['shipment_qty'] if 'shipment_qty' in data else 0)
-            sheet.write(row, 14, data['shipment_amount'] if 'shipment_amount' in data else '0',
-                        name_border_format_colored_text_right)
-            footer_shipment_amount = float(data['shipment_amount'] if 'shipment_amount' in data else 0)
-            shipment_amount_in_bdt = self.get_amount_in_bdt(
-                data['shipment_amount'] if 'shipment_amount' in data else '',
-                data['currency'] if 'currency' in data else '')
-            sheet.write(row, 15, shipment_amount_in_bdt, name_border_format_colored_text_right)
-            footer_shipment_amount_in_bdt += float(shipment_amount_in_bdt if shipment_amount_in_bdt is not None else 0)
-            sheet.write(row, 16, str(undelivered_qty), name_border_format_colored_text_right)
-            footer_undelivery_qty += float(undelivered_qty)
-            sheet.write(row, 17, data['tenure'] if 'tenure' in data else '', name_border_format_colored)
-            sheet.write(row, 18,
-                        ReportUtility.get_date_from_string(data['shipment_date']) if 'shipment_date' in data else '',
-                        name_border_format_colored_text_right)
-            sheet.write(row, 19,
-                        ReportUtility.get_date_from_string(data['expiry_date']) if 'expiry_date' in data else '',
-                        name_border_format_colored_text_right)
-            sheet.write(row, 20, delivery_details_date_of_trans[1], name_border_format_colored)
-            sheet.write(row, 21, delivery_details_date_of_trans[0], name_border_format_colored)
-            sheet.write(row, 22, ReportUtility.get_date_from_string(
-                data['doc_preparation_date']) if 'doc_preparation_date' in data else '',
-                        name_border_format_colored_text_right)
-            if 'doc_preparation_date' in data:
-                sheet.write(row, 23,
-                            date_subtract_date_to_days(ReportUtility.get_date_from_string(data['doc_preparation_date']),
-                                                       delivery_details_date_of_trans[1]),
-                            name_border_format_colored_text_right)
-            else:
-                sheet.write(row, 23, '', name_border_format_colored_text_right)
-
-            if region_type == 'local':
-                sheet.write(row, 24, ReportUtility.get_date_from_string(
-                    data['doc_dispatch_to_party_date']) if 'doc_dispatch_to_party_date' in data else '',
-                            name_border_format_colored_text_right)
-            elif region_type == 'foreign':
-                sheet.write(row, 24, ReportUtility.get_date_from_string(
-                    data['doc_dispatch_to_party_date_foreign']) if 'doc_dispatch_to_party_date_foreign' in data else '',
-                            name_border_format_colored_text_right)
-
-            sheet.write(row, 25, ReportUtility.get_date_from_string(
-                data['first_acceptance_doc_submission_date']) if 'first_acceptance_doc_submission_date' in data else '',
-                        name_border_format_colored_text_right)
-
-            if region_type == 'local':
-                aging_days = data['aging_first_acceptance_days'] if 'aging_first_acceptance_days' in data else '0'
-                if aging_days is None:
-                    aging_days = 0
-                sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
-                footer_aging_days += float(aging_days)
-            elif region_type == 'foreign':
-                aging_days = data[
-                    'aging_first_acceptance_days_foreign'] if 'aging_first_acceptance_days_foreign' in data else '0'
-                if aging_days is None:
-                    aging_days = 0
-                sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
-
-            if str(obj.filter_by) == "percentage_of_first_acceptance_collection":
-                if int(aging_days) > int(obj.acceptance_default_value):
-                    condition_above_row += 1
-
-            if region_type == 'local':
-                sheet.write(row, 27, ReportUtility.get_date_from_string(
-                    data['to_buyer_bank_date']) if 'to_buyer_bank_date' in data else '',
-                            name_border_format_colored_text_right)
-            elif region_type == 'foreign':
-                sheet.write(row, 27, ReportUtility.get_date_from_string(
-                    data['to_buyer_bank_date_foreign']) if 'to_buyer_bank_date_foreign' in data else '',
-                            name_border_format_colored_text_right)
-            if region_type == 'local':
-                sheet.write(row, 28, ReportUtility.get_date_from_string(
-                    data['second_acceptance_date']) if 'second_acceptance_date' in data else '',
-                            name_border_format_colored_text_right)
-            elif region_type == 'foreign':
-                sheet.write(row, 28, 'N/A', name_border_format_colored)
-            if region_type == 'local':
-                sheet.write(row, 29, data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else '0',
-                            name_border_format_colored_text_right)
-                footer_aging_2nd_acceptance_days += data[
-                    'aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else 0
-            elif region_type == 'foreign':
-                sheet.write(row, 29, 'N/A', name_border_format_colored)
-
-            sheet.write(row, 30,
-                        ReportUtility.get_date_from_string(data['maturity_date']) if 'maturity_date' in data else '',
-                        name_border_format_colored_text_right)
-            sheet.write(row, 31, ReportUtility.get_date_from_string(
-                data['shipment_done_date']) if 'shipment_done_date' in data else '',
-                        name_border_format_colored_text_right)
-            sheet.write(row, 32, data['discrepancy_amount'] if 'discrepancy_amount' in data else '0',
-                        name_border_format_colored_text_right)
-            footer_discrepancy_amount += float(data['discrepancy_amount'] if 'discrepancy_amount' in data else 0)
-            if region_type == 'local':
-                sheet.write(row, 33, data['ait_amount'] if 'ait_amount' in data else '0',
-                            name_border_format_colored_text_right)
-                footer_ait_amount += float(data['ait_amount'] if 'ait_amount' in data else 0)
-            elif region_type == 'foreign':
-                sheet.write(row, 33, 'N/A', name_border_format_colored)
-
-            sheet.write(row, 34, ReportUtility.get_date_from_string(
-                data['payment_rec_date']) if 'payment_rec_date' in data else '', name_border_format_colored_text_right)
-            sheet.write(row, 35, data['payment_rec_amount'] if 'payment_rec_amount' in data else '0',
-                        name_border_format_colored_text_right)
-            payment_rec_amount_in_bdt = self.get_amount_in_bdt(
-                data['payment_rec_amount'] if 'shipment_amount' in data else '',
-                data['currency'] if 'currency' in data else '')
-            sheet.write(row, 36, payment_rec_amount_in_bdt,
-                        name_border_format_colored_text_right)
-            footer_payment_rec_amount += float(data['payment_rec_amount'] if 'payment_rec_amount' in data else 0)
-            sheet.write(row, 37, data['payment_charge'] if 'payment_charge' in data else '0',
-                        name_border_format_colored_text_right)
-            footer_payment_charge += float(data['payment_charge'] if 'payment_charge' in data else 0)
-            sheet.write(row, 38, data['comment'] if 'comment' in data else '', name_border_format_colored)
-            sheet.write(row, 39, date_subtract_date_to_days(
-                ReportUtility.get_date_from_string(data['shipment_done_date']) if 'shipment_done_date' in data else '',
-                ReportUtility.get_date_from_string(data['maturity_date']) if 'maturity_date' in data else ''),
-                        name_border_format_colored_text_right)
-            sheet.write(row, 40, data['second_party_bank'] if 'second_party_bank' in data else '',
-                        name_border_format_colored)
-            sheet.write(row, 41, data['samuda_bank_name'] if 'samuda_bank_name' in data else '',
-                        name_border_format_colored)
-            sheet.write(row, 42, data['packing_type'] if 'packing_type' in data else '', name_border_format_colored)
-            sheet.write(row, 43, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
-
-
-            # shipment not create line
-            if un_shipment_qty > 0 and data['lc_number'] not in lc_list and str(obj.filter_by) == 'goods_delivered_doc_not_prepared':
-                lc_list.append(data['lc_number'])
 
                 sl = sl + 1
                 row = row + 1
-
                 sheet.write(row, 0, sl, name_format_left_int)
                 sheet.write(row, 1, data['party_name'], name_border_format_colored)
                 sheet.write(row, 2, data['executive_name'], name_border_format_colored)
@@ -301,32 +153,42 @@ class LcRegisterXLSX(ReportXlsx):
                             name_border_format_colored_text_right)
                 sheet.write(row, 8, lc_qty, name_border_format_colored_text_right)
                 footer_lc_quantity += float(lc_qty)
-                sheet.write(row, 9, data['lc_amount'] if 'lc_amount' in data else '',
-                            name_border_format_colored_text_right)
+                sheet.write(row, 9, data['lc_amount'] if 'lc_amount' in data else '', name_border_format_colored_text_right)
                 footer_lc_amount += float(data['lc_amount'] if 'lc_amount' in data else 0)
                 sheet.write(row, 10, data['currency'] if 'currency' in data else '', name_border_format_colored)
-                sheet.write(row, 11, '0', name_border_format_colored_text_right)
+                sheet.write(row, 11, str(delivered_qty), name_border_format_colored_text_right)
                 footer_lc_delivery_qty += delivered_qty
-                sheet.write(row, 12, 'No Shipment Created', name_border_format_colored)
-                sheet.write(row, 13, un_shipment_qty, name_border_format_colored_text_right)
-                sheet.write(row, 14, '0', name_border_format_colored_text_right)
-                shipment_amount_in_bdt = self.get_amount_in_bdt(data['shipment_amount'] if 'shipment_amount' in data else '0', data['currency'] if 'currency' in data else '')
+                sheet.write(row, 12, data['shipment_no'] if 'shipment_no' in data else '', name_border_format_colored)
+                sheet.write(row, 13, data['shipment_qty'] if 'shipment_qty' in data else '0',
+                            name_border_format_colored_text_right)
+                footer_shipment_qty += float(data['shipment_qty'] if 'shipment_qty' in data else 0)
+                sheet.write(row, 14, data['shipment_amount'] if 'shipment_amount' in data else '0',
+                            name_border_format_colored_text_right)
+                footer_shipment_amount = float(data['shipment_amount'] if 'shipment_amount' in data else 0)
+                shipment_amount_in_bdt = self.get_amount_in_bdt(
+                    data['shipment_amount'] if 'shipment_amount' in data else '',
+                    data['currency'] if 'currency' in data else '')
                 sheet.write(row, 15, shipment_amount_in_bdt, name_border_format_colored_text_right)
                 footer_shipment_amount_in_bdt += float(shipment_amount_in_bdt if shipment_amount_in_bdt is not None else 0)
-                sheet.write(row, 16, '0', name_border_format_colored_text_right)
+                sheet.write(row, 16, str(undelivered_qty), name_border_format_colored_text_right)
+                footer_undelivery_qty += float(undelivered_qty)
                 sheet.write(row, 17, data['tenure'] if 'tenure' in data else '', name_border_format_colored)
-                sheet.write(row, 18, ReportUtility.get_date_from_string(
-                    data['shipment_date']) if 'shipment_date' in data else '', name_border_format_colored_text_right)
-                sheet.write(row, 19, ReportUtility.get_date_from_string(data['expiry_date']) if 'expiry_date' in data else '',
+                sheet.write(row, 18,
+                            ReportUtility.get_date_from_string(data['shipment_date']) if 'shipment_date' in data else '',
+                            name_border_format_colored_text_right)
+                sheet.write(row, 19,
+                            ReportUtility.get_date_from_string(data['expiry_date']) if 'expiry_date' in data else '',
                             name_border_format_colored_text_right)
                 sheet.write(row, 20, delivery_details_date_of_trans[1], name_border_format_colored)
                 sheet.write(row, 21, delivery_details_date_of_trans[0], name_border_format_colored)
-                sheet.write(row, 22, ReportUtility.get_date_from_string(data['doc_preparation_date']) if 'doc_preparation_date' in data else '',
+                sheet.write(row, 22, ReportUtility.get_date_from_string(
+                    data['doc_preparation_date']) if 'doc_preparation_date' in data else '',
                             name_border_format_colored_text_right)
                 if 'doc_preparation_date' in data:
-                    sheet.write(row, 23, date_subtract_date_to_days(
-                        ReportUtility.get_date_from_string(data['doc_preparation_date']),
-                        delivery_details_date_of_trans[1]), name_border_format_colored_text_right)
+                    sheet.write(row, 23,
+                                date_subtract_date_to_days(ReportUtility.get_date_from_string(data['doc_preparation_date']),
+                                                           delivery_details_date_of_trans[1]),
+                                name_border_format_colored_text_right)
                 else:
                     sheet.write(row, 23, '', name_border_format_colored_text_right)
 
@@ -335,18 +197,30 @@ class LcRegisterXLSX(ReportXlsx):
                         data['doc_dispatch_to_party_date']) if 'doc_dispatch_to_party_date' in data else '',
                                 name_border_format_colored_text_right)
                 elif region_type == 'foreign':
-                    sheet.write(row, 24, ReportUtility.get_date_from_string(data['doc_dispatch_to_party_date_foreign']) if 'doc_dispatch_to_party_date_foreign' in data else '',
+                    sheet.write(row, 24, ReportUtility.get_date_from_string(
+                        data['doc_dispatch_to_party_date_foreign']) if 'doc_dispatch_to_party_date_foreign' in data else '',
                                 name_border_format_colored_text_right)
 
-                sheet.write(row, 25, ReportUtility.get_date_from_string(data['first_acceptance_doc_submission_date']) if 'first_acceptance_doc_submission_date' in data else '',
+                sheet.write(row, 25, ReportUtility.get_date_from_string(
+                    data['first_acceptance_doc_submission_date']) if 'first_acceptance_doc_submission_date' in data else '',
                             name_border_format_colored_text_right)
 
                 if region_type == 'local':
-                    aging_days = 0
+                    aging_days = data['aging_first_acceptance_days'] if 'aging_first_acceptance_days' in data else '0'
+                    if aging_days is None:
+                        aging_days = 0
                     sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
+                    footer_aging_days += float(aging_days)
                 elif region_type == 'foreign':
-                    aging_days = 0
+                    aging_days = data[
+                        'aging_first_acceptance_days_foreign'] if 'aging_first_acceptance_days_foreign' in data else '0'
+                    if aging_days is None:
+                        aging_days = 0
                     sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
+
+                if str(obj.filter_by) == "percentage_of_first_acceptance_collection":
+                    if int(aging_days) > int(obj.acceptance_default_value):
+                        condition_above_row += 1
 
                 if region_type == 'local':
                     sheet.write(row, 27, ReportUtility.get_date_from_string(
@@ -363,14 +237,15 @@ class LcRegisterXLSX(ReportXlsx):
                 elif region_type == 'foreign':
                     sheet.write(row, 28, 'N/A', name_border_format_colored)
                 if region_type == 'local':
-                    sheet.write(row, 29,data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else '0',
+                    sheet.write(row, 29, data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else '0',
                                 name_border_format_colored_text_right)
-                    footer_aging_2nd_acceptance_days += data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else 0
+                    footer_aging_2nd_acceptance_days += data[
+                        'aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else 0
                 elif region_type == 'foreign':
                     sheet.write(row, 29, 'N/A', name_border_format_colored)
 
-                sheet.write(row, 30, ReportUtility.get_date_from_string(
-                    data['maturity_date']) if 'maturity_date' in data else '',
+                sheet.write(row, 30,
+                            ReportUtility.get_date_from_string(data['maturity_date']) if 'maturity_date' in data else '',
                             name_border_format_colored_text_right)
                 sheet.write(row, 31, ReportUtility.get_date_from_string(
                     data['shipment_done_date']) if 'shipment_done_date' in data else '',
@@ -385,8 +260,8 @@ class LcRegisterXLSX(ReportXlsx):
                 elif region_type == 'foreign':
                     sheet.write(row, 33, 'N/A', name_border_format_colored)
 
-                sheet.write(row, 34, ReportUtility.get_date_from_string(data['payment_rec_date']) if 'payment_rec_date' in data else '',
-                            name_border_format_colored_text_right)
+                sheet.write(row, 34, ReportUtility.get_date_from_string(
+                    data['payment_rec_date']) if 'payment_rec_date' in data else '', name_border_format_colored_text_right)
                 sheet.write(row, 35, data['payment_rec_amount'] if 'payment_rec_amount' in data else '0',
                             name_border_format_colored_text_right)
                 payment_rec_amount_in_bdt = self.get_amount_in_bdt(
@@ -395,14 +270,14 @@ class LcRegisterXLSX(ReportXlsx):
                 sheet.write(row, 36, payment_rec_amount_in_bdt,
                             name_border_format_colored_text_right)
                 footer_payment_rec_amount += float(data['payment_rec_amount'] if 'payment_rec_amount' in data else 0)
+                footer_payment_rec_amount_in_bdt += payment_rec_amount_in_bdt
                 sheet.write(row, 37, data['payment_charge'] if 'payment_charge' in data else '0',
                             name_border_format_colored_text_right)
                 footer_payment_charge += float(data['payment_charge'] if 'payment_charge' in data else 0)
                 sheet.write(row, 38, data['comment'] if 'comment' in data else '', name_border_format_colored)
-                sheet.write(row, 39, date_subtract_date_to_days(ReportUtility.get_date_from_string(
-                    data['shipment_done_date']) if 'shipment_done_date' in data else '',
-                                                                ReportUtility.get_date_from_string(data[
-                                                                                                       'maturity_date']) if 'maturity_date' in data else ''),
+                sheet.write(row, 39, date_subtract_date_to_days(
+                    ReportUtility.get_date_from_string(data['shipment_done_date']) if 'shipment_done_date' in data else '',
+                    ReportUtility.get_date_from_string(data['maturity_date']) if 'maturity_date' in data else ''),
                             name_border_format_colored_text_right)
                 sheet.write(row, 40, data['second_party_bank'] if 'second_party_bank' in data else '',
                             name_border_format_colored)
@@ -411,10 +286,142 @@ class LcRegisterXLSX(ReportXlsx):
                 sheet.write(row, 42, data['packing_type'] if 'packing_type' in data else '', name_border_format_colored)
                 sheet.write(row, 43, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
 
+
+                # shipment not create line
+                if un_shipment_qty > 0 and delivered_qty > 0 and data['lc_number'] not in lc_list and str(obj.filter_by) == 'goods_delivered_doc_not_prepared':
+                    lc_list.append(data['lc_number'])
+
+                    sl = sl + 1
+                    row = row + 1
+
+                    sheet.write(row, 0, sl, name_format_left_int)
+                    sheet.write(row, 1, data['party_name'], name_border_format_colored)
+                    sheet.write(row, 2, data['executive_name'], name_border_format_colored)
+                    sheet.write(row, 3, data['product_name'], name_border_format_colored)
+                    sheet.write(row, 4, self.get_lc_pi_no(lc_id) if lc_id != '' else data['pi_name'],
+                                name_border_format_colored)
+                    sheet.write(row, 5, self.get_lc_so_no(lc_id) if lc_id != '' else data['so_name'],
+                                name_border_format_colored)
+                    sheet.write(row, 6, data['lc_number'] if 'lc_number' in data else '', name_border_format_colored)
+                    sheet.write(row, 7, ReportUtility.get_date_from_string(data['lc_date']) if 'lc_date' in data else '',
+                                name_border_format_colored_text_right)
+                    sheet.write(row, 8, lc_qty, name_border_format_colored_text_right)
+                    footer_lc_quantity += float(lc_qty)
+                    sheet.write(row, 9, data['lc_amount'] if 'lc_amount' in data else '',
+                                name_border_format_colored_text_right)
+                    footer_lc_amount += float(data['lc_amount'] if 'lc_amount' in data else 0)
+                    sheet.write(row, 10, data['currency'] if 'currency' in data else '', name_border_format_colored)
+                    sheet.write(row, 11, str(delivered_qty), name_border_format_colored_text_right)
+                    footer_lc_delivery_qty += delivered_qty
+                    sheet.write(row, 12, 'No Shipment Created', name_border_format_colored)
+                    sheet.write(row, 13, un_shipment_qty, name_border_format_colored_text_right)
+                    sheet.write(row, 14, '0', name_border_format_colored_text_right)
+                    shipment_amount_in_bdt = self.get_amount_in_bdt(data['shipment_amount'] if 'shipment_amount' in data else '0', data['currency'] if 'currency' in data else '')
+                    sheet.write(row, 15, shipment_amount_in_bdt, name_border_format_colored_text_right)
+                    footer_shipment_amount_in_bdt += float(shipment_amount_in_bdt if shipment_amount_in_bdt is not None else 0)
+                    sheet.write(row, 16, '0', name_border_format_colored_text_right)
+                    sheet.write(row, 17, data['tenure'] if 'tenure' in data else '', name_border_format_colored)
+                    sheet.write(row, 18, ReportUtility.get_date_from_string(
+                        data['shipment_date']) if 'shipment_date' in data else '', name_border_format_colored_text_right)
+                    sheet.write(row, 19, ReportUtility.get_date_from_string(data['expiry_date']) if 'expiry_date' in data else '',
+                                name_border_format_colored_text_right)
+                    sheet.write(row, 20, delivery_details_date_of_trans[1], name_border_format_colored)
+                    sheet.write(row, 21, delivery_details_date_of_trans[0], name_border_format_colored)
+                    sheet.write(row, 22, ReportUtility.get_date_from_string(data['doc_preparation_date']) if 'doc_preparation_date' in data else '',
+                                name_border_format_colored_text_right)
+                    if 'doc_preparation_date' in data:
+                        sheet.write(row, 23, date_subtract_date_to_days(
+                            ReportUtility.get_date_from_string(data['doc_preparation_date']),
+                            delivery_details_date_of_trans[1]), name_border_format_colored_text_right)
+                    else:
+                        sheet.write(row, 23, '', name_border_format_colored_text_right)
+
+                    if region_type == 'local':
+                        sheet.write(row, 24, ReportUtility.get_date_from_string(
+                            data['doc_dispatch_to_party_date']) if 'doc_dispatch_to_party_date' in data else '',
+                                    name_border_format_colored_text_right)
+                    elif region_type == 'foreign':
+                        sheet.write(row, 24, ReportUtility.get_date_from_string(data['doc_dispatch_to_party_date_foreign']) if 'doc_dispatch_to_party_date_foreign' in data else '',
+                                    name_border_format_colored_text_right)
+
+                    sheet.write(row, 25, ReportUtility.get_date_from_string(data['first_acceptance_doc_submission_date']) if 'first_acceptance_doc_submission_date' in data else '',
+                                name_border_format_colored_text_right)
+
+                    if region_type == 'local':
+                        aging_days = 0
+                        sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
+                    elif region_type == 'foreign':
+                        aging_days = 0
+                        sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
+
+                    if region_type == 'local':
+                        sheet.write(row, 27, ReportUtility.get_date_from_string(
+                            data['to_buyer_bank_date']) if 'to_buyer_bank_date' in data else '',
+                                    name_border_format_colored_text_right)
+                    elif region_type == 'foreign':
+                        sheet.write(row, 27, ReportUtility.get_date_from_string(
+                            data['to_buyer_bank_date_foreign']) if 'to_buyer_bank_date_foreign' in data else '',
+                                    name_border_format_colored_text_right)
+                    if region_type == 'local':
+                        sheet.write(row, 28, ReportUtility.get_date_from_string(
+                            data['second_acceptance_date']) if 'second_acceptance_date' in data else '',
+                                    name_border_format_colored_text_right)
+                    elif region_type == 'foreign':
+                        sheet.write(row, 28, 'N/A', name_border_format_colored)
+                    if region_type == 'local':
+                        sheet.write(row, 29,data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else '0',
+                                    name_border_format_colored_text_right)
+                        footer_aging_2nd_acceptance_days += data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else 0
+                    elif region_type == 'foreign':
+                        sheet.write(row, 29, 'N/A', name_border_format_colored)
+
+                    sheet.write(row, 30, ReportUtility.get_date_from_string(
+                        data['maturity_date']) if 'maturity_date' in data else '',
+                                name_border_format_colored_text_right)
+                    sheet.write(row, 31, ReportUtility.get_date_from_string(
+                        data['shipment_done_date']) if 'shipment_done_date' in data else '',
+                                name_border_format_colored_text_right)
+                    sheet.write(row, 32, data['discrepancy_amount'] if 'discrepancy_amount' in data else '0',
+                                name_border_format_colored_text_right)
+                    footer_discrepancy_amount += float(data['discrepancy_amount'] if 'discrepancy_amount' in data else 0)
+                    if region_type == 'local':
+                        sheet.write(row, 33, data['ait_amount'] if 'ait_amount' in data else '0',
+                                    name_border_format_colored_text_right)
+                        footer_ait_amount += float(data['ait_amount'] if 'ait_amount' in data else 0)
+                    elif region_type == 'foreign':
+                        sheet.write(row, 33, 'N/A', name_border_format_colored)
+
+                    sheet.write(row, 34, ReportUtility.get_date_from_string(data['payment_rec_date']) if 'payment_rec_date' in data else '',
+                                name_border_format_colored_text_right)
+                    sheet.write(row, 35, data['payment_rec_amount'] if 'payment_rec_amount' in data else '0',
+                                name_border_format_colored_text_right)
+                    payment_rec_amount_in_bdt = self.get_amount_in_bdt(
+                        data['payment_rec_amount'] if 'shipment_amount' in data else '',
+                        data['currency'] if 'currency' in data else '')
+                    sheet.write(row, 36, payment_rec_amount_in_bdt,
+                                name_border_format_colored_text_right)
+                    footer_payment_rec_amount += float(data['payment_rec_amount'] if 'payment_rec_amount' in data else 0)
+                    footer_payment_rec_amount_in_bdt += payment_rec_amount_in_bdt
+                    sheet.write(row, 37, data['payment_charge'] if 'payment_charge' in data else '0',
+                                name_border_format_colored_text_right)
+                    footer_payment_charge += float(data['payment_charge'] if 'payment_charge' in data else 0)
+                    sheet.write(row, 38, data['comment'] if 'comment' in data else '', name_border_format_colored)
+                    sheet.write(row, 39, date_subtract_date_to_days(ReportUtility.get_date_from_string(
+                        data['shipment_done_date']) if 'shipment_done_date' in data else '',
+                                                                    ReportUtility.get_date_from_string(data[
+                                                                                                           'maturity_date']) if 'maturity_date' in data else ''),
+                                name_border_format_colored_text_right)
+                    sheet.write(row, 40, data['second_party_bank'] if 'second_party_bank' in data else '',
+                                name_border_format_colored)
+                    sheet.write(row, 41, data['samuda_bank_name'] if 'samuda_bank_name' in data else '',
+                                name_border_format_colored)
+                    sheet.write(row, 42, data['packing_type'] if 'packing_type' in data else '', name_border_format_colored)
+                    sheet.write(row, 43, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
+
         # footer
         row += 1
         for n in range(0, 44):
-            if n in (0, 8, 9, 11, 13, 14, 15, 16, 26, 29, 32, 33, 36):
+            if n in (0, 8, 9, 11, 13, 14, 15, 16, 26, 29, 32, 33, 35, 36, 37):
                 if n == 0:
                     sheet.write(row, n, 'Total ', name_border_format_colored_bold)
                 if n == 8:
@@ -443,8 +450,12 @@ class LcRegisterXLSX(ReportXlsx):
                     sheet.write(row, 32, footer_discrepancy_amount, name_border_format_colored_bold)
                 if n == 33:
                     sheet.write(row, 33, footer_ait_amount, name_border_format_colored_bold)
+                if n == 35:
+                    sheet.write(row, 35, footer_payment_rec_amount, name_border_format_colored_bold)
                 if n == 36:
-                    sheet.write(row, 36, footer_payment_charge, name_border_format_colored_bold)
+                    sheet.write(row, 36, footer_payment_rec_amount_in_bdt, name_border_format_colored_bold)
+                if n == 37:
+                    sheet.write(row, 37, footer_payment_charge, name_border_format_colored_bold)
             else:
                 sheet.write(row, n, '', name_border_format_colored_bold)
 
@@ -641,7 +652,7 @@ class LcRegisterXLSX(ReportXlsx):
 
         elif filter_by == 'first_acceptance':
             filter_by_text = '1st Acceptance'
-            where += "where CURRENT_DATE-(Date(ps.to_first_acceptance_date)) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
+            where += "where CURRENT_DATE-(Date(ps.to_buyer_date)) > " + acceptance_default_value + " and ps.to_first_acceptance_date is null "
 
         elif filter_by == 'second_acceptance':
             filter_by_text = "2nd Acceptance"
