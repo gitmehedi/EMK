@@ -118,7 +118,7 @@ class LcRegisterXLSX(ReportXlsx):
             export_excel = True
             lc_id = data['lc_id'] if 'lc_id' in data else ''
             delivered_qty = self.get_delivered_qty(lc_id)
-            if delivered_qty == 0.0:
+            if delivered_qty == 0.0 and str(obj.filter_by) == "goods_delivered_doc_not_prepared":
                 export_excel = False
 
             if export_excel:
