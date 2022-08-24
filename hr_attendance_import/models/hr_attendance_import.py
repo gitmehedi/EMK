@@ -57,7 +57,7 @@ class AttendanceImport(models.Model):
         import_line = self.env['hr.attendance.import.error'].search([('import_id', '=', self.id)])
         if import_line:
             raise ValidationError(
-                _("You can't Apply because of there has Error Data, please check Error Data tab. Solve error row and import again."))
+                _("Before apply please solve error data's row data"))
 
         self.state = 'confirmed'
 
