@@ -113,12 +113,16 @@ class HrAttendanceImportWizard(models.TransientModel):
                     error_msg = error_msg + "\n" + str(emp.name) + ' AC NO: ' + str(emp.device_employee_acc)
 
                 raise UserError(error_msg)
-            date_time_check_in = datetime.strptime(str(val[3]), '%d/%m/%Y %H:%M:%S') - timedelta(hours=6)
-            check_in = ReportUtility.get_date_time_from_string(str(date_time_check_in))
-            date_time_check_out = datetime.strptime(str(val[4]), '%d/%m/%Y %H:%M:%S') - timedelta(hours=6)
-            check_out = ReportUtility.get_date_time_from_string(str(date_time_check_out))
+            # date_time_check_in = datetime.strptime(str(val[3]), '%d/%m/%Y %H:%M:%S') - timedelta(hours=6)
+            date_time_check_in = datetime.strptime(str(val[3]), '%d/%m/%Y %H:%M:%S')
+            # check_in = ReportUtility.get_date_time_from_string(str(date_time_check_in))
+            check_in = date_time_check_in
+            date_time_check_out = datetime.strptime(str(val[4]), '%d/%m/%Y %H:%M:%S')
+            # check_out = ReportUtility.get_date_time_from_string(str(date_time_check_out))
+            check_out = date_time_check_out
 
-            time_diff = date_time_check_out - date_time_check_in
+            # time_diff = date_time_check_out - date_time_check_in
+            time_diff = check_out - check_in
             diff_in_hours = time_diff.total_seconds() / 3600
 
             if employee_obj and diff_in_hours <= 14:
