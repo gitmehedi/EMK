@@ -248,17 +248,14 @@ class ProformaInvoice(models.Model):
     def action_update_pi_number(self):
         vals = {
             'pi_id': self.id,
+            'default_current_pi_number': self.name
         }
-        message_id = self.env['update.pi.number.confirmation'].create({
-            'current_pi_number': self.name
-        })
         return {
             'name': _('Confirmation : Are you sure to update this PI Number?'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'update.pi.number.confirmation',
             'context': vals,
-            'res_id': message_id.id,
             'target': 'new'
         }
 

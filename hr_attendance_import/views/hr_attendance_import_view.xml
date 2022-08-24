@@ -9,6 +9,7 @@
 			<tree string="Import Attendance">
 				<field name= "name" />
 				<field name="import_creation_date_time" />
+				<field name="state" />
 			</tree>
 		</field>
 	</record>
@@ -29,13 +30,12 @@
 							string="Apply" states="validate"
 							class="oe_highlight"/>
 
-					<button name="action_reset_to_draft" type="object"
-							string="Reset to Draft" states="validate"
-							class="oe_highlight"/>
-
 					<button name="action_approve" type="object"
 							string="Approve" states="confirmed"
 							class="oe_highlight"/>
+
+					<button name="action_reset_to_draft" type="object"
+							string="Reset to Draft" states="validate,confirmed"/>
 
 					<button name="hr_attendance_import.hr_import_attendance_wizard_action_view"
 							type="action" string="Upload Excel"
@@ -49,12 +49,12 @@
 				<sheet>
 					<group>
 						<group>
-							<field name="name" />
-							<field name="company_id" />
-							<field name="import_creation_date_time" readonly="1"/>
+							<field name="name" attrs="{'readonly': [('state', '!=', 'draft'), ('state', '!=', 'validate'), ('state', '!=', 'confirmed')]}"/>
+							<field name="company_id" attrs="{'readonly': [('state', '!=', 'draft'), ('state', '!=', 'validate'), ('state', '!=', 'confirmed')]}"/>
+							<field name="import_creation_date_time" readonly="1" attrs="{'readonly': [('state', '!=', 'draft'), ('state', '!=', 'validate'), ('state', '!=', 'confirmed')]}"/>
 						</group>
 						<group>
-							<field name="operating_unit_id" />
+							<field name="operating_unit_id" attrs="{'readonly': [('state', '!=', 'draft'), ('state', '!=', 'validate'), ('state', '!=', 'confirmed')]}"/>
 						</group>
 					</group>
 					<notebook position="inside">
