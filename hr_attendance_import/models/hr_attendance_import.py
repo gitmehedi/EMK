@@ -8,7 +8,7 @@ class AttendanceImport(models.Model):
     _name = 'hr.attendance.import'
     
     name = fields.Char(string='Name', required=True)
-    import_creation_date_time = fields.Datetime(string='Imported Date',default=date.today(),required=True)
+    import_creation_date_time = fields.Datetime(string='Imported Date',default=fields.Datetime.now,required=True)
     
     state = fields.Selection([
         ('draft', "Draft"),
@@ -57,7 +57,7 @@ class AttendanceImport(models.Model):
         import_line = self.env['hr.attendance.import.error'].search([('import_id', '=', self.id)])
         if import_line:
             raise ValidationError(
-                _("Before apply please solve error data's row data"))
+                _("Before apply please solve error data's row attendance"))
 
         self.state = 'confirmed'
 
