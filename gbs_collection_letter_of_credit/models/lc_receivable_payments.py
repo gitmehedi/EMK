@@ -112,7 +112,16 @@ class LCReceivablePayment(models.Model):
     def onchange_narration(self):
         if self.narration:
             self.narration = self.narration.strip()
-
+    @api.onchange('lc_id')
+    def onchange_lc_id_shipment(self):
+        if self.lc_id:
+            shipment_ids = []
+            shipment_objs = self.env['purchase.shipment'].search([('lc_id', '=', self.lc_id.id)])
+            if shipment_objs:
+                shipment_ids = shipment_objs.ids
+            return {
+                'domain': {'shipment_id': [('id', 'in', shipment_ids)]}
+            }
     @api.onchange('lc_id')
     def onchange_lc_id(self):
         if self.lc_id:
@@ -146,8 +155,7 @@ class LCReceivablePayment(models.Model):
             else:
                 self.analytic_acc_create = True
             return {
-                'domain': {'shipment_id': [('id', 'in', shipment_ids)],
-                           'invoice_ids': [('id', 'in', invoice_ids),
+                'domain': {'invoice_ids': [('id', 'in', invoice_ids),
                                            ('currency_id','=',self.lc_id.currency_id.id),
                                            ('state','=','open')],
                            'analytic_account_id': [('id', '=', analytic_account_id)]
