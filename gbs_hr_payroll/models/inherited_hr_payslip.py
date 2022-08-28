@@ -52,6 +52,10 @@ class HrPayslipRun(models.Model):
         for a in self:
             if a.state != 'draft':
                 raise UserError(_('You can not delete this.'))
+            batch_payslips = self.env['hr.payslip'].search([('payslip_run_id', '=', a.id )])
+
+            for payslip in batch_payslips:
+                payslip.unlink()
 
         return super(HrPayslipRun, self).unlink()
 
