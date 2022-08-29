@@ -112,7 +112,7 @@ class LCReceivablePayment(models.Model):
     def onchange_narration(self):
         if self.narration:
             self.narration = self.narration.strip()
-    @api.onchange('lc_id')
+    @api.onchange('lc_id', 'journal_id')
     def onchange_lc_id_shipment(self):
         if self.lc_id:
             shipment_ids = []
@@ -122,7 +122,7 @@ class LCReceivablePayment(models.Model):
             return {
                 'domain': {'shipment_id': [('id', 'in', shipment_ids)]}
             }
-    @api.onchange('lc_id')
+    @api.onchange('lc_id', 'journal_id')
     def onchange_lc_id(self):
         if self.lc_id:
             self.operating_unit_id = self.lc_id.operating_unit_id.id
