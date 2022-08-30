@@ -35,7 +35,7 @@
 							<field name="currency_id"/>
 							<field name="uom_id"/>
 							<field name="discount"/>
-							<field name="product_package_mode"/>
+							<field name="product_package_mode" domain="[('is_deprecated','=',False)]"/>
 							<!--<field name="country_id"/>-->
 							<!--<field name="terms_setup_id"/>-->
 							<!--<field name="freight_mode"/>-->
