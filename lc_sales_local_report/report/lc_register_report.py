@@ -45,7 +45,7 @@ class LcRegisterXLSX(ReportXlsx):
         sheet.write(7, 8, "LC Quantity", header_format_left)
         sheet.write(7, 9, "LC Amount", header_format_left)
         sheet.write(7, 10, "Currency", header_format_left)
-        sheet.write(7, 11, "LC Delivery Quantity", header_format_left)
+        sheet.write(7, 11, "Delivery Quantity", header_format_left)
         sheet.write(7, 12, "Shipment No", header_format_left)
         sheet.write(7, 13, "Shipment Qty", header_format_left)
         sheet.write(7, 14, "Shipment Amt", header_format_left)
@@ -61,8 +61,8 @@ class LcRegisterXLSX(ReportXlsx):
         sheet.write(7, 24, "Doc. submit to Party Date/1st Acceptance", header_format_left)
         sheet.write(7, 25, "First Acceptance Doc. Collection  Date", header_format_left)
         sheet.write(7, 26, "Aging (Days) First Acceptance", header_format_left)
-        sheet.write(7, 27, "To Buyer Bank", header_format_left)
-        sheet.write(7, 28, "2nd Acceptance Date", header_format_left)
+        sheet.write(7, 27, "Seller Bank Receive", header_format_left)
+        sheet.write(7, 28, "To Buyer Bank", header_format_left)
         sheet.write(7, 29, "Aging (Days) 2nd Acceptance", header_format_left)
         sheet.write(7, 30, "Maturity Date", header_format_left)
         sheet.write(7, 31, "Shipment Done Date", header_format_left)
@@ -127,7 +127,8 @@ class LcRegisterXLSX(ReportXlsx):
                 un_shipment_qty = float(delivered_qty) - float(document_qty)
 
                 shipment_id = data['shipment_id'] if 'shipment_id' in data else ''
-                delivery_details_date_of_trans = self.get_delivery_detail(lc_id, shipment_id)
+                so_name = data['so_name'] if 'so_name' in data else ''
+                delivery_details_date_of_trans = self.get_delivery_detail(lc_id, shipment_id, so_name)
                 lc_qty = self.get_lc_qty(lc_id)
 
                 region_type = data['region_type'] if 'region_type' in data else ''
@@ -156,8 +157,11 @@ class LcRegisterXLSX(ReportXlsx):
                 sheet.write(row, 9, data['lc_amount'] if 'lc_amount' in data else '', name_border_format_colored_text_right)
                 footer_lc_amount += float(data['lc_amount'] if 'lc_amount' in data else 0)
                 sheet.write(row, 10, data['currency'] if 'currency' in data else '', name_border_format_colored)
-                sheet.write(row, 11, str(delivered_qty), name_border_format_colored_text_right)
+                sheet.write(row, 11, str(delivered_qty) if lc_id != '' else data['qty_delivery'], name_border_format_colored_text_right)
+                if lc_id == '':
+                    delivered_qty = float(data['qty_delivery'])
                 footer_lc_delivery_qty += delivered_qty
+
                 sheet.write(row, 12, data['shipment_no'] if 'shipment_no' in data else '', name_border_format_colored)
                 sheet.write(row, 13, data['shipment_qty'] if 'shipment_qty' in data else '0',
                             name_border_format_colored_text_right)
@@ -170,8 +174,11 @@ class LcRegisterXLSX(ReportXlsx):
                     data['currency'] if 'currency' in data else '')
                 sheet.write(row, 15, shipment_amount_in_bdt, name_border_format_colored_text_right)
                 footer_shipment_amount_in_bdt += float(shipment_amount_in_bdt if shipment_amount_in_bdt is not None else 0)
-                sheet.write(row, 16, str(undelivered_qty), name_border_format_colored_text_right)
+                sheet.write(row, 16, str(undelivered_qty) if lc_id != '' else data['undelivered_qty'], name_border_format_colored_text_right)
+                if lc_id == '':
+                    undelivered_qty = data['undelivered_qty']
                 footer_undelivery_qty += float(undelivered_qty)
+
                 sheet.write(row, 17, data['tenure'] if 'tenure' in data else '', name_border_format_colored)
                 sheet.write(row, 18,
                             ReportUtility.get_date_from_string(data['shipment_date']) if 'shipment_date' in data else '',
@@ -212,8 +219,7 @@ class LcRegisterXLSX(ReportXlsx):
                     sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
                     footer_aging_days += float(aging_days)
                 elif region_type == 'foreign':
-                    aging_days = data[
-                        'aging_first_acceptance_days_foreign'] if 'aging_first_acceptance_days_foreign' in data else '0'
+                    aging_days = data['aging_first_acceptance_days_foreign'] if 'aging_first_acceptance_days_foreign' in data else '0'
                     if aging_days is None:
                         aging_days = 0
                     sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
@@ -222,20 +228,20 @@ class LcRegisterXLSX(ReportXlsx):
                     if int(aging_days) > int(obj.acceptance_default_value):
                         condition_above_row += 1
 
+
+                sheet.write(row, 27, ReportUtility.get_date_from_string(
+                        data['to_seller_bank_date']) if 'to_seller_bank_date' in data else '',
+                                name_border_format_colored_text_right)
+
                 if region_type == 'local':
-                    sheet.write(row, 27, ReportUtility.get_date_from_string(
+                    sheet.write(row, 28, ReportUtility.get_date_from_string(
                         data['to_buyer_bank_date']) if 'to_buyer_bank_date' in data else '',
                                 name_border_format_colored_text_right)
                 elif region_type == 'foreign':
-                    sheet.write(row, 27, ReportUtility.get_date_from_string(
+                    sheet.write(row, 28, ReportUtility.get_date_from_string(
                         data['to_buyer_bank_date_foreign']) if 'to_buyer_bank_date_foreign' in data else '',
                                 name_border_format_colored_text_right)
-                if region_type == 'local':
-                    sheet.write(row, 28, ReportUtility.get_date_from_string(
-                        data['second_acceptance_date']) if 'second_acceptance_date' in data else '',
-                                name_border_format_colored_text_right)
-                elif region_type == 'foreign':
-                    sheet.write(row, 28, 'N/A', name_border_format_colored)
+
                 if region_type == 'local':
                     sheet.write(row, 29, data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else '0',
                                 name_border_format_colored_text_right)
@@ -354,20 +360,21 @@ class LcRegisterXLSX(ReportXlsx):
                         aging_days = 0
                         sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
 
+
+
+                    sheet.write(row, 27, ReportUtility.get_date_from_string(
+                            data['to_seller_bank_date']) if 'to_seller_bank_date' in data else '',
+                                    name_border_format_colored_text_right)
+
                     if region_type == 'local':
-                        sheet.write(row, 27, ReportUtility.get_date_from_string(
+                        sheet.write(row, 28, ReportUtility.get_date_from_string(
                             data['to_buyer_bank_date']) if 'to_buyer_bank_date' in data else '',
                                     name_border_format_colored_text_right)
                     elif region_type == 'foreign':
-                        sheet.write(row, 27, ReportUtility.get_date_from_string(
+                        sheet.write(row, 28, ReportUtility.get_date_from_string(
                             data['to_buyer_bank_date_foreign']) if 'to_buyer_bank_date_foreign' in data else '',
                                     name_border_format_colored_text_right)
-                    if region_type == 'local':
-                        sheet.write(row, 28, ReportUtility.get_date_from_string(
-                            data['second_acceptance_date']) if 'second_acceptance_date' in data else '',
-                                    name_border_format_colored_text_right)
-                    elif region_type == 'foreign':
-                        sheet.write(row, 28, 'N/A', name_border_format_colored)
+
                     if region_type == 'local':
                         sheet.write(row, 29,data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else '0',
                                     name_border_format_colored_text_right)
@@ -440,7 +447,8 @@ class LcRegisterXLSX(ReportXlsx):
                     sheet.write(row, 16, footer_undelivery_qty, name_border_format_colored_bold)
                 if n == 26:
                     if str(obj.filter_by) == "percentage_of_first_acceptance_collection" and condition_above_row > 0:
-                        sheet.write(row, 26, ((condition_above_row / sl) * 100), name_border_format_colored_bold)
+                        footer_percentage = (float(condition_above_row)/float(sl))*100
+                        sheet.write(row, 26, footer_percentage, name_border_format_colored_bold)
                     else:
                         sheet.write(row, 26, footer_aging_days, name_border_format_colored_bold)
                 if n == 29:
@@ -459,13 +467,13 @@ class LcRegisterXLSX(ReportXlsx):
             else:
                 sheet.write(row, n, '', name_border_format_colored_bold)
 
-    def get_delivery_detail(self, lc_id, shipment_id):
+    def get_delivery_detail(self, lc_id, shipment_id, so_name):
+
         if shipment_id:
             query = """select * from lc_shipment_invoice_rel where shipment_id = %s""" % shipment_id
             self.env.cr.execute(query)
             purchase_shipment_invoices = self.env.cr.dictfetchall()
 
-            ReportUtility = self.env['report.utility']
             if purchase_shipment_invoices:
                 purchase_shipment_inv = ''
                 for ship_inv in purchase_shipment_invoices:
@@ -491,25 +499,32 @@ class LcRegisterXLSX(ReportXlsx):
                 """ % lc_id
                 self.env.cr.execute(query)
                 query_res = self.env.cr.dictfetchall()
+        else:
+            query = """select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, spo.qty_done as qty_delivered from stock_picking as sp 
+                        LEFT JOIN stock_pack_operation as spo ON spo.picking_id = sp.id
+                        where origin='%s'
+                            """ % so_name
+            self.env.cr.execute(query)
+            query_res = self.env.cr.dictfetchall()
 
-            lc_delivery_details_str = ""
-            for data in query_res:
-                name = data['name'] if data['name'] is not None else ''
-                min_date = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date() if data[
-                                                                                                  'min_date'] is not None else ''
-                qty = data["qty_delivered"] if data["qty_delivered"] is not None else '0'
-                delivery_date = ReportUtility.get_date_from_string(str(min_date))
+        lc_delivery_details_str = ""
+        ReportUtility = self.env['report.utility']
+        for data in query_res:
+            name = data['name'] if data['name'] is not None else ''
+            min_date = datetime.strptime(data['min_date'], '%Y-%m-%d %H:%M:%S').date() if data[
+                                                                                              'min_date'] is not None else ''
+            qty = data["qty_delivered"] if data["qty_delivered"] is not None else '0'
+            delivery_date = ReportUtility.get_date_from_string(str(min_date))
 
-                lc_delivery_details_str += str(name) + ", " + str(qty) + ", " + str(delivery_date) + "\n"
-            date_done = ''
-            if query_res:
-                date_done_uniformat = datetime.strptime(query_res[0]['date_done'], '%Y-%m-%d %H:%M:%S').date() if data[
-                                                                                                                      'date_done'] is not None else ''
-                if date_done_uniformat:
-                    date_done = ReportUtility.get_date_from_string(str(date_done_uniformat))
-            return lc_delivery_details_str, str(date_done)
+            lc_delivery_details_str += str(name) + ", " + str(qty) + ", " + str(delivery_date) + "\n"
+        date_done = ''
+        if query_res:
+            date_done_uniformat = datetime.strptime(query_res[0]['date_done'], '%Y-%m-%d %H:%M:%S').date() if data[
+                                                                                                                  'date_done'] is not None else ''
+            if date_done_uniformat:
+                date_done = ReportUtility.get_date_from_string(str(date_done_uniformat))
+        return lc_delivery_details_str, str(date_done)
 
-        return '', ''
 
     def get_lc_qty(self, lc_id):
         if lc_id:
@@ -656,7 +671,7 @@ class LcRegisterXLSX(ReportXlsx):
 
         elif filter_by == 'second_acceptance':
             filter_by_text = "2nd Acceptance"
-            where += "where CURRENT_DATE - (Date(ps.to_second_acceptance_date)) > " + acceptance_default_value + " "
+            where += "where CURRENT_DATE - (Date(ps.to_second_acceptance_date)) > " + acceptance_default_value + " and ps.to_maturity_date is null "
 
         elif filter_by == 'maturated_but_amount_not_collect':
             filter_by_text = 'Matured but Amount not collected'
@@ -695,7 +710,7 @@ class LcRegisterXLSX(ReportXlsx):
             query = '''
                 select so.id,rp.name as party_name, rp2.name as executive_name, sol.name as product_name, 
                 so.region_type as region_type, so.name as so_name, 
-                pi.name as pi_name,rc.name as currency, sol.qty_delivered as qty_delivery
+                pi.name as pi_name,rc.name as currency, sol.qty_delivered as qty_delivery,sol.product_uom_qty-sol.qty_delivered as undelivered_qty
                 from sale_order as so 
                 LEFT JOIN sale_order_type as sot on so.type_id = sot.id 
                 LEFT JOIN sale_order_line as sol on so.id = sol.order_id
@@ -714,15 +729,15 @@ class LcRegisterXLSX(ReportXlsx):
             query = '''
                     SELECT distinct on (ps.id) ps.id as shipment_id, rp.name as party_name,rp2.name as executive_name,lpl.name as product_name, lc.name as lc_number, 
                     ps.name as shipment_no, coalesce(spl.product_qty,0) as shipment_qty, coalesce(ps.invoice_value,0) as shipment_amount, lc.tenure as tenure,
-                    ps.bl_date as doc_dispatch_to_party_date_foreign,coalesce((ps.to_first_acceptance_date-ps.bl_date),0) as aging_first_acceptance_days_foreign,
+                    ps.bl_date as doc_dispatch_to_party_date_foreign,coalesce((CURRENT_DATE-ps.to_buyer_date),0) as aging_first_acceptance_days_foreign,
                     date(ps.to_first_acceptance_date + INTERVAL '7 day') as to_buyer_bank_date_foreign,
-                    ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_second_acceptance_date as second_acceptance_date,
-                    coalesce((ps.to_second_acceptance_date-ps.to_buyer_bank_date),0) as aging_2nd_acceptance_days, 
+                    ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_seller_bank_date as to_seller_bank_date,
+                    coalesce((CURRENT_DATE-ps.to_buyer_bank_date),0) as aging_2nd_acceptance_days, 
                     rc.name as currency, 
                     lc.id as lc_id, lc.shipment_date as shipment_date, lc.expiry_date as expiry_date, ps.doc_preparation_date as doc_preparation_date,
                     lc.issue_date as lc_date,coalesce(lc.lc_value,0) as lc_amount,lc.region_type as region_type,
                     ps.to_buyer_date as doc_dispatch_to_party_date, ps.to_first_acceptance_date as first_acceptance_doc_submission_date,
-                    coalesce((ps.to_first_acceptance_date-ps.to_buyer_date),0) as aging_first_acceptance_days,ps.to_maturity_date as maturity_date, 
+                    coalesce((CURRENT_DATE-ps.to_buyer_date),0) as aging_first_acceptance_days,ps.to_maturity_date as maturity_date, 
                     ps.shipment_done_date as shipment_done_date, 
                     coalesce(ps.discrepancy_amount,0) as discrepancy_amount, coalesce(ps.ait_amount,0) as ait_amount, ps.payment_rec_date, coalesce(ps.payment_rec_amount,0) as payment_rec_amount, coalesce(ps.payment_charge,0) as payment_charge, 
                     ps.comment as comment, lc.second_party_bank as second_party_bank, rb.bic as samuda_bank_name,
