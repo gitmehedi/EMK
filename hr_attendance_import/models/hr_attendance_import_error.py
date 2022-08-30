@@ -4,8 +4,8 @@ class HrAttendanceImportError(models.Model):
     _name = 'hr.attendance.import.error'
     
     employee_id = fields.Many2one('hr.employee', required=False)
-    check_in = fields.Char(string='Check In', required=False)
-    check_out = fields.Char(string='Check Out', required=False)
+    check_in = fields.Datetime(string='Check In', required=False)
+    check_out = fields.Datetime(string='Check Out', required=False)
     attempt_to_success = fields.Integer(string='Try', default=0)
     # attendance_server_id will be deprecated after 02-08-2017. operating_unit_id will fill
     #attendance_server_id = fields.Integer(string='Server Id', required=False)
