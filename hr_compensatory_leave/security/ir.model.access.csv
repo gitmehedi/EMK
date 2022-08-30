@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_hr_compensatory_leave_user,access_hr_compensatory_leave_user,model_hr_compensatory_leave,base.group_user,1,1,1,1
+access_hr_compensatory_leave_off,access_hr_compensatory_leave_off,model_hr_compensatory_leave,hr_attendance.group_hr_attendance_user,1,1,1,1
+access_hr_compensatory_leave_hod,access_hr_compensatory_leave_hod,model_hr_compensatory_leave,gbs_application_group.group_dept_manager,1,1,1,1
+
