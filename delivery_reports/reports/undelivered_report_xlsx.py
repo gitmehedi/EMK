@@ -19,7 +19,7 @@ class UndeliveredReportXLSX(ReportXlsx):
     def _get_query_where_clause(self, obj):
         where_str = """WHERE 
                             sp.operating_unit_id=%s AND sp.state NOT IN ('done','cancel')
-                            AND DATE(sp.date_done + interval '6h') <= DATE('%s')+time '23:59:59'""" % (obj.operating_unit_id.id, obj.date_today)
+                            AND DATE(sp.date_done + interval '6h') <= DATE(CURRENT_DATE)+time '23:59:59'""" % (obj.operating_unit_id.id)
 
         if obj.product_tmpl_id and not obj.product_id:
             product_ids = self.env['product.product'].search([('product_tmpl_id', '=', obj.product_tmpl_id.id), '|', ('active', '=', True), ('active', '=', False)]).ids
@@ -169,7 +169,7 @@ class UndeliveredReportXLSX(ReportXlsx):
         sheet.merge_range(row, last_col - 2, row, last_col, "Customer: " + partner, bold)
         row += 1
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
-        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + ReportUtility.get_date_from_string(obj.date_today), bold)
+        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + ReportUtility.get_date_from_string(datetime.today()), bold)
         row += 1
 
         # TABLE HEADER

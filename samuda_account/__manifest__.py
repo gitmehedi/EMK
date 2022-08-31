@@ -17,6 +17,7 @@
         'views/sale_type_product_acc.xml',
         'views/inherit_invoice_lc_view.xml',
         'views/account_view.xml',
+        'views/menu_items.xml',
     ],
     'installable': True,
     'application': True,
