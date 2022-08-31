@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <menuitem id="account_standard_report.menu_account_standard_report" name="Standard Report" sequence="0" parent="account.menu_finance_reports" action="account_standard_report.action_account_standard_report_menu" groups="base.group_system"/>
+        <record id="account_standard_report.menu_account_standard_report" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('account.group_account_manager'))]"/>
+        </record>
+        <record id="account_standard_report.menu_account_standard_report" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('account.group_account_user'))]"/>
+        </record>
+
+        <menuitem id="account.account_reports_management_menu" name="Management" parent="account.menu_finance_reports" sequence="4" groups="base.group_system"/>
+        <record id="account.account_reports_management_menu" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('account.group_account_user'))]"/>
+        </record>
+
+        <menuitem id="account.account_reports_business_intelligence_menu" name="Business Intelligence" parent="account.menu_finance_reports" sequence="5" groups="base.group_system"/>
+        <record id="account.account_reports_business_intelligence_menu" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('account.group_account_invoice'))]"/>
+        </record>
+
+        <menuitem id="account.menu_finance_legal_statement" name="PDF Reports" parent="account.menu_finance_reports" groups="base.group_system"/>
+        <record id="account.menu_finance_legal_statement" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('account.group_account_user'))]"/>
+        </record>
+        <record id="account.menu_finance_legal_statement" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('base.group_erp_manager'))]"/>
+        </record>
+
+        <menuitem parent="account.menu_finance_reports" id="account_financial_report_qweb.menu_oca_reports" name="OCA accounting reports" groups="base.group_system" />
+        <record id="account_financial_report_qweb.menu_oca_reports" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('account.group_account_manager'))]"/>
+        </record>
+        <record id="account_financial_report_qweb.menu_oca_reports" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('account.group_account_user'))]"/>
+        </record>
+
+        <menuitem id="account_reports.menu_action_account_report_gt" name="Tax Report" action="account_reports.action_account_report_gt" parent="account_reports.account_reports_legal_statements_menu" groups="base.group_system"/>
+
+        <menuitem id="account.menu_print_journal" name="Sale/Purchase Journal" parent="account.menu_finance_legal_statement" action="account.action_account_print_journal_menu" groups="base.group_system"/>
+        <record id="account.menu_print_journal" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('account.group_account_manager'))]"/>
+        </record>
+        <record id="account.menu_print_journal" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('account.group_account_user'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<openerp>
+<odoo>
   <data>
 
     <record id="aml_import_view_form" model="ir.ui.view">
@@ -8,20 +8,31 @@
       <field name="priority">1</field>
       <field name="arch" type="xml">
         <form string="Import File">
-          <group col="4">
-            <separator string="Select your file :" colspan="4"/>
-            <field name="aml_data" filename="aml_fname"/>
-            <field name="aml_fname" readonly="1"/>
-            <newline/>
-            <field name="csv_separator"/>
-            <field name="decimal_separator"/>
-            <field name="codepage"/>
-          </group>
-          <footer>
-            <button name="aml_import" string="_Import" type="object" class="oe_highlight"/>
-            or
-            <button string="Cancel" class="oe_link" special="cancel"/>
-          </footer>
+            <group>
+                <group>
+                    <field name="aml_data" filename="aml_fname"/>
+                    <field name="aml_fname" readonly="1"/>
+                </group>
+                <group>
+                    <field name="operating_unit_id" readonly="1"/>
+                    <field name="company_id" readonly="1"/>
+                    <field name="attendance_id" invisible="1"/>
+                </group>
+            </group>
+            <footer>
+                <button name="attendance_import" string="Import" type="object" class="oe_highlight"/>
+                or
+                <button string="Cancel" class="oe_link" special="cancel"/>
+                <div style="float:right;">
+                    <strong>Download Sample:</strong>
+                    <a role="button" href="/hr_attendance_import/static/sample_import_data/import_attendance_template.xls"
+                       class="btn-primary"
+                       style="font-size: 12px;line-height: 1.5;border-radius: 3px;padding: 8px 10px;color: #FFFFFF;">
+                        <i class="fa fa-download"/>
+                        Excel file
+                    </a>
+                </div>
+            </footer>
         </form>
       </field>
     </record>
@@ -42,7 +53,7 @@
     </record> 
     
     
-	<record id="hr_earned_leave_encashment_wizard_action_view" model="ir.actions.act_window">
+	<record id="hr_import_attendance_wizard_action_view" model="ir.actions.act_window">
 			<field name="name">Attendance Import</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr.attendance.import.wizard</field>
@@ -52,4 +63,4 @@
 	</record>
 
   </data>
-</openerp>
+</odoo>

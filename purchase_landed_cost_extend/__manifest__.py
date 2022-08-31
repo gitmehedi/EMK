@@ -18,7 +18,8 @@
         'product_gate_in',
         'stock_picking_mrr',
         'account_currency_wrapper',
-        'goods_movement_ledger_reports'
+        'goods_movement_ledger_reports',
+        'gbs_samuda_service_order'
     ],
     'data': [
         'security/security.xml',

@@ -14,6 +14,7 @@
                         <button string="Reset To Draft" name="action_draft"
                                 states="confirm" type="object"/>
                         <field name="state" widget="statusbar"/>
+                        <button string="Update PI Number" name="action_update_pi_number" class="btn-primary btn-info mr24 pull-right oe_read_only" type="object" groups="gbs_samuda_sales_access.group_proforma_invoice_manager" states="confirm"/>
                     </header>
 
                     <sheet>

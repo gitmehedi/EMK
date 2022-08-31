@@ -66,7 +66,7 @@ class MonthlyProvidentFund(models.AbstractModel):
         for rec in dpt_payslips_list:
             if rec['val']:
                 for value in rec['val']:
-                    if value['EPMF'] != 0:
+                    if 'EPMF' in value and value['EPMF'] != 0:
                         pf_val.append(value)
 
         for rule in rule_list:

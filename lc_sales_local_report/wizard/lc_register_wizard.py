@@ -6,9 +6,9 @@ class LcRegisterWizard(models.Model):
     _name = 'lc.register.wizard'
 
     filter_by = fields.Selection([('goods_delivered_doc_not_prepared', 'Goods Delivered but doc. not prepared'),
+                                  ('goods_delivered_but_lc_not_received', 'Goods Delivered but LC not received'),
                                   ('first_acceptance', '1st Acceptance'), ('second_acceptance', '2nd Acceptance'),
                                   ('maturated_but_amount_not_collect', 'Matured but Amount not collected'),
-                                  ('goods_delivered_but_lc_not_received', 'Goods Delivered but LC not received'),
                                   ('percentage_of_first_acceptance_collection', 'Percentage of 1st acceptance collection'),
                                   ('lc_history', 'LC History'), ('lc_number', 'LC Number')], required=True)
     lc_number = fields.Many2one('letter.credit', string='LC Number', domain=[('name', '!=', ''), ('state', '!=', 'cancel')])

@@ -1,5 +1,4 @@
-import datetime
-
+from datetime import datetime
 from odoo.report import report_sxw
 from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 
@@ -11,7 +10,7 @@ class UndeliveredReportXLSX(ReportXlsx):
         currencies = self.env['res.currency'].search([('active', '=', True)])
         for cr in currencies:
             to_currency = self.env.user.company_id.currency_id
-            from_currency = cr.with_context(date=datetime.datetime.now())
+            from_currency = cr.with_context(date=datetime.now())
             conversion_rate_dict[cr.name] = to_currency.round(to_currency.rate / from_currency.rate)
 
         return conversion_rate_dict
@@ -19,7 +18,7 @@ class UndeliveredReportXLSX(ReportXlsx):
     def _get_query_where_clause(self, obj):
         where_str = """WHERE 
                             sp.operating_unit_id=%s AND sp.state NOT IN ('done','cancel')
-                            AND DATE(sp.date_done + interval '6h') <= DATE('%s')+time '23:59:59'""" % (obj.operating_unit_id.id, obj.date_today)
+                            AND DATE(sp.date_done + interval '6h') <= DATE(CURRENT_DATE)+time '23:59:59'""" % (obj.operating_unit_id.id)
 
         if obj.product_tmpl_id and not obj.product_id:
             product_ids = self.env['product.product'].search([('product_tmpl_id', '=', obj.product_tmpl_id.id), '|', ('active', '=', True), ('active', '=', False)]).ids
@@ -169,7 +168,8 @@ class UndeliveredReportXLSX(ReportXlsx):
         sheet.merge_range(row, last_col - 2, row, last_col, "Customer: " + partner, bold)
         row += 1
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
-        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + ReportUtility.get_date_from_string(obj.date_today), bold)
+        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + datetime.today().strftime('%d-%m-%Y'), bold)
+        # sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + ReportUtility.get_date_from_string(obj.date_to), bold)
         row += 1
 
         # TABLE HEADER

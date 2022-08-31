@@ -31,6 +31,12 @@ class HrPayslipEmployees(models.TransientModel):
             if not payslip.contract_id:
                 payslip.unlink()
 
+            net_amount = 0
+            for line_id in payslip.line_ids:
+                if line_id.code == 'NET':
+                    net_amount = line_id.amount
+            if net_amount <= 0:
+                payslip.unlink()
         return res
 
 
@@ -46,6 +52,10 @@ class HrPayslipRun(models.Model):
         for a in self:
             if a.state != 'draft':
                 raise UserError(_('You can not delete this.'))
+            batch_payslips = self.env['hr.payslip'].search([('payslip_run_id', '=', a.id )])
+
+            for payslip in batch_payslips:
+                payslip.unlink()
 
         return super(HrPayslipRun, self).unlink()
 

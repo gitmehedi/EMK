@@ -14,5 +14,37 @@
                   sequence="120"
                   groups="stock.group_stock_manager,stock.group_stock_user"
                   action="stock.quantsact"/>
+
+
+        <menuitem action="stock.stock_move_action"
+                  id="stock.stock_move_menu"
+                  parent="stock.menu_warehouse_report"
+                  groups="base.group_erp_manager"
+                  sequence="130"/>
+
+
+        <menuitem id="stock.menu_quants"
+                  name="Inventory Valuation"
+                  parent="stock.menu_warehouse_report"
+                  sequence="120"
+                  groups="base.group_erp_manager"
+                  action="stock.quantsact"/>
+
+        <record id="stock.menu_quants" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('stock.group_stock_user'))]"/>
+        </record>
+
+        <record id="stock.menu_quants" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('stock.group_stock_manager'))]"/>
+        </record>
+
+        <record id="stock.stock_move_menu" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('stock.group_stock_manager'))]"/>
+        </record>
+
+        <record id="stock.menu_stock_procurement_action" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3,ref('stock.group_stock_manager'))]"/>
+        </record>
+
     </data>
 </odoo>

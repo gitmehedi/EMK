@@ -1,1 +1,2 @@
 import hr_attendance_import_wizard
+import success_wizard

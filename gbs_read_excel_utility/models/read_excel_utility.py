@@ -35,7 +35,7 @@ class GbsReadExcelUtility(models.TransientModel):
                     elif cell.ctype is xlrd.XL_CELL_DATE:
                         is_datetime = cell.value % 1 != 0.0
                         # emulate xldate_as_datetime for pre-0.9.3
-                        dt = datetime.datetime(*xlrd.xldate.xldate_as_tuple(cell.value, book.datemode))
+                        dt = datetime(*xlrd.xldate.xldate_as_tuple(cell.value, book.datemode))
                         values.append(
                             dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                             if is_datetime

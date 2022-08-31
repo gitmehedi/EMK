@@ -14,7 +14,7 @@
                                     <field name="name"/>
                                     <field name="type"/>
                                     <field name="is_bank_type"/>
-
+                                    <field name="is_ibp_loan"/>
                                 </group>
                                 <group>
                                     <field name="include_initial_balance"/>

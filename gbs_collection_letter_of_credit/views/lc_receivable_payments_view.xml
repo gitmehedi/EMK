@@ -58,6 +58,7 @@
                             <field name="currency_id"/>
                             <field name="currency_rate"/>
                             <field name="amount_in_company_currency"/>
+                            <field name="ibp_loan" readonly = "1" force_save = "1"/>
                             <field name="narration" required="1"/>
                         </group>
                         <button name="action_analytic_create" string="Create Analytic"
