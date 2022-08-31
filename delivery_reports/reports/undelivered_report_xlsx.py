@@ -1,5 +1,4 @@
-import datetime
-
+from datetime import datetime
 from odoo.report import report_sxw
 from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 
@@ -11,7 +10,7 @@ class UndeliveredReportXLSX(ReportXlsx):
         currencies = self.env['res.currency'].search([('active', '=', True)])
         for cr in currencies:
             to_currency = self.env.user.company_id.currency_id
-            from_currency = cr.with_context(date=datetime.datetime.now())
+            from_currency = cr.with_context(date=datetime.now())
             conversion_rate_dict[cr.name] = to_currency.round(to_currency.rate / from_currency.rate)
 
         return conversion_rate_dict
@@ -169,7 +168,8 @@ class UndeliveredReportXLSX(ReportXlsx):
         sheet.merge_range(row, last_col - 2, row, last_col, "Customer: " + partner, bold)
         row += 1
         sheet.merge_range(row, 0, row, 2, "Operating Unit: " + obj.operating_unit_id.name, bold)
-        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + ReportUtility.get_date_from_string(datetime.today()), bold)
+        sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + datetime.today().strftime('%d-%m-%Y'), bold)
+        # sheet.merge_range(row, last_col - 2, row, last_col, "Date: " + ReportUtility.get_date_from_string(obj.date_to), bold)
         row += 1
 
         # TABLE HEADER
