@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="hr_compensatory_leave_allowance_form" model="ir.ui.view">
+            <field name="name">hr.compensatory.leave.allowance.form</field>
+            <field name="model">hr.compensatory.leave.allowance</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Overtime Allowance" delete="false">
+                    <header>
+                        <button name="action_gen_allowance" type="object" string="Generate Allowance" states="draft"
+                                class="oe_highlight"/>
+                        <button name="action_confirm" type="object" string="Approve" states="draft"
+                                class="oe_highlight"/>
+                        <button name="action_done" type="object" groups="hr.group_hr_manager"
+                                string="Done" states="approve" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="period_id" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+
+                                <field name="company_id" groups="base.group_multi_company"
+                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                            </group>
+                            <group>
+                                <field name="total_time"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Employee Allowance">
+                                <field name="line_ids">
+                                    <tree string="List" editable="bottom">
+                                        <field name="employee_id"
+                                               options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                                        <field name="hours"/>
+                                        <field name="state" invisible="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_compensatory_leave_allowance_tree" model="ir.ui.view">
+            <field name="name">hr.compensatory.leave.allowance.tree</field>
+            <field name="model">hr.compensatory.leave.allowance</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Overtime Allowance" decoration-info="state=='draft'"
+                      decoration-success="state=='approve'" decoration-mute="state=='done'"
+                      decoration-bf="state in ('approve',)">
+                    <field name="period_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="total_time" sum="total_time"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_compensatory_leave_allowance_action" model="ir.actions.act_window" >
+            <field name="name">Overtime Allowance</field>
+            <field name="res_model">hr.compensatory.leave.allowance</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_hr_compensatory_leave_allowance" name="Overtime Allowance"
+                  parent="main_menu_hr_compensatory_leave" sequence="5"
+                  action="hr_compensatory_leave_allowance_action" groups="gbs_application_group.group_dept_manager"/>
+    </data>
+</odoo>

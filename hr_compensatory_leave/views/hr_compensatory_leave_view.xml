@@ -2,12 +2,12 @@
 <openerp>
     <data>
         <!-- Form View -->
-        <record id="hr_ot_requisition_form" model="ir.ui.view">
-            <field name="name">hr_ot_requisition_form</field>
-            <field name="model">hr.ot.requisition</field>
+        <record id="hr_compensatory_leave_form" model="ir.ui.view">
+            <field name="name">hr_compensatory_leave_form</field>
+            <field name="model">hr.compensatory.leave</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="OT Requisition">
+                <form string="Compensatory Leave">
                     <header>
                         <button string="Submit" name="action_submit" states="to_submit"
                                 type="object" class="oe_highlight" groups="base.group_user"/>
@@ -33,6 +33,7 @@
                                 <field name="from_datetime"
                                        attrs="{'readonly':[('state','in',['approved','refuse'])]}"/>
                                 <field name="to_datetime" attrs="{'readonly':[('state','in',['approved','refuse'])]}"/>
+                                <field name="available_hours" widget="float_time"/>
                                 <field name="total_hours" widget="float_time"/>
                             </group>
                             <group>
@@ -41,36 +42,25 @@
                         </group>
                         <group>
                             <group string="Reason">
-                                <field name="ot_reason" nolabel="1" colspan="4" placeholder="Add a reason..."
+                                <field name="leave_reason" nolabel="1" colspan="4" placeholder="Add a reason..."
                                        attrs="{'readonly':[('state','in',['approved','refuse'])]}"/>
                             </group>
                         </group>
-                        <notebook>
-                            <page string="Approbations" groups="hr.group_hr_user">
-                                <field name="approbations" groups="hr.group_hr_user">
-                                    <tree>
-                                        <field name="approver"/>
-                                        <field name="date"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-
-                        <div class="oe_chatter">
-                            <field name="message_follower_ids" widget="mail_followers"/>
-                            <field name="message_ids" widget="mail_thread"/>
-                        </div>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
 
         <!-- Tree View -->
-        <record id="hr_ot_requisition_tree" model="ir.ui.view">
-            <field name="name">hr_ot_requisition_tree</field>
-            <field name="model">hr.ot.requisition</field>
+        <record id="hr_compensatory_leave_tree" model="ir.ui.view">
+            <field name="name">hr_compensatory_leave_tree</field>
+            <field name="model">hr.compensatory.leave</field>
             <field name="arch" type="xml">
-                <tree string="OT Requisition" decoration-danger="state == 'refuse'"
+                <tree string="Compensatory Leave" decoration-danger="state == 'refuse'"
                       decoration-info="state == 'to_approve'" decoration-success="state == 'approved'"
                       decoration-bf="message_needaction == True">
                     <field name="employee_id"/>
@@ -85,11 +75,11 @@
         </record>
 
         <!--search view-->
-        <record id="view_hr_ot_requisition_filter" model="ir.ui.view">
-            <field name="name">hr.ot.requisition.filter</field>
-            <field name="model">hr.ot.requisition</field>
+        <record id="view_hr_compensatory_leave_filter" model="ir.ui.view">
+            <field name="name">hr.compensatory.leave.filter</field>
+            <field name="model">hr.compensatory.leave</field>
             <field name="arch" type="xml">
-                <search string="Search OT Requisition">
+                <search string="Search Compensatory Leave">
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <filter name='my_approval' string="My Approval" domain="[('pending_approver.user_id','=',uid)]"/>
@@ -97,46 +87,32 @@
             </field>
         </record>
 
-        <record id="action_hr_ot_requisition" model="ir.actions.act_window">
-            <field name="name">OT Requisition</field>
-            <field name="res_model">hr.ot.requisition</field>
+        <record id="action_hr_compensatory_leave" model="ir.actions.act_window">
+            <field name="name">Compensatory Leave</field>
+            <field name="res_model">hr.compensatory.leave</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <record id="action_hr_ot_requisition_pending" model="ir.actions.act_window">
-            <field name="name">OT Requisition</field>
-            <field name="res_model">hr.ot.requisition</field>
+        <record id="action_hr_compensatory_leave_pending" model="ir.actions.act_window">
+            <field name="name">Compensatory Leave</field>
+            <field name="res_model">hr.compensatory.leave</field>
             <field name="view_type">form</field>
             <field name="domain">[('state','in',['to_approve'])]</field>
             <field name="view_mode">tree,form</field>
             <field name="context" eval="{'search_default_my_approval':1}"/>
-            <field name="search_view_id" ref="view_hr_ot_requisition_filter"/>
+            <field name="search_view_id" ref="view_hr_compensatory_leave_filter"/>
         </record>
 
-        <record id="action_hr_ot_requisition_approved" model="ir.actions.act_window">
-            <field name="name">OT Requisition</field>
-            <field name="res_model">hr.ot.requisition</field>
+        <record id="action_hr_compensatory_leave_approved" model="ir.actions.act_window">
+            <field name="name">Compensatory Leave</field>
+            <field name="res_model">hr.compensatory.leave</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','=','approved')]</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- Menu Item -->
-        <!--<menuitem id="nav_menu_hr_ot_requisition" name="OT Requisition"-->
-        <!--sequence="20" groups="base.group_user"/>-->
-
-        <menuitem id="main_menu_hr_ot_requisition" name="OT Requisition" parent="hr_attendance.menu_hr_attendance_root"
-                  sequence="17" groups="base.group_user"/>
-        <menuitem id="menu_hr_ot_requisition" name="OT Request" parent="main_menu_hr_ot_requisition"
-                  sequence="1" action="action_hr_ot_requisition" groups="base.group_user"/>
-
-        <menuitem id="menu_hr_ot_requisition_pending" name="Pending Request" parent="main_menu_hr_ot_requisition"
-                  sequence="2" action="action_hr_ot_requisition_pending" groups="base.group_user"/>
-
-        <menuitem id="menu_hr_ot_requisition_approved" name="Approved" parent="main_menu_hr_ot_requisition"
-                  sequence="3" action="action_hr_ot_requisition_approved"
-                  groups="hr_attendance.group_hr_attendance_user"/>
-
+        <menuitem id="menu_hr_compensatory_leave" name="Compensatory Leave"
+                  parent="main_menu_hr_compensatory_leave"
+                  sequence="1" action="action_hr_compensatory_leave" groups="base.group_user"/>
     </data>
 </openerp>

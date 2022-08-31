@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <menuitem id="main_menu_hr_compensatory_leave" name="Compensatory Leave"
+                  parent="hr_attendance.menu_hr_attendance_root" sequence="18" groups="base.group_user"/>
+    </data>
+</odoo>
