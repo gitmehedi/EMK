@@ -1,0 +1,13 @@
+<odoo>
+    <record id="rule_compensatory_leave_for_emp" model="ir.rule">
+        <field name="name">Compensatory Leave(Manager)</field>
+        <field name="model_id" ref="model_hr_compensatory_leave"/>
+        <field name="domain_force">['|',('employee_id.parent_id','in',[e.id for e in user.employee_ids]),
+            ('employee_id','child_of',[e.id for e in user.employee_ids])]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_create" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+</odoo>
