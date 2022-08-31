@@ -43,14 +43,16 @@ class AttendanceProcessor(models.Model):
                             FROM hr_manual_attendance 
                             WHERE employee_id = %s AND state = 'validate' AND sign_type = 'both' AND 
                                   check_out > %s AND check_in < %s
-                            UNION
-                            SELECT (date_from + interval '6h') AS check_in, 
-                                   (date_to + interval '6h') AS check_out, 
-                                   0 AS worked_hours, 3 AS att_type      
-                            FROM hr_holiday_hour 
-                            WHERE employee_id = %s AND state = 'validate' AND 
-                                date_to > %s AND date_from < %s
-                            ORDER BY check_in, att_type ASC"""
+                            ORDER BY check_in, att_type ASC """
+                            # UNION
+                            # SELECT (date_from + interval '6h') AS check_in,
+                            #        (date_to + interval '6h') AS check_out,
+                            #        0 AS worked_hours, 3 AS att_type
+                            # FROM hr_holiday_hour
+                            # WHERE employee_id = %s AND state = 'validate' AND
+                            #     date_to > %s AND date_from < %s
+                            # ORDER BY check_in, att_type ASC
+                            # """
 
     getExtraOTQuery = """SELECT 
                             SUM(total_hours)
@@ -275,8 +277,8 @@ class AttendanceProcessor(models.Model):
             att_time_end = postEndDate + timedelta(hours=1)
         # att_time_end = dutyTimeMap.get(self.getStrFromDate(postEndDate)).startDutyTime
         self._cr.execute(self.attendance_query, (employeeId, att_time_start, att_time_end,
-                                                 employeeId, att_time_start, att_time_end,
                                                  employeeId, att_time_start, att_time_end))
+                                                 # employeeId, att_time_start, att_time_end))
         attendance_data = self._cr.fetchall()
 
         return attendance_data

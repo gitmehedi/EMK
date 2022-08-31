@@ -10,8 +10,10 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        # 'security/ir_rule.xml',
-        'views/hr_compensatory_leave_view.xml'
+        'security/ir_rule.xml',
+        'views/menu_view.xml',
+        'views/hr_compensatory_leave_view.xml',
+        'views/hr_compensatory_leave_allowance_view.xml',
     ],
     'installable': True,
     'application': True,

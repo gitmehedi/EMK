@@ -27,6 +27,7 @@ class HRCompensatoryLeave(models.Model):
         return default_approver
 
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
+                                  domain=[('manager', '=', True)],
                                   default=_default_employee, required=True, track_visibility='onchange')
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department',
                                     readonly=True, store=True)
