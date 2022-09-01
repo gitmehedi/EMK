@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
+import base64
+from datetime import timedelta
 
 from odoo import models, fields, api, _
 from odoo.addons.event_management.data import helper
 from odoo.addons.opa_utility.helper.utility import Message
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from psycopg2 import IntegrityError
 
 
@@ -41,13 +43,14 @@ class EventEvent(models.Model):
     facilities_ids = fields.Many2many('event.service.type', string="Facilities Requested", track_visibility='onchange',
                                       required=True, readonly=True,
                                       states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    invoice_ids = fields.Many2many('account.invoice', string="Invoices", track_visibility='onchange')
+    invoice_ids = fields.Many2many('account.invoice', string="Invoices", track_visibility='onchange', readonly=True,
+                                   states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     total_seat_available = fields.Integer(string="Total Seat Available", compute='compute_total_seat')
-    event_book_ids = fields.One2many('event.room.book', 'event_id', string='Event Rooms', readonly=False,
+    event_book_ids = fields.One2many('event.room.book', 'event_id', string='Event Rooms', readonly=True,
                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    event_task_ids = fields.One2many('event.task.list', 'event_id', string='Event Tasks', readonly=False,
+    event_task_ids = fields.One2many('event.task.list', 'event_id', string='Event Tasks', readonly=True,
                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    date_begin = fields.Datetime(string='Start Date', required=True, track_visibility='onchange',
+    date_begin = fields.Datetime(string='Start Date', required=True, track_visibility='onchange', readonly=True,
                                  states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     payment_type = fields.Selection(helper.payment_type, required=True,
                                     default='free', string='Type', readonly=True,
@@ -88,13 +91,12 @@ class EventEvent(models.Model):
     purpose_of_event = fields.Html(string="Purpose of Event", track_visibility='onchange', sanitize=False,
                                    readonly=True,
                                    states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    target_audience_group = fields.Selection(helper.target_audience_group, default='yes', required=True,
-                                             string="Target Audience Group", readonly=True,
-                                             states={'draft': [('readonly', False)],
-                                                     'mark_close': [('readonly', False)]})
-    target_age = fields.Integer(string="Target Age", required=True, readonly=True,
-                                states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
-    outreach_plan = fields.Selection(helper.outreach_plan, string="Outreach Plan", required=True, readonly=True,
+    target_audience_group = fields.Char(string="Target Audience Group", readonly=True,
+                                        states={'draft': [('readonly', False)],
+                                                'mark_close': [('readonly', False)]})
+    target_age = fields.Char(string="Target Age", required=True, readonly=True,
+                             states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
+    outreach_plan = fields.Many2many('event.outreach.plan', string="Outreach Plan", readonly=True,
                                      states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     outreach_plan_other = fields.Char(string="Outreach Plan Other", readonly=True,
                                       states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
@@ -113,16 +115,76 @@ class EventEvent(models.Model):
                                states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     date_end = fields.Datetime(readonly=True,
                                states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
+    event_category_id = fields.Many2one('event.category', string='Event Category', track_visibility='onchange',
+                                        readonly=True,
+                                        states={'draft': [('readonly', False)], 'mark_close': [('readonly', False)]})
     event_share_name = fields.Char()
-    event_share = fields.Binary(string="Event Share Upload", attachment=True, track_visibility='onchange',
-                                  states={'draft': [('readonly', False)],
-                                          'approve': [('readonly', False), ('required', True)]})
+    event_share = fields.Binary(string="Event Details", attachment=True, track_visibility='onchange',
+                                readonly=True, states={'draft': [('readonly', False)],
+                                                       'approve': [('readonly', False)]})
+    total_participation_amount = fields.Float(string="Total Participation Amount", compute='compute_total_collection')
     state = fields.Selection(helper.event_state, string="State")
+    close_registration = fields.Selection([('open', 'Open'), ('close', 'Close')], string='Close Registration',
+                                          track_visibility='onchange', readonly=True, default='open')
+    social_content_ids = fields.One2many('event.social.content.reservation', 'line_id', readonly=True,
+                                         states={'draft': [('readonly', False)],
+                                                 'reservation': [('readonly', False), ('required', True)]})
+
+    # Fields used in reports
+    activity_duration = fields.Integer(string='Activity Duration', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    off_total_participant = fields.Integer(string='Total Participants', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    off_male = fields.Integer(string='Male', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    off_female = fields.Integer(string='Female', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    off_transgender = fields.Integer(string='Transgender', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    off_not_say = fields.Integer(string='Prefer Not to Say', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    on_total_participant = fields.Integer(string='Total Participants', readonly=True,
+                                           states={'mark_close': [('readonly', False)]})
+    on_male = fields.Integer(string='Male', readonly=True,
+                              states={'mark_close': [('readonly', False)]})
+    on_female = fields.Integer(string='Female', readonly=True,
+                                states={'mark_close': [('readonly', False)]})
+    on_transgender = fields.Integer(string='Transgender', readonly=True,
+                                     states={'mark_close': [('readonly', False)]})
+    on_not_say = fields.Integer(string='Prefer Not to Say', readonly=True,
+                                 states={'mark_close': [('readonly', False)]})
+
+    live_total_participant = fields.Integer(string='Total Participants', readonly=True,
+                                          states={'mark_close': [('readonly', False)]})
+    live_male = fields.Integer(string='Male', readonly=True,
+                             states={'mark_close': [('readonly', False)]})
+    live_female = fields.Integer(string='Female', readonly=True,
+                               states={'mark_close': [('readonly', False)]})
+    live_transgender = fields.Integer(string='Transgender', readonly=True,
+                                    states={'mark_close': [('readonly', False)]})
+    live_not_say = fields.Integer(string='Prefer Not to Say', readonly=True,
+                                states={'mark_close': [('readonly', False)]})
+
+    view_total_participant = fields.Integer(string='Total Participants', readonly=True,
+                                            states={'mark_close': [('readonly', False)]})
+    view_male = fields.Integer(string='Male', readonly=True,
+                               states={'mark_close': [('readonly', False)]})
+    view_female = fields.Integer(string='Female', readonly=True,
+                                 states={'mark_close': [('readonly', False)]})
+    view_transgender = fields.Integer(string='Transgender', readonly=True,
+                                      states={'mark_close': [('readonly', False)]})
+    view_not_say = fields.Integer(string='Prefer Not to Say', readonly=True,
+                                  states={'mark_close': [('readonly', False)]})
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):
         for record in self:
             record.total_seat_available = sum([rec.seat_no for rec in record.event_book_ids])
+
+    @api.depends('event_book_ids')
+    def compute_total_collection(self):
+        for record in self:
+            record.total_participation_amount = sum([reg.event_fee for reg in record.registration_ids])
 
     # @api.onchange('event_book_ids')
     # def onchange_event_book_ids(self):
@@ -137,7 +199,7 @@ class EventEvent(models.Model):
     @api.constrains('date_begin')
     def _check_date_begin(self):
         dt_now = fields.datetime.now()
-        date_begin = datetime.datetime.strptime(self.date_begin, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(minutes=1)
+        date_begin = datetime.datetime.strptime(self.date_begin, '%Y-%m-%d %H:%M:%S') + timedelta(minutes=1)
         if date_begin < dt_now:
             raise ValidationError(_("Event start date cannot be past date from current date"))
 
@@ -190,6 +252,74 @@ class EventEvent(models.Model):
     def button_confirm(self):
         self.state = 'confirm'
 
+    @api.one
+    def act_refund(self):
+        if self.state == 'mark_close':
+            serv_name = [ 'Event Refund Fee']
+            services = self.env['product.product'].search([('name', 'in', serv_name), ('active', 'in', serv_name)],
+                                                          order='id desc')
+            def create_invoice(service, vals):
+                ins_inv = self.env['account.invoice']
+                journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
+                account_id = self.env['account.account'].search(
+                    [('internal_type', '=', 'receivable'), ('deprecated', '=', False)])
+                analytic_acc = self.env['account.analytic.account'].search([('name', '=', 'EMK Cost Center')], limit=1)
+
+                acc_invoice = {
+                    'partner_id': self.organizer_id.id,
+                    'date_invoice': fields.datetime.now(),
+                    'date_due': datetime.datetime.strptime(self.date_begin, '%Y-%m-%d %H:%M:%S') - timedelta(days=1),
+                    'user_id': self.env.user.id,
+                    'origin': self.name,
+                    'type': 'in_invoice',
+                    'reference': self.name + vals['subject'],
+                    'account_id': account_id.id,
+                    'state': 'draft',
+                    'invoice_line_ids': [
+                        (0, 0, {
+                            'name': service.name,
+                            'product_id': service.id,
+                            'price_unit': vals['amount'],
+                            'account_analytic_id': analytic_acc.id,
+                            'account_id': journal_id.default_debit_account_id.id,
+                        })]
+                }
+                inv = ins_inv.create(acc_invoice)
+                inv.action_invoice_open()
+
+                if inv:
+                    self.state = 'confirm'
+                    pdf = self.env['report'].sudo().get_pdf([inv.id], 'account.report_invoice')
+                    attachment = self.env['ir.attachment'].create({
+                        'name': inv.number + '.pdf',
+                        'res_model': 'account.invoice',
+                        'res_id': inv.id,
+                        'datas_fname': inv.number + '.pdf',
+                        'type': 'binary',
+                        'datas': base64.b64encode(pdf),
+                        'mimetype': 'application/x-pdf'
+                    })
+                    vals = {
+                        'template': 'mail_send.emk_inv_email_tmpl',
+                        'email_to': self.work_email,
+                        'attachment_ids': [(6, 0, attachment.ids)],
+                        'context': {
+                            'name': self.organizer_id.name,
+                            'subject': vals['subject']
+                        },
+                    }
+                    self.env['mail.mail'].mailsend(vals)
+                    return inv.id
+
+            vals = {
+                'amount': self.refundable_amount,
+                'subject': 'Refundable Return Amount',
+            }
+
+            refund_inv = create_invoice(services, vals)
+            self.write({'invoice_ids': [(4, refund_inv)]})
+
+
     @api.multi
     def unlink(self):
         for event in self:
@@ -224,10 +354,21 @@ class EventRegistration(models.Model):
     gender = fields.Many2one('res.gender', required=True, string='Gender')
     profession_id = fields.Many2one('attendee.profession', string='Profession', default=False)
     card_number = fields.Char(string='Card Number')
+    event_fee = fields.Float(string='Participation Amount')
 
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['draft', 'open'])]
+
+    # @api.one
+    # def button_reg_close(self):
+    #     res = super(EventRegistration, self).button_reg_close()
+    #     self.write({'event_fee': self.event_id.participating_amount})
+
+    @api.one
+    def button_reg_payment(self):
+        if not self.event_fee:
+            self.write({'event_fee': self.event_id.participating_amount})
 
 
 class AttendeeProfession(models.Model):
@@ -295,3 +436,15 @@ class AttendeeProfession(models.Model):
                 return super(AttendeeProfession, rec).unlink()
             except IntegrityError:
                 raise ValidationError(_(Message.UNLINK_INT_WARNING))
+
+
+class EventSocialContentReservation(models.Model):
+    _name = 'event.social.content.reservation'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Event Social Content'
+
+    name = fields.Char('Content Title', required=True, translate=True, track_visibility='onchange')
+    content_name = fields.Char(track_visibility='onchange')
+    content = fields.Binary('Content Upload', translate=True, track_visibility='onchange')
+    content_description = fields.Char('Content Description', translate=True, track_visibility='onchange')
+    line_id = fields.Many2one('event.event', ondelete='cascade', translate=True, track_visibility='onchange')

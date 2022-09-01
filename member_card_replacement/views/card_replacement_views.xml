@@ -28,7 +28,8 @@
                             <field name="comments"/>
                         </group>
                         <group>
-                            <field name="gb_upload"/>
+                            <field name="gb_upload_name" invisible="True"/>
+                            <field name="gb_upload" filename="gb_upload_name"/>
                             <field name="request_date"/>
                             <field name="authorize_date" attrs="{'invisible': [('state', '=', 'request')]}"/>
                             <field name="approve_date"

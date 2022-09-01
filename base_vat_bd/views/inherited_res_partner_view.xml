@@ -8,9 +8,12 @@
         <field name="priority" eval="30"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lang']" position="after">
-                <field name="tax"/>
-                <field name="vat"/>
-                <field name="bin"/>
+                <field name="tax"
+                       groups="sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads,sales_team.group_sale_manager"/>
+                <field name="vat"
+                       groups="sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads,sales_team.group_sale_manager"/>
+                <field name="bin"
+                       groups="sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads,sales_team.group_sale_manager"/>
             </xpath>
         </field>
     </record>

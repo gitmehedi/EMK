@@ -1,11 +1,11 @@
 from odoo import api
-from odoo import models, fields,_,SUPERUSER_ID
+from odoo import models, fields, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 
 
 class HROTRequisition(models.Model):
-    _name='hr.ot.requisition'
-    _inherit = ['mail.thread','ir.needaction_mixin']
+    _name = 'hr.ot.requisition'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'employee_id'
 
     def _default_employee(self):
@@ -25,12 +25,21 @@ class HROTRequisition(models.Model):
         return default_approver
 
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
-                                  default=_default_employee,required=True, track_visibility='onchange')
+                                  default=_default_employee, required=True, track_visibility='onchange')
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department',
                                     readonly=True, store=True)
-    from_datetime = fields.Datetime('Start Date', readonly=True, index=True, copy=False,required=True, track_visibility='onchange')
-    to_datetime = fields.Datetime('End Date', readonly=True, copy=False,required=True, track_visibility='onchange')
-    total_hours = fields.Float(string='Total hours', compute='_compute_total_hours', store=True,digits=(15, 2),readonly=True, track_visibility='onchange')
+    from_datetime = fields.Datetime('Start Date', readonly=True, index=True, copy=False, required=True,
+                                    track_visibility='onchange')
+    to_datetime = fields.Datetime('End Date', readonly=True, copy=False, required=True, track_visibility='onchange')
+    total_hours = fields.Float(string='OT Hours', compute='_compute_total_hours', store=True, digits=(15, 2),
+                               readonly=True, track_visibility='onchange')
+    from_att_datetime = fields.Datetime('Attendance Check In', compute='_compute_attendance', store=True,
+                                        track_visibility='onchange')
+    to_att_datetime = fields.Datetime('Attendance Check Out', compute='_compute_attendance',
+                                      track_visibility='onchange')
+
+    total_att_hours = fields.Float(string='Attendance Hours', compute='_compute_attendance', store=True, digits=(15, 2),
+                                   readonly=True, track_visibility='onchange')
     ot_reason = fields.Text(string='Reason for OT')
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True,
                               default=lambda self: self.env.uid, readonly=True)
@@ -49,7 +58,7 @@ class HROTRequisition(models.Model):
         ('to_approve', "To Approve"),
         ('approved', "Approved"),
         ('refuse', 'Refused'),
-    ], default='to_submit',track_visibility='onchange')
+    ], default='to_submit', track_visibility='onchange')
 
     ####################################################
     # Business methods
@@ -61,6 +70,20 @@ class HROTRequisition(models.Model):
             self.pending_approver = self.employee_id.holidays_approvers[0].approver.id
         else:
             self.pending_approver = False
+
+    @api.depends('employee_id', 'from_datetime', 'to_datetime')
+    def _compute_attendance(self):
+        for rec in self:
+            if rec.employee_id and rec.from_datetime and rec.to_datetime:
+                start_date = rec.from_datetime[:10]
+                emp_id = rec.employee_id.id
+                attendance = rec.env['hr.attendance'].search([('employee_id', '=', emp_id),
+                                                              ('duty_date', '=', start_date)], limit=1)
+
+                if attendance:
+                    rec.from_att_datetime = attendance.check_in
+                    rec.to_att_datetime = attendance.check_out
+                    rec.total_att_hours = attendance.worked_hours
 
     @api.one
     def _compute_current_user_is_approver(self):
@@ -75,7 +98,7 @@ class HROTRequisition(models.Model):
         if employee.user_id:
             self.message_subscribe_users(user_ids=employee.user_id.ids)
 
-    @api.constrains('from_datetime','to_datetime')
+    @api.constrains('from_datetime', 'to_datetime')
     def _check_to_datetime_validation(self):
 
         for ot in self:
@@ -97,8 +120,8 @@ class HROTRequisition(models.Model):
         if self.from_datetime and self.to_datetime:
             start_dt = fields.Datetime.from_string(self.from_datetime)
             finish_dt = fields.Datetime.from_string(self.to_datetime)
-            diff=finish_dt-start_dt
-            hours = float(diff.total_seconds()  / 3600)
+            diff = finish_dt - start_dt
+            hours = float(diff.total_seconds() / 3600)
             self.total_hours = hours
 
     @api.one
@@ -131,12 +154,14 @@ class HROTRequisition(models.Model):
                 if next_approver and next_approver.id:
                     vals['pending_approver'] = next_approver.id
                 ot.write(vals)
-                self.env['hr.employee.ot.approbation'].create({'ot_ids': ot.id, 'approver': self.env.uid, 'sequence': sequence, 'date': fields.Datetime.now()})
+                self.env['hr.employee.ot.approbation'].create(
+                    {'ot_ids': ot.id, 'approver': self.env.uid, 'sequence': sequence, 'date': fields.Datetime.now()})
 
     @api.multi
     def action_validate(self):
         for ot in self:
             ot.write({'state': 'approved'})
+
     @api.multi
     def action_refuse(self):
         self.write({'state': 'refuse'})

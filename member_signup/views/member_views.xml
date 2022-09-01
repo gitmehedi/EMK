@@ -10,8 +10,13 @@
                         attrs="{'invisible':[('member_sequence','!=',False)]}"
                         groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
             </xpath>
+            <xpath expr="//form/header" position="inside">
+                <button string="Profile Update" name="%(action_membership_profile_update)d" type="action"
+                        class="oe_highlight" groups="member_user.group_user_member"/>
+            </xpath>
             <xpath expr="//form" position="attributes">
                 <attribute name="create">false</attribute>
+                <attribute name="edit">false</attribute>
             </xpath>
             <xpath expr="//button[@name='open_parent']" position="attributes">
                 <attribute name="attrs">{'invisible':True}</attribute>
@@ -21,7 +26,7 @@
             </xpath>
             <xpath expr="//form/header" position="after">
                 <field name="state" invisible="True"/>
-                <field name="company_id"/>
+                <field name="company_id" invisible="True"/>
                 <div attrs="{'invisible': [('state','!=','member'),('free_member','=',False)]}">
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px; text-align:center;"
                          attrs="{'invisible': ['|',('membership_days_remaining','&gt;',30),('membership_days_remaining','=',0)]}">
@@ -153,6 +158,7 @@
         <field name="arch" type="xml">
             <xpath expr="//kanban" position="attributes">
                 <attribute name="create">false</attribute>
+                <attribute name="edit">false</attribute>
             </xpath>
         </field>
     </record>
@@ -162,7 +168,7 @@
         <field name="inherit_id" ref="membership.membership_members_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="replace">
-                <tree string="Members" create="0" decoration-danger="membership_status =='inactive'"
+                <tree string="Members" create="0" edit="0" decoration-danger="membership_status =='inactive'"
                       decoration-success="membership_status =='active'"
                       decoration-info="membership_status =='restricted'">
                     <field name="member_sequence" string="Membership ID"/>

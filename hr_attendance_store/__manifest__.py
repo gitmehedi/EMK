@@ -17,6 +17,7 @@
         'gbs_interface',
     ],
     "data": [
+        "security/ir.model.access.csv",
         "data/ir_cron.xml",
         "data/ir_sequence_view.xml",
         # "views/menu_view.xml",

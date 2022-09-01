@@ -14,7 +14,12 @@
                 </header>
                 <sheet>
                     <group>
-                        <field name="name"/>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="type"/>
+                        </group>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -30,10 +35,12 @@
         <field name="inherit_id" ref="membership_extension.membership_category_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="replace">
-                <tree string="Membership Categories" decoration-info="state=='draft'" decoration-success="state=='approve'"
-                  decoration-danger="state=='reject'"
-                  decoration-bf="state in ('approve',)">
+                <tree string="Membership Categories" decoration-info="state=='draft'"
+                      decoration-success="state=='approve'"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('approve',)">
                     <field name="name"/>
+                    <field name="type"/>
                     <field name="state"/>
                 </tree>
             </xpath>

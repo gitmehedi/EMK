@@ -30,5 +30,5 @@ class RFIDGeneration(models.Model):
         return [('state', '=', 'draft')]
 
     @api.multi
-    def confirm(self):
+    def act_generate(self):
         self.state = 'generate'

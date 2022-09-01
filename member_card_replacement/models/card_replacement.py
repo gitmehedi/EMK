@@ -29,7 +29,8 @@ class MemberCardReplacement(models.Model):
     rejected_date = fields.Date(string="Rejected Date",
                                 readonly=True, states={'approve': [('readonly', '=', False)]},
                                 track_visibility="onchange")
-    gb_upload = fields.Binary(string="GD Upload", readonly=True, attachment=True,
+    gb_upload_name = fields.Char()
+    gb_upload = fields.Binary(string="GD Attachment", readonly=True, attachment=True,
                               required=True, states={'request': [('readonly', '=', False)]},
                               track_visibility="onchange")
     comments = fields.Text(string='Comments', readonly=True, states={'request': [('readonly', '=', False)]},

@@ -42,18 +42,17 @@ $(function () {
 
     $('input[name=subject_of_interest]').change(function(){
         vals= [];
-        var selector = $('#subject_of_interest_others');
         $("input:checkbox[name=subject_of_interest]:checked").each(function(){
            vals.push($(this).parent().text().trim());
         });
-        
-        if(vals.indexOf('Other')>-1){
-            selector.attr('required','required');
-            selector.parent().show();
-        }else{
-            selector.val('').removeAttr('required');
-            selector.parent().hide();
-        }
+
+        // if(vals.indexOf('Others')>-1){
+        //     selector.attr('required','required');
+        //     selector.parent().show();
+        // }else{
+        //     selector.val('').removeAttr('required');
+        //     selector.parent().hide();
+        // }
         cbx_group = $("input[name=subject_of_interest]");
 
         cbx_group.prop('required', true);
@@ -63,31 +62,29 @@ $(function () {
     });
 
 
-
-
-    $('#highest_certification').change(function(){
-        var val = $('#highest_certification option:selected').text().trim().toLowerCase();
-        var selector = $('#highest_certification_other');
-        if (val=="other"){
-            selector.attr('required','required');
-            selector.parent().show();
-        }else{
-            selector.val('').removeAttr('required');
-            selector.parent().hide();
-        }
-    });
-
-    $('#occupation').change(function(){
-        var val = $('#occupation option:selected').text().trim().toLowerCase();
-        var selector = $('#occupation_other');
-        if (val=="other"){
-            selector.attr('required','required');
-            selector.parent().show();
-        }else{
-            selector.val('').removeAttr('required');
-            selector.parent().hide();
-        }
-    });
+    // $('#highest_certification').change(function(){
+    //     var val = $('#highest_certification option:selected').text().trim().toLowerCase();
+    //     var selector = $('#highest_certification_other');
+    //     if (val=="Others"){
+    //         selector.attr('required','required');
+    //         selector.parent().show();
+    //     }else{
+    //         selector.val('').removeAttr('required');
+    //         selector.parent().hide();
+    //     }
+    // });
+    //
+    // $('#occupation').change(function(){
+    //     var val = $('#occupation option:selected').text().trim().toLowerCase();
+    //     var selector = $('#occupation_other');
+    //     if (val=="Others"){
+    //         selector.attr('required','required');
+    //         selector.parent().show();
+    //     }else{
+    //         selector.val('').removeAttr('required');
+    //         selector.parent().hide();
+    //     }
+    // });
 
     $('input[name=usa_work_or_study]').change(function(){
         var val = $("input:checked[name=usa_work_or_study]:checked").val();

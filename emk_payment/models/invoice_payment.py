@@ -56,13 +56,13 @@ class MemberPayment(models.Model):
         users = []
         self.payment_partner_id = None
         if self.invoice_type == 'membership_payment':
-            inv = self.env['account.invoice'].search([('state', '=', 'open'),
-                                                      ('residual', '>', 0)])
+            inv = self.env['account.invoice'].sudo().search([('state', '=', 'open'),
+                                                             ('residual', '>', 0)])
             member_inv = [val.partner_id.id for val in inv]
-            members = self.env['res.partner'].search([('is_applicant', '=', True), ('id', 'in', member_inv)])
+            members = self.env['res.partner'].sudo().search([('is_applicant', '=', True), ('id', 'in', member_inv)])
             users = members.ids
         if self.invoice_type == 'event_payment':
-            payment_users = self.env['account.invoice'].search(
+            payment_users = self.env['account.invoice'].sudo().search(
                 [('state', '=', 'open'), ('partner_id.is_poc', '=', True)])
             users = list(set([val.partner_id.id for val in payment_users]))
 
@@ -76,7 +76,7 @@ class MemberPayment(models.Model):
         if self.payment_partner_id:
             res = {}
             self.invoice_id = None
-            invoice = self.env['account.invoice'].search([('state', '=', 'open'),
+            invoice = self.env['account.invoice'].sudo().search([('state', '=', 'open'),
                                                           ('partner_id', '=', self.payment_partner_id.id),
                                                           ('residual', '>', 0)])
             res['domain'] = {

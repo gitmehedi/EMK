@@ -1,4 +1,5 @@
 import os, shutil, base64, csv
+from datetime import datetime,timedelta
 
 from odoo import api, models, fields, _
 from odoo.addons.hr_attendance_store.helpers import helper
@@ -72,11 +73,13 @@ class HrManualAttendanceProcess(models.Model):
                         WHERE LINE_ID=%s;"""
             self._cr.execute(query, [self.id])
             for line in self.env.cr.fetchall():
+                check_in = str(fields.Datetime.from_string(line[2])-timedelta(hours=6))
+                check_out = str(fields.Datetime.from_string(line[3])-timedelta(hours=6))
                 vals = {}
                 vals['employee_id'] = line[0]
                 vals['duty_date'] = line[1]
-                vals['check_in'] = line[2]
-                vals['check_out'] = line[3]
+                vals['check_in'] = check_in
+                vals['check_out'] = check_out
                 self.env['hr.attendance'].create(vals)
             self.state = 'approve'
 

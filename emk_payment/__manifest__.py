@@ -9,7 +9,8 @@
     'category': 'Payments',
     'depends': [
         'account',
-        'account_accountant'
+        'account_accountant',
+        'account_configuration',
     ],
     'data': [
         # 'data/sequence.xml',

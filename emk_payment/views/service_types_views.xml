@@ -6,13 +6,34 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Service Types" duplicate="0">
+                <header>
+                    <button name="act_approve" string="Approve" type="object" states="draft"
+                            class="oe_highlight"
+                            groups=""/>
+                    <button name="act_reject" string="Reject" type="object" states="draft"
+                            groups=""/>
+                    <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                            groups=""/>
+                    <button name="act_inactive" string="Set to In-Active" type="object" states="approve"
+                            groups=""/>
+                    <button name="act_active" string="Set to Active" type="object" states="reject"
+                            class="oe_highlight"
+                            groups=""/>
+                    <field name="state" widget="statusbar" invisible="True"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="type"/>
-                            <field name="categ_id" invisible="True"/>
                             <field name="list_price" string="Price" required="True"/>
+                            <field name="type" invisible="True"/>
+                            <field name="categ_id" invisible="True"/>
+                            <field name="sale_ok" invisible="True"/>
+                            <field name="purchase_ok" invisible="True"/>
+                        </group>
+                        <group>
+                            <field name="pending" invisible="True"/>
+                            <field name="active" invisible="True"/>
                         </group>
                     </group>
                 </sheet>
@@ -33,14 +54,38 @@
                 <field name="type" invisible="True"/>
                 <field name="categ_id" invisible="True"/>
                 <field name="list_price" string="Price"/>
-
             </tree>
+        </field>
+    </record>
+    <record id="view_service_types_search" model="ir.ui.view">
+        <field name="name">product.template.search</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="state"/>
+                <group string="Group By">
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                    <filter string="Rejected" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    <filter string="In-Active" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                </group>
+            </search>
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_service_fee_product">
         <field name="name">Service Types</field>
         <field name="res_model">product.template</field>
-        <field name="domain">[('type','=','service'),('sale_ok','=',False),('purchase_ok','=',False)]</field>
+        <field name="search_view_id" ref="view_service_types_search"/>
+        <field name="domain">[]</field>
+        <field name="context">
+            {'default_type':'service','default_sale_ok':0,'default_purchase_ok':0,"search_default_active":'False',"search_default_pending":'True'}
+        </field>
+        <field name="domain">
+            [('type','=','service'),('sale_ok','=',False),('purchase_ok','=',False)]
+        </field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Create a new Service Types

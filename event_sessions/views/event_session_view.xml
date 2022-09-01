@@ -218,4 +218,35 @@
     <menuitem id="event_session_menu" name="Sessions" sequence="10"
               parent="event_management.menu_event_general" action="act_event_session_form"
               groups="event_user.group_event_officer,event.group_event_manager"/>
+
+    <record id="view_dashboard_event_session_calendar" model="ir.ui.view">
+        <field name="name">event.session.calendar</field>
+        <field name="model">event.session</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar color="event_id" date_start="date_begin" date_stop="date_end"
+                      string="Event Registration">
+                <field name="name"/>
+                <field name="event_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_event_session_calendar" model="ir.actions.act_window">
+        <field name="name">Event Session</field>
+        <field name="res_model">event.session</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">calendar</field>
+    </record>
+
+    <record id="action_view_calendar_event_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_dashboard_event_session_calendar"/>
+        <field name="act_window_id" ref="action_event_session_calendar"/>
+    </record>
+
+    <menuitem id="menu_event_session_calendar" action="action_event_session_calendar"
+              name="Calendar" parent="event.event_main_menu" sequence="1"
+              groups="event_user.group_event_organizer,event.group_event_user,event_user.group_event_officer"/>
 </odoo>
