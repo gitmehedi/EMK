@@ -8,7 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 class HrCompensatoryLeaveAllowance(models.Model):
     _name = 'hr.compensatory.leave.allowance'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = 'Ted Cafe Bills'
+    _description = 'Overtime Alllowance'
     _order = 'period_id desc'
     _rec_name = "period_id"
 
