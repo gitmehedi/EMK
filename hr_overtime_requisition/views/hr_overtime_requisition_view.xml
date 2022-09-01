@@ -36,10 +36,10 @@
                                 <field name="total_hours" widget="float_time"/>
                             </group>
                             <group>
-                                <field name="pending_approver" groups="hr.group_hr_user"/>
-                                <field name="from_att_datetime" groups="hr.group_hr_user"/>
-                                <field name="to_att_datetime" groups="hr.group_hr_user"/>
-                                <field name="total_att_hours" groups="hr.group_hr_user"/>
+                                <field name="pending_approver"/>
+                                <field name="from_att_datetime"/>
+                                <field name="to_att_datetime"/>
+                                <field name="total_att_hours"/>
                             </group>
                         </group>
                         <group>
