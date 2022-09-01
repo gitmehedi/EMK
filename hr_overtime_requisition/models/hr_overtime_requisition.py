@@ -31,11 +31,12 @@ class HROTRequisition(models.Model):
     from_datetime = fields.Datetime('Start Date', readonly=True, index=True, copy=False, required=True,
                                     track_visibility='onchange')
     to_datetime = fields.Datetime('End Date', readonly=True, copy=False, required=True, track_visibility='onchange')
-    total_hours = fields.Float(string='Total hours', compute='_compute_total_hours', store=True, digits=(15, 2),
+    total_hours = fields.Float(string='OT Hours', compute='_compute_total_hours', store=True, digits=(15, 2),
                                readonly=True, track_visibility='onchange')
     from_att_datetime = fields.Datetime('Attendance Check In', compute='_compute_attendance', store=True,
                                         track_visibility='onchange')
-    to_att_datetime = fields.Datetime('Attendance Check Out', compute='_compute_attendance',  track_visibility='onchange')
+    to_att_datetime = fields.Datetime('Attendance Check Out', compute='_compute_attendance',
+                                      track_visibility='onchange')
 
     total_att_hours = fields.Float(string='Attendance Hours', compute='_compute_attendance', store=True, digits=(15, 2),
                                    readonly=True, track_visibility='onchange')
@@ -75,15 +76,14 @@ class HROTRequisition(models.Model):
         for rec in self:
             if rec.employee_id and rec.from_datetime and rec.to_datetime:
                 start_date = rec.from_datetime[:10]
-                end_date = rec.to_datetime[:10]
                 emp_id = rec.employee_id.id
                 attendance = rec.env['hr.attendance'].search([('employee_id', '=', emp_id),
-                                                              ('duty_date', '=', start_date)])
+                                                              ('duty_date', '=', start_date)], limit=1)
+
                 if attendance:
                     rec.from_att_datetime = attendance.check_in
                     rec.to_att_datetime = attendance.check_out
                     rec.total_att_hours = attendance.worked_hours
-
 
     @api.one
     def _compute_current_user_is_approver(self):
