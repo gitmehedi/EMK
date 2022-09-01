@@ -116,6 +116,7 @@ class HRCompensatoryLeave(models.Model):
             leave_ins = self.search([('employee_id', '=', self.employee_id.id),
                                      ('state', '=', 'approved'),
                                      ('from_datetime', '>=', from_dt[:10]),
+                                     ('from_datetime', '<=', to_dt[:10])
                                      ])
 
             ot_hours = 0.0
