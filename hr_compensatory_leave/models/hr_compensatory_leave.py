@@ -106,7 +106,7 @@ class HRCompensatoryLeave(models.Model):
     @api.depends('employee_id', 'from_datetime', 'to_datetime')
     def _compute_available_hours(self):
         if self.employee_id and self.from_datetime and self.to_datetime:
-            to_dt = fields.Datetime.now()
+            to_dt = self.from_datetime
             from_dt = str(fields.Datetime.from_string(to_dt) - timedelta(days=30))
             ot_ins = self.env['hr.ot.requisition'].search([('employee_id', '=', self.employee_id.id),
                                                            ('state', '=', 'approved'),
