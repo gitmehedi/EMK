@@ -121,6 +121,7 @@
         "gbs_hr_recruitment",
         "website_job_application",
         "hr_employee_payroll_absence",
+        "hr_compensatory_leave",
     ],
     'installable': True,
     'application': True,
