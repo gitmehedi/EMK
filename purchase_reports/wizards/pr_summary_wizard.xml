@@ -58,7 +58,7 @@
                 name="Purchase Analysis"
                 parent="custom_purchase_report_menu"
                 sequence="99"
-                groups="-purchase.group_purchase_manager,base_technical_features.group_technical_features"
+                groups="purchase.group_purchase_user,purchase.group_purchase_manager,base_technical_features.group_technical_features"
                 action="purchase.action_purchase_order_report_all"/>
 
         <menuitem
