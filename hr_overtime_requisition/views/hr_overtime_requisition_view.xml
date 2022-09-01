@@ -37,6 +37,9 @@
                             </group>
                             <group>
                                 <field name="pending_approver" groups="hr.group_hr_user"/>
+                                <field name="from_att_datetime" groups="hr.group_hr_user"/>
+                                <field name="to_att_datetime" groups="hr.group_hr_user"/>
+                                <field name="total_att_hours" groups="hr.group_hr_user"/>
                             </group>
                         </group>
                         <group>
