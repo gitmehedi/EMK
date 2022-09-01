@@ -11,7 +11,6 @@
 							<field name="partner_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
 							<field name="operating_unit_id" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
 							<field name="date_today" readonly="1"/>
-							<field name="date_from"/>
 						</group>
 						<group>
 							<field name="product_tmpl_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
