@@ -64,6 +64,14 @@ class HROTRequisition(models.Model):
     # Business methods
     ####################################################
 
+    @api.onchange('from_datetime')
+    def _onchange_datetime(self):
+        if self.from_datetime:
+            lst_time = "11:30:00"
+            exit_time = "11:30:00"
+            self.from_datetime = "{0} {1}".format(self.from_datetime[:10], lst_time)
+            self.to_datetime = "{0} {1}".format(self.from_datetime[:10], exit_time)
+
     @api.onchange('employee_id')
     def _onchange_employee(self):
         if self.employee_id and self.employee_id.holidays_approvers:

@@ -6,7 +6,7 @@ class HrContract(models.Model):
     _name = 'hr.contract'
     _inherit = ['hr.contract','mail.thread', 'ir.needaction_mixin']
 
-    transport_allowance = fields.Float(string='Trasport Allowance', digits=dp.get_precision('Payroll'),
+    transport_allowance = fields.Float(string='Transport Allowance', digits=dp.get_precision('Payroll'),
                                        track_visibility='onchange', help='Amount for Transport Allowance')
     contractual = fields.Boolean(string="Contractual",track_visibility='onchange')
 

@@ -36,7 +36,8 @@
                                     <tree string="List" editable="bottom">
                                         <field name="employee_id"
                                                options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
-                                        <field name="hours"/>
+                                        <field name="hours" sum="hours"/>
+                                        <field name="amount" sum="amount"/>
                                         <field name="state" invisible="1"/>
                                     </tree>
                                 </field>
