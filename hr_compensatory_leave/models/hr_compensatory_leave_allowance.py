@@ -61,7 +61,6 @@ class HrCompensatoryLeaveAllowance(models.Model):
                     line.write({'state': 'approved'})
             self.state = 'done'
 
-
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ('draft', 'approve', 'reject'))]
@@ -84,8 +83,14 @@ class HrCompensatoryLeaveAllowance(models.Model):
             allowance = self._cr.fetchall()
             self.line_ids.unlink()
             for line in allowance:
+                hours = line[1]
+                contract = self.env['hr.contract'].search([('employee_id','=',line[0])])
+                logic = 1
+                amount = hours*contract.comp_allow_rate*logic
+
                 rec = {'employee_id': line[0],
-                       'hours': line[1],
+                       'hours': hours,
+                       'amount': amount,
                        'line_id': self.id,
                        'state': 'draft',
                        }
@@ -116,6 +121,8 @@ class HrCompensatoryLeaveAllowanceLine(models.Model):
 
     hours = fields.Float(string="Allowance Hours", required=True, readonly=True,
                          states={'draft': [('readonly', False)]})
+    amount = fields.Float(string="Allowance Amount", required=True, readonly=True,
+                          states={'draft': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string="Employee", store=True, required=True,
                                   domain=_get_contract_employee, readonly=True, states={'draft': [('readonly', False)]})
     line_id = fields.Many2one(comodel_name='hr.compensatory.leave.allowance', ondelete='cascade', string='Cafe No')
@@ -159,7 +166,7 @@ class InheritedCompensatoryLeavePayslip(models.Model):
             for line in lines:
                 line_ids += line_ids.new({
                     'name': 'Compensatory Leave Allowance',
-                    'code': "CLA",
+                    'code': "COMLEAVE",
                     'amount': line.amount,
                     'contract_id': self.contract_id.id,
                     'ref': line.id,
