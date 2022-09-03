@@ -6,6 +6,9 @@
     'summary': 'This modules calculates compensatory leave depending on OT Requests',
     'version': '1.0',
     'depends': [
+        'hr_payroll',
+        'gbs_hr_payroll',
+        'l10n_in_hr_payroll',
         'hr_overtime_requisition',
     ],
     'data': [
@@ -14,6 +17,7 @@
         'views/menu_view.xml',
         'views/hr_compensatory_leave_view.xml',
         'views/hr_compensatory_leave_allowance_view.xml',
+        'views/hr_contract_view.xml',
     ],
     'installable': True,
     'application': True,
