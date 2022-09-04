@@ -13,3 +13,12 @@ class DateRange(models.Model):
             self.current = True
         else:
             self.current = False
+
+    @api.one
+    def name_get(self):
+        if self.name and self.date_start and self.date_end:
+            frmt = '%m/%d/%Y'
+            start = fields.Datetime.from_string(self.date_start).strftime(frmt)
+            end = fields.Datetime.from_string(self.date_end).strftime(frmt)
+            name = '%s [%s - %s]' % (self.name, start, end)
+        return (self.id, name)
