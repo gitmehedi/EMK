@@ -7,7 +7,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('is_cnf','=','1')]</field>
-            <field name="context">{'default_customer':0, 'default_is_cnf':1}</field>
+            <field name="context">{'default_customer':0, 'default_is_cnf':1, 'no_create_edit_button': True}</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">

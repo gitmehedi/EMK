@@ -14,8 +14,10 @@ class InheritedProductProduct(models.Model):
 
         doc = etree.XML(res['arch'])
         no_create_edit_button = self.env.context.get('no_create_edit_button')
+        group_ser = self.env.user.has_group('gbs_application_group.group_service_product_manager')
+        group_prod = self.env.user.has_group('gbs_application_group.group_sales_product_manager')
 
-        if not self.env.user.has_group('gbs_application_group.group_sales_product_manager'):
+        if not group_ser and not group_prod:
             if no_create_edit_button:
                 if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
                     for node_form in doc.xpath("//kanban"):
