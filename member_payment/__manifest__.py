@@ -11,6 +11,7 @@
         'account_accountant',
         'emk_payment',
         'member_user',
+        'membership_extension',
         'member_signup',
         'member_card_replacement',
     ],

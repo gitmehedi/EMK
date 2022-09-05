@@ -11,6 +11,10 @@
         'account',
         'account_accountant',
         'account_configuration',
+        'member_user',
+        'membership_extension',
+        'event',
+        'event_user',
     ],
     'data': [
         # 'data/sequence.xml',

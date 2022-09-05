@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <menuitem name="Member Payments" id="sub_menu_member_payment" parent="emk_payment.main_menu_payment"
-              groups="member_user.group_mem_user_officer" sequence="1"/>
+              groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager" sequence="1"/>
     <record id="emk_payment.service_fee" model="ir.ui.menu">
         <field name="groups_id"
                eval="[(4, ref('member_user.group_mem_user_officer')),(4, ref('membership_extension.group_membership_manager'))]"/>

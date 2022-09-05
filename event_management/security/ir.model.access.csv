@@ -24,6 +24,9 @@ evt_rs_part_usr,evt_rs_part_usr,model_res_partner,event.group_event_user,1,0,0,0
 evt_rs_part_adm,evt_rs_part_adm,model_res_partner,event_user.group_event_officer,1,1,1,1
 evt_rs_part_mng,evt_rs_part_mng,model_res_partner,event.group_event_manager,1,1,1,1
 
+evt_evt_cat_usr,evt_evt_cat_usr,model_event_category,event.group_event_user,1,0,0,0
+evt_evt_cat_adm,evt_evt_cat_adm,model_event_category,event_user.group_event_officer,1,1,1,1
+evt_evt_cat_mng,evt_evt_cat_mng,model_event_category,event.group_event_manager,1,1,1,1
 
 evt_reg_usr,evt_reg_usr,event.model_event_registration,event.group_event_user,1,0,0,0
 evt_reg_adm,evt_reg_adm,event.model_event_registration,event_user.group_event_officer,1,1,1,1
