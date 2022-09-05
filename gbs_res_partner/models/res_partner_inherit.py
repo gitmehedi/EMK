@@ -61,6 +61,20 @@ class ResPartner(models.Model):
                         node_form.set("create", 'false')
                         node_form.set("edit", 'false')
 
+        no_create_edit_button_customer = self.env.context.get('no_create_edit_button_customer')
+        if not self.env.user.has_group('gbs_application_group.group_sales_customer_manager'):
+            if no_create_edit_button_customer:
+                if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
+                    for node_form in doc.xpath("//kanban"):
+                        node_form.set("create", 'false')
+                        node_form.set("edit", 'false')
+                    for node_form in doc.xpath("//tree"):
+                        node_form.set("create", 'false')
+                        node_form.set("edit", 'false')
+                    for node_form in doc.xpath("//form"):
+                        node_form.set("create", 'false')
+                        node_form.set("edit", 'false')
+
         res['arch'] = etree.tostring(doc)
         return res
 

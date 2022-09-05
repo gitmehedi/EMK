@@ -15,13 +15,10 @@ class InheritedProductTemplate(models.Model):
         no_create_edit_button = self.env.context.get('no_create_edit_button')
         no_create_edit_button_service = self.env.context.get('no_create_edit_button_service')
 
-        res_ser = self.env.ref('gbs_service.product_template_service_action')
-        res_prod = self.env.ref('purchase.product_normal_action_puchased')
-
         group_ser = self.env.user.has_group('gbs_application_group.group_service_product_manager')
         group_prod = self.env.user.has_group('gbs_application_group.group_sales_product_manager')
 
-        if no_create_edit_button and not group_prod:
+        if no_create_edit_button and not self.env.user.has_group('gbs_application_group.group_sales_product_manager'):
             if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
                 for node_form in doc.xpath("//kanban"):
                     node_form.set("create", 'false')
@@ -33,7 +30,7 @@ class InheritedProductTemplate(models.Model):
                     node_form.set("create", 'false')
                     node_form.set("edit", 'false')
 
-        if no_create_edit_button_service and not group_ser:
+        if no_create_edit_button_service and not self.env.user.has_group('gbs_application_group.group_service_product_manager'):
             if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
                 for node_form in doc.xpath("//kanban"):
                     node_form.set("create", 'false')
@@ -44,6 +41,7 @@ class InheritedProductTemplate(models.Model):
                 for node_form in doc.xpath("//form"):
                     node_form.set("create", 'false')
                     node_form.set("edit", 'false')
+
         res['arch'] = etree.tostring(doc)
         return res
 
