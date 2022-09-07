@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="hr_attendance.group_hr_attendance_user" model="res.groups">
+            <field name="name">Attendance: Officer</field>
+            <field name="category_id" ref="base.module_category_hr_attendance"/>
+            <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+        </record>
+
+        <record id="hr_attendance.group_hr_attendance_manager" model="res.groups">
+            <field name="name">Attendance: Manager</field>
+            <field name="category_id" ref="base.module_category_hr_attendance"/>
+            <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="hr_manual_atd" model="res.groups">
+            <field name="name">Attendance: Manual Attendance</field>
+            <field name="category_id" ref="base.module_category_hr_attendance"/>
+            <field name="comment">The user will gain access to the human resources attendance menu, enabling him to
+                manage his own attendance.
+            </field>
+        </record>
+
+        <record id="hr_dept_mang_atd" model="res.groups">
+            <field name="name">Attendance: Department Manger</field>
+            <field name="category_id" ref="base.module_category_hr_attendance"/>
+            <field name="comment">The user will gain access to the human resources attendance menu, enabling him to
+                manage his own attendance.
+            </field>
+        </record>
+
+    </data>
+</odoo>
