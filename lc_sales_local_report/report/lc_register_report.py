@@ -485,7 +485,7 @@ class LcRegisterXLSX(ReportXlsx):
                         LEFT JOIN account_invoice_stock_picking_rel as aispr ON aispr.stock_picking_id = sp.id 
                         LEFT JOIN account_invoice ai ON ai.id = aispr.account_invoice_id
                         LEFT JOIN stock_pack_operation as spo ON spo.picking_id = sp.id
-                        where ai.id in (%s) order by sp.date_done DESC
+                        where ai.id in (%s) and sp.state='done' order by sp.date_done DESC
                         """ % purchase_shipment_inv
                 self.env.cr.execute(query)
                 query_res = self.env.cr.dictfetchall()
@@ -495,14 +495,14 @@ class LcRegisterXLSX(ReportXlsx):
                 LEFT JOIN stock_pack_operation as spo ON spo.picking_id = sp.id
                 where state='done' and sp.origin in (select name from sale_order as so
                 LEFT JOIN pi_lc_rel as plr on plr.pi_id = so.lc_id
-                where so.lc_id=%s)
+                where so.lc_id=%s) and sp.state='done'
                 """ % lc_id
                 self.env.cr.execute(query)
                 query_res = self.env.cr.dictfetchall()
         else:
             query = """select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, spo.qty_done as qty_delivered from stock_picking as sp 
                         LEFT JOIN stock_pack_operation as spo ON spo.picking_id = sp.id
-                        where origin='%s'
+                        where origin='%s' and sp.state='done'
                             """ % so_name
             self.env.cr.execute(query)
             query_res = self.env.cr.dictfetchall()
