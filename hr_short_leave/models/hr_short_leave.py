@@ -10,7 +10,7 @@ HOURS_PER_DAY = 8
 
 class HrShortLeave(models.Model):
     _name = "hr.short.leave"
-    _description = "Short Leaves "
+    _description = "Half Day Leaves "
     _order = "date_from desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 

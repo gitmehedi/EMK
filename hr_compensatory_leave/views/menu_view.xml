@@ -2,6 +2,7 @@
 <odoo>
     <data>
         <menuitem id="main_menu_hr_compensatory_leave" name="Compensatory Leave"
-                  parent="hr_attendance.menu_hr_attendance_root" sequence="18" groups="base.group_user"/>
+                  parent="hr_attendance.menu_hr_attendance_root" sequence="18"
+                  groups="hr_attendance.group_hr_attendance_user,hr_attendance.group_hr_attendance_manager,hr_attendance_user.hr_dept_mang_atd"/>
     </data>
 </odoo>

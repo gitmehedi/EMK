@@ -10,6 +10,7 @@
         'gbs_hr_payroll',
         'l10n_in_hr_payroll',
         'hr_overtime_requisition',
+        'hr_attendance_user',
     ],
     'data': [
         'security/ir.model.access.csv',

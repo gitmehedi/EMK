@@ -7,7 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class HRCompensatoryLeave(models.Model):
     _name = 'hr.compensatory.leave'
-    _description = 'Overtime Allowance'
+    _description = 'Compensatory Leave'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'employee_id'
 
