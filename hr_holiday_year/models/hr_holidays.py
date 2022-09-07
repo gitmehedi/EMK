@@ -18,6 +18,8 @@ class HrHolidays(models.Model):
                                     states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
                                     domain="[('type_id.holiday_year', '=', True)]")
 
+    state= fields.Selection(default='draft')
+
     @api.constrains('date_from', 'date_to')
     def _check_date(self):
         for holiday in self:

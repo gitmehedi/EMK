@@ -112,7 +112,7 @@
         </record>
 
         <menuitem id="menu_hr_compensatory_leave" name="Compensatory Leave"
-                  parent="main_menu_hr_compensatory_leave"
-                  sequence="1" action="action_hr_compensatory_leave" groups="base.group_user"/>
+                  parent="main_menu_hr_compensatory_leave" sequence="1" action="action_hr_compensatory_leave"
+                  groups="hr_attendance.group_hr_attendance_user,hr_attendance.group_hr_attendance_manager,hr_attendance_user.hr_dept_mang_atd"/>
     </data>
 </openerp>
