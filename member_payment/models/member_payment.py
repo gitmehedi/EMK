@@ -136,7 +136,7 @@ class MemberPayment(models.Model):
                         [('name', '=', 'Applicants'), ('category_id.name', '=', 'Membership')])
                     rm_grp.write({'users': [(3, self.membership_id.user_ids.id)]})
                     add_grp = self.env['res.groups'].sudo().search(
-                        [('name', '=', 'Membership User'), ('category_id.name', '=', 'Membership')])
+                        [('name', '=', 'Member: General User'), ('category_id.name', '=', 'Membership')])
                     add_grp.write({'users': [(4, self.membership_id.user_ids.id)]})
 
                     vals = {

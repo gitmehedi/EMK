@@ -37,17 +37,18 @@ class ResPartner(models.Model):
     signup_type = fields.Char(string='Signup Token Type', copy=False)
     signup_expiration = fields.Datetime(copy=False, track_visibility="onchange")
     website = fields.Char(track_visibility="onchange")
-    signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid',track_visibility="onchange")
+    signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid',
+                                  track_visibility="onchange")
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
     birth_date = fields.Date("Date of Birth", track_visibility="onchange")
     auto_renew = fields.Boolean(string='Auto Renew', default=False, track_visibility="onchange")
 
     street = fields.Char(track_visibility="onchange")
     street2 = fields.Char(track_visibility="onchange")
-    zip = fields.Char(track_visibility="onchange",change_default=True)
+    zip = fields.Char(track_visibility="onchange", change_default=True)
     city = fields.Char(track_visibility="onchange")
-    state_id = fields.Many2one("res.country.state",track_visibility="onchange")
-    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict',track_visibility="onchange")
+    state_id = fields.Many2one("res.country.state", track_visibility="onchange")
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', track_visibility="onchange")
 
     last_place_of_study = fields.Char(string='Last or Current Place of Study', track_visibility="onchange")
     place_of_study = fields.Char(string='Place of Study', track_visibility="onchange")
@@ -209,6 +210,7 @@ class ResPartner(models.Model):
         journal_id = self.env['account.journal'].search([('code', '=', 'INV')])
         account_id = self.env['account.account'].search([('internal_type', '=', 'receivable'),
                                                          ('deprecated', '=', False)])
+        cost_centre_id = self.env['account.analytic.account'].search([('code', '=', '100')], limit=1)
 
         acc_invoice = {
             'partner_id': self.id,
@@ -221,6 +223,7 @@ class ResPartner(models.Model):
                     'name': product_id.name,
                     'product_id': product_id.id,
                     'price_unit': product_id.list_price,
+                    'account_analytic_id': cost_centre_id.id,
                     'account_id': journal_id.default_debit_account_id.id,
                 })]
         }
@@ -289,7 +292,7 @@ class ResPartner(models.Model):
     def act_confirm_member(self):
         if self.state == 'invoice':
             today = date.today()
-            days = self.membership_cat_id.membership_interval_qty*365
+            days = self.membership_cat_id.membership_interval_qty * 365
             next_year = today + timedelta(days=days)
             vals = {
                 'date': today,
