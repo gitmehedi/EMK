@@ -58,7 +58,7 @@
                     <field name="currency_rate" readonly="1" string="Rate used"/>
                 </xpath>
                 <xpath expr="//field[@name='cost_lines']/tree/field[@name='product_price_unit']" position="before">
-                    <field name="prev_product_price_unit"/>
+                    <field name="prev_product_price_unit" invisible="1"/>
                 </xpath>
 
                 <xpath expr="//field[@name='cost_lines']/tree/field[@name='picking_id']" position="after">
