@@ -63,8 +63,8 @@
         </record>
 
         <!-- Checklist Item Menu -->
-        <menuitem id="checklist_item_line_menu" name="Pending Employee Checklists"
-                  parent="menu_exit_management" sequence="8"
+        <menuitem id="checklist_item_line_menu" name="Exit Checklists (Pending)"
+                  parent="menu_exit_management" sequence="10"
                   action="action_hr_exit_checklists_line_view"/>
     </data>
 </odoo>
