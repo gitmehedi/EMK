@@ -112,6 +112,7 @@ class Picking(models.Model):
                     and pick.location_dest_id.usage in ['customer', 'internal'] \
                     and not self.env.context.get('set_date_of_transfer', False):
                 view = self.env.ref('stock_picking_extend.view_stock_date_of_transfer_form')
+                print("pick", pick)
                 wiz = self.env['stock.date.transfer'].create({'pick_id': pick.id})
 
                 return {
@@ -128,6 +129,12 @@ class Picking(models.Model):
                 }
 
         return super(Picking, self).do_new_transfer()
+
+    # @api.multi
+    # def do_transfer(self):
+    #     res = super(Picking, self).do_transfer()
+    #     self.write({'challan_bill_no': 'SHOAIB'})
+    #     return res
 
     def recheck_availability(self):
         """ First of all, unreserve the qty

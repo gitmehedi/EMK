@@ -1,1 +1,2 @@
 import stock_date_of_transfer
+import inherited_stock_immediate_transfer
