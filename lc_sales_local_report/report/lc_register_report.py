@@ -729,7 +729,7 @@ class LcRegisterXLSX(ReportXlsx):
             query = '''
                     SELECT distinct on (ps.id) ps.id as shipment_id, rp.name as party_name,rp2.name as executive_name,lpl.name as product_name, lc.name as lc_number, 
                     ps.name as shipment_no, coalesce(spl.product_qty,0) as shipment_qty, coalesce(ps.invoice_value,0) as shipment_amount, lc.tenure as tenure,
-                    ps.bl_date as doc_dispatch_to_party_date_foreign,coalesce((CURRENT_DATE-ps.to_buyer_date),0) as aging_first_acceptance_days_foreign,
+                    ps.bl_date as doc_dispatch_to_party_date_foreign,coalesce((CURRENT_DATE-ps.bl_date),0) as aging_first_acceptance_days_foreign,
                     date(ps.to_first_acceptance_date + INTERVAL '7 day') as to_buyer_bank_date_foreign,
                     ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_seller_bank_date as to_seller_bank_date,
                     coalesce((CURRENT_DATE-ps.to_buyer_bank_date),0) as aging_2nd_acceptance_days, 
