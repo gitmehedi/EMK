@@ -112,7 +112,6 @@ class Picking(models.Model):
                     and pick.location_dest_id.usage in ['customer', 'internal'] \
                     and not self.env.context.get('set_date_of_transfer', False):
                 view = self.env.ref('stock_picking_extend.view_stock_date_of_transfer_form')
-                print("pick", pick)
                 wiz = self.env['stock.date.transfer'].create({'pick_id': pick.id})
 
                 return {
