@@ -11,13 +11,13 @@
                         <button string="Confirm" name="exit_confirm" states="draft" type="object" class="oe_highlight"/>
                         <button string="Approve" name="exit_validate"
                                 states="confirm" type="object" class="oe_highlight"/>
-                        <button string="Validate" name="exit_done" groups="hr.group_hr_manager" states="validate1"
+                        <button string="Validate" name="exit_done" groups="hr.group_hr_manager,hr.group_hr_user" states="validate1"
                                 type="object"
                                 class="oe_highlight"/>
                         <button string="Refuse" name="exit_refuse"
-                                groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
+                                groups="gbs_application_group.group_dept_manager,hr.group_hr_manager,hr.group_hr_user"
                                 states="confirm,validate1" type="object"/>
-                        <button string="Reset to Draft" name="exit_reset" groups="hr.group_hr_manager"
+                        <button string="Reset to Draft" name="exit_reset" groups="hr.group_hr_manager,hr.group_hr_user"
                                 attrs="{'invisible': [('state', 'not in', ['validate1', 'refuse'])]}"
                                 type="object"/>
                         <button string="Reset to Draft" name="exit_reset"
@@ -151,7 +151,7 @@
 
         <!-- Checklist Item Menu -->
 
-        <menuitem name="Exit Requests" parent="menu_exit_management" id="menu_exit_req"
+        <menuitem name="Exit Requests" parent="menu_exit_management" id="menu_exit_req" sequence="5"
                   action="action_exit_req_view"/>
     </data>
 </odoo>

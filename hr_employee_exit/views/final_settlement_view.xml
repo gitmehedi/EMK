@@ -98,10 +98,10 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem
-				name="Full &amp; Final Settlement" groups ="hr.group_hr_manager"
+				name="Full &amp; Final Settlement" groups ="hr.group_hr_manager,hr.group_hr_user"
 				id="final_settlement_menu"
                 parent="menu_exit_management"
-				sequence="21"
+				sequence="20"
                 action="action_final_settlement"
         />
     </data>

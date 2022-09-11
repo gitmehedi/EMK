@@ -9,15 +9,18 @@
                 <form string="Employee Ted Cafe Bills" delete="false">
                     <header>
                         <button name="action_confirm" type="object" string="Approve" states="draft"
+                                groups="point_of_sale.group_pos_user,point_of_sale.group_pos_manager"
                                 class="oe_highlight"/>
-                        <button name="action_done" type="object" groups="hr.group_hr_manager"
+                        <button name="action_done" type="object"
+                                groups="point_of_sale.group_pos_user,point_of_sale.group_pos_manager"
                                 string="Done" states="approve" class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <group>
                             <group>
-                                <field name="name"/>
+                                <field name="period_id"
+                                       options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                                 <field name="total_amount"/>
                                 <field name="company_id" groups="base.group_multi_company"
                                        options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
@@ -59,7 +62,7 @@
                 <tree string="Employee Ted Cafe Bills" decoration-info="state=='draft'"
                       decoration-success="state=='approve'" decoration-mute="state=='done'"
                       decoration-bf="state in ('approve',)">
-                    <field name="name"/>
+                    <field name="period_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="total_amount" sum="total_amount"/>
@@ -74,6 +77,7 @@
         </record>
 
         <menuitem id="hr_ted_cafe_credit_sales_menu" name="Cafe Credit Sale" parent="hr_cafe_operations_menu"
-                  action="hr_ted_cafe_credit_sale_action" sequence="5" groups="hr.group_hr_user"/>
+                  action="hr_ted_cafe_credit_sale_action" sequence="5"
+                  groups="point_of_sale.group_pos_user,pos_users.group_pos_gen_user,point_of_sale.group_pos_manager"/>
     </data>
 </odoo>
