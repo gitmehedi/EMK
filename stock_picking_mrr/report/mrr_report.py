@@ -7,15 +7,17 @@ class MrrReport(models.AbstractModel):
 
     @api.multi
     def render_html(self, docids, data=None):
+
         report_utility_pool = self.env['report.utility']
-        picking = self.env['stock.picking'].search(['|',('name', '=', data['origin']),('origin','=',data['origin'])],limit=1 ,order='id asc')
+        picking = self.env['stock.picking'].search(
+            ['|', ('name', '=', data['origin']), ('origin', '=', data['origin'])], limit=1, order='id asc')
         new_picking = self.env['stock.picking'].search([('id', '=', data['self_picking_id'])])
         mrr_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(data['mrr_date']))
         data['address'] = report_utility_pool.getAddressByUnit(picking.operating_unit_id)
         pack_list = []
         total_amount = []
-        customer =False
-        challan =False
+        customer = False
+        challan = False
         challan_date = False
         po_no = []
         po_date = False
@@ -24,12 +26,12 @@ class MrrReport(models.AbstractModel):
         if picking.shipment_id:
             if picking.shipment_id.lc_id.po_ids:
                 po_ids = picking.shipment_id.lc_id.po_ids
-                customer = self.get_rep_line(report_utility_pool,picking,new_picking,po_ids)['customer']
-                challan = self.get_rep_line(report_utility_pool,picking,new_picking,po_ids)['challan']
-                challan_date = self.get_rep_line(report_utility_pool,picking,new_picking,po_ids)['challan_date']
-                po_no = self.get_rep_line(report_utility_pool,picking,new_picking,po_ids)['po_no']
-                po_date = self.get_rep_line(report_utility_pool,picking,new_picking,po_ids)['po_date']
-                pack_list = self.get_rep_line(report_utility_pool,picking,new_picking,po_ids)['pack_list']
+                customer = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['customer']
+                challan = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['challan']
+                challan_date = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['challan_date']
+                po_no = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['po_no']
+                po_date = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['po_date']
+                pack_list = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['pack_list']
                 total_amount = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['total_amount']
 
         elif picking.purchase_id:
@@ -52,27 +54,31 @@ class MrrReport(models.AbstractModel):
             pack_list = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['pack_list']
             total_amount = self.get_rep_line(report_utility_pool, picking, new_picking, po_ids)['total_amount']
 
-        total = round(sum(total_amount),2)
+        total = round(sum(total_amount), 2)
         amt_to_word = self.env['res.currency'].amount_to_word(float(total))
         po_no_str = ''
         if po_no:
             po_no_str = ','.join(po_no)
+        if challan_date:
+            formated_challan_date = report_utility_pool.get_date_from_string(new_picking.challan_date)
+        else:
+            formated_challan_date = ''
         docargs = {
-            'lists' : pack_list,
-            'mrr_no' : data['mrr_no'],
-            'mrr_date' : mrr_date,
-            'customer' : customer,
-            'challan' : new_picking.challan_bill_no,
-            'challan_date' : new_picking.challan_date,
-            'po_no' : po_no_str,
+            'lists': pack_list,
+            'mrr_no': data['mrr_no'],
+            'mrr_date': mrr_date,
+            'customer': customer,
+            'challan': new_picking.challan_bill_no,
+            'challan_date': formated_challan_date,
+            'po_no': po_no_str,
             'po_date': po_date,
-            'total_amount' : formatLang(self.env, total),
-            'amt_to_word' : amt_to_word,
+            'total_amount': formatLang(self.env, total),
+            'amt_to_word': amt_to_word,
             'address': data['address']
         }
         return self.env['report'].render('stock_picking_mrr.report_mrr_doc', docargs)
 
-    def get_rep_line(self,report_utility_pool,picking,new_picking,po_ids):
+    def get_rep_line(self, report_utility_pool, picking, new_picking, po_ids):
         pack_list = []
         total_amount = []
         po_no = []
@@ -83,7 +89,8 @@ class MrrReport(models.AbstractModel):
                 po_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(po.date_order))
                 customer = po.partner_id.name
                 challan = picking.challan_bill_no
-                challan_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateTimeFromStr(picking.date_done))
+                challan_date = report_utility_pool.getERPDateFormat(
+                    report_utility_pool.getDateTimeFromStr(picking.date_done))
                 for move in new_picking.pack_operation_ids:
                     po_line_objs = po.order_line.filtered(lambda r: r.product_id.id == move.product_id.id)
                     if po_line_objs:
@@ -95,7 +102,8 @@ class MrrReport(models.AbstractModel):
                         pack_obj['mrr_quantity'] = move.qty_done
                         pack_obj['product_uom_id'] = move.product_uom_id.name
                         pack_obj['price_unit'] = formatLang(self.env, po_line_objs[0].price_unit)
-                        pack_obj['sub_amount'] = formatLang(self.env, move.qty_done * (po_line_objs[0].price_unit - dis_amt))
+                        pack_obj['sub_amount'] = formatLang(self.env,
+                                                            move.qty_done * (po_line_objs[0].price_unit - dis_amt))
                         pack_obj['discount'] = po_line_objs[0].discount
                         pack_obj['amount'] = move.qty_done * (po_line_objs[0].price_unit - dis_amt)
                         total_amount.append(pack_obj['amount'])
@@ -119,11 +127,11 @@ class MrrReport(models.AbstractModel):
                 pack_list.append(pack_obj)
 
         return {
-            'pack_list':pack_list,
-            'po_no':po_no,
-            'po_date':po_date,
-            'customer':customer,
-            'challan':challan,
-            'challan_date':challan_date,
+            'pack_list': pack_list,
+            'po_no': po_no,
+            'po_date': po_date,
+            'customer': customer,
+            'challan': challan,
+            'challan_date': challan_date,
             'total_amount': total_amount
         }
