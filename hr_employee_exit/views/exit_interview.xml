@@ -11,19 +11,19 @@
                 <form string="Employee Exit Interview">
                     <header>
                         <button name="action_submit" states="draft" type="object" string="Apply"
-                                groups="hr.group_hr_manager" class="oe_highlight"/>
+                                groups="hr.group_hr_manager,hr.group_hr_user" class="oe_highlight"/>
                         <button string="Submit" name="action_validate"
                                 attrs="{'invisible': [('state', 'not in', ['submit'])]}"
                                 type="object" class="oe_highlight"/>
                         <button string="Validate" name="action_approved"
-                                groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
+                                groups="gbs_application_group.group_dept_manager,hr.group_hr_manager,hr.group_hr_user"
                                 attrs="{'invisible': [('state','not in',['validate'])]}"
                                 type="object" class="oe_highlight"/>
                         <button string="Approved" name="action_done"
-                                attrs="{'invisible': [('state','not in',['approved'])]}" groups="hr.group_hr_manager"
+                                attrs="{'invisible': [('state','not in',['approved'])]}" groups="hr.group_hr_manager,hr.group_hr_user"
                                 type="object" class="oe_highlight"/>
                         <button string="Reset to Draft" name="action_reset"
-                                groups="gbs_application_group.group_dept_manager,hr.group_hr_manager"
+                                groups="gbs_application_group.group_dept_manager,hr.group_hr_manager,hr.group_hr_user"
                                 attrs="{'invisible': [('state', 'in', ['draft','submit','done'])]}"
                                 type="object"/>
                         <field name="state" widget="statusbar"
@@ -168,7 +168,7 @@
                 name="Exit Interview"
                 id="exit_interview_menu"
                 parent="menu_exit_management"
-                sequence="20"
+                sequence="15"
                 action="action_exit_interview"
         />
 

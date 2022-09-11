@@ -13,6 +13,8 @@
         'point_of_sale',
         'pos_operating_unit',
         'hr_employee_ted_cafe_bills',
+        'pos_permissions',
+        'pos_users',
     ],
     'installable': True,
     'application': True,

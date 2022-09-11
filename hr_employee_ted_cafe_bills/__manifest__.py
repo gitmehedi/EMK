@@ -12,7 +12,8 @@
                 'hr_payroll',
                 'l10n_in_hr_payroll',
                 'report_layout',
-                'point_of_sale'
+                'point_of_sale',
+                'pos_users',
                 ],
     'data': [
         'security/ir.model.access.csv',
