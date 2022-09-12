@@ -64,7 +64,7 @@ class InvoiceExportWizard(models.TransientModel):
                 purchase_shipment = self.env['purchase.shipment'].sudo().search([('invoice_ids', 'in', acc_inv.id)])
                 if not purchase_shipment:
                     inv_list.append(acc_inv.id)
-        return {'domain': {'invoice_ids': [('id', 'in', inv_list)]}}
+        return {'domain': {'invoice_ids': [('id', 'in', inv_list), ('state', '=', 'open')]}}
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):
