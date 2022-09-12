@@ -118,7 +118,7 @@
                 action="action_gbs_account_invoice_report"
                 id="menu_gbs_account_invoice_report"
                 parent="sales_team.menu_sale_report"
-                groups="sales_team.group_sale_manager,commercial.group_commercial_manager_export"
+                groups="sales_team.group_sale_manager"
                 sequence="11"/>
 
         <act_window
@@ -146,6 +146,10 @@
 
         <record id="samuda_sales_report.menu_yearly_sales_comparison_report" model="ir.ui.menu">
             <field name="groups_id" eval="[(4,[ref('sales_team.group_sale_manager')])]"/>
+        </record>
+
+        <record id="menu_gbs_account_invoice_report" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6,0,[ref('commercial.group_commercial_manager_export')])]"/>
         </record>
 
     </data>
