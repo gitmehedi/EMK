@@ -19,3 +19,4 @@ class StockDateOfTransfer(models.TransientModel):
         self.ensure_one()
         self.pick_id.write({'date_done': self.date_done})
         return self.pick_id.with_context(set_date_of_transfer=True).do_new_transfer()
+
