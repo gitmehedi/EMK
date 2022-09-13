@@ -24,8 +24,8 @@
         'account_configuration',
     ],
     'data': [
-        'security/ir_rule.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'data/member_signup_data.xml',
         'data/email_template.xml',
         'data/member_sequence.xml',
