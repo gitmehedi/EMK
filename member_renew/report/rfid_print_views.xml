@@ -5,6 +5,7 @@
             string="RFID"
             name="member_signup.rfid_gen_tmpl"
             file="member_signup.rfid_gen_tmpl"
+            groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"
             report_type="qweb-html"/>
 
     <template id="rfid_gen_tmpl">

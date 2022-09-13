@@ -18,7 +18,7 @@ class HrTedCafeBill(models.Model):
         return next_month - timedelta(days=next_month.day)
 
     period_id = fields.Many2one("date.range", string="Select Period", readonly=True, required=True,
-                             states={'draft': [('readonly', False)]})
+                                states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', string='Company', index=True,
                                  default=lambda self: self.env.user.company_id)
     date_from = fields.Date(string='Start Date', required=True, default=get_first_day, readonly=True, copy=True,
@@ -27,8 +27,9 @@ class HrTedCafeBill(models.Model):
                           states={'draft': [('readonly', False)]})
     total_amount = fields.Float(compute='_compute_total_amount', string='Total Amount')
     line_ids = fields.One2many(comodel_name='hr.ted.cafe.bill.line', inverse_name='line_id', string="Line Id",
-                               readonly=True, copy=True, states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft', "Draft"), ('approve', "Approved"), ('done', "Done"), ], default='draft')
+                               readonly=True, copy=True, states={'confirm': [('readonly', False)]})
+    state = fields.Selection([('draft', "Draft"), ('confirm', "Confirm"), ('approve', "Approved"), ('done', "Done"), ],
+                             default='draft')
 
     @api.multi
     @api.depends('line_ids')
@@ -38,15 +39,31 @@ class HrTedCafeBill(models.Model):
 
     @api.multi
     def action_draft(self):
-        if self.state == 'approve':
+        if self.state == 'confirm':
             for line in self.line_ids:
                 if line.state != 'adjusted':
                     line.write({'state': 'draft'})
             self.state = 'draft'
 
     @api.multi
-    def action_confirm(self):
+    def act_gen_employee(self):
         if self.state == 'draft':
+            employee = self.env['hr.employee'].sudo().search([('state', '=', 'employment')])
+            line_empl = set([val.employee_id.id for val in self.line_ids])
+            rest_empl = set(employee.ids) - line_empl
+            for emp in rest_empl:
+                self.line_ids.create({
+                    'employee_id': emp,
+                    'state': 'draft',
+                    'date': fields.Date.today(),
+                    'line_id': self.id,
+                    'amount': 0,
+                })
+            self.state = 'confirm'
+
+    @api.multi
+    def action_confirm(self):
+        if self.state == 'confirm':
             for line in self.line_ids:
                 if line.state != 'adjusted':
                     line.write({'state': 'applied'})

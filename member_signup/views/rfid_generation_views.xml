@@ -58,9 +58,9 @@
         </field>
     </record>
 
-    <menuitem name="Reports" id="menu_rfid_generation" parent="membership.menu_association"
-              groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
-    <menuitem id="sub_rfid_generation" parent="menu_rfid_generation"
-              action="action_rfid_generation"
-              groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+    <menuitem name="RFID Generation" id="menu_rfid_generation" parent="membership.menu_association"
+              groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+
+    <menuitem id="sub_rfid_generation" parent="menu_rfid_generation" action="action_rfid_generation"
+              groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 </odoo>

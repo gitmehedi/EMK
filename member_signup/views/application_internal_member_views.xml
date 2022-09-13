@@ -22,7 +22,6 @@
             </tree>
         </field>
     </record>
-
     <record id="member_internal_app_form_view" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
@@ -192,7 +191,6 @@
             </form>
         </field>
     </record>
-
     <record id="member_internal_app_kanban_view" model="ir.ui.view">
         <field name="name">member.res.partner.kanban</field>
         <field name="model">res.partner</field>
@@ -314,8 +312,7 @@
     </record>
     <menuitem id="menu_member_internal_app_pending" sequence="5" parent="menu_member_internal_app"
               action="action_member_internal_app_pending"
-              groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
-
+              groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
     <record id="member_internal_app_apr_rej_tree_view" model="ir.ui.view">
         <field name="name">Members</field>
@@ -339,7 +336,6 @@
             </tree>
         </field>
     </record>
-
     <record id="member_internal_app_apr_rej_form_view" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
@@ -541,7 +537,7 @@
     </record>
     <menuitem id="menu_member_internal_app_approved" sequence="10" parent="menu_member_internal_app"
               action="action_member_internal_app_approved"
-              groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+              groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
     <record id="action_member_internal_app_reject" model="ir.actions.act_window">
         <field name="name">Rejected Application</field>
@@ -574,5 +570,5 @@
     </record>
     <menuitem id="menu_member_internal_app_reject" sequence="15" parent="menu_member_internal_app"
               action="action_member_internal_app_reject"
-              groups="member_user.group_mem_user_officer,member_user.group_user_member,membership_extension.group_membership_manager"/>
+              groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 </odoo>
