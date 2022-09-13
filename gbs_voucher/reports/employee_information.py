@@ -23,7 +23,7 @@ class EmployeeInformation(models.TransientModel):
             information.append(vals['designation'])
 
         user_obj = self.env['res.users'].suspend_security().browse(user_id)
-        name = user_obj.login
+        name = user_obj.partner_id.name
         department = ''
         designation = ''
         if information == []:
