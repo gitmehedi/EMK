@@ -28,8 +28,6 @@
         'views/receive_products.xml',
         'views/stock_scrap_view.xml',
         'views/inherit_product_template_views.xml',
-        'views/inherit_res_partner.xml',
-
     ],
     'installable': True,
     'application': False,

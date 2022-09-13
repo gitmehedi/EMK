@@ -74,7 +74,7 @@
         </field>
     </record>
 
-    <menuitem name="General" id="menu_general" sequence="3" parent="membership.menu_association"
+    <menuitem name="General Operation" id="menu_general" sequence="3" parent="membership.menu_association"
               groups="member_user.group_mem_user_officer,member_user.group_user_member,membership_extension.group_membership_manager"/>
 
     <menuitem id="sub_renew_request" parent="menu_general"

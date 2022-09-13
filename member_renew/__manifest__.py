@@ -19,6 +19,7 @@
         'data/templates.xml',
         'data/ir_actions_server.xml',
         'data/sequence.xml',
+        'views/menu_views.xml',
         'views/expiration_list_views.xml',
         'views/renew_request_views.xml',
         'wizard/expiration_list_wizard_views.xml',

@@ -53,6 +53,3 @@ mem_acc_full_recon_mng,mem_acc_full_recon_mng,account.model_account_full_reconci
 
 mem_pro_tmpl_adm,mem_pro_tmpl_adm,account.model_product_template,member_user.group_mem_user_officer,1,1,1,1
 mem_pro_tmpl_mng,mem_pro_tmpl_mng,account.model_product_template,membership_extension.group_membership_manager,1,1,1,1
-
-mem_res_part_adm,mem_res_part_adm,base.model_res_partner,member_user.group_mem_user_officer,1,1,1,1
-mem_res_part_mng,mem_res_part_mng,base.model_res_partner,membership_extension.group_membership_manager,1,1,1,1

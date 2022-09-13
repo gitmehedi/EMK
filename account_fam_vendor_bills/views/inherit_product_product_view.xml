@@ -27,21 +27,6 @@
                 <xpath expr="//field[@name='name']" position="after">
                     <field name="pending" invisible="1"/>
                 </xpath>
-                <xpath expr="//sheet" position="before">
-                    <header>
-                        <button name="act_approve" string="Approve" type="object" states="draft"
-                                class="oe_highlight"
-                                groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"/>
-                        <button name="act_reject" string="Reject" type="object" states="draft"
-                                groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"/>
-                        <button name="act_reject_pending" string="Reject" type="object"
-                                groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"
-                                attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
-                        <button name="act_draft" string="Set to Draft" type="object" states="reject"
-                                groups="account_fam_access.group_fam_sys_admin,account.group_account_manager"/>
-                        <field name="state" widget="statusbar" invisible="True"/>
-                    </header>
-                </xpath>
                 <xpath expr="//field[@name='property_account_income_id']" position="attributes">
                     <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
                 </xpath>
@@ -75,12 +60,6 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
-                    <attribute name="decoration-info">state == 'draft'</attribute>
-                    <attribute name="decoration-success">state=='approve'</attribute>
-                    <attribute name="decoration-danger">state=='reject'</attribute>
-                    <attribute name="decoration-bf">state in ('approve',)</attribute>
-                </xpath>
                 <xpath expr="//field[@name='name']" position="attributes">
                     <attribute name="string">Product/Service</attribute>
                 </xpath>
@@ -125,17 +104,6 @@
                 <filter name="consumable" position="after">
                     <field name="pending" string="Pending"/>
                 </filter>
-                <xpath expr="//search" position="inside">
-                    <group name="group_by">
-                        <filter string="Pending" name="pending" icon="terp-personal"
-                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
-                        <filter string="Rejected" name="state" icon="terp-personal"
-                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
-                        <filter string="In-Active" name="state" icon="terp-personal"
-                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
-                        <filter string="By Type" name='type' domain="[]" context="{'group_by':'type'}"/>
-                    </group>
-                </xpath>
             </field>
         </record>
 

@@ -21,7 +21,7 @@
         <field name="name">Member: Officer</field>
         <field name="category_id" ref="membership_extension.module_category_membership_management"/>
         <field name="implied_ids" eval="[(4, ref('group_user_member'))]"/>
-        <field name="comment">User will have an access application form which shows only readonly mode.
+        <field name="comment">Officer will have an access application form which shows only readonly mode.
         </field>
     </record>
 
