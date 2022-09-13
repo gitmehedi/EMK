@@ -40,7 +40,7 @@ class InvoiceExportWizard(models.TransientModel):
             total_amount = 0.0
             total_qty = 0
             for invoice_id in self.invoice_ids:
-                total_amount += invoice_id.amount_total
+                total_amount += invoice_id.residual
                 for invoice_line_id in invoice_id.invoice_line_ids:
                     total_qty += invoice_line_id.quantity
 
@@ -104,7 +104,7 @@ class InvoiceExportWizard(models.TransientModel):
         total_amount = 0
         total_qty = 0
         for invoice_id in self.invoice_ids:
-            total_amount += invoice_id.amount_total
+            total_amount += invoice_id.residual
             for invoice_line_id in invoice_id.invoice_line_ids:
                 total_qty += invoice_line_id.quantity
         self.invoice_value = total_amount
