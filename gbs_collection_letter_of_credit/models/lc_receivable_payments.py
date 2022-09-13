@@ -5,40 +5,40 @@ from datetime import datetime
 
 
 class LCReceivablePayment(models.Model):
-
     _name = 'lc.receivable.payment'
     _description = 'LC Receivable Payment'
-    _inherit = ['mail.thread','ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = "date desc"
 
-    name = fields.Char(string='Reference', readonly=True, index=True,default='Draft',
+    name = fields.Char(string='Reference', readonly=True, index=True, default='Draft',
                        track_visibility='onchange')
-    lc_id = fields.Many2one('letter.credit', 'LC', ondelete='cascade',required=True,
-                            readonly=True,states={'draft': [('readonly', False)]},
+    lc_id = fields.Many2one('letter.credit', 'LC', ondelete='cascade', required=True,
+                            readonly=True, states={'draft': [('readonly', False)]},
                             domain=[('type', '=', 'export')],
-                            track_visibility = 'onchange')
-    shipment_id = fields.Many2one('purchase.shipment','Shipment', ondelete='cascade',required=True,
+                            track_visibility='onchange')
+    shipment_id = fields.Many2one('purchase.shipment', 'Shipment', ondelete='cascade', required=True,
                                   readonly=True, states={'draft': [('readonly', False)]},
                                   track_visibility='onchange')
-    currency_id = fields.Many2one('res.currency', string='Currency',readonly=True,store=True,
-                                  track_visibility='onchange',compute='_compute_rate_amounts')
-    invoice_amount = fields.Float(string='Invoice Amount',readonly=True,store=True,digits=dp.get_precision('Account'),
-                                  track_visibility='onchange',compute='_compute_rate_amounts')
-    currency_rate = fields.Float(string='Currency Rate',readonly=True,store=True,
-                                 track_visibility='onchange',compute='_compute_rate_amounts')
-    amount_in_company_currency = fields.Float(string='Base Amount',readonly=True,store=True,
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, store=True,
+                                  track_visibility='onchange', compute='_compute_rate_amounts')
+    invoice_amount = fields.Float(string='Invoice Amount', readonly=True, store=True,
+                                  digits=dp.get_precision('Account'),
+                                  track_visibility='onchange', compute='_compute_rate_amounts')
+    currency_rate = fields.Float(string='Currency Rate', readonly=True, store=True,
+                                 track_visibility='onchange', compute='_compute_rate_amounts')
+    amount_in_company_currency = fields.Float(string='Base Amount', readonly=True, store=True,
                                               digits=dp.get_precision('Account'),
-                                              track_visibility='onchange',compute='_compute_rate_amounts')
+                                              track_visibility='onchange', compute='_compute_rate_amounts')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Profit Centre', ondelete="cascade",
                                           readonly=True, states={'draft': [('readonly', False)]},
                                           track_visibility='onchange')
     company_id = fields.Many2one('res.company', string='Company', readonly=True,
                                  default=lambda self: self.env.user.company_id)
-    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit',readonly=True,
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', readonly=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
     date = fields.Datetime('Date', index=True, default=fields.Datetime.now,
-                           readonly=True,states={'draft': [('readonly', False)]},
-                           track_visibility = 'onchange')
+                           readonly=True, states={'draft': [('readonly', False)]},
+                           track_visibility='onchange')
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirmed'),
                               ('approve', 'Posted'),
@@ -48,38 +48,38 @@ class LCReceivablePayment(models.Model):
                                    'lc_collection_invoice_rel',
                                    'lc_collection_id',
                                    'invoice_id',
-                                   'Invoices',readonly=True,required=True,
+                                   'Invoices', readonly=True, required=True,
                                    states={'draft': [('readonly', False)]})
-    currency_loss_gain_amount = fields.Float(string='Loss/Gain Amount',compute='_compute_currency_loss_gain',
-                                             track_visibility='onchange',digits=dp.get_precision('Account'))
+    currency_loss_gain_amount = fields.Float(string='Loss/Gain Amount', compute='_compute_currency_loss_gain',
+                                             track_visibility='onchange', digits=dp.get_precision('Account'))
     currency_loss_gain_type = fields.Selection([('margin', 'Margin'),
                                                 ('loss', 'Loss'),
-                                                ('gain', 'Gain'),], string='Loss/Gain Type', default='margin',
+                                                ('gain', 'Gain'), ], string='Loss/Gain Type', default='margin',
                                                compute='_compute_currency_loss_gain',
                                                track_visibility='onchange')
     particular = fields.Char(string='Particular', readonly=True, states={'draft': [('readonly', False)]},
                              track_visibility='onchange')
-    analytic_acc_create = fields.Boolean('Need to create Analytic Account',default=False)
+    analytic_acc_create = fields.Boolean('Need to create Analytic Account', default=False)
     journal_id = fields.Many2one('account.journal', string='Account Journal', ondelete="cascade",
-                                 domain=[('type', '=', 'lc')],required=True,readonly=True,
-                                 states={'draft': [('readonly', False)]},track_visibility='onchange')
+                                 domain=[('type', '=', 'lc')], required=True, readonly=True,
+                                 states={'draft': [('readonly', False)]}, track_visibility='onchange')
     reference = fields.Text(string='Reference', compute='_compute_reference', readonly=True, store=False)
     bank_ref = fields.Char(string='Bank Reference', readonly=True, states={'draft': [('readonly', False)]},
                            track_visibility='onchange')
-    account_move_id = fields.Many2one('account.move', string='Journal Entry', readonly=True,copy=False)
+    account_move_id = fields.Many2one('account.move', string='Journal Entry', readonly=True, copy=False)
     """ Relational Fields """
     lc_receivable_collection_ids = fields.One2many('lc.receivable.collection', 'collection_parent_id',
-                                                   string="Collections",readonly=True,
+                                                   string="Collections", readonly=True,
                                                    states={'draft': [('readonly', False)]})
     lc_receivable_charges_ids = fields.One2many('lc.receivable.charges', 'charges_parent_id',
-                                                string="Charges",readonly=True,
+                                                string="Charges", readonly=True,
                                                 states={'draft': [('readonly', False)]})
     lc_receivable_miscellaneous_ids = fields.One2many('lc.receivable.miscellaneous', 'miscellaneous_parent_id',
                                                       string='Miscellaneous', readonly=True,
                                                       states={'draft': [('readonly', False)]})
-    narration = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange')
-    ibp_loan = fields.Float(string='IBP Loan', store=True, digits=dp.get_precision('Account'),)
-
+    narration = fields.Text(string='Narration', readonly=True, states={'draft': [('readonly', False)]},
+                            track_visibility='onchange')
+    ibp_loan = fields.Float(string='IBP Loan', store=True, digits=dp.get_precision('Account'), )
 
     @api.constrains('lc_receivable_collection_ids')
     def constrains_lc_receivable_collection_ids(self):
@@ -112,6 +112,7 @@ class LCReceivablePayment(models.Model):
     def onchange_narration(self):
         if self.narration:
             self.narration = self.narration.strip()
+
     @api.onchange('lc_id', 'journal_id')
     def onchange_lc_id_shipment(self):
         if self.lc_id:
@@ -122,6 +123,7 @@ class LCReceivablePayment(models.Model):
             return {
                 'domain': {'shipment_id': [('id', 'in', shipment_ids)]}
             }
+
     @api.onchange('lc_id', 'journal_id')
     def onchange_lc_id(self):
         if self.lc_id:
@@ -143,7 +145,7 @@ class LCReceivablePayment(models.Model):
                 shipment_ids = shipment_objs.ids
 
             if self.lc_id.pi_ids_temp:
-                so_objs = self.env['sale.order'].search([('pi_id', 'in',self.lc_id.pi_ids_temp.ids)])
+                so_objs = self.env['sale.order'].search([('pi_id', 'in', self.lc_id.pi_ids_temp.ids)])
                 if so_objs:
                     for so_obj in so_objs:
                         for invoice_id in so_obj.invoice_ids:
@@ -156,8 +158,8 @@ class LCReceivablePayment(models.Model):
                 self.analytic_acc_create = True
             return {
                 'domain': {'invoice_ids': [('id', 'in', invoice_ids),
-                                           ('currency_id','=',self.lc_id.currency_id.id),
-                                           ('state','=','open')],
+                                           ('currency_id', '=', self.lc_id.currency_id.id),
+                                           ('state', '=', 'open')],
                            'analytic_account_id': [('id', '=', analytic_account_id)]
                            }
             }
@@ -180,8 +182,10 @@ class LCReceivablePayment(models.Model):
                 # calculate total invoice amount in company currency
                 amount_in_company_currency = 0
                 for inv in rec.invoice_ids:
-                    from_currency = inv.currency_id.with_context(date=inv._get_currency_rate_date() or fields.Date.context_today(inv))
-                    amount_in_company_currency += inv.residual * to_currency.round(to_currency.rate / from_currency.rate)
+                    from_currency = inv.currency_id.with_context(
+                        date=inv._get_currency_rate_date() or fields.Date.context_today(inv))
+                    amount_in_company_currency += inv.residual * to_currency.round(
+                        to_currency.rate / from_currency.rate)
 
                 # Set the Base Amount of a LC Collection
                 rec.amount_in_company_currency = amount_in_company_currency
@@ -196,13 +200,16 @@ class LCReceivablePayment(models.Model):
             total_charges_amount = 0.0
             total_miscellaneous_amount = 0.0
             if rec.lc_receivable_collection_ids:
-                total_collection_amount = sum(line.amount_in_company_currency for line in rec.lc_receivable_collection_ids)
+                total_collection_amount = sum(
+                    line.amount_in_company_currency for line in rec.lc_receivable_collection_ids)
             if rec.lc_receivable_charges_ids:
                 total_charges_amount = sum(line.amount_in_company_currency for line in rec.lc_receivable_charges_ids)
             if rec.lc_receivable_miscellaneous_ids:
-                total_miscellaneous_amount = sum(line.amount_in_company_currency for line in rec.lc_receivable_miscellaneous_ids)
+                total_miscellaneous_amount = sum(
+                    line.amount_in_company_currency for line in rec.lc_receivable_miscellaneous_ids)
 
-            rec.currency_loss_gain_amount = (total_collection_amount + total_charges_amount + total_miscellaneous_amount) - rec.amount_in_company_currency
+            rec.currency_loss_gain_amount = (
+                                                        total_collection_amount + total_charges_amount + total_miscellaneous_amount) - rec.amount_in_company_currency
 
             # if -1 < rec.currency_loss_gain_amount < 1:
             #     rec.currency_loss_gain_amount = 0
@@ -322,7 +329,8 @@ class LCReceivablePayment(models.Model):
 
     def _generate_move(self, move_obj, journal):
         if not journal.sequence_id:
-            raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
+            raise UserError(_('Configuration Error !'),
+                            _('The journal %s does not have a sequence, please specify one.') % journal.name)
         if not journal.sequence_id.active:
             raise UserError(_('Configuration Error !'), _('The sequence of journal %s is deactivated.') % journal.name)
 
@@ -347,9 +355,9 @@ class LCReceivablePayment(models.Model):
             'date_maturity': self.date,
             'amount_currency': -amount_currency,
             'credit': credit,
-            'debit':  False,
+            'debit': False,
             'name': name,
-            'operating_unit_id':  self.operating_unit_id.id,
+            'operating_unit_id': self.operating_unit_id.id,
             'partner_id': self.invoice_ids[0].partner_id.id,
             'move_id': move_id,
             'currency_id': currency_id
@@ -370,7 +378,7 @@ class LCReceivablePayment(models.Model):
         }
 
     @api.multi
-    def lc_pay_and_reconcile(self, pay_journal,move_obj, pay_amount=None):
+    def lc_pay_and_reconcile(self, pay_journal, move_obj, pay_amount=None):
         payment_type = self.invoice_ids[0].type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
         if payment_type == 'inbound':
             payment_method = self.env.ref('account.account_payment_method_manual_in')
@@ -455,9 +463,10 @@ class LCReceivablePayment(models.Model):
         if analytic_account_id:
             query = ("select SUM(aml.debit)-SUM(aml.credit) as ibp_loan from account_move_line as aml "
                      "LEFT JOIN account_move as am ON am.id = aml.move_id "
-                    "LEFT JOIN account_account as aa ON aa.id=aml.account_id "
-                    "LEFT JOIN account_account_type as aat ON aat.id = aa.user_type_id "
-                    "WHERE aml.analytic_account_id={0} and aat.is_ibp_loan=True and am.state='posted' and '{1}' between '{2}' and '{3}'").format(analytic_account_id, date, start_date, end_date)
+                     "LEFT JOIN account_account as aa ON aa.id=aml.account_id "
+                     "LEFT JOIN account_account_type as aat ON aat.id = aa.user_type_id "
+                     "WHERE aml.analytic_account_id={0} and aat.is_ibp_loan=True and am.state='posted' and '{1}' between '{2}' and '{3}'").format(
+                analytic_account_id, date, start_date, end_date)
             self.env.cr.execute(query)
             ibp_loan_data = self.env.cr.dictfetchall()
 
@@ -469,11 +478,12 @@ class LCReceivablePayment(models.Model):
             else:
                 return ibp_loan
 
+
 class LCReceivableCollection(models.Model):
     _name = 'lc.receivable.collection'
 
     collection_parent_id = fields.Many2one('lc.receivable.payment', 'Collections', ondelete='cascade')
-    account_journal_id = fields.Many2one('account.journal', string="Bank Account",required=True,
+    account_journal_id = fields.Many2one('account.journal', string="Bank Account", required=True,
                                          domain="[('type', '=', 'bank')]")
     currency_id = fields.Many2one('res.currency', string='Currency')
     currency_rate = fields.Float(string='Currency Rate')
@@ -499,13 +509,14 @@ class LCReceivableCollection(models.Model):
             if self.account_journal_id.currency_id.id and self.account_journal_id.currency_id.id != self.collection_parent_id.company_id.currency_id.id:
                 self.currency_id = self.account_journal_id.currency_id
 
-        domain['currency_id'] = [('active', '=', True), ('id', '!=', self.collection_parent_id.company_id.currency_id.id)]
+        domain['currency_id'] = [('active', '=', True),
+                                 ('id', '!=', self.collection_parent_id.company_id.currency_id.id)]
         return {'domain': domain}
 
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
         if self.currency_id:
-            self.currency_rate = self.collection_parent_id.company_id.currency_id.rate/\
+            self.currency_rate = self.collection_parent_id.company_id.currency_id.rate / \
                                  self.currency_id.with_context(date=fields.Date.context_today(self)).rate
 
     @api.onchange('currency_id', 'currency_rate', 'amount_in_currency')
@@ -518,12 +529,12 @@ class LCReceivableCharges(models.Model):
     _name = 'lc.receivable.charges'
 
     charges_parent_id = fields.Many2one('lc.receivable.payment', 'Charges', ondelete='cascade')
-    product_id = fields.Many2one('product.product', string='Service',required=True,
+    product_id = fields.Many2one('product.product', string='Service', required=True,
                                  domain=[('type', '=', 'service')])
     account_id = fields.Many2one('account.account', string="Account")
     currency_id = fields.Many2one('res.currency', string='Currency')
     currency_rate = fields.Float(string='Currency Rate')
-    amount_in_currency = fields.Float(string='Amount In Currency',digits=dp.get_precision('Account'))
+    amount_in_currency = fields.Float(string='Amount In Currency', digits=dp.get_precision('Account'))
     amount_in_company_currency = fields.Float(string='Base Amount', digits=dp.get_precision('Account'))
 
     @api.onchange('product_id')
@@ -585,7 +596,8 @@ class LCReceivableMiscellaneous(models.Model):
             }
             return {'warning': warning}
 
-        domain['currency_id'] = [('active', '=', True), ('id', '!=', self.miscellaneous_parent_id.company_id.currency_id.id)]
+        domain['currency_id'] = [('active', '=', True),
+                                 ('id', '!=', self.miscellaneous_parent_id.company_id.currency_id.id)]
         return {'domain': domain}
 
     @api.onchange('currency_id')
@@ -598,4 +610,3 @@ class LCReceivableMiscellaneous(models.Model):
     def _onchange_amount_in_company_currency(self):
         if self.amount_in_currency and self.currency_rate and self.currency_id.id:
             self.amount_in_company_currency = self.amount_in_currency * self.currency_rate
-
