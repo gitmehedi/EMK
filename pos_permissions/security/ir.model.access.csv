@@ -4,7 +4,7 @@ acc_pos_config_guser,acc_pos_config_guser,point_of_sale.model_pos_config,pos_use
 point_of_sale.access_pos_config_user,pos.config user,point_of_sale.model_pos_config,point_of_sale.group_pos_user,1,1,1,0
 
 acc_pos_order_guser,acc_pos_config_guser,point_of_sale.model_pos_order,pos_users.group_pos_gen_user,1,0,0,0
-point_of_sale.access_pos_order,pos.order,point_of_sale.model_pos_order,point_of_sale.group_pos_user,1,0,0,0
+point_of_sale.access_pos_order,pos.order,point_of_sale.model_pos_order,point_of_sale.group_pos_user,1,1,1,0
 acc_pos_order_mng,acc_pos_order_mng,point_of_sale.model_pos_order,point_of_sale.group_pos_manager,1,1,1,1
 
 acc_pos_order_line_guser,acc_pos_order_line_guser,point_of_sale.model_pos_order_line,pos_users.group_pos_gen_user,1,0,0,0
@@ -47,6 +47,9 @@ acc_stock_wop_mng,acc_stock_wop_mng,stock.model_stock_warehouse_orderpoint,point
 acc_res_users_guser,acc_res_users_guser,base.model_res_users,pos_users.group_pos_gen_user,1,0,0,0
 acc_res_users_user,acc_res_users_user,base.model_res_users,point_of_sale.group_pos_user,1,0,0,0
 acc_res_users_mng,acc_res_users_mng,base.model_res_users,point_of_sale.group_pos_manager,1,0,0,0
+
+acc_account_journal_guser,acc_account_journal_guser,account.model_account_journal,pos_users.group_pos_gen_user,1,0,0,0
+acc_stock_move_guser,acc_stock_move_guser,stock.model_stock_move,pos_users.group_pos_gen_user,1,0,0,0
 
 acc_report_pos_order_guser,acc_res_users_guser,point_of_sale.model_report_pos_order,pos_users.group_pos_gen_user,1,1,1,1
 acc_report_pos_order_mng,acc_report_pos_order_mng,point_of_sale.model_report_pos_order,point_of_sale.group_pos_manager,1,1,1,1

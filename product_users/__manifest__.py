@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Point of Sale Users',
-    'description': """ All types of users whom are related to activities of Point of Sales""",
+    'name': 'Product and Template Management Users',
+    'description': """ All types of users whom are related to activities of Product and Template Management""",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
     'version': '1.0',
-    'category': 'Point of Sale',
+    'category': 'Products',
     'depends': [
-        'product_users',
-        'point_of_sale',
+        'base',
     ],
     'data': [
         'security/users.xml',

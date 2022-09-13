@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+acc_pro_pro_guser,acc_pro_pro_guser,product.model_product_product,product_users.group_pro_gen_user,1,0,0,0
+acc_pro_pro_off,acc_pro_pro_off,product.model_product_product,product_users.group_pro_officer,1,1,1,1
+acc_pro_pro_mng,acc_pro_pro_mng,product.model_product_product,product_users.group_pro_manager,1,1,1,1
+
+acc_pro_tmpl_guser,acc_pro_tmpl_guser,product.model_product_template,product_users.group_pro_gen_user,1,0,0,0
+acc_pro_tmpl_off,acc_pro_tmpl_off,product.model_product_template,product_users.group_pro_officer,1,1,1,1
+acc_pro_tmpl_mng,acc_pro_tmpl_mng,product.model_product_template,product_users.group_pro_manager,1,1,1,1
