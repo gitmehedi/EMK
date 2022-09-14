@@ -148,8 +148,13 @@
             <field name="groups_id" eval="[(4,[ref('sales_team.group_sale_manager')])]"/>
         </record>
 
-        <record id="menu_gbs_account_invoice_report" model="ir.ui.menu">
-            <field name="groups_id" eval="[(6,0,[ref('commercial.group_commercial_manager_export')])]"/>
+
+        <record id="gbs_account_invoice_report.menu_gbs_account_invoice_report" model="ir.ui.menu">
+            <field name="groups_id" eval="[(4,[ref('gbs_samuda_sales_access.group_mis_reports_sale')])]"/>
+        </record>
+
+        <record id="purchase.purchase_report" model="ir.ui.menu">
+            <field name="groups_id" eval="[(4,[ref('gbs_procure_n_commercial_access.group_mis_reports_procurement')])]"/>
         </record>
 
     </data>
