@@ -181,7 +181,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="event_reservation_menu" sequence="80" groups="event_user.group_event_officer"
-                  parent="menu_event_general" action="event_reservation_action"/>
+        <menuitem id="event_reservation_menu" sequence="80" parent="menu_event_general"
+                  action="event_reservation_action"
+                  groups="event.group_event_user,event_user.group_event_officer,event.group_event_manager"/>
     </data>
 </odoo>
