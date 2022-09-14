@@ -285,7 +285,8 @@
             <field name="search_view_id" ref="event.view_event_search"/>
         </record>
 
-        <menuitem id="event_event_close_menu" name="Event Close" sequence="21" groups="event_user.group_event_officer"
-                  parent="menu_event_general" action="event_event_close_action"/>
+        <menuitem id="event_event_close_menu" name="Event Close" sequence="21"
+                  parent="menu_event_general" action="event_event_close_action"
+        groups="event.group_event_user,event_user.group_event_officer,event.group_event_manager"/>
     </data>
 </odoo>

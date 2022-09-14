@@ -95,6 +95,7 @@
         </record>
 
         <menuitem id="menu_event_task_list" action="action_event_task_list" sequence="10"
-                  parent="menu_event_operations" groups="event.group_event_user,event_user.group_event_officer"/>
+                  parent="menu_event_operations"
+                  groups="event.group_event_user,event_user.group_event_officer,event.group_event_manager,event_user.group_event_organizer"/>
     </data>
 </odoo>

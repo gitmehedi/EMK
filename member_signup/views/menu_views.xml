@@ -39,9 +39,6 @@
     <record id="membership_withdrawal.menu_membership_withdrawal_reason" model="ir.ui.menu">
         <field name="name">Membership Withdrawal</field>
     </record>
-
-
-
     <record id="membership.menu_marketing_config_association" model="ir.ui.menu">
         <field name="groups_id" eval="[(4, ref('membership_extension.group_membership_manager'))]"/>
     </record>

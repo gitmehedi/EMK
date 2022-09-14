@@ -6,31 +6,43 @@
                    eval="[(4, ref('event_user.group_event_organizer')),(4, ref('event_user.group_event_officer'))]"/>
             <field name="sequence">40</field>
         </record>
+
         <record id="event.menu_reporting_events" model="ir.ui.menu">
-            <field name="groups_id" eval="[(4, ref('event_user.group_event_officer'))]"/>
+            <field name="name">Reports</field>
+            <field name="groups_id"
+                   eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
         </record>
+
         <record id="event.menu_report_event_registration" model="ir.ui.menu">
-            <field name="groups_id" eval="[(4, ref('event_user.group_event_organizer'))]"/>
+            <field name="name">Events</field>
+            <field name="groups_id"
+                   eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+        </record>
+
+        <record id="website_event_questions.menu_report_event_questions" model="ir.ui.menu">
+            <field name="name">Questions</field>
+            <field name="groups_id"
+                   eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
         </record>
 
         <menuitem id="menu_event_general" name="Events" parent="event.event_main_menu"
                   groups="event_user.group_event_organizer,event.group_event_user,event_user.group_event_officer"/>
 
         <menuitem id="menu_event_operations" name="Event Operations" parent="event.event_main_menu"
-                  groups="event_user.group_event_organizer,event.group_event_user,event_user.group_event_officer"/>
+                  groups="event.group_event_user,event_user.group_event_officer,event.group_event_manager,event_user.group_event_organizer"/>
 
         <record id="event.menu_action_registration" model="ir.ui.menu">
             <field name="parent_id" eval="ref('menu_event_operations')"/>
             <field name="sequence">1</field>
             <field name="groups_id"
-                   eval="[(4, ref('event_user.group_event_officer')),(4, ref('base.group_no_one'))]"/>
+                   eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager')),(4, ref('base.group_no_one'))]"/>
         </record>
 
         <record id="event.menu_event_event" model="ir.ui.menu">
             <field name="parent_id" eval="ref('menu_event_general')"/>
             <field name="sequence">10</field>
             <field name="groups_id"
-                   eval="[(4, ref('event_user.group_event_organizer')),(4, ref('event_user.group_event_officer'))]"/>
+                   eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_organizer')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
         </record>
     </data>
 </odoo>
