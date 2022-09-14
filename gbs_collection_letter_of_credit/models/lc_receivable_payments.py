@@ -149,7 +149,8 @@ class LCReceivablePayment(models.Model):
                 if so_objs:
                     for so_obj in so_objs:
                         for invoice_id in so_obj.invoice_ids:
-                            invoice_ids.append(invoice_id.id)
+                            if invoice_id.so_id:
+                                invoice_ids.append(invoice_id.id)
             analytic_account_id = False
             if self.lc_id.analytic_account_id:
                 analytic_account_id = self.lc_id.analytic_account_id.id
