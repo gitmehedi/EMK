@@ -392,8 +392,8 @@
                         <div class="col-md-6">
                             <div class="warning">Signature Image (Resolution: 300px * 80px, Size: 200KB)</div>
                             <div class="img_ctx pull-left">
-                                <input id="signature-image-upload" name="signature_image" class="hidden reqfield"
-                                       type="file" accept="image/*" required="required">
+                                <input id="signature-image-upload" name="signature_image" class="hidden"
+                                       type="file" accept="image/*" >
                                     <img id="signature_image"/>
                                 </input>
                                 <div class="img_select_layer">
@@ -407,8 +407,8 @@
                                 200px * 200px , Size: 2MB)
                             </div>
                             <div class="img_ctx  pull-right">
-                                <input id="member-image-upload" class="hidden reqfield" type="file" name="image"
-                                       accept="image/*" required="required">
+                                <input id="member-image-upload" class="hidden" type="file" name="image"
+                                       accept="image/*">
                                     <img id="member_image"/>
                                 </input>
                                 <div class="img_select_layer">

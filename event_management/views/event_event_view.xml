@@ -30,7 +30,9 @@
                 </xpath>
                 <xpath expr="//form/header" position="replace">
                     <header>
-                        <button string="Approve Event" name="button_approve" states="draft" type="object"
+                        <button string="Verify Event" name="button_verify" states="draft" type="object"
+                                class="oe_highlight" groups="event_user.group_event_officer"/>
+                        <button string="Approve Event" name="button_approve" states="verify" type="object"
                                 class="oe_highlight" groups="event_user.group_event_officer"/>
                         <button string="Confirm Event" name="button_confirm" states="approve" type="object"
                                 class="oe_highlight" groups="event_user.group_event_officer"/>
@@ -42,12 +44,11 @@
                                 class="oe_highlight" groups="event_user.group_event_officer"/>
                         <button string="Set To Draft" name="button_draft" states="cancel" type="object"
                                 groups="event_user.group_event_officer"/>
-                        <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"
+                        <button string="Cancel Event" name="button_cancel" states="draft,verify" type="object"
                                 groups="event_user.group_event_officer"/>
                         <button string="Registration Modify" name="%(action_registration_modify_wizard)d"
-                                states="confirm" type="action"
-                                groups="event_user.group_event_officer"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,approve,confirm"/>
+                                states="confirm" type="action" groups="event_user.group_event_officer"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,verify,approve,confirm,cancel"/>
                     </header>
                 </xpath>
                 <xpath expr="//button[@name='toggle_active']" position="replace"></xpath>
