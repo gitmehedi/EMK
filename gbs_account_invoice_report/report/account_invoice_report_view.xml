@@ -157,5 +157,9 @@
             <field name="groups_id" eval="[(4,[ref('gbs_procure_n_commercial_access.group_mis_reports_procurement')])]"/>
         </record>
 
+        <record id="purchase.purchase_report" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3, ref('purchase.group_purchase_manager'))]"/>
+        </record>
+
     </data>
 </odoo>
