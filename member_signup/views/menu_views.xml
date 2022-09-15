@@ -53,12 +53,12 @@
                eval="[(4, ref('member_user.group_mem_user_applicant')),(4, ref('member_user.group_user_member'))]"/>
     </record>
 
-    <record id="membership.menu_report_membership" model="ir.ui.menu">
-        <field name="name">Reports</field>
-        <field name="groups_id"
-               eval="[(4, ref('member_user.group_user_member')),(4, ref('member_user.group_mem_user_officer')),(4, ref('membership_extension.group_membership_manager'))]">
-        </field>
-    </record>
+<!--    <record id="membership.menu_report_membership" model="ir.ui.menu">-->
+<!--        <field name="name">Members Analysis</field>-->
+<!--        <field name="groups_id"-->
+<!--               eval="[(4, ref('member_user.group_user_member')),(4, ref('member_user.group_mem_user_officer')),(4, ref('membership_extension.group_membership_manager'))]">-->
+<!--        </field>-->
+<!--    </record>-->
 
 
 </odoo>

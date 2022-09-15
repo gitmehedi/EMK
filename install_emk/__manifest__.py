@@ -226,7 +226,7 @@
         "calendar",
         "event_registration",
         "website_event",
-        "emk_point_of_sale",
+        "pos_management",
     ],
     'installable': True,
     'application': True,

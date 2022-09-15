@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 {
     'name': "EMK Point of Sale",
-
     'summary': """
         Custom Point of Sale""",
-
     'description': """
         To manage the purchase order,quotation and revision . 
     """,
@@ -19,10 +17,10 @@
         'account'
     ],
     'data': [
-        # 'views/inherit_account_journal_view.xml',
-        # 'views/inherit_pos_config_view.xml',
+        'security/ir.model.access.csv',
         'views/pos_category_view.xml',
         'views/product_view.xml',
+        'views/account_bank_statement_views.xml',
     ],
     'qweb': ['static/src/xml/pos.xml'],
 }

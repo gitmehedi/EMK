@@ -15,7 +15,7 @@
         'hr_employee_ted_cafe_bills',
         'pos_permissions',
         'pos_users',
-        'emk_point_of_sale',
+        'pos_management',
     ],
     'installable': True,
     'application': True,
