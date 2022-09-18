@@ -17,7 +17,7 @@ This application allows you to easily maintain access rights of emk process.
     ],
     'data': [
         'security/ir_security.xml',
-        'views/menu.xml'
+        # 'views/menu.xml'
     ],
     'installable': True,
     'application': True,

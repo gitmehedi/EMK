@@ -23,7 +23,6 @@
         "emk_purchase_order_menu",
         "stock_indent_access",
         "stock_indent_install",
-        "stock_indent_menu",
         "stock",
         "sale",
         "stock_account",

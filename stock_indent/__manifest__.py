@@ -13,11 +13,11 @@
         'indent_type',
         'stock_operating_unit_user',
         'inventory_user',
-        'stock_indent_menu',
     ],
     'data': [
         'security/ir.model.access.csv',
         # 'security/ir_rule.xml',
+        'views/menu_view.xml',
         'report/stock_indent.xml',
         'data/stock_indent_data.xml',
         'data/stock_indent_sequence.xml',
