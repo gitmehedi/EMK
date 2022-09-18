@@ -7,11 +7,10 @@
     'version': '1.0',
     'category': 'Inventory Management',
     'depends': [
-
+        'stock'
     ],
     'data': [
         'security/users.xml',
     ],
     'installable': True,
 }
-

@@ -14,6 +14,19 @@
             </field>
         </record>
 
+        <record id='action_purchase_order_emk' model='ir.actions.act_window'>
+            <field name="name">Purchase Order</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new Purchase Order.
+                </p>
+            </field>
+        </record>
+
+
         <!-- actions -->
         <record id="action_view_picking100" model="ir.actions.act_window">
             <field name="name">Receive Products</field>
@@ -33,17 +46,17 @@
             <field name="domain">[('state','=','done')]</field>
         </record>
 
-        <record id="emk_purchase_order.purchase_orders_emk" model="ir.ui.menu">
-            <field name="name">Purchase Orders (Draft)</field>
-            <field name="groups_id" eval="[(4, ref('stock.group_stock_user')),(4, ref('stock.group_stock_manager'))]"/>
-            <field name="sequence">1</field>
-        </record>
+        <menuitem id="purchase_orders_emk" name="Purchase Orders (Draft)" parent="emk_purchase_order.menu_stock_purchase" sequence="0"
+                  action="action_purchase_order_emk"
+                  groups="stock.group_stock_user,stock.group_stock_manager"/>
 
-        <menuitem id="purchase_orders_receive" name="Purchase Orders (Receive)" parent="emk_purchase_order.menu_stock_purchase"
+        <menuitem id="purchase_orders_receive" name="Purchase Orders (Receive)"
+                  parent="emk_purchase_order.menu_stock_purchase"
                   sequence="5" action="action_view_picking100"
                   groups="stock.group_stock_user,stock.group_stock_manager"/>
 
-        <menuitem id="menu_purchase_orders_done" name="Purchase Orders (Done)" parent="emk_purchase_order.menu_stock_purchase"
+        <menuitem id="menu_purchase_orders_done" name="Purchase Orders (Done)"
+                  parent="emk_purchase_order.menu_stock_purchase"
                   sequence="10" action="action_purchase_order_done"
                   groups="stock.group_stock_user,stock.group_stock_manager"/>
 

@@ -9,7 +9,7 @@
         </record>
 
         <record id="stock.group_stock_user" model="res.groups">
-            <field name="name">Inventory: Officers</field>
+            <field name="name">Inventory: Officer</field>
             <field name="sequence">5</field>
         </record>
 
