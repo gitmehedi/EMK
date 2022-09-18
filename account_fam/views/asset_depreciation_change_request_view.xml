@@ -9,12 +9,12 @@
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft"
                             type="object" class="oe_highlight"
-                            groups="account_fam.grp_fixasset_user,account_fam.grp_fixasset_manager"/>
+                            groups="account_fam_user.grp_fixasset_manager"/>
                     <button string="Approve" name="action_approve" type="object" class="oe_highlight"
                             attrs="{'invisible': [('state', '!=', 'confirm')]}"
-                            groups="account_fam.grp_fixasset_user,account_fam.grp_fixasset_manager"/>
+                            groups="account_fam_user.grp_fixasset_manager"/>
                     <button string="Cancel" name="action_cancel" states="confirm"
-                            groups="account_fam.grp_fixasset_user,account_fam.grp_fixasset_manager" type="object"/>
+                            groups="account_fam_user.grp_fixasset_manager" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
                 </header>
                 <sheet>
@@ -98,9 +98,9 @@
         <field name="context">{}</field>
     </record>
 
-    <menuitem id="menu_asset_depreciation_change_request"
-              parent="account_fam_menu.menu_action_account_asset_operation"
-              groups="account_fam.grp_fixasset_user,account_fam.grp_fixasset_manager"
-              action="action_asset_depreciation_change_request" sequence="60"/>
+<!--    <menuitem id="menu_asset_depreciation_change_request"-->
+<!--              parent="account_fam_menu.menu_action_account_asset_operation"-->
+<!--              groups="account_fam_user.grp_fixasset_user,account_fam_user.grp_fixasset_manager"-->
+<!--              action="action_asset_depreciation_change_request" sequence="60"/>-->
 
 </odoo>

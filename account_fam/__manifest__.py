@@ -13,9 +13,9 @@
         'account_fam_menu',
         'account_fam_vendor_bills',
         'l10n_bd_account_tax',
+        'account_fam_user',
     ],
     'data': [
-        'security/security.xml',
         # 'security/ir_rule.xml',
         'security/ir.model.access.csv',
         'data/sequence.xml',

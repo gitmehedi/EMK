@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="stock.menu_stock_root" model="ir.ui.menu">
+            <field name="name">Inventory</field>
+            <field name="groups_id" eval="[(4, ref('inventory_user.grp_inv_gen_user'))]"/>
+        </record>
+
+        <record id="stock.stock_picking_type_menu" model="ir.ui.menu">
+            <field name="name">Dashboard</field>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user')),(4, ref('stock.group_stock_manager'))]"/>
+        </record>
+
+        <record id="stock.menu_stock_warehouse_mgmt" model="ir.ui.menu">
+            <field name="name">Operations</field>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user')),(4, ref('stock.group_stock_manager'))]"/>
+        </record>
+
+        <record id="stock.menu_warehouse_report" model="ir.ui.menu">
+            <field name="name">Reports</field>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user')),(4, ref('stock.group_stock_manager'))]"/>
+        </record>
+
+        <menuitem id="menu_stock_indent" name='Indent' parent="stock.menu_stock_root" sequence="10"
+                  groups="inventory_user.grp_inv_gen_user,stock.group_stock_user,stock.group_stock_manager"/>
+
+        <menuitem id="emk_purchase_order.menu_stock_purchase" name="Purchase" sequence="15" parent="stock.menu_stock_root"
+                  groups="stock.group_stock_user,stock.group_stock_manager"/>
+
+        <menuitem id="menu_stock_scrap" name="Scraps" sequence="20" parent="stock.menu_stock_root"
+                  groups="inventory_user.grp_inv_gen_user,stock.group_stock_user,stock.group_stock_manager"/>
+    </data>
+</odoo>

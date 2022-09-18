@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-
     <record id="view_rfid_generation_form" model="ir.ui.view">
         <field name="name">rfid.generation.form</field>
         <field name="model">rfid.generation</field>
@@ -8,9 +7,14 @@
         <field name="arch" type="xml">
             <form string="RFID Generation">
                 <header>
-                    <button string='Print RFID' name="rfid_print" type='object' class="oe_highlight"
-                            states="draft"/>
-                    <button string='Generated' name="act_generate" type='object' states="draft"/>
+                    <button string='Issue' name="act_issue" type='object' class="oe_highlight" states="draft"
+                            groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+                    <button string='Generated' name="act_generate" type='object' states="issue" class="oe_highlight"
+                            groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+                    <button string='Print RFID' name="rfid_print" type='object' states="issue"
+                            groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+                    <button string='Hand Over' name="act_handover" type='object' states="generate" class="oe_highlight"
+                            groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -39,7 +43,9 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <tree string="RFID Generation"
-                  colors="green:state=='draft'; gray:state=='generate'">
+                  decoration-primary="state=='draft'" decoration-success="state=='issue'"
+                  decoration-info="state=='generate'" decoration-muted="state=='handover'"
+                  decoration-bf="state in ('issue','generate')">
                 <field name="membership_id"/>
                 <field name="ref"/>
                 <field name="date"/>

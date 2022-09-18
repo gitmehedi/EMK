@@ -88,8 +88,9 @@
             <field name="view_mode">tree,calendar,form</field>
         </record>
 
-        <menuitem name="Event Room Booking" id="menu_meeting_room_reservation"
-                  action="action_meeting_room_reservation"
-                  parent="menu_event_operations" groups="event_user.group_event_officer" sequence="30"/>
+        <menuitem name="Event Room Booking" id="menu_meeting_room_reservation" action="action_meeting_room_reservation"
+                  parent="menu_event_operations"  sequence="30"
+                  groups="event.group_event_user,event_user.group_event_officer,event.group_event_manager,event_user.group_event_organizer"
+        />
     </data>
 </odoo>

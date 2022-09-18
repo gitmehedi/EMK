@@ -13,14 +13,14 @@
             <xpath expr="//form/header" position="replace">
                 <header>
                     <button name="validate" states="draft" string="Confirm" type="object" class="oe_highlight"
-                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
+                            groups="account_fam_user.grp_fixasset_manager"/>
                     <button name="%(action_asset_allocation_wizard)d" string="Allocate" class="oe_highlight"
                             type="action" context="{'allocation':'True'}"
-                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
+                            groups="account_fam_user.grp_fixasset_manager"
                             attrs="{'invisible': ['|',('allocation_status','=', True),('state','!=', 'open')]}"/>
                     <button name="%(action_asset_allocation_wizard)d" string="Transfer" class="oe_highlight"
                             type="action" context="{'transfer':'True'}"
-                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
+                            groups="account_fam_user.grp_fixasset_manager"
                             attrs="{'invisible': ['|',('allocation_status','=', False),('state','!=', 'open')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </header>
@@ -76,7 +76,7 @@
                         <field name="current_branch_id" readonly="True"
                                options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
                         <field name="cost_centre_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
-                        <field name="reconcile_ref" groups="account_fam.grp_fixasset_manager"
+                        <field name="reconcile_ref" groups="account_fam_user.grp_fixasset_manager"
                                attrs="{'invisible':[('reconcile_ref','=',False)]}"/>
                         <field name="currency_id" groups="base.group_multi_currency"
                                options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
@@ -281,7 +281,8 @@
     </record>
 
     <menuitem parent="account_fam_menu.sub_assets_menu" id="menu_action_account_asset_asset_form_open"
-              action="action_account_asset_asset_form_open" sequence="6" groups="account.group_account_user"/>
+              action="action_account_asset_asset_form_open" sequence="6"
+    groups="account_fam_user.grp_fixasset_user,account_fam_user.grp_fixasset_manager,account_fam_user.grp_fam_system_settings"/>
 
     <record model="ir.actions.act_window" id="action_account_asset_asset_form_confirmed">
         <field name="name">Fixed Assets (Draft)</field>
@@ -294,7 +295,8 @@
     </record>
 
     <menuitem parent="account_fam_menu.sub_assets_menu" id="menu_action_account_asset_asset_form_confirmed"
-              action="action_account_asset_asset_form_confirmed" sequence="5" groups="account.group_account_user"/>
+              action="action_account_asset_asset_form_confirmed" sequence="5"
+    groups="account_fam_user.grp_fixasset_user,account_fam_user.grp_fixasset_manager,account_fam_user.grp_fam_system_settings"/>
 
 
     <record model="ir.actions.act_window" id="action_account_asset_asset_form_disposal">
@@ -308,7 +310,8 @@
     </record>
 
     <menuitem parent="account_fam_menu.sub_assets_menu" id="menu_action_account_asset_asset_form_disposal"
-              action="action_account_asset_asset_form_disposal" sequence="7" groups="account.group_account_user"/>
+              action="action_account_asset_asset_form_disposal" sequence="7"
+    groups="account_fam_user.grp_fixasset_user,account_fam_user.grp_fixasset_manager,account_fam_user.grp_fam_system_settings"/>
 
     <record model="ir.actions.act_window" id="action_account_asset_asset_form_close">
         <field name="name">Fixed Assets (Closed)</field>
@@ -319,6 +322,7 @@
     </record>
 
     <menuitem parent="account_fam_menu.sub_assets_menu" id="menu_action_account_asset_asset_form_close"
-              action="action_account_asset_asset_form_close" sequence="8" groups="account.group_account_user"/>
+              action="action_account_asset_asset_form_close" sequence="8"
+              groups="account_fam_user.grp_fixasset_user,account_fam_user.grp_fixasset_manager,account_fam_user.grp_fam_system_settings"/>
 
 </odoo>

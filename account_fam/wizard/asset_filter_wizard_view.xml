@@ -34,5 +34,5 @@
     </record>
     <menuitem id="main_fixed_asset_filter_menu" name="Search Assets"
               parent="account_fam_menu.sub_assets_menu" sequence="55" action="action_asset_filter_wizard"
-              groups="grp_fixasset_manager"/>
+              groups="account_fam_user.grp_fixasset_manager"/>
 </odoo>

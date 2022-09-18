@@ -9,9 +9,11 @@
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
                             states="draft" groups="account.group_account_manager"/>
                     <button name="action_sale" string="Confirm" type="object" class="oe_highlight"
+                            groups="account.group_account_manager"
                             context="{'sale':True,'sale_id':name}" states="approve"/>
                     <button name="%(action_asset_sale_wizard)d" states="draft"
-                            type="action" string="Add Assets" />
+                            type="action" string="Add Assets"
+                    groups="account.group_account_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="approve,sale"/>
                 </header>
                 <sheet>

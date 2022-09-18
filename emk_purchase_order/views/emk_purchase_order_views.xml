@@ -50,29 +50,8 @@
                     <xpath expr="//field[@name='partner_id']" position="attributes">
                         <attribute name="options">{'no_create':True,'no_open':True}</attribute>
                     </xpath>
-
                 </data>
             </field>
-
         </record>
-
-
-        <record id='action_purchase_order_emk' model='ir.actions.act_window'>
-			<field name="name">Purchase Order</field>
-			<field name="res_model">purchase.order</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-<!--            <field name="domain">[("product_id.type","!=",'service')]</field>-->
-			<field name="help" type="html">
-				<p class="oe_view_nocontent_create">
-					Click to create a new Purchase Order.
-				</p>
-			</field>
-		</record>
-
-
-        <menuitem id="purchase_orders_emk" name="Purchase Orders (Draft)" parent="stock_indent_menu.menu_stock_purchase" sequence="0" action="action_purchase_order_emk"/>
-
-
     </data>
 </odoo>

@@ -3,42 +3,57 @@
     <record id="account_asset.menu_action_account_asset_asset_form" model="ir.ui.menu">
         <field name="parent_id" eval="ref('account_fam_menu.sub_assets_menu')"/>
         <field name="sequence">10</field>
+        <field name="groups_id"
+               eval="[(4, ref('account_fam_user.grp_fixasset_user')),(4, ref('account_fam_user.grp_fixasset_manager')),(4, ref('account_fam_user.grp_fam_system_settings'))]"/>
     </record>
 
     <record id="account_asset.menu_asset_depreciation_confirmation_wizard" model="ir.ui.menu">
         <field name="parent_id" eval="ref('account_fam_menu.sub_assets_menu')"/>
         <field name="sequence">20</field>
+        <field name="groups_id"
+               eval="[(4, ref('account_fam_user.grp_fixasset_user')),(4, ref('account_fam_user.grp_fixasset_manager')),(4, ref('account_fam_user.grp_fam_system_settings'))]"/>
     </record>
 
     <menuitem id="sub_reports_menu" name="Reports" sequence="20"
-              parent="account_fam_menu.main_fixed_asset_menu" groups="base.group_no_one"/>
+              parent="account_fam_menu.main_fixed_asset_menu"
+              groups="account_fam_user.grp_fixasset_user,account_fam_user.grp_fixasset_manager,account_fam_user.grp_fam_system_settings"/>
 
     <record id="account_asset.menu_action_asset_asset_report" model="ir.ui.menu">
         <field name="name">Fixed Assets</field>
         <field name="parent_id" eval="ref('account_fam_menu.sub_reports_menu')"/>
         <field name="sequence">10</field>
+        <field name="groups_id"
+               eval="[(4, ref('account_fam_user.grp_fixasset_user')),(4, ref('account_fam_user.grp_fixasset_manager')),(4, ref('account_fam_user.grp_fam_system_settings'))]"/>
     </record>
 
     <record id="account_asset.menu_action_account_asset_asset_form" model="ir.ui.menu">
         <field name="name">Stock of Fixed Assets</field>
         <field name="sequence">5</field>
+        <field name="groups_id"
+               eval="[(4, ref('account_fam_user.grp_fixasset_user')),(4, ref('account_fam_user.grp_fixasset_manager')),(4, ref('account_fam_user.grp_fam_system_settings'))]"/>
     </record>
 
     <record id="account_asset.action_account_asset_asset_form" model="ir.actions.act_window">
         <field name="name">Fixed Assets</field>
         <field name="sequence">1</field>
+        <field name="groups_id"
+               eval="[(4, ref('account_fam_user.grp_fixasset_user')),(4, ref('account_fam_user.grp_fixasset_manager')),(4, ref('account_fam_user.grp_fam_system_settings'))]"/>
     </record>
 
     <record id="account_asset.menu_action_account_asset_asset_list_normal_purchase" model="ir.ui.menu">
         <field name="name">Fixed Asset Types</field>
+        <field name="groups_id"
+               eval="[(4, ref('account_fam_user.grp_fam_system_settings'))]"/>
     </record>
 
     <record id="account_asset.action_account_asset_asset_list_normal_purchase" model="ir.actions.act_window">
         <field name="name">Fixed Asset Types</field>
+                <field name="groups_id"
+               eval="[(4, ref('account_fam_user.grp_fam_system_settings'))]"/>
     </record>
 
-    <menuitem id="asset_settings_menu" name="Settings" sequence="10"
-              parent="account_fam_menu.sub_configuration_menu" groups=""/>
+    <menuitem id="asset_settings_menu" name="Settings" sequence="10" parent="account_fam_menu.sub_configuration_menu"
+              groups="account_fam_user.grp_fam_system_settings"/>
 
     <record id="account_asset.menu_action_account_asset_asset_list_normal_purchase" model="ir.ui.menu">
         <field name="parent_id" eval="ref('account_fam_menu.sub_configuration_menu')"/>
