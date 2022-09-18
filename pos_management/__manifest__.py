@@ -14,7 +14,8 @@
     'version': '10.0.1',
     'depends': [
         'point_of_sale',
-        'account'
+        'account',
+        'pos_users',
     ],
     'data': [
         'security/ir.model.access.csv',
