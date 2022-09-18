@@ -9,6 +9,7 @@
     'depends': [
         'account_asset',
         'account_fam',
+        'account_fam_user',
     ],
     'data': [
         'data/sequence.xml',

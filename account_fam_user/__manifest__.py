@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Event Management Users',
-    'description': """ All types of users whom are related to activities of event management""",
+    'name': 'Fixed Asset Management Users',
+    'description': """ All types of users whom are related to activities of FAM management""",
     "author": "Genweb2 Limited",
     "website": "http://www.genweb2.com",
     'version': '1.0',
-    'category': 'Event Management',
+    'category': 'FAM Management',
     'depends': [
-        'event',
     ],
     'data': [
         'security/users.xml',

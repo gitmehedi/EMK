@@ -7,21 +7,21 @@
             <form string="Account Asset Category" edit="0" duplicate="0">
                 <header>
                     <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
-                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"/>
+                            groups="account_fam_user.grp_fixasset_manager,account_fam_user.grp_fixasset_user,account.group_account_manager"/>
                     <button name="act_reject" string="Reject" type="object" states="draft"
-                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"/>
+                            groups="account_fam_user.grp_fixasset_manager,account_fam_user.grp_fixasset_user,account.group_account_manager"/>
                     <button name="%(account_fam.action_account_asset_category_wizard)d" string="Edit" type="action"
                             class="oe_highlight"
-                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"
+                            groups="account_fam_user.grp_fixasset_manager,account_fam_user.grp_fixasset_user,account.group_account_manager"
                             attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
                     <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
-                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"
+                            groups="account_fam_user.grp_fixasset_manager,account_fam_user.grp_fixasset_user,account.group_account_manager"
                             attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
                     <button name="act_reject_pending" string="Reject" type="object"
-                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"
+                            groups="account_fam_user.grp_fixasset_manager,account_fam_user.grp_fixasset_user,account.group_account_manager"
                             attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
                     <button name="act_draft" string="Set to Draft" type="object" states="reject"
-                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"/>
+                            groups="account_fam_user.grp_fixasset_manager,account_fam_user.grp_fixasset_user,account.group_account_manager"/>
                     <field name="state" widget="statusbar" invisible="True"/>
                 </header>
                 <sheet>
@@ -89,14 +89,16 @@
                                        domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </div>
-                            <label for="account_depreciation_expense_id" attrs="{'invisible': [('method','=','no_depreciation')]}"/>
+                            <label for="account_depreciation_expense_id"
+                                   attrs="{'invisible': [('method','=','no_depreciation')]}"/>
                             <div>
                                 <field name="account_depreciation_expense_id" class="oe_inline"
                                        domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
                                        attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
                                        options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
                             </div>
-                            <label for="account_depreciation_id" attrs="{'invisible': [('method','=','no_depreciation')]}"/>
+                            <label for="account_depreciation_id"
+                                   attrs="{'invisible': [('method','=','no_depreciation')]}"/>
                             <div>
                                 <field name="account_depreciation_id" class="oe_inline"
                                        domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
@@ -252,7 +254,8 @@
     </record>
 
     <menuitem parent="account_fam_menu.sub_configuration_menu" id="menu_action_account_asset_type"
-              action="action_account_asset_type" sequence="40"/>
+              action="action_account_asset_type" sequence="40"
+              groups="account_fam_user.grp_fam_system_settings"/>
 
     <record model="ir.actions.act_window" id="account_asset.action_account_asset_asset_list_normal_purchase">
         <field name="domain">[('type', '=', 'purchase'),('parent_id','=',False)]</field>

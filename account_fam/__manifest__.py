@@ -16,7 +16,6 @@
         'account_fam_user',
     ],
     'data': [
-        # 'security/security.xml',
         # 'security/ir_rule.xml',
         'security/ir.model.access.csv',
         'data/sequence.xml',
