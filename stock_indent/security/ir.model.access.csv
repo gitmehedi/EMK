@@ -27,4 +27,5 @@ inv_ind_scr_mng,inv_ind_scr_mng,model_stock_indent_scrap,stock.group_stock_manag
 
 inv_sto_ind_scr_line_superv,inv_sto_ind_scr_superv,model_scrap_product_lines,inventory_user.grp_inv_supervisor,1,1,1,1
 inv_sto_ind_scr_line_str_exe,inv_sto_ind_scr_str_exe,model_scrap_product_lines,inventory_user.grp_inv_gen_user,1,1,1,1
-inv_sto_ind_scr_line_dep_exe,inv_sto_ind_scr_str_exe,model_scrap_product_lines,inventory_user.grp_inv_department_executive,1,1,1,1
+
+inv_stock_move_gen_user,inv_stock_move_gen_user,stock.model_stock_move,inventory_user.grp_inv_gen_user,1,0,0,0
