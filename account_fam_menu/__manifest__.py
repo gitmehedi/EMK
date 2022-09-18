@@ -11,6 +11,7 @@
     """,
     'depends': [
         'account_fam_access',
+        'account_fam_user',
     ],
     'data': [
         'views/menu.xml'

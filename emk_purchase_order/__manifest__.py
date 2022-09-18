@@ -16,7 +16,8 @@
     'version': '10.0.1',
     'depends': [
         'purchase',
-        'emk_purchase_order_menu'
+        'emk_purchase_order_menu',
+        'inventory_user',
     ],
     'data': [
         'security/ir.model.access.csv',

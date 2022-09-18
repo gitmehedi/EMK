@@ -30,5 +30,5 @@
     </record>
     <menuitem id="main_fixed_asset_depreciation_menu" name="Execute Asset Depr"
               parent="account_fam_menu.menu_action_account_asset_operation" sequence="10" action="action_asset_depreciation_wizard"
-              groups="grp_fixasset_manager"/>
+              groups="account_fam_user.grp_fixasset_manager"/>
 </odoo>

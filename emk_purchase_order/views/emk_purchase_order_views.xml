@@ -62,7 +62,6 @@
 			<field name="res_model">purchase.order</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-<!--            <field name="domain">[("product_id.type","!=",'service')]</field>-->
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">
 					Click to create a new Purchase Order.
@@ -70,9 +69,7 @@
 			</field>
 		</record>
 
-
-        <menuitem id="purchase_orders_emk" name="Purchase Orders (Draft)" parent="stock_indent_menu.menu_stock_purchase" sequence="0" action="action_purchase_order_emk"/>
-
+        <menuitem id="purchase_orders_emk" name="Purchase Orders (Draft)" parent="menu_stock_purchase" sequence="0" action="action_purchase_order_emk"/>
 
     </data>
 </odoo>
