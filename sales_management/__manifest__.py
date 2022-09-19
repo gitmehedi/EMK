@@ -8,6 +8,7 @@
     'category': 'Sales',
     'depends': [
         'sales_team',
+        'sales_users',
     ],
     'data': [
         'security/ir.model.access.csv',
