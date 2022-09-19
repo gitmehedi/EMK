@@ -7,7 +7,7 @@
     'version': '1.0',
     'category': 'Sales',
     'depends': [
-        'sales_users',
+        'sales_team',
     ],
     'data': [
         'security/users.xml',
