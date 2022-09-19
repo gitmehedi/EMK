@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+pur_sale_report_gen_user,pur_sale_report_gen_user,sale.model_sale_report,sales_team.group_sale_salesman,1,0,0,0
+pur_sale_report_off,pur_sale_report_off,sale.model_sale_report,sales_team.group_sale_salesman_all_leads,1,0,0,0
+pur_sale_report_man,pur_sale_report_man,sale.model_sale_report,sales_team.group_sale_manager,1,0,0,0
+
+sale.access_sale_order,sale.order,sale.model_sale_order,sales_team.group_sale_salesman,1,0,0,0
+access_sale_order_off,access_sale_order_off,sale.model_sale_order,sales_team.group_sale_salesman_all_leads,1,1,1,0
+sale.access_sale_order_manager,sale.order.manager,sale.model_sale_order,sales_team.group_sale_manager,1,1,1,1
+
+sale.access_sale_order_line,sale.order.line,sale.model_sale_order_line,sales_team.group_sale_salesman,1,0,0,0
+access_sale_order_li_off,access_sale_order_li_off,sale.model_sale_order_line,sales_team.group_sale_salesman_all_leads,1,1,1,0
