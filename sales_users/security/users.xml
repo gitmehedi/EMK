@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+    <data noupdate="0">
+        <record id="sales_team.group_sale_salesman" model="res.groups">
+            <field name="name">User: General User</field>
+        </record>
+
+        <record id="sales_team.group_sale_salesman_all_leads" model="res.groups">
+            <field name="name">User: Officer</field>
+        </record>
+
+        <record id="sales_team.group_sale_manager" model="res.groups">
+            <field name="name">User: Manager</field>
+        </record>
+    </data>
+</odoo>
