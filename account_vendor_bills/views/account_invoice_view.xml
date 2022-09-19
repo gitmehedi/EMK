@@ -8,7 +8,6 @@
             <xpath expr="//form" position="attributes">
                 <attribute name="duplicate">0</attribute>
             </xpath>
-
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
@@ -50,9 +49,9 @@
             <xpath expr="//field[@name='tax_line_ids']" position="attributes">
                 <attribute name="groups">base.group_system</attribute>
             </xpath>
-<!--            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="after">-->
-<!--                <field name="product_id" invisible="1"/>-->
-<!--            </xpath>-->
+            <!--            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="after">-->
+            <!--                <field name="product_id" invisible="1"/>-->
+            <!--            </xpath>-->
             <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="attributes">
                 <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
             </xpath>
@@ -165,7 +164,9 @@
     </record>
 
     <record id="account.action_invoice_tree2" model="ir.actions.act_window">
-        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('state', 'in', ('draft', 'cancel'))]</field>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('state', 'in',
+            ('draft', 'cancel'))]
+        </field>
     </record>
 
     <record id="action_vendor_bill_open" model="ir.actions.act_window">
@@ -174,7 +175,9 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
-        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('state', 'in', ('open', 'paid')), ('residual', '&gt;', 0)]</field>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('state', 'in',
+            ('open', 'paid')), ('residual', '&gt;', 0)]
+        </field>
         <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}
         </field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
@@ -195,7 +198,9 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
-        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False),('state', 'in', ('open', 'paid')), ('residual', '&lt;=', 0)]</field>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False),('state', 'in', ('open',
+            'paid')), ('residual', '&lt;=', 0)]
+        </field>
         <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}
         </field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
@@ -211,12 +216,15 @@
     </record>
 
     <menuitem id="account.menu_action_invoice_tree2" action="account.action_invoice_tree2" name="Vendor Bills (Draft)"
-              parent="account.menu_finance_payables"  sequence="1"/>
+              parent="account.menu_finance_payables" sequence="1"
+              groups="purchase_users.group_purchase_gen_user,purchase.group_purchase_user,purchase.group_purchase_manager"/>
 
     <menuitem action="action_vendor_bill_open" id="menu_vendor_bills_open"
-              parent="account.menu_finance_payables"  name="Vendor Bills (Validated)" sequence="2"/>
+              parent="account.menu_finance_payables" name="Vendor Bills (Validated)" sequence="2"
+              groups="purchase_users.group_purchase_gen_user,purchase.group_purchase_user,purchase.group_purchase_manager"/>
 
     <menuitem action="action_vendor_bill_paid" id="menu_vendor_bills_paid"
-              parent="account.menu_finance_payables"  name="Vendor Bills (Paid)" sequence="3"/>
+              parent="account.menu_finance_payables" name="Vendor Bills (Paid)" sequence="3"
+              groups="purchase_users.group_purchase_gen_user,purchase.group_purchase_user,purchase.group_purchase_manager"/>
 
 </odoo>

@@ -13,8 +13,11 @@
         'account_parent',
         'account_operating_unit',
         'l10n_bd_account_tax',
+        'purchase_users',
     ],
     "data": [
+        'security/ir.model.access.csv',
+        'views/menu_view.xml',
         'views/account_invoice_view.xml',
     ],
     'installable': True,
