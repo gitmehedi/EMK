@@ -9,11 +9,10 @@
                 <header>
                     <button name="act_validate" type="object" string="Validate Session" states="opened"
                             class="oe_highlight"/>
-                    <button name="act_close" type="object" string="Validate Closing"
-                            states="validate" class="oe_highlight"/>
+                    <button name="act_close" type="object" string="Validate Closing" states="validate"
+                            class="oe_highlight"/>
                     <button name="act_open" type="object" string="Continue Session" states="validate"/>
-                    <field name="state" widget="statusbar"
-                           statusbar_visible="opened,validate,closed" nolabel="1"/>
+                    <field name="state" widget="statusbar" statusbar_visible="opened,validate,closed" />
                 </header>
                 <sheet>
                     <h1 class="oe_title">

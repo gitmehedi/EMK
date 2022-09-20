@@ -21,6 +21,8 @@
         'data/email_template.xml',
         'data/default_data.xml',
         'views/menu_views.xml',
+        'views/payment_session_views.xml',
+        'views/payment_operation_views.xml',
     ],
     'installable': True,
     'application': False,
