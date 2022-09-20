@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="inherit_view_service_payment_form" model="ir.ui.view">
+        <field name="model">service.payment</field>
+        <field name="inherit_id" ref="emk_payment.view_service_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='act_payment_register']" position="attributes">
+                <attribute name="groups">member_user.group_mem_user_officer,membership_extension.group_membership_manager</attribute>
+            </xpath>
+            <xpath expr="//button[@name='act_cancel']" position="attributes">
+                <attribute name="groups">member_user.group_mem_user_officer,membership_extension.group_membership_manager</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_invoice_payment_form" model="ir.ui.view">
+        <field name="model">invoice.payment</field>
+        <field name="inherit_id" ref="emk_payment.view_invoice_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='invoice_payment']" position="attributes">
+                <attribute name="groups">member_user.group_mem_user_officer,membership_extension.group_membership_manager</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

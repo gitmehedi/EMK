@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase.menu_purchase_root" model="ir.ui.menu">
+        <field name="name">Purchase</field>
+        <field name="groups_id"
+               eval="[(4, ref('purchase_users.group_purchase_gen_user')),(4, ref('purchase.group_purchase_user')),(4, ref('purchase.group_purchase_manager'))]"/>
+    </record>
+
+    <menuitem id="purchase_report_main" name="Reports" parent="purchase.menu_purchase_root" sequence="99"
+              groups="purchase_users.group_purchase_gen_user,purchase.group_purchase_user,purchase.group_purchase_manager"/>
+
+    <record id="purchase.purchase_report" model="ir.ui.menu">
+        <field name="name">Purchase Analysis</field>
+        <field name="parent_id" eval="ref('purchase_report_main')"/>
+        <field name="groups_id"
+               eval="[(4, ref('purchase_users.group_purchase_gen_user')),(4, ref('purchase.group_purchase_user')),(4, ref('purchase.group_purchase_manager'))]"/>
+    </record>
+
+    <record id="account.menu_finance_payables" model="ir.ui.menu">
+        <field name="name">Vendor Operations</field>
+        <field name="parent_id" eval="ref('purchase.menu_purchase_root')"/>
+        <field name="sequence">1</field>
+        <field name="groups_id"
+               eval="[(4, ref('purchase_users.group_purchase_gen_user')),(4, ref('purchase.group_purchase_user')),(4, ref('purchase.group_purchase_manager'))]"/>
+    </record>
+
+    <record id="purchase.menu_purchase_control" model="ir.ui.menu">
+        <field name="name">Control Operations</field>
+        <field name="groups_id"
+               eval="[(4, ref('purchase_users.group_purchase_gen_user')),(4, ref('purchase.group_purchase_user')),(4, ref('purchase.group_purchase_manager'))]"/>
+    </record>
+
+    <record id="purchase.menu_action_picking_tree_in_move" model="ir.ui.menu">
+        <field name="name">Incoming Products</field>
+        <field name="groups_id"
+               eval="[(4, ref('purchase_users.group_purchase_gen_user')),(4, ref('purchase.group_purchase_user')),(4, ref('purchase.group_purchase_manager'))]"/>
+    </record>
+
+    <record id="purchase.menu_procurement_management_pending_invoice" model="ir.ui.menu">
+        <field name="name">Vendor Bills</field>
+        <field name="groups_id"
+               eval="[(4, ref('purchase_users.group_purchase_gen_user')),(4, ref('purchase.group_purchase_user')),(4, ref('purchase.group_purchase_manager'))]"/>
+    </record>
+</odoo>
