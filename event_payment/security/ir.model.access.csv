@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
+evt_pay_sess_gen_user,evt_pay_sess_gen_user,emk_payment.model_payment_session,event.group_event_user,1,0,0,0
 evt_pay_sess_adm,evt_pay_sess_adm,emk_payment.model_payment_session,event_user.group_event_officer,1,1,1,1
 evt_pay_sess_mng,evt_pay_sess_mng,emk_payment.model_payment_session,event.group_event_manager,1,1,1,1
 
@@ -7,6 +8,7 @@ evt_inv_pay_usr,evt_inv_pay_usr,emk_payment.model_invoice_payment,event.group_ev
 evt_inv_pay_adm,evt_inv_pay_adm,emk_payment.model_invoice_payment,event_user.group_event_officer,1,1,1,1
 evt_inv_pay_mng,evt_inv_pay_mng,emk_payment.model_invoice_payment,event.group_event_manager,1,1,1,1
 
+evt_ser_pay_gen_user,evt_ser_pay_gen_user,emk_payment.model_service_payment,event.group_event_user,1,0,0,0
 evt_ser_pay_adm,evt_ser_pay_adm,emk_payment.model_service_payment,event_user.group_event_officer,1,1,1,1
 evt_ser_pay_mng,evt_ser_pay_mng,emk_payment.model_service_payment,event.group_event_manager,1,1,1,1
 
