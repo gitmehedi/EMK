@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="assets_common" name="static_resources_web_fix_chrome_export_xls"
+              inherit_id="web.assets_common">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/web_fix_chrome_export_xls/static/src/js/web_export_view_extend.js"></script>
+        </xpath>
+    </template>
+</odoo>

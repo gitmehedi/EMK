@@ -17,6 +17,10 @@
             <field name="context">{"search_default_filter_to_sell":1,'no_create_edit_button': True}</field>
         </record>
 
+<!--         <record id="gbs_service.product_template_service_action" model="ir.actions.act_window">-->
+<!--            <field name="context">{'no_create_edit_button': True}</field>-->
+<!--        </record>-->
+
 
     </data>
 </odoo>

@@ -13,18 +13,35 @@ class InheritedProductTemplate(models.Model):
 
         doc = etree.XML(res['arch'])
         no_create_edit_button = self.env.context.get('no_create_edit_button')
-        if not self.env.user.has_group('gbs_application_group.group_sales_product_manager'):
-            if no_create_edit_button:
-                if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
-                    for node_form in doc.xpath("//kanban"):
-                        node_form.set("create", 'false')
-                        node_form.set("edit", 'false')
-                    for node_form in doc.xpath("//tree"):
-                        node_form.set("create", 'false')
-                        node_form.set("edit", 'false')
-                    for node_form in doc.xpath("//form"):
-                        node_form.set("create", 'false')
-                        node_form.set("edit", 'false')
+        no_create_edit_button_service = self.env.context.get('no_create_edit_button_service')
+
+        group_ser = self.env.user.has_group('gbs_application_group.group_service_product_manager')
+        group_prod = self.env.user.has_group('gbs_application_group.group_sales_product_manager')
+
+        if no_create_edit_button and not self.env.user.has_group('gbs_application_group.group_sales_product_manager'):
+            if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
+                for node_form in doc.xpath("//kanban"):
+                    node_form.set("create", 'false')
+                    node_form.set("edit", 'false')
+                for node_form in doc.xpath("//tree"):
+                    node_form.set("create", 'false')
+                    node_form.set("edit", 'false')
+                for node_form in doc.xpath("//form"):
+                    node_form.set("create", 'false')
+                    node_form.set("edit", 'false')
+
+        if no_create_edit_button_service and not self.env.user.has_group('gbs_application_group.group_service_product_manager'):
+            if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
+                for node_form in doc.xpath("//kanban"):
+                    node_form.set("create", 'false')
+                    node_form.set("edit", 'false')
+                for node_form in doc.xpath("//tree"):
+                    node_form.set("create", 'false')
+                    node_form.set("edit", 'false')
+                for node_form in doc.xpath("//form"):
+                    node_form.set("create", 'false')
+                    node_form.set("edit", 'false')
+
         res['arch'] = etree.tostring(doc)
         return res
 
@@ -35,6 +52,3 @@ class InheritedProductTemplate(models.Model):
             self.message_post(body="Product Template Activated")
         res = super(InheritedProductTemplate, self).toggle_active()
         return res
-
-
-

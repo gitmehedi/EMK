@@ -1,5 +1,6 @@
 from odoo import api, fields, models
 from datetime import datetime
+from odoo.exceptions import Warning, UserError, ValidationError
 
 class InvoiceExportWizard(models.TransientModel):
     _name = 'invoice.export.wizard.foreign'
@@ -36,11 +37,21 @@ class InvoiceExportWizard(models.TransientModel):
         form_id = self.env.context.get('active_id')
         shipment_pool = self.env['purchase.shipment']
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
+        pi_ids = shipment_obj.lc_id.pi_ids_temp
+        so_invoice_ids = []
+        for pi_id in pi_ids:
+            sale_order = self.env['sale.order'].search([('pi_id', '=', pi_id.id)])
+            for inv in sale_order.invoice_ids:
+                so_invoice_ids.append(inv.id)
+
         if shipment_obj:
             total_amount = 0.0
             total_qty = 0
             for invoice_id in self.invoice_ids:
-                total_amount += invoice_id.amount_total
+                if invoice_id.id not in so_invoice_ids:
+                    raise UserError('Please select valid invoices')
+
+                total_amount += invoice_id.residual
                 for invoice_line_id in invoice_id.invoice_line_ids:
                     total_qty += invoice_line_id.quantity
 
@@ -104,7 +115,7 @@ class InvoiceExportWizard(models.TransientModel):
         total_amount = 0
         total_qty = 0
         for invoice_id in self.invoice_ids:
-            total_amount += invoice_id.amount_total
+            total_amount += invoice_id.residual
             for invoice_line_id in invoice_id.invoice_line_ids:
                 total_qty += invoice_line_id.quantity
         self.invoice_value = total_amount

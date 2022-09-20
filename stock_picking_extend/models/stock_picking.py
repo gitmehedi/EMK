@@ -129,6 +129,12 @@ class Picking(models.Model):
 
         return super(Picking, self).do_new_transfer()
 
+    # @api.multi
+    # def do_transfer(self):
+    #     res = super(Picking, self).do_transfer()
+    #     self.write({'challan_bill_no': 'SHOAIB'})
+    #     return res
+
     def recheck_availability(self):
         """ First of all, unreserve the qty
             Then reserve the qty again

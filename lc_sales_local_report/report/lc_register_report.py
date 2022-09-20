@@ -485,7 +485,7 @@ class LcRegisterXLSX(ReportXlsx):
                         LEFT JOIN account_invoice_stock_picking_rel as aispr ON aispr.stock_picking_id = sp.id 
                         LEFT JOIN account_invoice ai ON ai.id = aispr.account_invoice_id
                         LEFT JOIN stock_pack_operation as spo ON spo.picking_id = sp.id
-                        where ai.id in (%s) order by sp.date_done DESC
+                        where ai.id in (%s) and sp.state='done' order by sp.date_done DESC
                         """ % purchase_shipment_inv
                 self.env.cr.execute(query)
                 query_res = self.env.cr.dictfetchall()
@@ -495,14 +495,14 @@ class LcRegisterXLSX(ReportXlsx):
                 LEFT JOIN stock_pack_operation as spo ON spo.picking_id = sp.id
                 where state='done' and sp.origin in (select name from sale_order as so
                 LEFT JOIN pi_lc_rel as plr on plr.pi_id = so.lc_id
-                where so.lc_id=%s)
+                where so.lc_id=%s) and sp.state='done'
                 """ % lc_id
                 self.env.cr.execute(query)
                 query_res = self.env.cr.dictfetchall()
         else:
             query = """select distinct sp.name as name, sp.min_date as min_date, sp.date_done as date_done, spo.qty_done as qty_delivered from stock_picking as sp 
                         LEFT JOIN stock_pack_operation as spo ON spo.picking_id = sp.id
-                        where origin='%s'
+                        where origin='%s' and sp.state='done'
                             """ % so_name
             self.env.cr.execute(query)
             query_res = self.env.cr.dictfetchall()
@@ -729,7 +729,7 @@ class LcRegisterXLSX(ReportXlsx):
             query = '''
                     SELECT distinct on (ps.id) ps.id as shipment_id, rp.name as party_name,rp2.name as executive_name,lpl.name as product_name, lc.name as lc_number, 
                     ps.name as shipment_no, coalesce(spl.product_qty,0) as shipment_qty, coalesce(ps.invoice_value,0) as shipment_amount, lc.tenure as tenure,
-                    ps.bl_date as doc_dispatch_to_party_date_foreign,coalesce((CURRENT_DATE-ps.to_buyer_date),0) as aging_first_acceptance_days_foreign,
+                    ps.bl_date as doc_dispatch_to_party_date_foreign,coalesce((CURRENT_DATE-ps.bl_date),0) as aging_first_acceptance_days_foreign,
                     date(ps.to_first_acceptance_date + INTERVAL '7 day') as to_buyer_bank_date_foreign,
                     ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_seller_bank_date as to_seller_bank_date,
                     coalesce((CURRENT_DATE-ps.to_buyer_bank_date),0) as aging_2nd_acceptance_days, 

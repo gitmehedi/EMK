@@ -30,7 +30,7 @@ class InvoiceExportWizard(models.TransientModel):
             total_amount = 0
             total_qty = 0
             for invoice_id in self.invoice_ids:
-                total_amount += invoice_id.amount_total
+                total_amount += invoice_id.residual
                 for invoice_line_id in invoice_id.invoice_line_ids:
                     total_qty += invoice_line_id.quantity
 
@@ -64,7 +64,7 @@ class InvoiceExportWizard(models.TransientModel):
                 purchase_shipment = self.env['purchase.shipment'].sudo().search([('invoice_ids', 'in', acc_inv.id)])
                 if not purchase_shipment:
                     inv_list.append(acc_inv.id)
-        return {'domain': {'invoice_ids': [('id', 'in', inv_list)]}}
+        return {'domain': {'invoice_ids': [('id', 'in', inv_list), ('state', '=', 'open')]}}
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):
@@ -78,7 +78,7 @@ class InvoiceExportWizard(models.TransientModel):
         total_amount = 0
         total_qty = 0
         for invoice_id in self.invoice_ids:
-            total_amount += invoice_id.amount_total
+            total_amount += invoice_id.residual
             for invoice_line_id in invoice_id.invoice_line_ids:
                 total_qty += invoice_line_id.quantity
         self.invoice_value = total_amount

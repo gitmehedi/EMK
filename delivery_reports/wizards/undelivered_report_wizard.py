@@ -1,12 +1,15 @@
 from datetime import datetime
 import pytz
 from odoo import api, fields, models, _
+import time
 
 class UndeliveredReportWizard(models.TransientModel):
     _name = 'undelivered.report.wizard'
 
     # date_today = fields.Date(string='Date', readonly=True, default=datetime.datetime.today())
-    date_today = fields.Date(string='Date', readonly=True, default=fields.Date.today())
+    date_today = fields.Date(string='Date', default=fields.Date.today())
+    date_from = fields.Date(string='Date From', readonly=True, required=True,
+                            default=time.strftime('%Y-%m-%d'))
     partner_id = fields.Many2one('res.partner', string='Customer', domain="([('customer','=','True')])")
     product_tmpl_id = fields.Many2one('product.template', string='Product', domain="([('sale_ok','=','True')])")
     product_id = fields.Many2one('product.product', string='Product Variant', domain="([('sale_ok','=','True')])")
