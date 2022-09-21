@@ -2,12 +2,6 @@
 <odoo>
     <data>
 
-
-        <menuitem id="cheque_received_accounting"
-                  name="Accounting"
-                  parent="gbs_samuda_account_access.menu_finance_unit"
-                  sequence="30" groups="gbs_accounting_cheque_received.group_cheque_receive_unit"/>
-
         <record model="ir.actions.act_window" id="cheque_received_action_from_accounting_unit">
             <field name="name">Cheque Received</field>
             <field name="res_model">accounting.cheque.received</field>
@@ -24,9 +18,9 @@
 
         <menuitem id="menu_inherited_unit_cheque_received"
                   name="Cheque Received" action="cheque_received_action_from_accounting_unit"
-                  parent="gbs_accounting_cheque_received.cheque_received_accounting"
+                  parent="gbs_samuda_account_access.menu_account_unit_accounting"
                   groups="gbs_accounting_cheque_received.group_cheque_receive_unit"
-                  sequence="1"/>
+                  sequence="3"/>
 
 
     </data>

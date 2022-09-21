@@ -103,6 +103,7 @@
         <field eval="0" name="perm_write"/>
         <field eval="1" name="perm_read"/>
         <field eval="0" name="perm_create"/>
+        <field name="active" eval="False"/>
     </record>
 
     <function name="write" model="ir.model.data">
