@@ -7,6 +7,9 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//button[@name='check_confirm_bank']" position="after">
+                        <button string="Export Excel" name="action_statement_print" class="oe_highlight" type="object"/>
+                    </xpath>
 
                     <xpath expr="//field[@name='name']" position="attributes">
                         <attribute name="attrs">{'required': [('is_petty_cash_journal', '!=', False)]}</attribute>

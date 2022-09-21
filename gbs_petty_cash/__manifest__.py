@@ -17,6 +17,7 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'report/petty_cash_report_xlsx_view.xml',
         'views/inherited_account_journal_view.xml',
         'views/inherited_account_bank_statement_view.xml',
         'views/petty_cash_dashboard.xml',

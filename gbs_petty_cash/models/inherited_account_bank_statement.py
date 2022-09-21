@@ -362,3 +362,7 @@ class InheritedAccountBankStatement(models.Model):
         #     moves_to_cancel.unlink()
         # if payment_to_cancel:
         #     payment_to_cancel.unlink()
+
+    @api.multi
+    def action_statement_print(self):
+        return self.env['report'].get_action(self, report_name='gbs_petty_cash.petty_cash_report_xlsx')
