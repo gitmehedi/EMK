@@ -41,12 +41,11 @@
                         <button name="duplicate_validate_action"
                                 string="Validate" type="object"
                                 class="oe_highlight"
-                                attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
-<!--                        <button name="duplicate_unreconcile_action"-->
-<!--                                string="Unreconcile" type="object"-->
-<!--                                class="oe_highlight"-->
-<!--                                attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>-->
-
+                                attrs="{'invisible':['|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                        <button name="duplicate_unreconcile_action"
+                                string="Unreconcile" type="object"
+                                class="oe_highlight"
+                                attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('show_reconcile_button', '=', True),('state', '!=', 'open')]}"/>
 
 
                     </xpath>
@@ -59,6 +58,14 @@
                         <field name="is_reconciled" invisible="1"/>
                         <field name="type_of_operation" invisible="1"/>
                     </xpath>
+
+                    <xpath expr="//sheet" position="after">
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                    </xpath>
+
 
                     <!--existing reconcile button-->
                     <xpath expr="//button[@name='%(account.action_bank_reconcile_bank_statements)d']"

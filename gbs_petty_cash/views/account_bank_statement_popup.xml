@@ -33,12 +33,23 @@
                                         <field name="sequence" invisible="1"/>
                                         <field name="name"/>
                                         <field name="account_id" string="Account"/>
-                                        <field name="partner_id" optional="show" string="Partner"/>
-                                        <field name="cost_center_id"/>
-                                        <field name="department_id"/>
-                                        <field name="operating_unit_id"/>
+                                        <field name="account_type_id" invisible="1"/>
+                                        <field name="account_type_id_partner_req" invisible="1"/>
+                                        <field name="partner_id" optional="show" string="Partner"
+                                               attrs="{'required':[('account_type_id_partner_req','=',True)]}"/>
+                                        <field name="account_type_id_cost_center_req" invisible="1"/>
+                                        <field name="cost_center_id"
+                                               attrs="{'required':[('account_type_id_cost_center_req','=',True)]}"/>
+                                        <field name="account_type_id_dept_req" invisible="1"/>
+                                        <field name="department_id"
+                                               attrs="{'required':[('account_type_id_dept_req','=',True)]}"/>
+                                        <field name="account_type_id_ou_req" invisible="1"/>
+                                        <field name="operating_unit_id"
+                                               attrs="{'required':[('account_type_id_ou_req','=',True)]}"/>
+                                        <field name="account_type_id_analytic_acc_req" invisible="1"/>
                                         <field name="analytic_account_id" optional="show"
-                                               groups="analytic.group_analytic_accounting"/>
+                                               groups="analytic.group_analytic_accounting"
+                                               attrs="{'required':[('account_type_id_analytic_acc_req','=',True)]}"/>
                                         <field name="analytic_tag_ids" optional="show" widget="many2many_tags"
                                                invisible="1"
                                         />
@@ -86,6 +97,10 @@
                             <button special="cancel" string="Cancel" class="btn-secondary"/>
                         </footer>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>

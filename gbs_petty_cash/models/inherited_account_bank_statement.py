@@ -7,17 +7,23 @@ import time
 
 
 class InheritedAccountBankStatement(models.Model):
-    _inherit = 'account.bank.statement'
+    _name = 'account.bank.statement'
+    _inherit = ['account.bank.statement', 'mail.thread']
 
     @api.constrains('balance_start')
     def _check_balance_start_negative_val(self):
         if self.balance_start < 0:
-            raise ValidationError('Starting Balance can not be Negative')
+            raise ValidationError('Starting Balance can not be Negative!')
 
     @api.constrains('balance_end_real')
     def _check_balance_end_real_negative_val(self):
         if self.balance_end_real < 0:
-            raise ValidationError('Ending Balance can not be Negative')
+            raise ValidationError('Ending Balance can not be Negative!')
+
+    @api.constrains('difference')
+    def _check_amount_val(self):
+        if self.difference and self.difference != 0:
+            raise ValidationError('End Balance does not match. Difference with real end balance = %s' % self.difference)
 
     show_reconcile_button = fields.Boolean(default=True)
 
@@ -63,7 +69,7 @@ class InheritedAccountBankStatement(models.Model):
         if len(self.matched_move_line_ids.ids) > 1:
             raise ValidationError(_('You cannot add multiple lines!'))
 
-    matched_move_line_ids = fields.Many2many('account.move.line')
+    matched_move_line_ids = fields.Many2many('account.move.line', relation='bank_statement_matched_move_line')
 
     def get_move_line_vals(self, name, date, journal_id, account_id, operating_unit_id, department_id, cost_center_id,
                            debit, credit,
@@ -98,14 +104,7 @@ class InheritedAccountBankStatement(models.Model):
                 # 'company_id': company_id,
             }
 
-    def process_move_line_reconciliation(self, statement, matched_move_lines):
-        context = {'ir_sequence_date': statement.date}
-        if statement.journal_id.sequence_id:
-            st_number = statement.journal_id.sequence_id.with_context(**context).next_by_id()
-            if "OU" in st_number:
-                st_number = st_number.replace('OU', statement.journal_id.operating_unit_id.code)
-        else:
-            raise UserError(_("Petty Cash journal sequence not found!"))
+    def process_move_line_reconciliation(self, statement, matched_move_lines, st_number):
 
         # create move
         vals = {
@@ -196,9 +195,16 @@ class InheritedAccountBankStatement(models.Model):
     @api.multi
     def action_reconcile_stmt(self):
         statement = self.env['account.bank.statement'].browse(self.id)
+        context = {'ir_sequence_date': statement.date}
+        if statement.journal_id.sequence_id:
+            st_number = statement.journal_id.sequence_id.with_context(**context).next_by_id()
+            if "OU" in st_number:
+                st_number = st_number.replace('OU', statement.journal_id.operating_unit_id.code)
+        else:
+            raise UserError(_("Petty Cash journal sequence not found!"))
         # matched_move_line
         if self.matched_move_line_ids:
-            self.process_move_line_reconciliation(statement, self.matched_move_line_ids)
+            self.process_move_line_reconciliation(statement, self.matched_move_line_ids,st_number)
         elif self.matched_manual_ids:
             move_lines = []
             for manual_entry in self.matched_manual_ids:
@@ -241,13 +247,6 @@ class InheritedAccountBankStatement(models.Model):
                 move_lines.append((0, 0, aml_vals))
                 total_amount = total_amount + line.amount
 
-            context = {'ir_sequence_date': statement.date}
-            if statement.journal_id.sequence_id:
-                st_number = statement.journal_id.sequence_id.with_context(**context).next_by_id()
-                if "OU" in st_number:
-                    st_number = st_number.replace('OU', statement.journal_id.operating_unit_id.code)
-            else:
-                raise UserError(_("Petty Cash journal sequence not found!"))
             if len(move_lines) > 0:
                 vals = {
                     'name': st_number,
@@ -268,6 +267,16 @@ class InheritedAccountBankStatement(models.Model):
             raise UserError(_("No move line found for reconciliation!"))
 
     def action_reconcile_all(self):
+        for line in self.line_ids:
+            if line.amount == 0:
+                raise UserError(_("Transaction amount 0 cannot be taken!"))
+
+        self.env.cr.execute(
+            'delete from bank_statement_matched_move_line where account_bank_statement_id = %s' % self.id)
+
+        self.env.cr.execute(
+            'delete from account_bank_statement_manual where statement_id = %s' % self.id)
+
         ref = lambda name: self.env.ref(name).id
         context = dict(self._context)
         return {
@@ -314,54 +323,37 @@ class InheritedAccountBankStatement(models.Model):
         statements.write({'state': 'confirm', 'date_done': time.strftime("%Y-%m-%d %H:%M:%S")})
 
     def duplicate_unreconcile_action(self):
-        print('Unreconcile button called!')
-        # moves_to_cancel = self.env['account.move']
-        # payment_to_unreconcile = self.env['account.payment']
-        # payment_to_cancel = self.env['account.payment']
-        #
-        # for st in self:
-        #     moves_to_unbind = st.move_line_ids.mapped('move_id')
-        #     move_names = moves_to_unbind.mapped('name')
-        #     for move in moves_to_unbind:
-        #         for line in move.line_ids:
-        #             payment_to_unreconcile |= line.payment_id
-        #             if line.payment_id.payment_reference in move_names:
-        #                 # there can be several moves linked to a statement line but maximum one created by the line itself
-        #                 moves_to_cancel |= move
-        #                 payment_to_cancel |= line.payment_id
-        #
-        #     moves_to_unbind = moves_to_unbind - moves_to_cancel
-        #
-        #
-        # for st_line in self:
-        #     moves_to_unbind = st_line.journal_entry_ids
-        #     for move in st_line.journal_entry_ids:
-        #         for line in move.line_ids:
-        #             payment_to_unreconcile |= line.payment_id
-        #             if st_line.move_name and line.payment_id.payment_reference == st_line.move_name:
-        #                 # there can be several moves linked to a statement line but maximum one created by the line itself
-        #                 moves_to_cancel |= move
-        #                 payment_to_cancel |= line.payment_id
-        #
-        #     moves_to_unbind = moves_to_unbind - moves_to_cancel
-        #
-        #     if moves_to_unbind:
-        #         moves_to_unbind.write({'statement_line_id': False})
-        #         for move in moves_to_unbind:
-        #             move.line_ids.filtered(lambda x: x.statement_id == st_line.statement_id).write(
-        #                 {'statement_id': False})
-        #
-        # payment_to_unreconcile = payment_to_unreconcile - payment_to_cancel
-        # if payment_to_unreconcile:
-        #     payment_to_unreconcile.unreconcile()
-        #
-        # if moves_to_cancel:
-        #     for move in moves_to_cancel:
-        #         move.line_ids.remove_move_reconcile()
-        #     moves_to_cancel.button_cancel()
-        #     moves_to_cancel.unlink()
-        # if payment_to_cancel:
-        #     payment_to_cancel.unlink()
+        for st in self:
+            if not st.move_line_ids:
+                raise UserError(_("Reconciliation not done for this transaction!"))
+
+            moves_to_cancel = st.move_line_ids.mapped('move_id')
+            payment_to_cancel = self.env['account.payment']
+            # check if reconciles entries exist in move
+            for move in moves_to_cancel:
+                # ids = []
+                # for aml in move.line_ids:
+                #     if aml.account_id.reconcile:
+                #         ids.extend(
+                #             [r.debit_move_id.id for r in aml.matched_debit_ids] if aml.credit > 0 else [r.credit_move_id.id
+                #                                                                                         for r in
+                #                                                                                         aml.matched_credit_ids])
+                #         ids.append(aml)
+                # for aml in ids:
+                #     if aml.move_id.id != move.id:
+                #         aml.write({'full_reconcile_id':False})
+                for line in move.line_ids:
+                    payment_to_cancel |= line.payment_id
+
+                move.line_ids.remove_move_reconcile()
+                moves_to_cancel.button_cancel()
+                moves_to_cancel.unlink()
+                if payment_to_cancel:
+                    payment_to_cancel.unlink()
+
+                # if reconcile entries found existing invoice matching number set to False
+            st.write({'show_reconcile_button': True})
+
 
     @api.multi
     def action_statement_print(self):
