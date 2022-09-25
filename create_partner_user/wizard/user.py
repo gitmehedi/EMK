@@ -34,6 +34,7 @@ class CreateUser(models.TransientModel):
 
 class CreateUserData(models.TransientModel):
     _name='user.datas'
+
     rel_id = fields.Many2one('partner.user')
     partner_id = fields.Many2one('res.partner',string='Partner')
     login = fields.Char('Login')
