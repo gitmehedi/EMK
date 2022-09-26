@@ -12,9 +12,9 @@
         <menuitem id="menu_inherited_unit_unhonoured_cheque_received"
                   name="Cheques(Not Honoured)"
                   action="cheque_received_action_from_accounting_unit"
-                  parent="gbs_accounting_cheque_received.cheque_received_accounting"
+                  parent="gbs_samuda_account_access.menu_account_unit_accounting"
                   groups="gbs_accounting_cheque_received.group_cheque_receive_unit"
-                  sequence="2"/>
+                  sequence="4"/>
 
 
 

@@ -64,5 +64,5 @@ class PettyCashReportXLSX(ReportXlsx):
         sheet.write(row, col + 1, float(total), no_format_bold)
 
 
-PettyCashReportXLSX('report.gbs_samuda_petty_cash.petty_cash_report_xlsx',
+PettyCashReportXLSX('report.gbs_petty_cash.petty_cash_report_xlsx',
                     'account.bank.statement', parser=report_sxw.rml_parse)

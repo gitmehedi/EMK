@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inherit_account_bank_statement_form_" model="ir.ui.view">
+            <field name="name">inherit.account.bank.statement.view.form</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='check_confirm_bank']" position="after">
+                        <button string="Export Excel" name="action_statement_print" class="oe_highlight" type="object"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='name']" position="attributes">
+                        <attribute name="attrs">{'required': [('is_petty_cash_journal', '!=', False)]}</attribute>
+                    </xpath>
+
+                    <xpath expr="//field[@name='journal_id']" position="attributes">
+                        <attribute name="readonly">1</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='journal_id']" position="after">
+                        <field name="is_petty_cash_journal" invisible="1"/>
+                        <field name="id" invisible="1"/>
+                        <field name="show_reconcile_button" invisible="1"/>
+                    </xpath>
+
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="type_of_operation"
+                               attrs="{'required':[('is_petty_cash_journal','=',True)],'readonly':[('id','!=',False)],'invisible':[('is_petty_cash_journal','=',False)]}"/>
+                        <!--  <field name="type_of_operation"/>-->
+                    </xpath>
+
+
+                    <xpath expr="//button[@name='%(account.action_bank_reconcile_bank_statements)d']"
+                           position="after">
+                        <button name="action_reconcile_all"
+                                class="btn-danger mr24 oe_read_only"
+                                type="object"
+                                attrs="{'invisible':['|',('is_petty_cash_journal','=',False),('show_reconcile_button','=',False)]}"
+                                string="Reconcile"/>
+                        <button name="duplicate_validate_action"
+                                string="Validate" type="object"
+                                class="oe_highlight"
+                                attrs="{'invisible':['|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                        <button name="duplicate_unreconcile_action"
+                                string="Unreconcile" type="object"
+                                class="oe_highlight"
+                                attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('show_reconcile_button', '=', True),('state', '!=', 'open')]}"/>
+
+
+                    </xpath>
+
+
+                    <!--lines-->
+                    <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='amount']"
+                           position="after">
+                        <field name="is_petty_cash_journal" invisible="1"/>
+                        <field name="is_reconciled" invisible="1"/>
+                        <field name="type_of_operation" invisible="1"/>
+                    </xpath>
+
+                    <xpath expr="//sheet" position="after">
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                    </xpath>
+
+
+                    <!--existing reconcile button-->
+                    <xpath expr="//button[@name='%(account.action_bank_reconcile_bank_statements)d']"
+                           position="attributes">
+                        <attribute name="attrs">{
+                            'invisible': ['|', '|', ('line_ids', '=', []), ('state', '!=', 'open'),
+                                          ('is_petty_cash_journal', '=', True)]}</attribute>
+                    </xpath>
+
+
+                </data>
+            </field>
+        </record>
+
+        <!--modified view-->
+        <record id="view_bank_statement_tree_petty_cash" model="ir.ui.view">
+            <field name="name">account.bank.statement.tree.petty_cash</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="not is_difference_zero and state=='open'"
+                      decoration-info="state=='open' and is_difference_zero" string="Statements">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="journal_id"/>
+                    <field name="balance_start"/>
+                    <field name="balance_end_real"/>
+                    <field name="balance_end" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="state"/>
+                    <field name="is_difference_zero" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_bank_statement_search_petty_cash" model="ir.ui.view">
+            <field name="name">account.bank.statement.search.petty_cash</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <search string="Search Bank Statements">
+                    <field name="name" string="Bank Statement"/>
+                    <field name="date"/>
+                    <filter string="Draft" name="draft" domain="[('state','=','open')]"/>
+                    <filter string="Confirmed" domain="[('state','=','confirm')]"/>
+                    <field name="journal_id" domain="[('type', '=', 'bank')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Journal" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Status" context="{'group_by': 'state'}"/>
+                        <filter string="Date" context="{'group_by': 'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_bank_statement_tree_petty_cash" model="ir.actions.act_window">
+            <field name="name">Cash Registers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="view_id" ref="view_bank_statement_tree_petty_cash"/>
+            <field name="search_view_id" ref="view_bank_statement_search_petty_cash"/>
+            <field name="domain">[('journal_id', '=', self.journal_id.id)]</field>
+            <field name="context">{'journal_type': 'cash'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new cash log.
+                </p>
+                <p>
+                    A Cash Register allows you to manage cash entries in your cash
+                    journals. This feature provides an easy way to follow up cash
+                    payments on a daily basis. You can enter the coins that are in
+                    your cash box, and then post entries when money comes in or
+                    goes out of the cash box.
+                </p>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
