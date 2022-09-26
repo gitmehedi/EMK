@@ -10,6 +10,8 @@ class InheritedAccountBankStatement(models.Model):
     _name = 'account.bank.statement'
     _inherit = ['account.bank.statement', 'mail.thread']
 
+    name = fields.Char(string='Reference', size=60, states={'open': [('readonly', False)]}, copy=False, readonly=True)
+
     @api.constrains('balance_start')
     def _check_balance_start_negative_val(self):
         if self.balance_start < 0:
@@ -25,7 +27,7 @@ class InheritedAccountBankStatement(models.Model):
         if self.difference and self.difference != 0:
             raise ValidationError('End Balance does not match. Difference with real end balance = %s' % self.difference)
 
-    show_reconcile_button = fields.Boolean(default=True)
+    petty_cash_reconciled = fields.Boolean(default=False)
 
     @api.depends('journal_id')
     def _check_journal(self):
@@ -188,7 +190,7 @@ class InheritedAccountBankStatement(models.Model):
                 new_aml = self.env['account.move.line'].with_context(check_move_validity=False).create(aml_vals)
             move.post()
             if move:
-                statement.write({'show_reconcile_button': False})
+                statement.write({'petty_cash_reconciled': True})
             payment.write({'payment_reference': move.name})
         return True
 
@@ -204,7 +206,7 @@ class InheritedAccountBankStatement(models.Model):
             raise UserError(_("Petty Cash journal sequence not found!"))
         # matched_move_line
         if self.matched_move_line_ids:
-            self.process_move_line_reconciliation(statement, self.matched_move_line_ids,st_number)
+            self.process_move_line_reconciliation(statement, self.matched_move_line_ids, st_number)
         elif self.matched_manual_ids:
             move_lines = []
             for manual_entry in self.matched_manual_ids:
@@ -262,7 +264,7 @@ class InheritedAccountBankStatement(models.Model):
 
                 move = self.env['account.move'].create(vals)
                 if move:
-                    statement.write({'show_reconcile_button': False})
+                    statement.write({'petty_cash_reconciled': True})
         else:
             raise UserError(_("No move line found for reconciliation!"))
 
@@ -293,7 +295,7 @@ class InheritedAccountBankStatement(models.Model):
     # duplicate_validate_action
     @api.multi
     def duplicate_validate_action(self):
-        if self.show_reconcile_button:
+        if not self.petty_cash_reconciled:
             raise UserError(_("Reconciliation not done!"))
         if self.journal_type == 'cash' and not self.currency_id.is_zero(self.difference):
             action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_view_account_bnk_stmt_check')
@@ -352,9 +354,22 @@ class InheritedAccountBankStatement(models.Model):
                     payment_to_cancel.unlink()
 
                 # if reconcile entries found existing invoice matching number set to False
-            st.write({'show_reconcile_button': True})
-
+            st.write({'petty_cash_reconciled': False})
 
     @api.multi
     def action_statement_print(self):
         return self.env['report'].get_action(self, report_name='gbs_petty_cash.petty_cash_report_xlsx')
+
+
+
+    @api.multi
+    def button_cancel(self):
+        for statement in self:
+            if statement.is_petty_cash_journal:
+                if statement.move_line_ids:
+                    raise UserError(_('A statement cannot be canceled when its lines are reconciled.'))
+            else:
+                if any(line.journal_entry_ids.ids for line in statement.line_ids):
+                    raise UserError(_('A statement cannot be canceled when its lines are reconciled.'))
+
+        self.state = 'open'

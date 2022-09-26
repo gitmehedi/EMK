@@ -21,7 +21,7 @@
                     <xpath expr="//field[@name='journal_id']" position="after">
                         <field name="is_petty_cash_journal" invisible="1"/>
                         <field name="id" invisible="1"/>
-                        <field name="show_reconcile_button" invisible="1"/>
+                        <field name="petty_cash_reconciled" invisible="1"/>
                     </xpath>
 
                     <xpath expr="//field[@name='company_id']" position="after">
@@ -36,19 +36,26 @@
                         <button name="action_reconcile_all"
                                 class="btn-danger mr24 oe_read_only"
                                 type="object"
-                                attrs="{'invisible':['|',('is_petty_cash_journal','=',False),('show_reconcile_button','=',False)]}"
+                                attrs="{'invisible':['|',('is_petty_cash_journal','=',False),('petty_cash_reconciled','=',True)]}"
                                 string="Reconcile"/>
                         <button name="duplicate_validate_action"
                                 string="Validate" type="object"
                                 class="oe_highlight"
-                                attrs="{'invisible':['|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                                attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open'),('petty_cash_reconciled','=',False)]}"/>
                         <button name="duplicate_unreconcile_action"
                                 string="Unreconcile" type="object"
                                 class="oe_highlight"
-                                attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('show_reconcile_button', '=', True),('state', '!=', 'open')]}"/>
-
-
+                                attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('petty_cash_reconciled', '=', False),('state', '!=', 'open')]}"/>
+<!--
+                        <button name="button_cancel_duplicate" states="confirm" string="Cancel Statement" attrs="{'invisible':[('is_petty_cash_journal','=',False)]}" type="object"/>
+                      <button name="button_cancel" states="confirm" attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement" type="object"/>-->
+<!--                    -->
                     </xpath>
+
+<!--                    <xpath expr="//button[@name='button_cancel']"-->
+<!--                           position="replace">-->
+<!--                        <button name="button_cancel" states="confirm" attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement" type="object"/>-->
+<!--                    </xpath>-->
 
 
                     <!--lines-->
@@ -80,6 +87,22 @@
             </field>
         </record>
 
+
+        <record id="inherit_account_bank_statement_tree_" model="ir.ui.view">
+            <field name="name">inherit.account.bank.statement.tree.form</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='date']" position="after">
+                        <field name="is_petty_cash_journal" invisible="1"/>
+                        <field name="type_of_operation" attrs="{'invisible':[('is_petty_cash_journal','=',False)]}"/>
+                    </xpath>
+
+                </data>
+            </field>
+        </record>
+
         <!--modified view-->
         <record id="view_bank_statement_tree_petty_cash" model="ir.ui.view">
             <field name="name">account.bank.statement.tree.petty_cash</field>
@@ -89,6 +112,7 @@
                       decoration-info="state=='open' and is_difference_zero" string="Statements">
                     <field name="name"/>
                     <field name="date"/>
+                    <field name="type_of_operation"/>
                     <field name="journal_id"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
