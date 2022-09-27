@@ -31,8 +31,9 @@
                                 <field name="matched_manual_ids" nolabel="1">
                                     <tree editable="bottom">
                                         <field name="sequence" invisible="1"/>
-                                        <field name="name"/>
-                                        <field name="account_id" string="Account"/>
+                                        <field name="account_id" string="Account" required="1"/>
+                                        <field name="name" required="1"/>
+                                        <field name="date" required="1"/>
                                         <field name="account_type_id" invisible="1"/>
                                         <field name="account_type_id_partner_req" invisible="1"/>
                                         <field name="partner_id" optional="show" string="Partner"
@@ -53,6 +54,7 @@
                                         <field name="analytic_tag_ids" optional="show" widget="many2many_tags"
                                                invisible="1"
                                         />
+                                        <field name="balance_readonly" readonly="1"/>
                                         <field name="balance" invisible="1"/>
 
                                         <field name="product_id" optional="hide" invisible="1"/>
@@ -84,12 +86,12 @@
                                     </form>
                                 </field>
                             </page>
-                            <page name="matched_invoices" string="Existing Entry Matching">
-                                <field name="matched_move_line_ids" nolabel="1"
-                                       context="{'tree_view_ref' : 'gbs_petty_cash.view_move_line_tree_custom'}"
-                                       domain="[('amount_residual','=', matched_balance),('reconciled','=', False), ('payment_id','=', False),('amount_residual','!=', 0), ('account_id.internal_type','!=', 'liquidity')]"/>
+<!--                            <page name="matched_invoices" string="Existing Entry Matching">-->
+<!--                                <field name="matched_move_line_ids" nolabel="1"-->
+<!--                                       context="{'tree_view_ref' : 'gbs_petty_cash.view_move_line_tree_custom'}"-->
+<!--                                       domain="[('amount_residual','=', matched_balance),('reconciled','=', False), ('payment_id','=', False),('amount_residual','!=', 0), ('account_id.internal_type','!=', 'liquidity')]"/>-->
 
-                            </page>
+<!--                            </page>-->
 
                         </notebook>
                         <footer>
