@@ -40,7 +40,13 @@ class AccountBankStatementManual(models.Model):
 
     balance = fields.Monetary('Amount', compute='calculate_balance')
 
-    partner_id = fields.Many2one('res.partner', domain="[('parent_id', '=', False)]")
+    def _get_partner(self):
+        partners = self.env['res.partner'].search(
+            ['|', ('customer', '=', True), ('supplier', '=', True), ('active', '=', True), ('parent_id', '=', False)])
+        domain = [("id", "in", partners.ids)]
+        return domain
+
+    partner_id = fields.Many2one('res.partner', domain=_get_partner)
     tax_ids = fields.Many2many('account.tax', string='Taxes', help="Taxes that apply on the base amount",
                                check_company=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
@@ -67,7 +73,6 @@ class AccountBankStatementManual(models.Model):
         departments = self.env['hr.department'].search([('company_id', '=', user_company.id)])
         domain = [("id", "in", departments.ids)]
         return domain
-
     department_id = fields.Many2one("hr.department", string="Department", domain=_get_department)
 
     def _get_operating_unit(self):
@@ -75,7 +80,6 @@ class AccountBankStatementManual(models.Model):
         return domain
 
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit', domain=_get_operating_unit)
-
 
     @api.onchange('account_id')
     def _onchange_account_id(self):

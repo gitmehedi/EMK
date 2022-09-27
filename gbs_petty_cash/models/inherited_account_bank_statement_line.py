@@ -7,6 +7,8 @@ from datetime import date, datetime
 class InheritedBankStatementLine(models.Model):
     _inherit = 'account.bank.statement.line'
 
+    name = fields.Char(string='Label', size=40, required=True)
+
     @api.constrains('date')
     def _check_date(self):
         if self.date:
@@ -17,6 +19,8 @@ class InheritedBankStatementLine(models.Model):
     @api.depends('type_of_operation', 'is_petty_cash_journal')
     @api.constrains('amount')
     def _check_amount_val(self):
+        if self.is_petty_cash_journal and self.amount == 0:
+            raise ValidationError('Transaction amount can not be 0')
         if self.is_petty_cash_journal and self.type_of_operation == 'cash_in' and self.amount < 0:
             raise ValidationError('Cash In amount can not be negative')
         elif self.is_petty_cash_journal and self.type_of_operation == 'cash_out' and self.amount > 0:
