@@ -82,5 +82,3 @@ class ResPartner(models.Model):
 
 
 
-
-
