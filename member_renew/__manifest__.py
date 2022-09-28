@@ -9,6 +9,7 @@
     'depends': [
         'mail',
         'account',
+        'analytic',
         'member_user',
         'member_signup',
         'server_action_permission',

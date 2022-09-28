@@ -139,8 +139,8 @@ class ResPartner(models.Model):
     def _compute_signup_valid(self):
         dt = now()
         for partner in self:
-            partner.signup_valid = bool(partner.signup_token) and \
-                                   (not partner.signup_expiration or dt <= partner.signup_expiration)
+            partner.sudo().signup_valid = bool(partner.sudo().signup_token) and \
+                                   (not partner.sudo().signup_expiration or dt <= partner.sudo().signup_expiration)
 
     @api.multi
     def _compute_signup_url(self):
@@ -227,7 +227,7 @@ class ResPartner(models.Model):
                     'account_id': journal_id.default_debit_account_id.id,
                 })]
         }
-        inv = ins_inv.create(acc_invoice)
+        inv = ins_inv.sudo().create(acc_invoice)
         inv.action_invoice_open()
 
         if inv:

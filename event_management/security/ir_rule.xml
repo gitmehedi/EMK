@@ -29,6 +29,19 @@
             <field eval="0" name="perm_unlink"></field>
             <field eval="1" name="perm_create"></field>
         </record>
+
+        <record id="rule_event_reservation_general_user" model="ir.rule">
+            <field name="name">Event: Event Reservation General User</field>
+            <field name="model_id" ref="model_event_reservation"></field>
+            <field name="groups" eval="[(4,ref('event.group_event_user'))]"></field>
+            <field name="domain_force">[('org_id.user_id','=',user.id)]</field>
+            <field eval="False" name="global"></field>
+            <field eval="1" name="perm_read"></field>
+            <field eval="1" name="perm_write"></field>
+            <field eval="0" name="perm_unlink"></field>
+            <field eval="1" name="perm_create"></field>
+        </record>
+
         <!--        <record id="rule_report_event_registration_organizer" model="ir.rule">-->
         <!--            <field name="name">Rule Report Event Registration Event Organizer</field>-->
         <!--            <field name="model_id" ref="event.model_report_event_registration"></field>-->
