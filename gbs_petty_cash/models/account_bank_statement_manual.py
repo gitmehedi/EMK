@@ -7,6 +7,7 @@ class AccountBankStatementManual(models.Model):
 
     sequence = fields.Integer()
     statement_id = fields.Many2one('account.bank.statement', ondelete='cascade')
+    date = fields.Date(string='Date', required=True)
     currency_id = fields.Many2one(related='statement_id.currency_id')
     company_id = fields.Many2one(related='statement_id.company_id')
     account_id = fields.Many2one('account.account', domain="[('deprecated', '=', False)]", check_company=True)
@@ -32,13 +33,14 @@ class AccountBankStatementManual(models.Model):
 
     name = fields.Char(string='Label')
 
-    @api.depends('statement_id')
-    def calculate_balance(self):
-        for rec in self:
-            if rec.statement_id:
-                rec.balance = rec.statement_id.matched_balance
+    # @api.depends('statement_id')
+    # def calculate_balance(self):
+    #     for rec in self:
+    #         if rec.statement_id:
+    #             rec.balance = rec.statement_id.matched_balance
 
-    balance = fields.Monetary('Amount', compute='calculate_balance')
+    balance = fields.Monetary('Amount')
+    balance_readonly=fields.Monetary('Amount')
 
     def _get_partner(self):
         partners = self.env['res.partner'].search(

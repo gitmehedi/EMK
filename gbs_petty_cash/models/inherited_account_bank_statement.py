@@ -59,17 +59,17 @@ class InheritedAccountBankStatement(models.Model):
             raise ValidationError(
                 _('Matched move lines and Manual journal entry both have lines! You can input one line betweeen these tabs!'))
 
-    @api.constrains('matched_manual_ids')
-    def _check_matched_manual_ids(self):
-        if len(self.matched_manual_ids.ids) > 1:
-            raise ValidationError(_('You cannot add multiple lines!'))
+    # @api.constrains('matched_manual_ids')
+    # def _check_matched_manual_ids(self):
+    #     if len(self.matched_manual_ids.ids) > 1:
+    #         raise ValidationError(_('You cannot add multiple lines!'))
 
     matched_manual_ids = fields.One2many('account.bank.statement.manual', 'statement_id')
 
-    @api.constrains('matched_move_line_ids')
-    def _check_matched_move_line_ids(self):
-        if len(self.matched_move_line_ids.ids) > 1:
-            raise ValidationError(_('You cannot add multiple lines!'))
+    # @api.constrains('matched_move_line_ids')
+    # def _check_matched_move_line_ids(self):
+    #     if len(self.matched_move_line_ids.ids) > 1:
+    #         raise ValidationError(_('You cannot add multiple lines!'))
 
     matched_move_line_ids = fields.Many2many('account.move.line', relation='bank_statement_matched_move_line')
 
@@ -121,7 +121,7 @@ class InheritedAccountBankStatement(models.Model):
             'ref': statement.name
         }
 
-        move = self.env['account.move'].create(vals)
+        move = self.env['account.move'].suspend_security().create(vals)
         total = self.matched_balance
         if matched_move_lines:
             # Create The payment
@@ -262,22 +262,31 @@ class InheritedAccountBankStatement(models.Model):
                     'ref': statement.name
                 }
 
-                move = self.env['account.move'].create(vals)
+                move = self.env['account.move'].suspend_security().create(vals)
                 if move:
                     statement.write({'petty_cash_reconciled': True})
         else:
             raise UserError(_("No move line found for reconciliation!"))
 
     def action_reconcile_all(self):
-        for line in self.line_ids:
-            if line.amount == 0:
-                raise UserError(_("Transaction amount 0 cannot be taken!"))
-
         self.env.cr.execute(
             'delete from bank_statement_matched_move_line where account_bank_statement_id = %s' % self.id)
 
         self.env.cr.execute(
             'delete from account_bank_statement_manual where statement_id = %s' % self.id)
+
+        for line in self.line_ids:
+            if line.amount == 0:
+                raise UserError(_("Transaction amount 0 cannot be taken!"))
+
+            self.env['account.bank.statement.manual'].suspend_security().create({
+                'statement_id': self.id,
+                'date': line.date,
+                'name': line.name,
+                'partner_id': line.partner_id.id,
+                'balance': line.amount,
+                'balance_readonly': line.amount
+            })
 
         ref = lambda name: self.env.ref(name).id
         context = dict(self._context)
@@ -359,8 +368,6 @@ class InheritedAccountBankStatement(models.Model):
     @api.multi
     def action_statement_print(self):
         return self.env['report'].get_action(self, report_name='gbs_petty_cash.petty_cash_report_xlsx')
-
-
 
     @api.multi
     def button_cancel(self):
