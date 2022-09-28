@@ -248,7 +248,7 @@ class MemberApplicationContoller(Home):
         db, login, password = request.env['res.users'].sudo().signup(data, values.get('token'))
         if login:
             groups = {
-                'grp_name': 'Applicants',
+                'grp_name': 'Member: Applicants',
                 'cat_name': 'Membership',
             }
             res_id = request.env['res.users'].sudo().create_temp_user(login, groups)

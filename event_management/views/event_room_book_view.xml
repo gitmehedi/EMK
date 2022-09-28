@@ -7,10 +7,10 @@
             <field name="arch" type="xml">
                 <form string="Event Room Booking">
                     <header>
-                        <button name="act_done" string="Done" type="object" class="oe_highlight"
-                                states="assign" />
-                        <button name="act_cancel" string="Cancel" type="object"
-                                states="assign"/>
+                        <button name="act_done" string="Done" type="object" class="oe_highlight" states="assign"
+                                groups="event_user.group_event_officer,event.group_event_manager"/>
+                        <button name="act_cancel" string="Cancel" type="object" states="assign"
+                                groups="event_user.group_event_officer,event.group_event_manager"/>
                         <field name="state" widget="statusbar" statusbar_visible="assign,done"/>
                     </header>
                     <sheet>
@@ -89,7 +89,7 @@
         </record>
 
         <menuitem name="Event Room Booking" id="menu_meeting_room_reservation" action="action_meeting_room_reservation"
-                  parent="menu_event_operations"  sequence="30"
+                  parent="menu_event_operations" sequence="30"
                   groups="event.group_event_user,event_user.group_event_officer,event.group_event_manager,event_user.group_event_organizer"
         />
     </data>

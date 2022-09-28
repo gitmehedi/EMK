@@ -1,6 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
-evt_type_usr,evt_type_usr,model_event_type,event.group_event_user,1,0,0,0
+event.access_event_type,event.type,event.model_event_type,event.group_event_user,1,0,0,0
 evt_type_adm,evt_type_adm,model_event_type,event_user.group_event_officer,1,1,1,1
 evt_type_mng,evt_type_mng,model_event_type,event.group_event_manager,1,1,1,1
 
@@ -21,7 +21,7 @@ evt_at_pf_adm,evt_at_pf_adm,model_attendee_profession,event_user.group_event_off
 evt_at_pf_mng,evt_at_pf_mng,model_attendee_profession,event.group_event_manager,1,1,1,1
 
 evt_rs_part_usr,evt_rs_part_usr,model_res_partner,event.group_event_user,1,0,0,0
-evt_rs_part_adm,evt_rs_part_adm,model_res_partner,event_user.group_event_officer,1,1,1,1
+evt_rs_part_adm,evt_rs_part_adm,model_res_partner,event_user.group_event_officer,1,0,0,0
 evt_rs_part_mng,evt_rs_part_mng,model_res_partner,event.group_event_manager,1,1,1,1
 
 evt_evt_cat_usr,evt_evt_cat_usr,model_event_category,event.group_event_user,1,0,0,0
@@ -32,7 +32,7 @@ event.access_event_registration,event.registration,model_event_registration,even
 evt_reg_adm,evt_reg_adm,event.model_event_registration,event_user.group_event_officer,1,1,1,1
 evt_reg_mng,evt_reg_mng,event.model_event_registration,event.group_event_manager,1,1,1,1
 
-evt_task_list_usr,evt_task_list_usr,model_event_task_list,event.group_event_user,1,0,0,0
+evt_task_list_usr,evt_task_list_usr,model_event_task_list,event.group_event_user,1,1,0,0
 evt_task_list_adm,evt_task_list_adm,model_event_task_list,event_user.group_event_officer,1,1,1,1
 evt_task_list_mng,evt_task_list_mng,model_event_task_list,event.group_event_manager,1,1,1,1
 
@@ -44,7 +44,7 @@ evt_room_book_usr,evt_room_book_usr,model_event_room_book,event.group_event_user
 evt_room_book_adm,evt_room_book_adm,model_event_room_book,event_user.group_event_officer,1,1,1,1
 evt_room_book_mng,evt_room_book_mng,model_event_room_book,event.group_event_manager,1,1,1,1
 
-evt_reservation_usr,evt_reservation_usr,model_event_reservation,event.group_event_user,1,0,0,0
+evt_reservation_usr,evt_reservation_usr,model_event_reservation,event.group_event_user,1,1,1,0
 evt_reservation_adm,evt_reservation_adm,model_event_reservation,event_user.group_event_officer,1,1,1,1
 evt_reservation_mng,evt_reservation_mng,model_event_reservation,event.group_event_manager,1,1,1,1
 
@@ -64,13 +64,9 @@ evt_pillar_usr,evt_pillar_usr,model_event_pillar,event.group_event_user,1,0,0,0
 evt_pillar_adm,evt_pillar_adm,model_event_pillar,event_user.group_event_officer,1,1,1,1
 evt_pillar_mng,evt_pillar_mng,model_event_pillar,event.group_event_manager,1,1,1,1
 
-evt_poc_type_usr,evt_pillar_usr,model_event_poc_type,event.group_event_user,1,0,0,0
-evt_poc_type_adm,evt_pillar_adm,model_event_poc_type,event_user.group_event_officer,1,1,1,1
-evt_poc_type_mng,evt_pillar_mng,model_event_poc_type,event.group_event_manager,1,1,1,1
-
-evt_theme_usr,evt_theme_usr,model_event_theme,event.group_event_user,1,0,0,0
-evt_theme_adm,evt_theme_adm,model_event_theme,event_user.group_event_officer,1,1,1,1
-evt_theme_mng,evt_theme_mng,model_event_theme,event.group_event_manager,1,1,1,1
+evt_poc_type_usr,evt_poc_type_usr,model_event_poc_type,event.group_event_user,1,0,0,0
+evt_poc_type_adm,evt_poc_type_adm,model_event_poc_type,event_user.group_event_officer,1,1,1,1
+evt_poc_type_mng,evt_poc_type_mng,model_event_poc_type,event.group_event_manager,1,1,1,1
 
 evt_theme_usr,evt_theme_usr,model_event_theme,event.group_event_user,1,0,0,0
 evt_theme_adm,evt_theme_adm,model_event_theme,event_user.group_event_officer,1,1,1,1
