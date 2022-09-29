@@ -12,6 +12,7 @@ class MrrReport(models.AbstractModel):
         picking = self.env['stock.picking'].search(
             ['|', ('name', '=', data['origin']), ('origin', '=', data['origin'])], limit=1, order='id asc')
         new_picking = self.env['stock.picking'].search([('id', '=', data['self_picking_id'])])
+
         mrr_date = report_utility_pool.getERPDateFormat(report_utility_pool.getDateFromStr(data['mrr_date']))
         data['address'] = report_utility_pool.getAddressByUnit(picking.operating_unit_id)
         pack_list = []
@@ -63,13 +64,24 @@ class MrrReport(models.AbstractModel):
             formated_challan_date = report_utility_pool.get_date_from_string(new_picking.challan_date)
         else:
             formated_challan_date = ''
+
+        challan_nos = ''
+        challan_dates = ''
+        for move in new_picking.move_lines:
+            if move.challan_bill_no:
+                if not move.challan_bill_no in challan_nos:
+                    challan_nos = challan_nos + ',' + move.challan_bill_no
+            if move.challan_date:
+                if not str(move.challan_date) in challan_dates:
+                    challan_dates = challan_dates + ',' + str(move.challan_date)
+
         docargs = {
             'lists': pack_list,
             'mrr_no': data['mrr_no'],
             'mrr_date': mrr_date,
             'customer': customer,
-            'challan': new_picking.challan_bill_no,
-            'challan_date': formated_challan_date,
+            'challan': challan_nos,
+            'challan_date': challan_dates,
             'po_no': po_no_str,
             'po_date': po_date,
             'total_amount': formatLang(self.env, total),
