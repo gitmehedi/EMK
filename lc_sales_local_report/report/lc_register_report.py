@@ -455,7 +455,7 @@ class LcRegisterXLSX(ReportXlsx):
                 if n == 27:
                     if str(obj.filter_by) == "percentage_of_first_acceptance_collection" and condition_above_row > 0:
                         footer_percentage = (float(condition_above_row) / float(percent_number_of_row)) * 100
-                        sheet.write(row, 27, str(footer_percentage) + "(%)", name_border_format_colored_bold)
+                        sheet.write(row, 27, str(round(footer_percentage,2)) + "%", name_border_format_colored_bold)
                     else:
                         sheet.write(row, 27, '0.00', name_border_format_colored_bold)
 
@@ -740,7 +740,7 @@ class LcRegisterXLSX(ReportXlsx):
                     ps.bl_date as doc_dispatch_to_party_date_foreign,coalesce((CURRENT_DATE-ps.bl_date),0) as aging_first_acceptance_days_foreign,
                     date(ps.to_first_acceptance_date + INTERVAL '7 day') as to_buyer_bank_date_foreign,
                     ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_seller_bank_date as to_seller_bank_date,
-                    coalesce((CURRENT_DATE-ps.to_buyer_bank_date),0) as aging_2nd_acceptance_days, 
+                    coalesce((CURRENT_DATE-ps.to_seller_bank_date),0) as aging_2nd_acceptance_days, 
                     rc.name as currency, 
                     lc.id as lc_id, lc.shipment_date as shipment_date, lc.expiry_date as expiry_date, ps.doc_preparation_date as doc_preparation_date,
                     lc.issue_date as lc_date,coalesce(lc.lc_value,0) as lc_amount,lc.region_type as region_type,
