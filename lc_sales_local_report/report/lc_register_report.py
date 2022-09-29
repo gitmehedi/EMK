@@ -61,23 +61,24 @@ class LcRegisterXLSX(ReportXlsx):
         sheet.write(7, 24, "Doc. submit to Party Date/1st Acceptance", header_format_left)
         sheet.write(7, 25, "First Acceptance Doc. Collection  Date", header_format_left)
         sheet.write(7, 26, "Aging (Days) First Acceptance", header_format_left)
-        sheet.write(7, 27, "Seller Bank Receive", header_format_left)
-        sheet.write(7, 28, "To Buyer Bank", header_format_left)
-        sheet.write(7, 29, "Aging (Days) 2nd Acceptance", header_format_left)
-        sheet.write(7, 30, "Maturity Date", header_format_left)
-        sheet.write(7, 31, "Shipment Done Date", header_format_left)
-        sheet.write(7, 32, "Discrepancy Amount", header_format_left)
-        sheet.write(7, 33, "AIT Amount", header_format_left)
-        sheet.write(7, 34, "Payment Rec. Date", header_format_left)
-        sheet.write(7, 35, "Payment Rec. Amount", header_format_left)
-        sheet.write(7, 36, "Payment Rec. Amount in BDT", header_format_left)
-        sheet.write(7, 37, "Payment Charge", header_format_left)
-        sheet.write(7, 38, "Discrepancy Details", header_format_left)
-        sheet.write(7, 39, "Aging /(Days) Final Payment", header_format_left)
-        sheet.write(7, 40, "Party Bank & Branch", header_format_left)
-        sheet.write(7, 41, "Samuda Bank Name", header_format_left)
-        sheet.write(7, 42, "Packing Type", header_format_left)
-        sheet.write(7, 43, "Bill ID NO", header_format_left)
+        sheet.write(7, 27, "Percentage of 1st Acceptance in a period or month", header_format_left)
+        sheet.write(7, 28, "Seller Bank Receive", header_format_left)
+        sheet.write(7, 29, "To Buyer Bank", header_format_left)
+        sheet.write(7, 30, "Aging (Days) 2nd Acceptance", header_format_left)
+        sheet.write(7, 31, "Maturity Date", header_format_left)
+        sheet.write(7, 32, "Shipment Done Date", header_format_left)
+        sheet.write(7, 33, "Discrepancy Amount", header_format_left)
+        sheet.write(7, 34, "AIT Amount", header_format_left)
+        sheet.write(7, 35, "Payment Rec. Date", header_format_left)
+        sheet.write(7, 36, "Payment Rec. Amount", header_format_left)
+        sheet.write(7, 37, "Payment Rec. Amount in BDT", header_format_left)
+        sheet.write(7, 38, "Payment Charge", header_format_left)
+        sheet.write(7, 39, "Discrepancy Details", header_format_left)
+        sheet.write(7, 40, "Aging /(Days) Final Payment", header_format_left)
+        sheet.write(7, 41, "Party Bank & Branch", header_format_left)
+        sheet.write(7, 42, "Samuda Bank Name", header_format_left)
+        sheet.write(7, 43, "Packing Type", header_format_left)
+        sheet.write(7, 44, "Bill ID NO", header_format_left)
 
     def set_sheet_table_data(self, obj, sheet, workbook, datas):
         ReportUtility = self.env['report.utility']
@@ -111,6 +112,7 @@ class LcRegisterXLSX(ReportXlsx):
         footer_payment_rec_amount = 0.0
         footer_payment_rec_amount_in_bdt = 0.0
         sl = 0
+        percent_number_of_row = 0
         row = 7
         condition_above_row = 0
         lc_list = []
@@ -224,73 +226,76 @@ class LcRegisterXLSX(ReportXlsx):
                         aging_days = 0
                     sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
 
+                percentage_of_first_acceptance_days = data['percentage_of_first_acceptance'] if 'percentage_of_first_acceptance' in data else '0'
+                sheet.write(row, 27, percentage_of_first_acceptance_days, name_border_format_colored_text_right)
+                if percentage_of_first_acceptance_days > 0:
+                    percent_number_of_row += 1
                 if str(obj.filter_by) == "percentage_of_first_acceptance_collection":
-                    if int(aging_days) > int(obj.acceptance_default_value):
+                    if int(percentage_of_first_acceptance_days) > int(obj.acceptance_default_value):
                         condition_above_row += 1
 
-
-                sheet.write(row, 27, ReportUtility.get_date_from_string(
+                sheet.write(row, 28, ReportUtility.get_date_from_string(
                         data['to_seller_bank_date']) if 'to_seller_bank_date' in data else '',
                                 name_border_format_colored_text_right)
 
                 if region_type == 'local':
-                    sheet.write(row, 28, ReportUtility.get_date_from_string(
+                    sheet.write(row, 29, ReportUtility.get_date_from_string(
                         data['to_buyer_bank_date']) if 'to_buyer_bank_date' in data else '',
                                 name_border_format_colored_text_right)
                 elif region_type == 'foreign':
-                    sheet.write(row, 28, ReportUtility.get_date_from_string(
+                    sheet.write(row, 29, ReportUtility.get_date_from_string(
                         data['to_buyer_bank_date_foreign']) if 'to_buyer_bank_date_foreign' in data else '',
                                 name_border_format_colored_text_right)
 
                 if region_type == 'local':
-                    sheet.write(row, 29, data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else '0',
+                    sheet.write(row, 30, data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else '0',
                                 name_border_format_colored_text_right)
                     footer_aging_2nd_acceptance_days += data[
                         'aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else 0
                 elif region_type == 'foreign':
-                    sheet.write(row, 29, 'N/A', name_border_format_colored)
+                    sheet.write(row, 30, 'N/A', name_border_format_colored)
 
-                sheet.write(row, 30,
+                sheet.write(row, 31,
                             ReportUtility.get_date_from_string(data['maturity_date']) if 'maturity_date' in data else '',
                             name_border_format_colored_text_right)
-                sheet.write(row, 31, ReportUtility.get_date_from_string(
+                sheet.write(row, 32, ReportUtility.get_date_from_string(
                     data['shipment_done_date']) if 'shipment_done_date' in data else '',
                             name_border_format_colored_text_right)
-                sheet.write(row, 32, data['discrepancy_amount'] if 'discrepancy_amount' in data else '0',
+                sheet.write(row, 33, data['discrepancy_amount'] if 'discrepancy_amount' in data else '0',
                             name_border_format_colored_text_right)
                 footer_discrepancy_amount += float(data['discrepancy_amount'] if 'discrepancy_amount' in data else 0)
                 if region_type == 'local':
-                    sheet.write(row, 33, data['ait_amount'] if 'ait_amount' in data else '0',
+                    sheet.write(row, 34, data['ait_amount'] if 'ait_amount' in data else '0',
                                 name_border_format_colored_text_right)
                     footer_ait_amount += float(data['ait_amount'] if 'ait_amount' in data else 0)
                 elif region_type == 'foreign':
-                    sheet.write(row, 33, 'N/A', name_border_format_colored)
+                    sheet.write(row, 34, 'N/A', name_border_format_colored)
 
-                sheet.write(row, 34, ReportUtility.get_date_from_string(
+                sheet.write(row, 35, ReportUtility.get_date_from_string(
                     data['payment_rec_date']) if 'payment_rec_date' in data else '', name_border_format_colored_text_right)
-                sheet.write(row, 35, data['payment_rec_amount'] if 'payment_rec_amount' in data else '0',
+                sheet.write(row, 36, data['payment_rec_amount'] if 'payment_rec_amount' in data else '0',
                             name_border_format_colored_text_right)
                 payment_rec_amount_in_bdt = self.get_amount_in_bdt(
                     data['payment_rec_amount'] if 'shipment_amount' in data else '',
                     data['currency'] if 'currency' in data else '')
-                sheet.write(row, 36, payment_rec_amount_in_bdt,
+                sheet.write(row, 37, payment_rec_amount_in_bdt,
                             name_border_format_colored_text_right)
                 footer_payment_rec_amount += float(data['payment_rec_amount'] if 'payment_rec_amount' in data else 0)
                 footer_payment_rec_amount_in_bdt += payment_rec_amount_in_bdt
-                sheet.write(row, 37, data['payment_charge'] if 'payment_charge' in data else '0',
+                sheet.write(row, 38, data['payment_charge'] if 'payment_charge' in data else '0',
                             name_border_format_colored_text_right)
                 footer_payment_charge += float(data['payment_charge'] if 'payment_charge' in data else 0)
-                sheet.write(row, 38, data['comment'] if 'comment' in data else '', name_border_format_colored)
-                sheet.write(row, 39, date_subtract_date_to_days(
+                sheet.write(row, 39, data['comment'] if 'comment' in data else '', name_border_format_colored)
+                sheet.write(row, 40, date_subtract_date_to_days(
                     ReportUtility.get_date_from_string(data['shipment_done_date']) if 'shipment_done_date' in data else '',
                     ReportUtility.get_date_from_string(data['maturity_date']) if 'maturity_date' in data else ''),
                             name_border_format_colored_text_right)
-                sheet.write(row, 40, data['second_party_bank'] if 'second_party_bank' in data else '',
+                sheet.write(row, 41, data['second_party_bank'] if 'second_party_bank' in data else '',
                             name_border_format_colored)
-                sheet.write(row, 41, data['samuda_bank_name'] if 'samuda_bank_name' in data else '',
+                sheet.write(row, 42, data['samuda_bank_name'] if 'samuda_bank_name' in data else '',
                             name_border_format_colored)
-                sheet.write(row, 42, data['packing_type'] if 'packing_type' in data else '', name_border_format_colored)
-                sheet.write(row, 43, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
+                sheet.write(row, 43, data['packing_type'] if 'packing_type' in data else '', name_border_format_colored)
+                sheet.write(row, 44, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
 
 
                 # shipment not create line
@@ -360,75 +365,75 @@ class LcRegisterXLSX(ReportXlsx):
                         aging_days = 0
                         sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
 
+                    sheet.write(row, 27, '', name_border_format_colored_text_right)
 
-
-                    sheet.write(row, 27, ReportUtility.get_date_from_string(
+                    sheet.write(row, 28, ReportUtility.get_date_from_string(
                             data['to_seller_bank_date']) if 'to_seller_bank_date' in data else '',
                                     name_border_format_colored_text_right)
 
                     if region_type == 'local':
-                        sheet.write(row, 28, ReportUtility.get_date_from_string(
+                        sheet.write(row, 29, ReportUtility.get_date_from_string(
                             data['to_buyer_bank_date']) if 'to_buyer_bank_date' in data else '',
                                     name_border_format_colored_text_right)
                     elif region_type == 'foreign':
-                        sheet.write(row, 28, ReportUtility.get_date_from_string(
+                        sheet.write(row, 29, ReportUtility.get_date_from_string(
                             data['to_buyer_bank_date_foreign']) if 'to_buyer_bank_date_foreign' in data else '',
                                     name_border_format_colored_text_right)
 
                     if region_type == 'local':
-                        sheet.write(row, 29,data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else '0',
+                        sheet.write(row, 30,data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else '0',
                                     name_border_format_colored_text_right)
                         footer_aging_2nd_acceptance_days += data['aging_2nd_acceptance_days'] if 'aging_2nd_acceptance_days' in data else 0
                     elif region_type == 'foreign':
-                        sheet.write(row, 29, 'N/A', name_border_format_colored)
+                        sheet.write(row, 30, 'N/A', name_border_format_colored)
 
-                    sheet.write(row, 30, ReportUtility.get_date_from_string(
+                    sheet.write(row, 31, ReportUtility.get_date_from_string(
                         data['maturity_date']) if 'maturity_date' in data else '',
                                 name_border_format_colored_text_right)
-                    sheet.write(row, 31, ReportUtility.get_date_from_string(
+                    sheet.write(row, 32, ReportUtility.get_date_from_string(
                         data['shipment_done_date']) if 'shipment_done_date' in data else '',
                                 name_border_format_colored_text_right)
-                    sheet.write(row, 32, data['discrepancy_amount'] if 'discrepancy_amount' in data else '0',
+                    sheet.write(row, 33, data['discrepancy_amount'] if 'discrepancy_amount' in data else '0',
                                 name_border_format_colored_text_right)
                     footer_discrepancy_amount += float(data['discrepancy_amount'] if 'discrepancy_amount' in data else 0)
                     if region_type == 'local':
-                        sheet.write(row, 33, data['ait_amount'] if 'ait_amount' in data else '0',
+                        sheet.write(row, 34, data['ait_amount'] if 'ait_amount' in data else '0',
                                     name_border_format_colored_text_right)
                         footer_ait_amount += float(data['ait_amount'] if 'ait_amount' in data else 0)
                     elif region_type == 'foreign':
-                        sheet.write(row, 33, 'N/A', name_border_format_colored)
+                        sheet.write(row, 34, 'N/A', name_border_format_colored)
 
-                    sheet.write(row, 34, ReportUtility.get_date_from_string(data['payment_rec_date']) if 'payment_rec_date' in data else '',
+                    sheet.write(row, 35, ReportUtility.get_date_from_string(data['payment_rec_date']) if 'payment_rec_date' in data else '',
                                 name_border_format_colored_text_right)
-                    sheet.write(row, 35, data['payment_rec_amount'] if 'payment_rec_amount' in data else '0',
+                    sheet.write(row, 36, data['payment_rec_amount'] if 'payment_rec_amount' in data else '0',
                                 name_border_format_colored_text_right)
                     payment_rec_amount_in_bdt = self.get_amount_in_bdt(
                         data['payment_rec_amount'] if 'shipment_amount' in data else '',
                         data['currency'] if 'currency' in data else '')
-                    sheet.write(row, 36, payment_rec_amount_in_bdt,
+                    sheet.write(row, 37, payment_rec_amount_in_bdt,
                                 name_border_format_colored_text_right)
                     footer_payment_rec_amount += float(data['payment_rec_amount'] if 'payment_rec_amount' in data else 0)
                     footer_payment_rec_amount_in_bdt += payment_rec_amount_in_bdt
-                    sheet.write(row, 37, data['payment_charge'] if 'payment_charge' in data else '0',
+                    sheet.write(row, 38, data['payment_charge'] if 'payment_charge' in data else '0',
                                 name_border_format_colored_text_right)
                     footer_payment_charge += float(data['payment_charge'] if 'payment_charge' in data else 0)
-                    sheet.write(row, 38, data['comment'] if 'comment' in data else '', name_border_format_colored)
-                    sheet.write(row, 39, date_subtract_date_to_days(ReportUtility.get_date_from_string(
+                    sheet.write(row, 39, data['comment'] if 'comment' in data else '', name_border_format_colored)
+                    sheet.write(row, 40, date_subtract_date_to_days(ReportUtility.get_date_from_string(
                         data['shipment_done_date']) if 'shipment_done_date' in data else '',
                                                                     ReportUtility.get_date_from_string(data[
                                                                                                            'maturity_date']) if 'maturity_date' in data else ''),
                                 name_border_format_colored_text_right)
-                    sheet.write(row, 40, data['second_party_bank'] if 'second_party_bank' in data else '',
+                    sheet.write(row, 41, data['second_party_bank'] if 'second_party_bank' in data else '',
                                 name_border_format_colored)
-                    sheet.write(row, 41, data['samuda_bank_name'] if 'samuda_bank_name' in data else '',
+                    sheet.write(row, 42, data['samuda_bank_name'] if 'samuda_bank_name' in data else '',
                                 name_border_format_colored)
-                    sheet.write(row, 42, data['packing_type'] if 'packing_type' in data else '', name_border_format_colored)
-                    sheet.write(row, 43, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
+                    sheet.write(row, 43, data['packing_type'] if 'packing_type' in data else '', name_border_format_colored)
+                    sheet.write(row, 44, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
 
         # footer
         row += 1
         for n in range(0, 44):
-            if n in (0, 8, 9, 11, 13, 14, 15, 16, 26, 29, 32, 33, 35, 36, 37):
+            if n in (0, 8, 9, 11, 13, 14, 15, 16, 26, 27, 30, 33, 34, 36, 37, 38):
                 if n == 0:
                     sheet.write(row, n, 'Total ', name_border_format_colored_bold)
                 if n == 8:
@@ -446,24 +451,27 @@ class LcRegisterXLSX(ReportXlsx):
                 if n == 16:
                     sheet.write(row, 16, footer_undelivery_qty, name_border_format_colored_bold)
                 if n == 26:
+                    sheet.write(row, 26, footer_aging_days, name_border_format_colored_bold)
+                if n == 27:
                     if str(obj.filter_by) == "percentage_of_first_acceptance_collection" and condition_above_row > 0:
-                        footer_percentage = (float(condition_above_row)/float(sl))*100
-                        sheet.write(row, 26, footer_percentage, name_border_format_colored_bold)
+                        footer_percentage = (float(condition_above_row) / float(percent_number_of_row)) * 100
+                        sheet.write(row, 27, str(round(footer_percentage,2)) + "%", name_border_format_colored_bold)
                     else:
-                        sheet.write(row, 26, footer_aging_days, name_border_format_colored_bold)
-                if n == 29:
-                    sheet.write(row, 29, footer_aging_2nd_acceptance_days, name_border_format_colored_bold)
+                        sheet.write(row, 27, '0.00', name_border_format_colored_bold)
 
-                if n == 32:
-                    sheet.write(row, 32, footer_discrepancy_amount, name_border_format_colored_bold)
+                if n == 30:
+                    sheet.write(row, 30, footer_aging_2nd_acceptance_days, name_border_format_colored_bold)
+
                 if n == 33:
-                    sheet.write(row, 33, footer_ait_amount, name_border_format_colored_bold)
-                if n == 35:
-                    sheet.write(row, 35, footer_payment_rec_amount, name_border_format_colored_bold)
+                    sheet.write(row, 33, footer_discrepancy_amount, name_border_format_colored_bold)
+                if n == 34:
+                    sheet.write(row, 34, footer_ait_amount, name_border_format_colored_bold)
                 if n == 36:
-                    sheet.write(row, 36, footer_payment_rec_amount_in_bdt, name_border_format_colored_bold)
+                    sheet.write(row, 36, footer_payment_rec_amount, name_border_format_colored_bold)
                 if n == 37:
-                    sheet.write(row, 37, footer_payment_charge, name_border_format_colored_bold)
+                    sheet.write(row, 37, footer_payment_rec_amount_in_bdt, name_border_format_colored_bold)
+                if n == 38:
+                    sheet.write(row, 38, footer_payment_charge, name_border_format_colored_bold)
             else:
                 sheet.write(row, n, '', name_border_format_colored_bold)
 
@@ -667,20 +675,20 @@ class LcRegisterXLSX(ReportXlsx):
 
         elif filter_by == 'first_acceptance':
             filter_by_text = '1st Acceptance'
-            where += "where CURRENT_DATE-(Date(ps.to_buyer_date)) > " + acceptance_default_value + " and ps.to_first_acceptance_date is null "
+            where += "where CURRENT_DATE-(Date(ps.to_first_acceptance_date)) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
 
         elif filter_by == 'second_acceptance':
             filter_by_text = "2nd Acceptance"
-            where += "where CURRENT_DATE - (Date(ps.to_second_acceptance_date)) > " + acceptance_default_value + " and ps.to_maturity_date is null "
+            where += "where CURRENT_DATE - (Date(ps.to_seller_bank_date)) > " + acceptance_default_value + " and ps.to_maturity_date is null "
 
         elif filter_by == 'maturated_but_amount_not_collect':
             filter_by_text = 'Matured but Amount not collected'
-            where += "where payment_rec_date is null and ps.to_seller_bank_date is not null "
+            where += "where ps.payment_rec_date is null and ps.to_maturity_date is not null "
         elif filter_by == 'percentage_of_first_acceptance_collection':
             filter_by_text = 'Percentage of First Acceptance Collection'
             where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' "
         elif filter_by == 'lc_history':
-            filter_by_text = 'LC History'
+            filter_by_text = 'LC Shipment History'
             where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' "
 
         type_text = ''
@@ -732,7 +740,7 @@ class LcRegisterXLSX(ReportXlsx):
                     ps.bl_date as doc_dispatch_to_party_date_foreign,coalesce((CURRENT_DATE-ps.bl_date),0) as aging_first_acceptance_days_foreign,
                     date(ps.to_first_acceptance_date + INTERVAL '7 day') as to_buyer_bank_date_foreign,
                     ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_seller_bank_date as to_seller_bank_date,
-                    coalesce((CURRENT_DATE-ps.to_buyer_bank_date),0) as aging_2nd_acceptance_days, 
+                    coalesce((CURRENT_DATE-ps.to_seller_bank_date),0) as aging_2nd_acceptance_days, 
                     rc.name as currency, 
                     lc.id as lc_id, lc.shipment_date as shipment_date, lc.expiry_date as expiry_date, ps.doc_preparation_date as doc_preparation_date,
                     lc.issue_date as lc_date,coalesce(lc.lc_value,0) as lc_amount,lc.region_type as region_type,
@@ -741,7 +749,8 @@ class LcRegisterXLSX(ReportXlsx):
                     ps.shipment_done_date as shipment_done_date, 
                     coalesce(ps.discrepancy_amount,0) as discrepancy_amount, coalesce(ps.ait_amount,0) as ait_amount, ps.payment_rec_date, coalesce(ps.payment_rec_amount,0) as payment_rec_amount, coalesce(ps.payment_charge,0) as payment_charge, 
                     ps.comment as comment, lc.second_party_bank as second_party_bank, rb.bic as samuda_bank_name,
-                    pu.name as packing_type, ps.bill_id as bill_id_no, coalesce(lpl.product_received_qty,0) as document_qty
+                    pu.name as packing_type, ps.bill_id as bill_id_no, coalesce(lpl.product_received_qty,0) as document_qty,
+                    coalesce((ps.to_first_acceptance_date-ps.to_buyer_date),0) as percentage_of_first_acceptance
                     FROM purchase_shipment AS ps 
                     LEFT JOIN letter_credit AS lc ON ps.lc_id = lc.id
                     LEFT JOIN res_partner AS rp ON rp.id = lc.second_party_applicant

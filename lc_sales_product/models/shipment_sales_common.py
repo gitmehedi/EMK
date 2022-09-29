@@ -77,7 +77,7 @@ class ShipmentCommon(models.Model):
 
             self.shipment_product_lines.unlink()
 
-        self.update({'state': 'draft', 'invoice_ids': False, 'invoice_value': 0})
+        self.sudo().update({'state': 'draft', 'invoice_ids': [(6, 0, [])], 'invoice_value': 0})
 
     @api.onchange('invoice_id')
     def _onchange_invoice_id(self):
