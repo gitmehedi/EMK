@@ -74,4 +74,19 @@
             </p>
         </field>
     </record>
+
+    <record id="inherit_view_pos_session_tree" model="ir.ui.view">
+        <field name="name">inherited_pos_session</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-info">state == 'opening_control'</attribute>
+                <attribute name="decoration-success">state=='opened'</attribute>
+                <attribute name="decoration-danger">state=='closing_control'</attribute>
+                <attribute name="decoration-muted">state=='closed'</attribute>
+                <attribute name="decoration-bf">state in ('opened','closing_control')</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>

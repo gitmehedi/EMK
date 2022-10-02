@@ -19,3 +19,15 @@ acc_acc_pay_mang,acc_acc_pay_mang,account.model_account_payment,membership_exten
 acc_report_mem_app,acc_report_mem_app,membership.model_report_membership,member_user.group_user_member,1,0,0,0
 acc_report_mem_off,acc_report_mem_off,membership.model_report_membership,member_user.group_mem_user_officer,1,1,1,0
 acc_report_mem_mang,acc_report_mem_mang,membership.model_report_membership,membership_extension.group_membership_manager,1,1,1,1
+
+acc_acc_ana_acc_app,acc_acc_ana_acc_app,analytic.model_account_analytic_account,member_user.group_user_member,1,0,0,0
+acc_acc_ana_acc_off,acc_acc_ana_acc_off,analytic.model_account_analytic_account,member_user.group_mem_user_officer,1,1,1,0
+acc_acc_ana_acc_mang,acc_acc_ana_acc_mang,analytic.model_account_analytic_account,membership_extension.group_membership_manager,1,1,1,1
+
+acc_acc_move_app,acc_acc_move_app,account.model_account_move,member_user.group_user_member,1,0,0,0
+acc_acc_move_off,acc_acc_move_off,account.model_account_move,member_user.group_mem_user_officer,1,1,1,0
+acc_acc_move_mang,acc_acc_move_mang,account.model_account_move,membership_extension.group_membership_manager,1,1,1,1
+
+acc_acc_move_li_app,acc_acc_move_li_app,account.model_account_move_line,member_user.group_user_member,1,0,0,0
+acc_acc_move_li_off,acc_acc_move_li_off,account.model_account_move_line,member_user.group_mem_user_officer,1,1,1,0
+acc_acc_move_li_mang,acc_acc_move_li_mang,account.model_account_move_line,membership_extension.group_membership_manager,1,1,1,1

@@ -11,15 +11,13 @@ class EmployeeCreditSaleWizard(models.TransientModel):
         return order.amount_total
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
+    credit_month_id = fields.Many2one('hr.ted.cafe.credit.sale', string='Month', required=True,
+                                      domain=[('state', '=', 'approve')])
     credit_amount = fields.Float(string='Credit Amount', required=True, default=_get_amount)
 
     @api.multi
     def process_credit_sale(self, ctx):
         order = self.env[ctx['active_model']].search([('id', '=', ctx['active_id'])])
-
-        credit_sale = self.env['hr.ted.cafe.credit.sale'].search([('state', '=', 'approve')])
-        if not credit_sale:
-            raise ValidationError(_("Please create an active credit sale for this month"))
 
         credit = {
             'employee_id': self.employee_id.id,
@@ -27,9 +25,9 @@ class EmployeeCreditSaleWizard(models.TransientModel):
             'pos_id': order.id,
             'amount': self.credit_amount,
             'state': 'applied',
-            'line_id': credit_sale.id,
+            'line_id': self.credit_month_id.id,
         }
-        line = credit_sale.line_ids.create(credit)
+        line = self.env['hr.ted.cafe.credit.sale'].line_ids.create(credit)
         order.write({'credit_sale_id': line.id})
 
         return {

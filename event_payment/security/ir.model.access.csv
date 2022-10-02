@@ -12,6 +12,7 @@ evt_ser_pay_gen_user,evt_ser_pay_gen_user,emk_payment.model_service_payment,even
 evt_ser_pay_adm,evt_ser_pay_adm,emk_payment.model_service_payment,event_user.group_event_officer,1,1,1,1
 evt_ser_pay_mng,evt_ser_pay_mng,emk_payment.model_service_payment,event.group_event_manager,1,1,1,1
 
+evt_acc_jour_gen_user,evt_acc_gen_user,account.model_account_journal,event.group_event_user,1,0,0,0
 evt_acc_jour_adm,evt_acc_jour_adm,account.model_account_journal,event_user.group_event_officer,1,1,1,1
 evt_acc_jour_mng,evt_acc_jour_mng,account.model_account_journal,event.group_event_manager,1,1,1,1
 
@@ -54,5 +55,3 @@ evt_acc_full_recon_mng,evt_acc_full_recon_mng,account.model_account_full_reconci
 evt_pro_tmpl_adm,evt_pro_tmpl_adm,account.model_product_template,event_user.group_event_officer,1,1,1,1
 evt_pro_tmpl_mng,evt_pro_tmpl_mng,account.model_product_template,event.group_event_manager,1,1,1,1
 
-evt_res_part_adm,evt_res_part_adm,base.model_res_partner,event_user.group_event_officer,1,1,1,1
-evt_res_part_mng,evt_res_part_mng,base.model_res_partner,event.group_event_manager,1,1,1,1

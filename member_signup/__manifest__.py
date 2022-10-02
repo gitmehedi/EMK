@@ -22,6 +22,7 @@
         'partner_fullname',
         'create_users',
         'account_configuration',
+        'gbs_gender',
     ],
     'data': [
         'security/ir.model.access.csv',

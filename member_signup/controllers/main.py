@@ -40,7 +40,7 @@ class MemberApplicationContoller(Home):
         }
 
     @http.route('/web/member_reset_password', type='http', auth='public', website=True)
-    def web_auth_reset_password(self, *args, **kw):
+    def member_auth_reset_password(self, *args, **kw):
         qcontext = self.get_signup_context()
 
         if not qcontext.get('token') and not qcontext.get('member_reset_password_enabled'):
@@ -248,7 +248,7 @@ class MemberApplicationContoller(Home):
         db, login, password = request.env['res.users'].sudo().signup(data, values.get('token'))
         if login:
             groups = {
-                'grp_name': 'Applicants',
+                'grp_name': 'Member: Applicants',
                 'cat_name': 'Membership',
             }
             res_id = request.env['res.users'].sudo().create_temp_user(login, groups)
