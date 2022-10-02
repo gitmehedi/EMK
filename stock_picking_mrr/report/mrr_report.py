@@ -75,6 +75,12 @@ class MrrReport(models.AbstractModel):
                 if not str(move.challan_date) in challan_dates:
                     challan_dates = challan_dates + ',' + str(move.challan_date)
 
+        if challan_nos:
+            if challan_nos[0] == ',':
+                challan_nos = challan_nos[1:]
+        if challan_dates:
+            if challan_dates[0] == ',':
+                challan_dates = challan_dates[1:]
         docargs = {
             'lists': pack_list,
             'mrr_no': data['mrr_no'],
