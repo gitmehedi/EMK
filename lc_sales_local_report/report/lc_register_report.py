@@ -541,9 +541,13 @@ class LcRegisterXLSX(ReportXlsx):
                     """ % lc_id
             self.env.cr.execute(query)
             query_res = self.env.cr.dictfetchall()
-            lc_qty = query_res[0]['lc_qty']
+
+            lc_qty = 0
+            a = query_res[0]['lc_qty']
+            if query_res[0]['lc_qty'] is not None:
+                lc_qty = query_res[0]['lc_qty']
             return lc_qty
-        return '0'
+        return 0
 
     def get_lc_pi_no(self, lc_id):
         if lc_id:
