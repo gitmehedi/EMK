@@ -20,7 +20,8 @@
     # always loaded
     'data': [
         'security/security.xml',
-        'views/inherited_vendor_bill.xml'
+        'views/inherited_vendor_bill.xml',
+        'views/inherited_customer_invoice.xml',
     ],
 
 }

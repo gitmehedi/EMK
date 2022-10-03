@@ -82,10 +82,14 @@ class InheritedAccountInvoiceLine(models.Model):
                 if self.env.user.has_group('gbs_invoices_using_picking_qty.group_vendor_invoice_editor'):
                     rec.can_edit_bill_line = True
             if rec.purchase_id.is_service_order:
-                rec.can_edit_invoice_line = True
+                rec.can_edit_bill_line = True
             if rec.purchase_id.cnf_quotation:
-                rec.can_edit_invoice_line = True
+                rec.can_edit_bill_line = True
             if not rec.invoice_id.from_po_form:
+                rec.can_edit_bill_line = True
+            if rec.invoice_id.type == 'out_refund':
+                rec.can_edit_invoice_line = True
+            if rec.invoice_id.type == 'in_refund':
                 rec.can_edit_invoice_line = True
 
     can_edit_bill_line = fields.Boolean(compute='check_group_vendor_invoice_editor', store=False)
@@ -96,11 +100,9 @@ class InheritedAccountInvoiceLine(models.Model):
             if rec.invoice_id.type == 'out_invoice':
                 if self.env.user.has_group('gbs_invoices_using_picking_qty.group_customer_invoice_editor'):
                     rec.can_edit_invoice_line = True
-            if rec.purchase_id.is_service_order:
-                rec.can_edit_invoice_line = True
-            if rec.purchase_id.cnf_quotation:
-                rec.can_edit_invoice_line = True
-            if not rec.invoice_id.from_po_form:
-                rec.can_edit_invoice_line = True
 
+            if rec.invoice_id.type == 'out_refund':
+                rec.can_edit_invoice_line = True
+            if rec.invoice_id.type == 'in_refund':
+                rec.can_edit_invoice_line = True
     can_edit_invoice_line = fields.Boolean(compute='check_group_customer_invoice_editor_editor', store=False)
