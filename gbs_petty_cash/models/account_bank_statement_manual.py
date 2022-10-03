@@ -31,7 +31,7 @@ class AccountBankStatementManual(models.Model):
     account_type_id_ou_req = fields.Boolean(compute='account_type_calc', store=False)
     account_type_id_analytic_acc_req = fields.Boolean(compute='account_type_calc', store=False)
 
-    name = fields.Char(string='Label')
+    name = fields.Char(string='Label', size=60)
 
     # @api.depends('statement_id')
     # def calculate_balance(self):
@@ -40,7 +40,7 @@ class AccountBankStatementManual(models.Model):
     #             rec.balance = rec.statement_id.matched_balance
 
     balance = fields.Monetary('Amount')
-    balance_readonly=fields.Monetary('Amount')
+    balance_readonly = fields.Monetary('Amount')
 
     def _get_partner(self):
         partners = self.env['res.partner'].search(
@@ -75,6 +75,7 @@ class AccountBankStatementManual(models.Model):
         departments = self.env['hr.department'].search([('company_id', '=', user_company.id)])
         domain = [("id", "in", departments.ids)]
         return domain
+
     department_id = fields.Many2one("hr.department", string="Department", domain=_get_department)
 
     def _get_operating_unit(self):

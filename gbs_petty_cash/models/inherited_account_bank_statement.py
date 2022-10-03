@@ -10,6 +10,16 @@ class InheritedAccountBankStatement(models.Model):
     _name = 'account.bank.statement'
     _inherit = ['account.bank.statement', 'mail.thread']
 
+    @api.model
+    def _default_opening_balance(self):
+        # Search last bank statement and set current opening balance as closing balance of previous one
+        journal_id = self._context.get('default_journal_id', False) or self._context.get('journal_id', False)
+        if journal_id:
+            return self._get_opening_balance(journal_id)
+        return 0
+
+    balance_start = fields.Monetary(string='Starting Balance', default=_default_opening_balance)
+
     name = fields.Char(string='Reference', size=60, states={'open': [('readonly', False)]}, copy=False, readonly=True)
 
     @api.constrains('balance_start')

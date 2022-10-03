@@ -10,9 +10,19 @@
                     <xpath expr="//button[@name='check_confirm_bank']" position="after">
                         <button string="Export Excel" name="action_statement_print" class="oe_highlight" type="object"/>
                     </xpath>
+                    <xpath expr="//button[@name='%(account.action_view_account_bnk_stmt_cashbox)d']" position="attributes">
+                        <attribute name="attrs">{'invisible': [('is_petty_cash_journal', '!=', False)]}</attribute>
+                    </xpath>
+
+
 
                     <xpath expr="//field[@name='name']" position="attributes">
                         <attribute name="attrs">{'required': [('is_petty_cash_journal', '!=', False)]}</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='balance_start']" position="attributes">
+                        <attribute name="attrs">{'readonly': ['|', ('is_petty_cash_journal', '!=', False),
+                                                              ('state', '=', 'confirm')]}</attribute>
+
                     </xpath>
 
                     <xpath expr="//field[@name='journal_id']" position="attributes">
@@ -46,16 +56,16 @@
                                 string="Unreconcile" type="object"
                                 class="oe_highlight"
                                 attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('petty_cash_reconciled', '=', False),('state', '!=', 'open')]}"/>
-<!--
-                        <button name="button_cancel_duplicate" states="confirm" string="Cancel Statement" attrs="{'invisible':[('is_petty_cash_journal','=',False)]}" type="object"/>
-                      <button name="button_cancel" states="confirm" attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement" type="object"/>-->
-<!--                    -->
+                        <!--
+                                                <button name="button_cancel_duplicate" states="confirm" string="Cancel Statement" attrs="{'invisible':[('is_petty_cash_journal','=',False)]}" type="object"/>
+                                              <button name="button_cancel" states="confirm" attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement" type="object"/>-->
+                        <!--                    -->
                     </xpath>
 
-<!--                    <xpath expr="//button[@name='button_cancel']"-->
-<!--                           position="replace">-->
-<!--                        <button name="button_cancel" states="confirm" attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement" type="object"/>-->
-<!--                    </xpath>-->
+                    <!--                    <xpath expr="//button[@name='button_cancel']"-->
+                    <!--                           position="replace">-->
+                    <!--                        <button name="button_cancel" states="confirm" attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement" type="object"/>-->
+                    <!--                    </xpath>-->
 
 
                     <!--lines-->
