@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gbs_invoices_using_picking_qty_gbs_invoices_using_picking_qty,gbs_invoices_using_picking_qty.gbs_invoices_using_picking_qty,model_gbs_invoices_using_picking_qty_gbs_invoices_using_picking_qty,,1,0,0,0
