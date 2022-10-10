@@ -541,9 +541,13 @@ class LcRegisterXLSX(ReportXlsx):
                     """ % lc_id
             self.env.cr.execute(query)
             query_res = self.env.cr.dictfetchall()
-            lc_qty = query_res[0]['lc_qty']
+
+            lc_qty = 0
+            a = query_res[0]['lc_qty']
+            if query_res[0]['lc_qty'] is not None:
+                lc_qty = query_res[0]['lc_qty']
             return lc_qty
-        return '0'
+        return 0
 
     def get_lc_pi_no(self, lc_id):
         if lc_id:
@@ -686,7 +690,7 @@ class LcRegisterXLSX(ReportXlsx):
             where += "where ps.payment_rec_date is null and ps.to_maturity_date is not null "
         elif filter_by == 'percentage_of_first_acceptance_collection':
             filter_by_text = 'Percentage of First Acceptance Collection'
-            where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' "
+            where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' and ps.to_first_acceptance_date is not null and ps.to_buyer_date is not null "
         elif filter_by == 'lc_history':
             filter_by_text = 'LC Shipment History'
             where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' "

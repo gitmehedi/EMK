@@ -68,7 +68,7 @@ class GBSStockScrap(models.Model):
                 'state': 'waiting_approval'
             }
             requested_date = self.requested_date
-            new_seq = self.env['ir.sequence'].next_by_code_new('stock.scraping',requested_date)
+            new_seq = self.env['ir.sequence'].next_by_code_new('stock.scraping',requested_date, scrap.operating_unit_id)
             if new_seq:
                 res['name'] = new_seq
 
