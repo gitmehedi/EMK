@@ -15,7 +15,8 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','stock','stock_picking_mrr','gbs_application_group'],
+    'depends': ['base', 'stock', 'stock_picking_mrr', 'gbs_application_group', 'gbs_samuda_service_order',
+                'gbs_purchase_quotation_cnf'],
 
     # always loaded
     'data': [

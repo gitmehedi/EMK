@@ -39,8 +39,8 @@ class InheritedAccountInvoice(models.Model):
         """ Override parent's method to add lc analytic account on invoice line"""
         invoice_line = super(InheritedAccountInvoice, self)._prepare_invoice_line_from_po_line(line)
 
-        if line.product_qty:
-            invoice_line.update({'quantity': line.product_qty})
+        # if line.product_qty:
+        #     invoice_line.update({'quantity': line.product_qty})
 
         if self.type == 'in_invoice' and self.purchase_id:
             # # vendor reference
