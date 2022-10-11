@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-          <record id="inherited_vendor_bill_form" model="ir.ui.view">
+        <record id="inherited_vendor_bill_form" model="ir.ui.view">
             <field name="name">inherit.vendor.bill.form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
@@ -12,9 +12,9 @@
 
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
                        position="before">
-                    <field name="mrr_qty" string="MRR Qty" invisible="1"/>
-                    <field name="available_qty" string="Available Qty" invisible="1"/>
-                    <field name="can_edit_bill_line" invisible="1"/>
+                    <field name="mrr_qty" string="MRR Qty"/>
+                    <field name="available_qty" string="Available Qty"/>
+                    <field name="can_edit_bill_line"/>
                 </xpath>
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
                        position="attributes">
@@ -26,6 +26,17 @@
                 </xpath>
             </field>
         </record>
+
+<!--        <record id="account.action_invoice_tree2" model="ir.actions.act_window">-->
+<!--            <field name="context">-->
+<!--                {'default_type': 'in_invoice',-->
+<!--                'type': 'in_invoice',-->
+<!--                'journal_type': 'purchase',-->
+<!--                'search_default_draft':1,-->
+<!--                'direct_vendor_bill':True-->
+<!--                }-->
+<!--            </field>-->
+<!--        </record>-->
 
 
     </data>
