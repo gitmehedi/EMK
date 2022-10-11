@@ -37,6 +37,7 @@ class GBSStockScrap(models.Model):
                                         domain="[('scrap_location', '=', True)]", readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
+
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         states={'draft': [('readonly', False)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
@@ -92,6 +93,18 @@ class GBSStockScrap(models.Model):
         }
 
         self.write(res)
+
+    @api.onchange('operating_unit_id')
+    def _compute_allowed_operating_unit_ids(self):
+        domain = {}
+        domain['operating_unit_id'] = [('id', 'in', self.env.user.operating_unit_ids.ids)]
+        return {'domain': domain}
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_location_default_select(self):
+        for location in self:
+            stock_warehouse = self.env['stock.warehouse'].search([('operating_unit_id', '=', location.operating_unit_id.id)])
+            location.location_id = stock_warehouse.wh_main_stock_loc_id
 
     def _add_operating_unit_in_context(self, operating_unit_id=False):
         """ Adding operating unit in context. """

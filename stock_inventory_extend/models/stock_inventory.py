@@ -20,5 +20,20 @@ class StockInventory(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Inventoried Location',
         readonly=True, required=True,
+        domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",
         states={'draft': [('readonly', False)]},
         default=_default_location_id)
+
+    @api.onchange('operating_unit_id')
+    def _compute_allowed_operating_unit_ids(self):
+        domain = {}
+        domain['operating_unit_id'] = [('id', 'in', self.env.user.operating_unit_ids.ids)]
+        domain['location_id'] = [('usage', '=', 'internal'),('operating_unit_id', '=', self.operating_unit_id.id)]
+        return {'domain': domain}
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_location_default_select(self):
+        for location in self:
+            stock_warehouse = self.env['stock.warehouse'].search(
+                [('operating_unit_id', '=', location.operating_unit_id.id)])
+            location.location_id = stock_warehouse.wh_main_stock_loc_id
