@@ -222,7 +222,7 @@ class InheritedAccountBankStatement(models.Model):
             for manual_entry in self.matched_manual_ids:
                 if manual_entry.balance > 0:
                     # credit
-                    aml_vals = self.get_move_line_vals(manual_entry.name, statement.date, statement.journal_id.id,
+                    aml_vals = self.get_move_line_vals(manual_entry.name, manual_entry.date, statement.journal_id.id,
                                                        manual_entry.account_id.id,
                                                        statement.journal_id.operating_unit_id.id,
                                                        manual_entry.department_id.id, manual_entry.cost_center_id.id, 0,
@@ -231,7 +231,7 @@ class InheritedAccountBankStatement(models.Model):
 
                 else:
                     # debit
-                    aml_vals = self.get_move_line_vals(manual_entry.name, statement.date, statement.journal_id.id,
+                    aml_vals = self.get_move_line_vals(manual_entry.name, manual_entry.date, statement.journal_id.id,
                                                        manual_entry.account_id.id,
                                                        statement.journal_id.operating_unit_id.id,
                                                        manual_entry.department_id.id, manual_entry.cost_center_id.id,
