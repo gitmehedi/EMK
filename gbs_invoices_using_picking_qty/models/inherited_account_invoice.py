@@ -7,12 +7,11 @@ class InheritedAccountInvoice(models.Model):
 
     from_po_form = fields.Boolean(default=False)
 
-    # direct_vendor_bill = fields.Boolean()
+    #direct_vendor_bill = fields.Boolean()
 
     def _prepare_invoice_line_from_po_line(self, line):
         """ Override parent's method to add lc analytic account on invoice line"""
         invoice_line = super(InheritedAccountInvoice, self)._prepare_invoice_line_from_po_line(line)
-
         # get_available_qty
 
         order_line = self.env['purchase.order.line'].browse(invoice_line['purchase_line_id'])

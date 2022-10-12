@@ -8,13 +8,14 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='currency_id']" position="after">
                     <field name="from_po_form" invisible="1"/>
+<!--                    <field name="direct_vendor_bill"/>-->
                 </xpath>
 
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
                        position="before">
-                    <field name="mrr_qty" string="MRR Qty"/>
-                    <field name="available_qty" string="Available Qty"/>
-                    <field name="can_edit_bill_line"/>
+                    <field name="mrr_qty" string="MRR Qty" invisible="1"/>
+                    <field name="available_qty" string="Available Qty" invisible="1"/>
+                    <field name="can_edit_bill_line" invisible="1"/>
                 </xpath>
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
                        position="attributes">

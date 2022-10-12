@@ -79,8 +79,9 @@ class InheritedAccountInvoiceLine(models.Model):
         for rec in self:
             # new id check:
             # if not isinstance(rec.invoice_id.id, int):
-            #     rec.can_edit_bill_line = True
+            #     rec.can_edit_bill_line = True-
             # else:
+
             rec.can_edit_bill_line = False
             if rec.invoice_id.type == 'in_invoice':
                 if self.env.user.has_group(
