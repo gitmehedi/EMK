@@ -36,39 +36,43 @@ class InheritedAccountInvoiceLine(models.Model):
     @api.model
     @api.depends('available_qty')
     def _get_default_qty(self):
-        if self.invoice_id.type == 'in_invoice' and not self.purchase_id.is_service_order and not self.purchase_id.cnf_quotation and self.invoice_id.from_po_form:
-            if self.available_qty:
-                return self.available_qty
-        else:
-            return self.purchase_line_id.product_qty
+        for rec in self:
+            if rec.invoice_id.type == 'in_invoice' and not rec.purchase_id.is_service_order and not rec.purchase_id.cnf_quotation and rec.invoice_id.from_po_form:
+                if rec.available_qty:
+                    return rec.available_qty
+            else:
+                return rec.purchase_line_id.product_qty
 
     @api.constrains('mrr_qty')
     def _check_mrr_qty(self):
-        if self.mrr_qty <= 0:
-            raise UserError(_("MRR not done!"))
+        for rec in self:
+            if rec.mrr_qty <= 0:
+                raise UserError(_("MRR not done!"))
 
     @api.constrains('price_unit')
     def _check_price_unit(self):
-        if self.price_unit <= 0:
-            raise UserError(_("Unit Price cannot be zero or less than 0!"))
+        for rec in self:
+            if rec.price_unit <= 0:
+                raise UserError(_("Unit Price cannot be zero or less than 0!"))
 
     @api.constrains('quantity')
     def _check_quantity(self):
-        if self.quantity <= 0:
-            raise UserError(_("Quantity cannot be zero or less than 0!"))
-        if self.invoice_id.type == 'in_invoice' and not self.purchase_id.is_service_order and not self.purchase_id.cnf_quotation and self.invoice_id.from_po_form:
-            # mrr qty - ei porjonto joto qty == 0
-            if self.purchase_line_id and self.product_id:
-                order_id = self.purchase_line_id.order_id
-                invoice_id = self.env.context.get('active_id')
-                other_invoices = order_id.invoice_ids.filtered(lambda x: x.state != 'cancel')
-                pro_qty_invoiced = 0
-                for inv in other_invoices:
-                    for line in inv.invoice_line_ids:
-                        if line.product_id.id == self.product_id.id:
-                            pro_qty_invoiced = pro_qty_invoiced + line.quantity
-                if pro_qty_invoiced > self.mrr_qty:
-                    raise UserError(_("Quantity cannot be greater than available MRR!"))
+        for rec in self:
+            if rec.quantity <= 0:
+                raise UserError(_("Quantity cannot be zero or less than 0!"))
+            if rec.invoice_id.type == 'in_invoice' and not rec.purchase_id.is_service_order and not rec.purchase_id.cnf_quotation and rec.invoice_id.from_po_form:
+                # mrr qty - ei porjonto joto qty == 0
+                if rec.purchase_line_id and rec.product_id:
+                    order_id = rec.purchase_line_id.order_id
+                    invoice_id = self.env.context.get('active_id')
+                    other_invoices = order_id.invoice_ids.filtered(lambda x: x.state != 'cancel')
+                    pro_qty_invoiced = 0
+                    for inv in other_invoices:
+                        for line in inv.invoice_line_ids:
+                            if line.product_id.id == rec.product_id.id:
+                                pro_qty_invoiced = pro_qty_invoiced + line.quantity
+                    if pro_qty_invoiced > rec.mrr_qty:
+                        raise UserError(_("Quantity cannot be greater than available MRR!"))
 
     # overriding quantity field
     quantity = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
