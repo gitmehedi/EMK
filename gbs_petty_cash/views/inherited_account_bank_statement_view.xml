@@ -29,6 +29,10 @@
                         <attribute name="readonly">1</attribute>
                     </xpath>
 
+<!--                    <xpath expr="//field[@name='balance_end_real']" position="attributes">-->
+<!--                        <attribute name="attrs">{'readonly': [('state', '=', 'confirm')]}</attribute>-->
+<!--                    </xpath>-->
+
                     <xpath expr="//field[@name='line_ids']" position="attributes">
                         <attribute name="attrs">{'readonly': [('petty_cash_reconciled', '!=', False)]}</attribute>
                     </xpath>

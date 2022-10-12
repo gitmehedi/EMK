@@ -20,6 +20,14 @@ class InheritedAccountBankStatement(models.Model):
 
     balance_start = fields.Monetary(string='Starting Balance', default=_default_opening_balance)
 
+    @api.depends('matched_balance', 'balance_start')
+    def calc_ending_balance(self):
+        for rec in self:
+            if rec.matched_balance and rec.balance_start:
+                rec.balance_end_real = rec.balance_start + rec.matched_balance
+
+    balance_end_real = fields.Monetary('Ending Balance', compute='calc_ending_balance', readonly=True)
+
     name = fields.Char(string='Reference', size=60, states={'open': [('readonly', False)]}, copy=False, readonly=True)
 
     @api.constrains('balance_start')
@@ -69,17 +77,7 @@ class InheritedAccountBankStatement(models.Model):
             raise ValidationError(
                 _('Matched move lines and Manual journal entry both have lines! You can input one line betweeen these tabs!'))
 
-    # @api.constrains('matched_manual_ids')
-    # def _check_matched_manual_ids(self):
-    #     if len(self.matched_manual_ids.ids) > 1:
-    #         raise ValidationError(_('You cannot add multiple lines!'))
-
     matched_manual_ids = fields.One2many('account.bank.statement.manual', 'statement_id')
-
-    # @api.constrains('matched_move_line_ids')
-    # def _check_matched_move_line_ids(self):
-    #     if len(self.matched_move_line_ids.ids) > 1:
-    #         raise ValidationError(_('You cannot add multiple lines!'))
 
     matched_move_line_ids = fields.Many2many('account.move.line', relation='bank_statement_matched_move_line')
 
