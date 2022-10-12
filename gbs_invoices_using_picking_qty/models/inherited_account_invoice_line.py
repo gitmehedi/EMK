@@ -46,8 +46,9 @@ class InheritedAccountInvoiceLine(models.Model):
     @api.constrains('mrr_qty')
     def _check_mrr_qty(self):
         for rec in self:
-            if rec.mrr_qty <= 0:
-                raise UserError(_("MRR not done!"))
+            if rec.invoice_id.type == 'in_invoice' and not rec.purchase_id.is_service_order and not rec.purchase_id.cnf_quotation and rec.invoice_id.from_po_form:
+                if rec.mrr_qty <= 0:
+                    raise UserError(_("MRR not done!"))
 
     @api.constrains('price_unit')
     def _check_price_unit(self):
