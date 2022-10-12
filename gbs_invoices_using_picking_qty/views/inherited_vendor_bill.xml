@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='currency_id']" position="after">
                     <field name="from_po_form" invisible="1"/>
-<!--                    <field name="direct_vendor_bill"/>-->
+                    <field name="direct_vendor_bill"/>
                 </xpath>
 
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
@@ -34,7 +34,7 @@
 <!--                'type': 'in_invoice',-->
 <!--                'journal_type': 'purchase',-->
 <!--                'search_default_draft':1,-->
-<!--                'direct_vendor_bill':True-->
+<!--                'default_direct_vendor_bill':True-->
 <!--                }-->
 <!--            </field>-->
 <!--        </record>-->
