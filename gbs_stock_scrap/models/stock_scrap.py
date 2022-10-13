@@ -134,6 +134,12 @@ class GBSStockScrap(models.Model):
                 [('operating_unit_id', '=', location.operating_unit_id.id)])
             location.location_id = stock_warehouse.wh_main_stock_loc_id
 
+    @api.onchange('company_id')
+    def _compute_allowed_company_ids(self):
+        domain = {}
+        domain['company_id'] = [('id', 'in', self.env.user.company_ids.ids)]
+        return {'domain': domain}
+
     def _add_operating_unit_in_context(self, operating_unit_id=False):
         """ Adding operating unit in context. """
         if operating_unit_id:
