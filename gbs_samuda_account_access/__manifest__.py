@@ -30,6 +30,7 @@
         'views/inherited_account.xml',
         'views/account_fiscalyear_close_view.xml',
         'views/inherited_account_invoice_view.xml',
+        'views/inherited_account_move_views.xml',
         'security/ir_rule.xml',
     ],
 

@@ -15,22 +15,59 @@
     </record>
 
     <menuitem id="menu_account_unit_accounting"
-                  name="Accounting" groups="account.group_account_user"
-                  parent="gbs_samuda_account_access.menu_finance_unit"
-                  sequence="2"/>
-    <menuitem id="menu_account_unit_journal_items"
-                  name="Journal Items" action="account.action_account_moves_all_a"
-                  parent="gbs_samuda_account_access.menu_account_unit_accounting"
-                  groups="account.group_account_user"
-                  sequence="1"/>
+              name="Accounting" groups="account.group_account_user"
+              parent="gbs_samuda_account_access.menu_finance_unit"
+              sequence="2"/>
+
+
+<!--    <record id="action_account_moves_all_custom_unit" model="ir.actions.act_window">-->
+<!--        <field name="context">{'journal_type':'general'}</field>-->
+<!--        <field name="name">Journal Items</field>-->
+<!--        <field name="res_model">account.move.line</field>-->
+<!--        <field name="view_id" ref="account.view_move_line_tree"/>-->
+<!--        <field name="view_mode">tree,form,pivot</field>-->
+<!--    </record>-->
+
+
+
+
+<!--    <menuitem id="menu_account_unit_journal_items"-->
+<!--              name="Journal Items" action="action_account_moves_all_custom_unit"-->
+<!--              parent="gbs_samuda_account_access.menu_account_unit_accounting"-->
+<!--              groups="account.group_account_user"-->
+<!--              sequence="1"/>-->
+
+    <record id="action_move_journal_line_custom_unit" model="ir.actions.act_window">
+        <field name="name">Journal Entries</field>
+        <field name="res_model">account.move</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="account.view_move_tree"/>
+        <field name="search_view_id" ref="account.view_account_move_filter"/>
+        <field name="domain">[('submitted_from','=','unit')]</field>
+        <field name="context">{'default_submitted_from':'unit'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a journal entry.
+            </p>
+            <p>
+                A journal entry consists of several journal items, each of
+                which is either a debit or a credit transaction.
+            </p>
+            <p>
+                Odoo automatically creates one journal entry per accounting
+                document: invoice, refund, vendor payment, bank statements,
+                etc. So, you should record journal entries manually only/mainly
+                for miscellaneous operations.
+            </p>
+        </field>
+    </record>
 
     <menuitem id="menu_account_unit_journal_entries"
-                  name="Journal Entries" action="account.action_move_journal_line"
-                  parent="gbs_samuda_account_access.menu_account_unit_accounting"
-                  groups="account.group_account_user"
-                  sequence="2"/>
-
-
+              name="Journal Entries" action="action_move_journal_line_custom_unit"
+              parent="gbs_samuda_account_access.menu_account_unit_accounting"
+              groups="account.group_account_user"
+              sequence="2"/>
 
 
 </odoo>

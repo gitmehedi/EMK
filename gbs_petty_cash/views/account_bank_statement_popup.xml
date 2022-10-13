@@ -29,7 +29,7 @@
                         <notebook>
                             <page name="matched_manual" string="Journal Entry">
                                 <field name="matched_manual_ids" nolabel="1">
-                                    <tree editable="bottom">
+                                    <tree editable="bottom" create="false">
                                         <field name="sequence" invisible="1"/>
                                         <field name="account_id" string="Account" required="1"/>
                                         <field name="name" required="1"/>

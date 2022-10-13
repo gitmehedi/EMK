@@ -7,7 +7,7 @@ class InheritedAccountInvoice(models.Model):
 
     from_po_form = fields.Boolean(default=False)
 
-    #direct_vendor_bill = fields.Boolean()
+    direct_vendor_bill = fields.Boolean()
 
     def _prepare_invoice_line_from_po_line(self, line):
         """ Override parent's method to add lc analytic account on invoice line"""
@@ -18,8 +18,10 @@ class InheritedAccountInvoice(models.Model):
         product = self.env['purchase.order.line'].browse(invoice_line['product_id'])
         order_id = order_line.order_id
         lc_number = order_line.order_id.po_lc_id.name
-        mrr_qty = self.env['account.invoice.utility'].get_mrr_qty(order_id, lc_number, product)
-        available_qty = self.env['account.invoice.utility'].get_available_qty(order_id, product.id, mrr_qty)
-        invoice_line.update({'quantity': available_qty})
+        if self.type == 'in_invoice' and not order_id.is_service_order and not order_id.cnf_quotation and self.from_po_form:
+            if order_line and product:
+                mrr_qty = self.env['account.invoice.utility'].get_mrr_qty(order_id, lc_number, product)
+                available_qty = self.env['account.invoice.utility'].get_available_qty(order_id, product.id, mrr_qty)
+                invoice_line.update({'quantity': available_qty})
 
         return invoice_line
