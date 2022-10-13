@@ -16,5 +16,5 @@ class InheritedResPartner(models.Model):
             self._cr.execute(sql, (self.name.strip(),))  # Never remove the comma after the parameter
             partners = self._cr.fetchall()
 
-            if len(partners) > 1:
+            if len(partners) > 1 and self.parnter_share:
                 raise ValidationError('Customer name already in use')
