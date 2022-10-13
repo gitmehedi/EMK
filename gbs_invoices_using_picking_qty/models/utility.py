@@ -12,8 +12,8 @@ class Utility(models.TransientModel):
             for line in inv.invoice_line_ids:
                 if line.product_id.id == line_product_id:
                     pro_qty_invoiced = pro_qty_invoiced + line.quantity
-
         available_qty = mrr_qty - pro_qty_invoiced
+        available_qty = float("{:.4f}".format(available_qty))
         return available_qty
 
     def get_mrr_qty(self, order_id, lc_number, line_product_id):
@@ -24,6 +24,6 @@ class Utility(models.TransientModel):
             [('picking_id', 'in', pickings.ids), ('product_id', 'in', line_product_id.ids),
              ('state', '=', 'done')])
         total_mrr_qty = sum(move.product_qty for move in moves)
-        if total_mrr_qty <= 0:
-            raise UserError(_('MRR not done for this order!'))
+        # if total_mrr_qty <= 0:
+        #     raise UserError(_('MRR not done for this order!'))
         return total_mrr_qty
