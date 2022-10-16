@@ -16,8 +16,8 @@
 
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
                        position="before">
-                    <field name="mrr_qty" string="MRR Qty" invisible="1"/>
-                    <field name="available_qty" string="Available Qty" invisible="1"/>
+<!--                    <field name="mrr_qty" string="MRR Qty" invisible="1"/>-->
+<!--                    <field name="available_qty" string="Available Qty" invisible="1"/>-->
                     <field name="can_edit_bill_line" invisible="1"/>
                 </xpath>
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
@@ -38,6 +38,16 @@
                 'journal_type': 'purchase',
                 'search_default_draft':1,
                 'default_direct_vendor_bill':True
+                }
+            </field>
+        </record>
+
+         <record id="purchase.action_invoice_pending" model="ir.actions.act_window">
+            <field name="context">
+                {'default_type':'in_invoice',
+                'type':'in_invoice',
+                'journal_type': 'purchase',
+                'no_create_edit_button':True
                 }
             </field>
         </record>
