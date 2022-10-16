@@ -14,7 +14,7 @@ class AccountInvoiceLine(models.Model):
                             'gbs_invoices_using_picking_qty.group_vendor_invoice_editor') or rec.purchase_id.is_service_order or rec.purchase_id.cnf_quotation:
                         rec.can_edit_bill_line = True
                 else:
-                    if len(rec.purchase_id) <= 0 or rec.purchase_id.is_service_order or rec.purchase_id.cnf_quotation:
+                    if len(rec.purchase_id) <= 0 or self.env.user.has_group('gbs_invoices_using_picking_qty.group_vendor_invoice_editor') or rec.purchase_id.is_service_order or rec.purchase_id.cnf_quotation:
                         rec.can_edit_bill_line = True
             # if rec.invoice_id.type == 'in_invoice':
             #     rec.can_edit_bill_line = True
