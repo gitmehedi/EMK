@@ -1,6 +1,6 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import Warning as UserError
 from lxml import etree
+from odoo.exceptions import UserError, ValidationError
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
@@ -78,3 +78,13 @@ class AccountInvoice(models.Model):
 
         res['arch'] = etree.tostring(doc)
         return res
+
+    @api.constrains('invoice_line_ids')
+    def _check_qty_price(self):
+        for rec in self:
+            if len(rec.invoice_line_ids) > 0:
+                for line in rec.invoice_line_ids:
+                    if line.quantity <= 0:
+                        raise ValidationError("Line Quantity cannot be 0!")
+                    if line.price_unit <= 0:
+                        raise ValidationError("Line Unit Price cannot be 0!")
