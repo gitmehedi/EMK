@@ -1,5 +1,5 @@
 from odoo import api, models
-
+from odoo.exceptions import ValidationError
 
 class InheritResPartner(models.Model):
     _inherit = 'res.partner'
@@ -40,6 +40,14 @@ class InheritResPartner(models.Model):
                 receivable_id = self._get_max_code_for_account_receivable(vals['company_id'], vals['name'])
                 vals['property_account_receivable_id'] = receivable_id
 
+                # unique check
+                sql = """SELECT * FROM res_partner WHERE name ='%s' and customer=True""" % (vals['name'].strip())
+                self._cr.execute(sql)  # Never remove the comma after the parameter
+                partners = self._cr.fetchall()
+
+                if len(partners) > 0:
+                    raise ValidationError('Customer name already in use')
+
             elif vals['supplier'] and not vals['supplier_type'] == 'foreign':
                 if 'supplier_type' in vals:
                     if not vals['supplier_type'] == 'foreign':
@@ -48,14 +56,58 @@ class InheritResPartner(models.Model):
                 else:
                     payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
                     vals['property_account_payable_id'] = payable_id
+
+                sql = """SELECT * FROM res_partner WHERE name ='%s' and supplier=True""" % (vals['name'].strip())
+                self._cr.execute(sql)  # Never remove the comma after the parameter
+                partners = self._cr.fetchall()
+
+                if len(partners) > 0:
+                    raise ValidationError('Supplier name already in use')
             elif vals['is_cnf']:
                 payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
                 vals['property_account_payable_id'] = payable_id
+
+                sql = """SELECT * FROM res_partner WHERE name ='%s' and is_cnf=True""" % (vals['name'].strip())
+                self._cr.execute(sql)  # Never remove the comma after the parameter
+                partners = self._cr.fetchall()
+
+                if len(partners) > 0:
+                    raise ValidationError('CNF Agent name already in use')
 
             else:
                 pass
 
         return super(InheritResPartner, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if 'name' in vals:
+            if self.customer:
+                # unique check
+                sql = """SELECT * FROM res_partner WHERE name ='%s' and customer=True""" % (vals['name'].strip())
+                self._cr.execute(sql)  # Never remove the comma after the parameter
+                partners = self._cr.fetchall()
+
+                if len(partners) > 0:
+                    raise ValidationError('Customer name already in use')
+
+            elif self.supplier:
+                sql = """SELECT * FROM res_partner WHERE name ='%s' and supplier=True""" % (vals['name'].strip())
+                self._cr.execute(sql)  # Never remove the comma after the parameter
+                partners = self._cr.fetchall()
+
+                if len(partners) > 0:
+                    raise ValidationError('Supplier name already in use')
+            elif self.is_cnf:
+                sql = """SELECT * FROM res_partner WHERE name ='%s' and is_cnf=True""" % (vals['name'].strip())
+                self._cr.execute(sql)  # Never remove the comma after the parameter
+                partners = self._cr.fetchall()
+
+                if len(partners) > 0:
+                    raise ValidationError('CNF Agent name already in use')
+
+        return super(InheritResPartner, self).write(vals)
+    
 
     # @api.multi
     # def unlink(self):

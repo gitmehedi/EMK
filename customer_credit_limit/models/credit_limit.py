@@ -155,12 +155,12 @@ class ResPartner(models.Model):
 
     """ All functions """
 
-    @api.constrains('name')
-    def _check_unique_name(self):
-        if self.name:
-            name = self.env['res.partner'].search([('name', '=ilike', self.name)])
-            if len(name) > 1:
-                raise ValidationError('Customer already exists.')
+    # @api.constrains('name')
+    # def _check_unique_name(self):
+    #     if self.name:
+    #         name = self.env['res.partner'].search([('name', '=ilike', self.name)])
+    #         if len(name) > 1:
+    #             raise ValidationError('Customer already exists.')
 
 
                 ## Total Invoiced amount which is not in Paid state
