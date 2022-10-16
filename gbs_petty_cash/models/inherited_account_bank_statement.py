@@ -20,11 +20,14 @@ class InheritedAccountBankStatement(models.Model):
 
     balance_start = fields.Monetary(string='Starting Balance', default=_default_opening_balance)
 
-    @api.depends('matched_balance', 'balance_start')
+    @api.depends('line_ids', 'balance_start')
     def calc_ending_balance(self):
-        for rec in self:
-            if rec.matched_balance and rec.balance_start:
-                rec.balance_end_real = rec.balance_start + rec.matched_balance
+        for record in self:
+            total = 0
+            for line in record.line_ids:
+                total = total + line.amount
+            if record.balance_start:
+                record.balance_end_real = total + record.balance_start
 
     balance_end_real = fields.Monetary('Ending Balance', compute='calc_ending_balance', readonly=True)
 
