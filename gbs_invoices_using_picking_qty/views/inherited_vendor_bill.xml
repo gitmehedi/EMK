@@ -42,6 +42,16 @@
             </field>
         </record>
 
+         <record id="purchase.action_invoice_pending" model="ir.actions.act_window">
+            <field name="context">
+                {'default_type':'in_invoice',
+                'type':'in_invoice',
+                'journal_type': 'purchase',
+                'no_create_edit_button':True
+                }
+            </field>
+        </record>
+
 
     </data>
 </odoo>

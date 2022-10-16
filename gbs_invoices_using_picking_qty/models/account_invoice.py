@@ -1,6 +1,6 @@
-from odoo import fields, models, api
-from odoo.exceptions import UserError, ValidationError
-
+from odoo import _, api, fields, models
+from odoo.exceptions import Warning as UserError
+from lxml import etree
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
@@ -38,6 +38,11 @@ class AccountInvoice(models.Model):
         if not self.partner_id:
             self.partner_id = self.purchase_id.partner_id.id
 
+        if self.partner_id.id != self.purchase_id.partner_id.id:
+            raise UserError(_(
+                'You need select purchase order of the selected vendor!'
+            ))
+
         new_lines = self.env['account.invoice.line']
         for line in self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id'):
             data = self._prepare_invoice_line_from_po_line(line)
@@ -49,3 +54,27 @@ class AccountInvoice(models.Model):
         self.invoice_line_ids += new_lines
         self.purchase_id = False
         return {}
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type,
+                                                                   toolbar=toolbar,
+                                                                   submenu=submenu)
+
+        doc = etree.XML(res['arch'])
+        no_create_edit_button = self.env.context.get('no_create_edit_button')
+
+        if no_create_edit_button:
+            if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
+                for node_form in doc.xpath("//kanban"):
+                    node_form.set("create", 'false')
+                    node_form.set("edit", 'false')
+                for node_form in doc.xpath("//tree"):
+                    node_form.set("create", 'false')
+                    node_form.set("edit", 'false')
+                for node_form in doc.xpath("//form"):
+                    node_form.set("create", 'false')
+                    node_form.set("edit", 'false')
+
+        res['arch'] = etree.tostring(doc)
+        return res
