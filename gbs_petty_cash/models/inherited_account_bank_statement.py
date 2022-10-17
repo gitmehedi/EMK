@@ -11,6 +11,30 @@ class InheritedAccountBankStatement(models.Model):
     _inherit = ['account.bank.statement', 'mail.thread']
 
     @api.model
+    def create(self, vals):
+        if 'balance_start_duplicate' in vals and 'line_ids' in vals:
+            total = 0
+            for line in vals['line_ids']:
+                amount = float(line[2]['amount'])
+                total = total + amount
+            vals['balance_end_real'] = float(vals['balance_start_duplicate']) + total
+        return super(InheritedAccountBankStatement, self).create(vals)
+
+    @api.multi
+    def write(self, values):
+        if 'line_ids' in values:
+            line_len = len(values['line_ids'])
+            total = 0
+            for x in xrange(line_len):
+                if values['line_ids'][x][2]:
+                    amount = float(values['line_ids'][x][2]['amount'])
+                    total = total + amount
+
+            values['balance_end_real'] = total + self.balance_end_real
+        res = super(InheritedAccountBankStatement, self).write(values)
+        return res
+
+    @api.model
     def _default_opening_balance(self):
         # Search last bank statement and set current opening balance as closing balance of previous one
         journal_id = self._context.get('default_journal_id', False) or self._context.get('journal_id', False)
@@ -19,17 +43,17 @@ class InheritedAccountBankStatement(models.Model):
         return 0
 
     balance_start = fields.Monetary(string='Starting Balance', default=_default_opening_balance)
-
-    @api.depends('line_ids', 'balance_start')
-    def calc_ending_balance(self):
-        for record in self:
-            total = 0
-            for line in record.line_ids:
-                total = total + line.amount
-            if record.balance_start:
-                record.balance_end_real = total + record.balance_start
-
-    balance_end_real = fields.Monetary('Ending Balance', compute='calc_ending_balance',readonly=False)
+    balance_start_duplicate = fields.Monetary(string='Start Balance', default=_default_opening_balance)
+    # @api.depends('line_ids', 'balance_start')
+    # def calc_ending_balance(self):
+    #     for record in self:
+    #         total = 0
+    #         for line in record.line_ids:
+    #             total = total + line.amount
+    #         if record.balance_start:
+    #             record.balance_end_real = total + record.balance_start
+    #
+    # balance_end_real = fields.Monetary('Ending Balance', compute='calc_ending_balance',readonly=False)
 
     name = fields.Char(string='Reference', size=60, states={'open': [('readonly', False)]}, copy=False, readonly=True)
 
@@ -38,10 +62,10 @@ class InheritedAccountBankStatement(models.Model):
         if self.balance_start < 0:
             raise ValidationError('Starting Balance can not be Negative!')
 
-    @api.constrains('balance_end_real')
-    def _check_balance_end_real_negative_val(self):
-        if self.balance_end_real < 0:
-            raise ValidationError('Ending Balance can not be Negative!')
+    # @api.constrains('balance_end_real')
+    # def _check_balance_end_real_negative_val(self):
+    #     if self.balance_end_real < 0:
+    #         raise ValidationError('Ending Balance can not be Negative!')
 
     @api.constrains('difference')
     def _check_amount_val(self):
