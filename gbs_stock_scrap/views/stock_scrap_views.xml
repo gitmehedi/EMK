@@ -25,16 +25,18 @@
             <field name="arch" type="xml">
                 <form string="Scrap">
                     <header>
-                        <button name="scrap_confirm" string="Confirm" states="draft"
+                        <button name="scrap_start" string="Start Scrap" states="draft"
+                                class="oe_highlight" type="object" groups="stock.group_stock_user"/>
+                        <button name="scrap_confirm" string="Confirm" states="confirm"
                                 class="oe_highlight" type="object" groups="stock.group_stock_user"/>
                         <button name="scrap_approve" string="Approve" states="waiting_approval" type="object"
                                 class="oe_highlight" groups="stock.group_stock_manager"/>
                         <button name="scrap_reject" string="Reject" states="waiting_approval"
                                 groups="stock.group_stock_manager" type="object"/>
                         <button string="Reset to Draft" name="action_draft" groups="stock.group_stock_manager"
-                                states="waiting_approval" type="object"/>
+                                states="confirm,waiting_approval" type="object"/>
                         <field name="state" widget="statusbar"
-                               statusbar_visible="draft,waiting_approval,approved"
+                               statusbar_visible="draft,confirm,waiting_approval,approved"
                                statusbar_colors='{"reject":"red"}' />
                     </header>
                     <sheet>
@@ -64,7 +66,7 @@
                                 <field name="package_id" invisible="1"/>
                             </group>
                         </group>
-                        <notebook>
+                        <notebook attrs="{'invisible': [('state', '=', 'draft')]}">
                             <page string="Products">
                                 <field name="product_lines">
                                     <tree string="Products" editable="bottom">
@@ -79,7 +81,7 @@
                                 <div class="oe_clear">
                                     <label for="reason" />
                                 </div>
-                                <field name="reason" colspan="4" placeholder="The material is scraping for..." />
+                                <field name="reason" colspan="4" attrs="{'required':[('state', '=','confirm')]}" placeholder="The material is scraping for..." />
                             </page>
                         </notebook>
                     </sheet>
