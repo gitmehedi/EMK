@@ -17,6 +17,8 @@ class InheritedAccountBankStatement(models.Model):
             for line in vals['line_ids']:
                 amount = float(line[2]['amount'])
                 total = total + amount
+            if float(vals['balance_start_duplicate']) + total < 0:
+                raise UserError('Ending Balance can not be Negative!')
             vals['balance_end_real'] = float(vals['balance_start_duplicate']) + total
         return super(InheritedAccountBankStatement, self).create(vals)
 
@@ -30,7 +32,10 @@ class InheritedAccountBankStatement(models.Model):
                     amount = float(values['line_ids'][x][2]['amount'])
                     total = total + amount
 
+            if total + self.balance_end_real < 0:
+                raise UserError('Ending Balance can not be Negative!')
             values['balance_end_real'] = total + self.balance_end_real
+
         res = super(InheritedAccountBankStatement, self).write(values)
         return res
 
