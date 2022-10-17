@@ -29,9 +29,10 @@
                         <attribute name="readonly">1</attribute>
                     </xpath>
 
-<!--                    <xpath expr="//field[@name='balance_end_real']" position="attributes">-->
-<!--                        <attribute name="attrs">{'readonly': [('state', '=', 'confirm')]}</attribute>-->
-<!--                    </xpath>-->
+                    <xpath expr="//field[@name='balance_end_real']" position="attributes">
+                        <attribute name="attrs">{'readonly': ['|', ('is_petty_cash_journal', '!=', False),
+                                                              ('state', '=', 'confirm')]}</attribute>
+                    </xpath>
 
                     <xpath expr="//field[@name='line_ids']" position="attributes">
                         <attribute name="attrs">{'readonly': [('petty_cash_reconciled', '!=', False)]}</attribute>
@@ -41,6 +42,7 @@
                         <field name="is_petty_cash_journal" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <field name="petty_cash_reconciled" invisible="1"/>
+                        <field name="balance_start_duplicate" invisible="1"/>
                     </xpath>
 
                     <xpath expr="//field[@name='company_id']" position="after">
