@@ -29,7 +29,7 @@ class InheritedAccountBankStatement(models.Model):
             if record.balance_start:
                 record.balance_end_real = total + record.balance_start
 
-    balance_end_real = fields.Monetary('Ending Balance', compute='calc_ending_balance', readonly=True)
+    balance_end_real = fields.Monetary('Ending Balance', compute='calc_ending_balance',readonly=False)
 
     name = fields.Char(string='Reference', size=60, states={'open': [('readonly', False)]}, copy=False, readonly=True)
 
