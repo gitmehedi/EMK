@@ -36,17 +36,16 @@ class InheritResPartner(models.Model):
     @api.model
     def create(self, vals):
         if 'parent_id' in vals and not vals['parent_id']:
+            name = ''
+            key = ''
+            msg = ""
             if vals['customer']:
+                name = vals['name']
+                key = "customer"
+                msg = "Customer name already in use"
+
                 receivable_id = self._get_max_code_for_account_receivable(vals['company_id'], vals['name'])
                 vals['property_account_receivable_id'] = receivable_id
-
-                # unique check
-                sql = """SELECT * FROM res_partner WHERE name ='%s' and customer=True""" % (vals['name'].strip())
-                self._cr.execute(sql)  # Never remove the comma after the parameter
-                partners = self._cr.fetchall()
-
-                if len(partners) > 0:
-                    raise ValidationError('Customer name already in use')
 
             elif vals['supplier'] and not vals['supplier_type'] == 'foreign':
                 if 'supplier_type' in vals:
@@ -57,57 +56,58 @@ class InheritResPartner(models.Model):
                     payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
                     vals['property_account_payable_id'] = payable_id
 
-                sql = """SELECT * FROM res_partner WHERE name ='%s' and supplier=True""" % (vals['name'].strip())
-                self._cr.execute(sql)  # Never remove the comma after the parameter
-                partners = self._cr.fetchall()
+                name = vals['name']
+                key = "supplier"
+                msg = "Supplier name already in use"
 
-                if len(partners) > 0:
-                    raise ValidationError('Supplier name already in use')
             elif vals['is_cnf']:
                 payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
                 vals['property_account_payable_id'] = payable_id
 
-                sql = """SELECT * FROM res_partner WHERE name ='%s' and is_cnf=True""" % (vals['name'].strip())
-                self._cr.execute(sql)  # Never remove the comma after the parameter
-                partners = self._cr.fetchall()
-
-                if len(partners) > 0:
-                    raise ValidationError('CNF Agent name already in use')
-
+                name = vals['name']
+                key = "is_cnf"
+                msg = "CNF Agent name already in use"
             else:
                 pass
+            if name:
+                partners = self._check_res_partner_duplicate(name, key)
+                if len(partners) > 0:
+                    raise ValidationError(msg)
 
         return super(InheritResPartner, self).create(vals)
 
     @api.multi
     def write(self, vals):
         if 'name' in vals:
-            if self.customer:
-                # unique check
-                sql = """SELECT * FROM res_partner WHERE name ='%s' and customer=True""" % (vals['name'].strip())
-                self._cr.execute(sql)  # Never remove the comma after the parameter
-                partners = self._cr.fetchall()
+            name = ''
+            key = ''
+            msg = ""
 
-                if len(partners) > 0:
-                    raise ValidationError('Customer name already in use')
+            if self.customer:
+                name = vals['name']
+                key = "customer"
+                msg = "Customer name already in use"
 
             elif self.supplier:
-                sql = """SELECT * FROM res_partner WHERE name ='%s' and supplier=True""" % (vals['name'].strip())
-                self._cr.execute(sql)  # Never remove the comma after the parameter
-                partners = self._cr.fetchall()
-
-                if len(partners) > 0:
-                    raise ValidationError('Supplier name already in use')
+                name = vals['name']
+                key = "supplier"
+                msg = "Supplier name already in use"
             elif self.is_cnf:
-                sql = """SELECT * FROM res_partner WHERE name ='%s' and is_cnf=True""" % (vals['name'].strip())
-                self._cr.execute(sql)  # Never remove the comma after the parameter
-                partners = self._cr.fetchall()
+                name = vals['name']
+                key = "is_cnf"
+                msg = "CNF Agent name already in use"
 
-                if len(partners) > 0:
-                    raise ValidationError('CNF Agent name already in use')
+            partners = self._check_res_partner_duplicate(name, key)
+            if len(partners) > 0:
+                raise ValidationError(msg)
 
         return super(InheritResPartner, self).write(vals)
     
+    def _check_res_partner_duplicate(self, name, key):
+        sql = """SELECT * FROM res_partner WHERE name ='%s' and %s=True""" % (name.strip(), key)
+        self._cr.execute(sql)
+        return self._cr.fetchall()
+
 
     # @api.multi
     # def unlink(self):
