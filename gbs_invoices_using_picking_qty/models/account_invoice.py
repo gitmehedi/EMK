@@ -90,3 +90,25 @@ class AccountInvoice(models.Model):
                         raise ValidationError("Line Quantity cannot be 0!")
                     if line.price_unit <= 0:
                         raise ValidationError("Line Unit Price cannot be 0!")
+                        
+                        
+    #overriden odoo method                    
+    @api.onchange('state', 'partner_id', 'invoice_line_ids')
+    def _onchange_allowed_purchase_ids(self):
+        '''
+        The purpose of the method is to define a domain for the available
+        purchase orders.
+        '''
+        result = {}
+
+        # A PO can be selected only if at least one PO line is not already in the invoice
+        purchase_line_ids = self.invoice_line_ids.mapped('purchase_line_id')
+        purchase_ids = self.invoice_line_ids.mapped('purchase_id').filtered(lambda r: r.order_line <= purchase_line_ids)
+
+        domain = [('invoice_status', 'in', ('to invoice','invoiced'))]
+        if self.partner_id:
+            domain += [('partner_id', 'child_of', self.partner_id.id)]
+        if purchase_ids:
+            domain += [('id', 'not in', purchase_ids.ids)]
+        result['domain'] = {'purchase_id': domain}
+        return result
