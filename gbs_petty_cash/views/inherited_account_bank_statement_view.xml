@@ -73,10 +73,9 @@
                         <!--                    -->
                     </xpath>
 
-                    <!--                    <xpath expr="//button[@name='button_cancel']"-->
-                    <!--                           position="replace">-->
-                    <!--                        <button name="button_cancel" states="confirm" attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement" type="object"/>-->
-                    <!--                    </xpath>-->
+                    <xpath expr="//button[@name='button_cancel']" position="replace">
+                        <button name="button_cancel" states="confirm" attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement" type="object"/>
+                     </xpath>
 
 
                     <!--lines-->
