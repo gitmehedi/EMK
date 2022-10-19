@@ -36,18 +36,20 @@ class InheritResPartner(models.Model):
     @api.model
     def create(self, vals):
         if 'parent_id' in vals and not vals['parent_id']:
-            name = ''
-            key = ''
-            msg = ""
+            name = vals['name'].strip()
             if vals['customer']:
-                name = vals['name']
-                key = "customer"
-                msg = "Customer name already in use"
+                partners = self._check_res_partner_duplicate(name, "customer")
+                if len(partners) > 0:
+                    raise ValidationError("Customer name already in use")
 
                 receivable_id = self._get_max_code_for_account_receivable(vals['company_id'], vals['name'])
                 vals['property_account_receivable_id'] = receivable_id
 
             elif vals['supplier'] and not vals['supplier_type'] == 'foreign':
+                partners = self._check_res_partner_duplicate(name, "supplier")
+                if len(partners) > 0:
+                    raise ValidationError("Supplier name already in use")
+
                 if 'supplier_type' in vals:
                     if not vals['supplier_type'] == 'foreign':
                         payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
@@ -56,51 +58,37 @@ class InheritResPartner(models.Model):
                     payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
                     vals['property_account_payable_id'] = payable_id
 
-                name = vals['name']
-                key = "supplier"
-                msg = "Supplier name already in use"
-
             elif vals['is_cnf']:
+                partners = self._check_res_partner_duplicate(name, "is_cnf")
+                if len(partners) > 0:
+                    raise ValidationError("CNF Agent name already in use")
+
                 payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
                 vals['property_account_payable_id'] = payable_id
-
-                name = vals['name']
-                key = "is_cnf"
-                msg = "CNF Agent name already in use"
             else:
                 pass
-            if name:
-                partners = self._check_res_partner_duplicate(name, key)
-                if len(partners) > 0:
-                    raise ValidationError(msg)
 
+            vals['name'] = name
         return super(InheritResPartner, self).create(vals)
 
     @api.multi
     def write(self, vals):
         if 'name' in vals:
-            name = ''
-            key = ''
-            msg = ""
-
+            name = vals['name'].strip()
             if self.customer:
-                name = vals['name']
-                key = "customer"
-                msg = "Customer name already in use"
-
+                partners = self._check_res_partner_duplicate(name, "supplier")
+                if len(partners) > 0:
+                    raise ValidationError("Customer name already in use")
             elif self.supplier:
-                name = vals['name']
-                key = "supplier"
-                msg = "Supplier name already in use"
+                partners = self._check_res_partner_duplicate(name, "supplier")
+                if len(partners) > 0:
+                    raise ValidationError("Supplier name already in use")
             elif self.is_cnf:
-                name = vals['name']
-                key = "is_cnf"
-                msg = "CNF Agent name already in use"
+                partners = self._check_res_partner_duplicate(name, "is_cnf")
+                if len(partners) > 0:
+                    raise ValidationError("CNF Agent name already in use")
 
-            partners = self._check_res_partner_duplicate(name, key)
-            if len(partners) > 0:
-                raise ValidationError(msg)
-
+            vals['name'] = name
         return super(InheritResPartner, self).write(vals)
     
     def _check_res_partner_duplicate(self, name, key):
