@@ -58,6 +58,11 @@ class InheritResPartner(models.Model):
                     payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
                     vals['property_account_payable_id'] = payable_id
 
+            elif vals['supplier'] and vals['supplier_type'] == 'foreign':
+                partners = self._check_res_partner_duplicate(name, "supplier")
+                if len(partners) > 0:
+                    raise ValidationError("Supplier name already in use")
+
             elif vals['is_cnf']:
                 partners = self._check_res_partner_duplicate(name, "is_cnf")
                 if len(partners) > 0:
