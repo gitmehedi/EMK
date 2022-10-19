@@ -229,7 +229,8 @@ class GBSStockScrap(models.Model):
         res = {
             'state': 'draft',
             'approver_id': self.env.user.id,
-            'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
+            'approved_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'product_lines': [(6, 0, False)]
         }
         self.write(res)
 
