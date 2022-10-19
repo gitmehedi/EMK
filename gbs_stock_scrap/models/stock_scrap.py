@@ -24,8 +24,8 @@ class GBSStockScrap(models.Model):
     name = fields.Char('Reference', default=lambda self: _('New'), copy=False,
                        readonly=True, required=True, track_visibility='onchange',
                        states={'draft': [('readonly', False)]})
-    reason = fields.Text('Reason', readonly=True, required=True, track_visibility='onchange',
-                         states={'draft': [('readonly', False)]})
+    reason = fields.Text('Reason', readonly=True, track_visibility='onchange',
+                         states={'confirm': [('readonly', False)]})
     request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True,
                                  track_visibility='onchange',
                                  default=lambda self: self.env.user)
@@ -52,9 +52,10 @@ class GBSStockScrap(models.Model):
     package_id = fields.Many2one('stock.quant.package', 'Package')
     move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True)
     product_lines = fields.One2many('gbs.stock.scrap.line', 'stock_scrap_id', 'Products', readonly=True,
-                                    states={'draft': [('readonly', False)]})
+                                    states={'confirm': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'Draft'),
+        ('confirm', 'In Progress'),
         ('waiting_approval', 'Waiting for Approval'),
         ('approved', 'Approved'),
         ('reject', 'Rejected'),
@@ -63,6 +64,10 @@ class GBSStockScrap(models.Model):
     ####################################################
     # Business methods
     ####################################################
+
+    @api.multi
+    def scrap_start(self):
+        self.write({'state': 'confirm'})
 
     @api.multi
     def scrap_confirm(self):
@@ -110,7 +115,11 @@ class GBSStockScrap(models.Model):
             picking_id = self._create_pickings_and_procurements()
             picking_objs = self.env['stock.picking'].search([('id', '=', picking_id)])
             picking_objs.action_confirm()
-            picking_objs.force_assign()
+            # picking_objs.force_assign()
+            picking_objs.action_assign()
+            trans_obj = picking_objs.do_new_transfer()
+            immediate_trans = self.env['stock.immediate.transfer'].search([('id', '=', trans_obj['res_id'])])
+            immediate_trans.process()
 
         res = {
             'state': 'approved',
@@ -120,6 +129,7 @@ class GBSStockScrap(models.Model):
         }
 
         self.write(res)
+
 
     @api.onchange('operating_unit_id')
     def _compute_allowed_operating_unit_ids(self):
@@ -285,6 +295,15 @@ class GBSStockScrapLines(models.Model):
             if quantity <= 0:
                 raise UserError(_('Product "{0}" has not sufficient balance for this location'.format(
                     self.product_id.display_name)))
+
+            query = """select scl.product_id from gbs_stock_scrap_line scl LEFT JOIN gbs_stock_scrap as sc ON 
+            scl.stock_scrap_id = sc.id WHERE scl.product_id=%s and sc.location_id=%s and sc.state in ('confirm', 
+            'waiting_approval') """ % (self.product_id.id, self.stock_scrap_id.location_id.id )
+            self.env.cr.execute(query)
+            pending_scrap = self.env.cr.dictfetchall()
+            if len(pending_scrap) > 1:
+                raise UserError("You cannot have two scrap in state 'in Progess' and 'waiting for approval' with the same product({0}), same location({1}). Please first validate the first scrap with this product before creating another one.".format(
+                    self.product_id.display_name, (self.stock_scrap_id.location_id.location_id.name + "/" + self.stock_scrap_id.location_id.name)))
 
             self.qty_available = quantity
 

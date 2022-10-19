@@ -35,7 +35,7 @@ class ResetLCWizard(models.TransientModel):
             pro_lc_line_pool.write({'product_received_qty':pro_line.product_received_qty})
 
         self.shipment_id.shipment_product_lines.unlink()
-        self.shipment_id.write({'state': 'draft'})
+        self.shipment_id.write({'state': 'draft', 'invoice_ids': [(6, 0, [])]})
 
         return {'type': 'ir.actions.act_window_close'}
 
