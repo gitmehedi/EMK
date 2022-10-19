@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_purchase_rfq_form" model="ir.ui.view">
+        <field name="name">Purchase Comparison</field>
+        <field name="model">purchase.rfq.cs</field>
+        <field name="arch" type="xml">
+            <form string="Comparison" class="oe_form_configuration">
+                <header>
+                    <style type="text/css">
+                        .o_form_sheet {
+                        max-width: none !important;
+                        }
+                        .cs_process {
+							max-height: calc(100vh - 255px);
+							overflow: auto;
+							border: 1px solid #ddd;
+                            font-size: 12px;
+                            white-space:nowrap;
+						}
+
+                    </style>
+                </header>
+                <separator string="Comparative Study View"/>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="rfq_id"/>
+                        <field name="rfq_id" id="rfq_id" class="oe_inline" colspan="4"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        <span style="margin-left:6px;"></span>
+                        <button string="Generate" class="oe_highlight" style="text-align:left;"
+                                custom="custom_click"/>
+                    </div>
+
+                </div>
+                <div class="o_form_sheet_bg">
+                    <div class="o_form_sheet">
+                        <div class="cs_process">
+                            <table class="table table-condensed table-bordered" style='width:100%;'>
+                                <thead>
+                                    <tr class="tr_1" id="tr_1"></tr>
+                                    <tr class="tr_2" id="tr_2"></tr>
+                                    <tr class="tr_3" id="tr_3"></tr>
+                                </thead>
+                                <tbody class="tbody_1" id="tbody_1">
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_purchase_comparison" model="ir.actions.act_window">
+        <field name="name">View Comparative Study</field>
+        <field name="res_model">purchase.rfq.cs</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="view_id" ref="view_purchase_rfq_form"/>
+    </record>
+    <menuitem
+            name="CS View"
+            id="menu_cs_view"
+            parent="purchase.menu_procurement_management"
+            sequence="8" action="action_purchase_comparison"
+            groups="base.group_user"/>
+
+
+    <!--    <record model="ir.ui.view" id="inherit_view_purchase_rfq_form">-->
+    <!--        <field name="name">purchase.rfq.inherit.validate</field>-->
+    <!--        <field name="model">purchase.rfq</field>-->
+    <!--        <field name="inherit_id" ref="gbs_purchase_rfq.view_purchase_rfq_form"/>-->
+    <!--        <field name="priority" eval="20"/>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <xpath expr="//button[@name='confirm_for_mail']" position="before">-->
+    <!--                <button name="%(action_purchase_comparison)d" type="action" string="Purchase CS Generate"-->
+    <!--                        class="oe_highlight"/>-->
+    <!--            </xpath>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+
+</odoo>
