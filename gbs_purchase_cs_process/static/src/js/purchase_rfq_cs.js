@@ -110,9 +110,9 @@ odoo.define('gbs_purchase_cs_process', function (require) {
                 for (var m = 0; m < data.row_objs[n].quotations.length; m++) {
                     var price = data.row_objs[n].quotations[m].price;
                     var total = data.row_objs[n].quotations[m].total;
-                    var tdm1 =  "<td class='text-right "+"chk"+chk+chkr+"'>"+price+"</td>";
-                    var tdm2 =  "<td class='text-right "+"chk"+chk+chkr+"'>"+total+"</td>";
-                    var tdm3 =  "<td class='text-right "+"chk"+chk+chkr+"'><input type='checkbox' id='"+"chk"+chk+chkr+"'/></td>";
+                    var tdm1 =  "<td class='text-right chk-rate'" + "id='rate"+chk+chkr+"'>"+price+"</td>";
+                    var tdm2 =  "<td class='text-right chk-total'" + "id='total"+chk+chkr+"'>"+total+"</td>";
+                    var tdm3 =  "<td class='text-right "+"chk"+chk+chkr+"'><input type='checkbox' class='chk-box' id='"+chk+chkr+"'/></td>";
                     tr_ = tr_ + tdm1 + tdm2 + tdm3;
                     chkr = chkr + 1;
                 }
@@ -125,7 +125,17 @@ odoo.define('gbs_purchase_cs_process', function (require) {
                 chk = chk + 1;
             }
             document.getElementById('tbody_1').innerHTML = final_tr;
+            $(document).find('.chk-box').on('click', function(){
+                if($(this).is(":checked")){
+                    var element_id = $(this).attr('id');
+                    var rate = $("#rate"+element_id).html();
+                    var total = $("#total"+element_id).html();
+                    alert("Rate: " + rate +"Total: " + total);
+                }else{
+                    $('.foo').attr('checked', false);
+                }
 
+            });
         },
 
 
