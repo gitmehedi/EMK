@@ -45,3 +45,15 @@ class InheritedBankStatementLine(models.Model):
                 rec.type_of_operation = rec.statement_id.type_of_operation
 
     type_of_operation = fields.Char(compute='statement_type_compute')
+
+    @api.multi
+    def unlink(self):
+        end_balance = 0
+        for rec in self:
+            if rec.amount < 0:
+                end_balance = rec.statement_id.balance_end_real + (-1) * rec.amount
+            else:
+                end_balance = rec.statement_id.balance_end_real - rec.amount
+            rec.statement_id.write({'balance_end_real': end_balance})
+
+        return super(InheritedBankStatementLine, self).unlink()

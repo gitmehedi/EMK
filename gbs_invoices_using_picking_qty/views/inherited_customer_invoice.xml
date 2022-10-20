@@ -21,5 +21,17 @@
                 </xpath>
             </field>
         </record>
+        
+        
+        <record id="account.action_invoice_tree1" model="ir.actions.act_window">
+            <field name="context">
+                {'type':'out_invoice',
+                'journal_type': 'sale',
+                'no_create_edit_button':True
+                }
+            </field>
+        </record>
+        
+        
     </data>
 </odoo>

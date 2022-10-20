@@ -12,6 +12,15 @@ class InheritedAccountBankStatement(models.Model):
 
     @api.model
     def create(self, vals):
+        if 'temp_journal_id' in vals and 'is_petty_cash_journal' in vals:
+            journal_id = vals['temp_journal_id']
+            is_petty_cash_journal = vals['is_petty_cash_journal']
+            if is_petty_cash_journal:
+                statements = self.env['account.bank.statement'].search(
+                    [('journal_id', '=', journal_id), ('state', '=', 'open')])
+                if statements:
+                    raise UserError(_('Please reconcile previous transactions for this journal.\n Then you can create new transaction!'))
+
         if 'balance_start_duplicate' in vals and 'line_ids' in vals:
             total = 0
             for line in vals['line_ids']:
@@ -49,16 +58,14 @@ class InheritedAccountBankStatement(models.Model):
 
     balance_start = fields.Monetary(string='Starting Balance', default=_default_opening_balance)
     balance_start_duplicate = fields.Monetary(string='Start Balance', default=_default_opening_balance)
-    # @api.depends('line_ids', 'balance_start')
-    # def calc_ending_balance(self):
-    #     for record in self:
-    #         total = 0
-    #         for line in record.line_ids:
-    #             total = total + line.amount
-    #         if record.balance_start:
-    #             record.balance_end_real = total + record.balance_start
-    #
-    # balance_end_real = fields.Monetary('Ending Balance', compute='calc_ending_balance',readonly=False)
+
+    @api.depends('journal_id')
+    def get_temp_journal(self):
+        for rec in self:
+            if rec.journal_id:
+                rec.temp_journal_id = rec.journal_id.id
+
+    temp_journal_id = fields.Many2one('account.journal', string='Journal', readonly=False, compute='get_temp_journal')
 
     name = fields.Char(string='Reference', size=60, states={'open': [('readonly', False)]}, copy=False, readonly=True)
 
@@ -88,7 +95,7 @@ class InheritedAccountBankStatement(models.Model):
                 else:
                     rec.is_petty_cash_journal = False
 
-    is_petty_cash_journal = fields.Boolean(compute="_check_journal")
+    is_petty_cash_journal = fields.Boolean(compute="_check_journal", readonly=False)
 
     type_of_operation = fields.Selection([('cash_in', 'Cash In'), ('cash_out', 'Cash Out')], string='Type of Operation')
 
@@ -420,3 +427,21 @@ class InheritedAccountBankStatement(models.Model):
                     raise UserError(_('A statement cannot be canceled when its lines are reconciled.'))
 
         self.state = 'open'
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(InheritedAccountBankStatement, self).fields_view_get(
+            view_id=view_id,
+            view_type=view_type,
+            toolbar=toolbar,
+            submenu=submenu)
+        if toolbar:
+            actions_in_toolbar = res['toolbar'].get('action')
+            if actions_in_toolbar:
+                temp_actions_in_toolbar = actions_in_toolbar
+                for action in temp_actions_in_toolbar:
+                    if action['xml_id'] == "account.action_cash_box_in":
+                        res['toolbar']['action'].remove(action)
+                    if action['xml_id'] == "account.action_cash_box_out":
+                        res['toolbar']['action'].remove(action)
+        return res
