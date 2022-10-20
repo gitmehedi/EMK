@@ -23,6 +23,7 @@
         'views/petty_cash_dashboard.xml',
         'views/inherited_account_bank_statement_view.xml',
         'views/account_bank_statement_popup.xml',
-        'views/inherited_account_move_line.xml'
+        'views/inherited_account_move_line.xml',
+        'views/account_bank_statement_view.xml'
     ],
 }

@@ -5,23 +5,29 @@
             <field name="name">inherit.account.bank.statement.view.form</field>
             <field name="model">account.bank.statement</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//form" position="attributes">
+                        <attribute name="duplicate">0</attribute>
+                        <attribute name="delete">0</attribute>
+                    </xpath>
+
                     <xpath expr="//button[@name='check_confirm_bank']" position="after">
                         <button string="Export Excel" name="action_statement_print" class="oe_highlight" type="object"/>
                     </xpath>
-                    <xpath expr="//button[@name='%(account.action_view_account_bnk_stmt_cashbox)d']" position="attributes">
+                    <xpath expr="//button[@name='%(account.action_view_account_bnk_stmt_cashbox)d']"
+                           position="attributes">
                         <attribute name="attrs">{'invisible': [('is_petty_cash_journal', '!=', False)]}</attribute>
                     </xpath>
-
-
 
                     <xpath expr="//field[@name='name']" position="attributes">
                         <attribute name="attrs">{'required': [('is_petty_cash_journal', '!=', False)]}</attribute>
                     </xpath>
                     <xpath expr="//field[@name='balance_start']" position="attributes">
                         <attribute name="attrs">{'readonly': ['|', ('is_petty_cash_journal', '!=', False),
-                                                              ('state', '=', 'confirm')]}</attribute>
+                            ('state', '=', 'confirm')]}
+                        </attribute>
 
                     </xpath>
 
@@ -31,7 +37,8 @@
 
                     <xpath expr="//field[@name='balance_end_real']" position="attributes">
                         <attribute name="attrs">{'readonly': ['|', ('is_petty_cash_journal', '!=', False),
-                                                              ('state', '=', 'confirm')]}</attribute>
+                            ('state', '=', 'confirm')]}
+                        </attribute>
                     </xpath>
 
                     <xpath expr="//field[@name='line_ids']" position="attributes">
@@ -40,6 +47,7 @@
 
                     <xpath expr="//field[@name='journal_id']" position="after">
                         <field name="is_petty_cash_journal" invisible="1"/>
+                        <field name="temp_journal_id" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <field name="petty_cash_reconciled" invisible="1"/>
                         <field name="balance_start_duplicate" invisible="1"/>
@@ -48,7 +56,6 @@
                     <xpath expr="//field[@name='company_id']" position="after">
                         <field name="type_of_operation"
                                attrs="{'required':[('is_petty_cash_journal','=',True)],'readonly':[('id','!=',False)],'invisible':[('is_petty_cash_journal','=',False)]}"/>
-                        <!--  <field name="type_of_operation"/>-->
                     </xpath>
 
 
@@ -66,16 +73,15 @@
                         <button name="duplicate_unreconcile_action"
                                 string="Unreconcile" type="object"
                                 class="oe_highlight"
+                                confirm="Are you sure to unreconcile?"
                                 attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('petty_cash_reconciled', '=', False),('state', '!=', 'open')]}"/>
-                        <!--
-                                                <button name="button_cancel_duplicate" states="confirm" string="Cancel Statement" attrs="{'invisible':[('is_petty_cash_journal','=',False)]}" type="object"/>
-                                              <button name="button_cancel" states="confirm" attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement" type="object"/>-->
-                        <!--                    -->
                     </xpath>
 
                     <xpath expr="//button[@name='button_cancel']" position="replace">
-                        <button name="button_cancel" states="confirm" attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement" type="object"/>
-                     </xpath>
+                        <button name="button_cancel" states="confirm"
+                                attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement"
+                                type="object"/>
+                    </xpath>
 
 
                     <!--lines-->
@@ -99,7 +105,8 @@
                            position="attributes">
                         <attribute name="attrs">{
                             'invisible': ['|', '|', ('line_ids', '=', []), ('state', '!=', 'open'),
-                                          ('is_petty_cash_journal', '=', True)]}</attribute>
+                            ('is_petty_cash_journal', '=', True)]}
+                        </attribute>
                     </xpath>
 
 
@@ -114,6 +121,11 @@
             <field name="inherit_id" ref="account.view_bank_statement_tree"/>
             <field name="arch" type="xml">
                 <data>
+                     <xpath expr="//tree" position="attributes">
+                        <attribute name="duplicate">0</attribute>
+                        <attribute name="delete">0</attribute>
+                    </xpath>
+
                     <xpath expr="//field[@name='date']" position="after">
                         <field name="is_petty_cash_journal" invisible="1"/>
                         <field name="type_of_operation" attrs="{'invisible':[('is_petty_cash_journal','=',False)]}"/>
