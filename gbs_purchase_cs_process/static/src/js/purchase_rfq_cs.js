@@ -131,8 +131,6 @@ odoo.define('gbs_purchase_cs_process', function (require) {
                     var rate = $("#rate"+element_id).html();
                     var total = $("#total"+element_id).html();
                     alert("Rate: " + rate +"Total: " + total);
-                }else{
-                    $('.foo').attr('checked', false);
                 }
 
             });
