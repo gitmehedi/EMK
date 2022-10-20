@@ -131,14 +131,6 @@
                                context="{'action_name': 'action_account_moves_all_a'}"
                                groups="gbs_petty_cash.group_petty_cash_user">Journal Items</a>
 
-                            <a type="object" name="create_cash_statement_cash_in" style="color:#68B396;font-weight:bold;">
-                                <t t-if="journal_type == 'cash'">Cash In Money</t>
-                            </a>
-                            <a type="object" name="create_cash_statement_cash_out" style="color:#68B396;font-weight:bold;">
-                                <t t-if="journal_type == 'cash'">Cash Out Money</t>
-                            </a>
-
-
                         </div>
                         <!-- On the right, show other common informations/actions -->
                         <div class="col-xs-6 o_kanban_primary_right">
@@ -160,6 +152,13 @@
                                     </div>
                                 </div>
                             </t>
+                             <a type="object" name="create_cash_statement_cash_in" style="color:#2AAA8A;font-weight:bold;">
+                                <t t-if="journal_type == 'cash'">Cash In Money</t>
+                            </a>
+                            <a type="object" name="create_cash_statement_cash_out" style="color:#2AAA8A;font-weight:bold;">
+                                <t t-if="journal_type == 'cash'">Cash Out Money</t>
+                            </a>
+
                             <!--Reconcile item hidden-->
 
 <!--                            <div class="o_kanban_card_manage_title">-->
