@@ -9,10 +9,12 @@ class Currency(models.Model):
     start_word_map['USD'] = ' Dollars'
     start_word_map['EUR'] = ' Euro'
     start_word_map['BDT'] = ' Taka'
+    start_word_map['CHF'] = ' CHF'
 
     end_word_map['USD'] = ' Cents'
     end_word_map['EUR'] = ' Cents'
     end_word_map['BDT'] = ' Paisa'
+    end_word_map['CHF'] = ' Coins'
 
     @api.model
     def amount_to_word(self, number, is_add_currency=True,currency='BDT'):
