@@ -19,7 +19,8 @@ class InheritedAccountBankStatement(models.Model):
                 statements = self.env['account.bank.statement'].search(
                     [('journal_id', '=', journal_id), ('state', '=', 'open')])
                 if statements:
-                    raise UserError(_('Please reconcile previous transactions for this journal.\n Then you can create new transaction!'))
+                    raise UserError(
+                        _('Please reconcile previous transactions for this journal.\n Then you can create new transaction!'))
 
         if 'balance_start_duplicate' in vals and 'line_ids' in vals:
             total = 0
@@ -40,14 +41,14 @@ class InheritedAccountBankStatement(models.Model):
             for x in xrange(line_len):
                 # if changing existing line amount
                 if values['line_ids'][x][1] and values['line_ids'][x][2]:
-                    bank_statement_line =  self.env['account.bank.statement.line'].browse(values['line_ids'][x][1])
+                    bank_statement_line = self.env['account.bank.statement.line'].browse(values['line_ids'][x][1])
                     if bank_statement_line:
                         sum_to_deduct = sum_to_deduct + bank_statement_line.amount
-                if values['line_ids'][x][2]:
+                if values['line_ids'][x][2] and values['line_ids'][x][2]['amount']:
                     amount = float(values['line_ids'][x][2]['amount'])
                     total = total + amount
             if sum_to_deduct < 0:
-                total = total + (-1)*sum_to_deduct
+                total = total + (-1) * sum_to_deduct
             else:
                 total = total - sum_to_deduct
             if total + self.balance_end_real < 0:
@@ -82,7 +83,6 @@ class InheritedAccountBankStatement(models.Model):
     def _check_balance_start_negative_val(self):
         if self.balance_start < 0:
             raise ValidationError('Starting Balance can not be Negative!')
-
 
     @api.constrains('difference')
     def _check_amount_val(self):
