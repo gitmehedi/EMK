@@ -35,6 +35,7 @@
                                     attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('petty_cash_reconciled', '=', False),('state', '!=', 'open')]}"/>
                             <button name="button_cancel" states="confirm" invisible="1" string="Cancel Statement"
                                     type="object"/>
+                            <button name="button_draft" states="confirm" string="Reset to New" type="object"/>
                             <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                         </header>
                         <sheet>
