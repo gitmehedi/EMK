@@ -152,11 +152,11 @@
                                     </div>
                                 </div>
                             </t>
-                             <a type="object" name="create_cash_statement_cash_in" style="color:#2AAA8A;font-weight:bold;">
-                                <t t-if="journal_type == 'cash'">Cash In Money</t>
+                             <a type="object" name="create_cash_statement_cash_in" style="color:#729FCF;font-weight:bold;">
+                                <t t-if="journal_type == 'cash'">Cash In</t>
                             </a>
-                            <a type="object" name="create_cash_statement_cash_out" style="color:#2AAA8A;font-weight:bold;">
-                                <t t-if="journal_type == 'cash'">Cash Out Money</t>
+                            <a type="object" name="create_cash_statement_cash_out" style="color:#729FCF;font-weight:bold;">
+                                <t t-if="journal_type == 'cash'">Cash Out</t>
                             </a>
 
                             <!--Reconcile item hidden-->

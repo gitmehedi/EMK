@@ -36,15 +36,24 @@ class InheritedAccountBankStatement(models.Model):
         if 'line_ids' in values:
             line_len = len(values['line_ids'])
             total = 0
+            sum_to_deduct = 0
             for x in xrange(line_len):
+                # if changing existing line amount
+                if values['line_ids'][x][1] and values['line_ids'][x][2]:
+                    bank_statement_line =  self.env['account.bank.statement.line'].browse(values['line_ids'][x][1])
+                    if bank_statement_line:
+                        sum_to_deduct = sum_to_deduct + bank_statement_line.amount
                 if values['line_ids'][x][2]:
                     amount = float(values['line_ids'][x][2]['amount'])
                     total = total + amount
-
+            if sum_to_deduct < 0:
+                total = total + (-1)*sum_to_deduct
+            else:
+                total = total - sum_to_deduct
             if total + self.balance_end_real < 0:
                 raise UserError('Ending Balance can not be Negative!')
-            values['balance_end_real'] = total + self.balance_end_real
 
+            values['balance_end_real'] = total + self.balance_end_real
         res = super(InheritedAccountBankStatement, self).write(values)
         return res
 
@@ -74,10 +83,6 @@ class InheritedAccountBankStatement(models.Model):
         if self.balance_start < 0:
             raise ValidationError('Starting Balance can not be Negative!')
 
-    # @api.constrains('balance_end_real')
-    # def _check_balance_end_real_negative_val(self):
-    #     if self.balance_end_real < 0:
-    #         raise ValidationError('Ending Balance can not be Negative!')
 
     @api.constrains('difference')
     def _check_amount_val(self):
@@ -366,13 +371,6 @@ class InheritedAccountBankStatement(models.Model):
         statements = self.filtered(lambda r: r.state == 'open')
         for statement in statements:
             moves = statement.move_line_ids.mapped('move_id')
-            # for st_line in statement.line_ids:
-            #     if st_line.account_id and not st_line.journal_entry_ids.ids:
-            #         st_line.fast_counterpart_creation()
-            #     elif not st_line.journal_entry_ids.ids:
-            #         raise UserError(
-            #             _('All the account entries lines must be processed in order to close the statement.'))
-            #     moves = (moves | st_line.journal_entry_ids)
 
             if moves:
                 moves.filtered(lambda m: m.state != 'posted').post()
@@ -389,17 +387,6 @@ class InheritedAccountBankStatement(models.Model):
             payment_to_cancel = self.env['account.payment']
             # check if reconciles entries exist in move
             for move in moves_to_cancel:
-                # ids = []
-                # for aml in move.line_ids:
-                #     if aml.account_id.reconcile:
-                #         ids.extend(
-                #             [r.debit_move_id.id for r in aml.matched_debit_ids] if aml.credit > 0 else [r.credit_move_id.id
-                #                                                                                         for r in
-                #                                                                                         aml.matched_credit_ids])
-                #         ids.append(aml)
-                # for aml in ids:
-                #     if aml.move_id.id != move.id:
-                #         aml.write({'full_reconcile_id':False})
                 for line in move.line_ids:
                     payment_to_cancel |= line.payment_id
 
@@ -441,7 +428,5 @@ class InheritedAccountBankStatement(models.Model):
                 temp_actions_in_toolbar = actions_in_toolbar
                 for action in temp_actions_in_toolbar:
                     if action['xml_id'] == "account.action_cash_box_in":
-                        res['toolbar']['action'].remove(action)
-                    if action['xml_id'] == "account.action_cash_box_out":
                         res['toolbar']['action'].remove(action)
         return res

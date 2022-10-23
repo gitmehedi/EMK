@@ -7,110 +7,136 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//form" position="attributes">
-                        <attribute name="duplicate">0</attribute>
-                        <attribute name="delete">0</attribute>
-                    </xpath>
+                <xpath expr="//form" position="replace">
+                    <form string="Bank Statement" duplicate="0" delete="0">
+                        <header>
+                            <field name="all_lines_reconciled" invisible="1"/>
+                            <button name="%(account.action_bank_reconcile_bank_statements)d" string="Reconcile" type="action"
+                                    class="oe_highlight"
+                                    attrs="{'invisible': ['|', '|', ('line_ids', '=', []), ('state', '!=', 'open'),('is_petty_cash_journal', '=', True)]}"/>
+                            <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight"
+                                    attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
 
-                    <xpath expr="//button[@name='check_confirm_bank']" position="after">
-                        <button string="Export Excel" name="action_statement_print" class="oe_highlight" type="object"/>
-                    </xpath>
-                    <xpath expr="//button[@name='%(account.action_view_account_bnk_stmt_cashbox)d']"
-                           position="attributes">
-                        <attribute name="attrs">{'invisible': [('is_petty_cash_journal', '!=', False)]}</attribute>
-                    </xpath>
+                            <button string="Export Excel" name="action_statement_print" class="oe_highlight"
+                                    type="object"/>
+                            <button name="action_reconcile_all"
+                                    class="btn-danger mr24 oe_read_only"
+                                    type="object"
+                                    attrs="{'invisible':['|',('is_petty_cash_journal','=',False),('petty_cash_reconciled','=',True)]}"
+                                    string="Reconcile"/>
+                            <button name="duplicate_validate_action"
+                                    string="Validate" type="object"
+                                    class="oe_highlight"
+                                    attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open'),('petty_cash_reconciled','=',False)]}"/>
+                            <button name="duplicate_unreconcile_action"
+                                    string="Unreconcile" type="object"
+                                    class="oe_highlight"
+                                    confirm="Are you sure to unreconcile?"
+                                    attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('petty_cash_reconciled', '=', False),('state', '!=', 'open')]}"/>
+                            <button name="button_cancel" states="confirm" invisible="1" string="Cancel Statement"
+                                    type="object"/>
+                            <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
+                        </header>
+                        <sheet>
+                            <div class="oe_button_box" name="button_box">
+                                <button class="oe_stat_button" name="button_journal_entries"
+                                        string="Journal Entries" type="object"
+                                        attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
+                                <field name="move_line_ids" invisible="1" readonly="1"/>
+                            </div>
+                            <div class="oe_title oe_inline">
+                                <label for="name" class="oe_edit_only"/>
+                                <h1>
+                                    <field name="name" attrs="{'required':[('is_petty_cash_journal', '!=', False)]}"/>
+                                </h1>
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="journal_type" invisible="1"/>
+                                    <field name="cashbox_start_id" invisible="1"/>
+                                    <field name="cashbox_end_id" invisible="1"/>
+                                    <field name="journal_id" domain="[('type', '=', journal_type)]"
+                                           attrs="{'readonly': [('move_line_ids', '!=', [])]}" widget="selection"/>
+                                    <field name="date"/>
+                                    <field name="is_petty_cash_journal" invisible="1"/>
+                                    <field name="temp_journal_id" invisible="1"/>
+                                    <field name="id" invisible="1"/>
+                                    <field name="petty_cash_reconciled" invisible="1"/>
+                                    <field name="balance_start_duplicate" invisible="1"/>
 
-                    <xpath expr="//field[@name='name']" position="attributes">
-                        <attribute name="attrs">{'required': [('is_petty_cash_journal', '!=', False)]}</attribute>
-                    </xpath>
-                    <xpath expr="//field[@name='balance_start']" position="attributes">
-                        <attribute name="attrs">{'readonly': ['|', ('is_petty_cash_journal', '!=', False),
-                            ('state', '=', 'confirm')]}
-                        </attribute>
+                                    <field name='company_id' options="{'no_create': True}"
+                                           groups="base.group_multi_company"/>
+                                    <field name="type_of_operation"
+                                           attrs="{'required':[('is_petty_cash_journal','=',True)],'readonly':[('id','!=',False)],'invisible':[('is_petty_cash_journal','=',False)]}"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </group>
+                                <group>
+                                    <label for="balance_start"/>
+                                    <div>
+                                        <field class="oe_inline" name="balance_start"
+                                               attrs="{'readonly':['|',('is_petty_cash_journal', '!=', False),('state', '=', 'confirm')]}"/>
 
-                    </xpath>
+                                    </div>
+                                    <label for="balance_end_real"/>
+                                    <div>
+                                        <field class="oe_inline" name="balance_end_real"
+                                               attrs="{'readonly':['|',('is_petty_cash_journal', '!=', False),('state', '=', 'confirm')]}"/>
 
-                    <xpath expr="//field[@name='journal_id']" position="attributes">
-                        <attribute name="readonly">1</attribute>
-                    </xpath>
+                                    </div>
+                                </group>
+                            </group>
 
-                    <xpath expr="//field[@name='balance_end_real']" position="attributes">
-                        <attribute name="attrs">{'readonly': ['|', ('is_petty_cash_journal', '!=', False),
-                            ('state', '=', 'confirm')]}
-                        </attribute>
-                    </xpath>
+                            <notebook>
+                                <page string="Transactions" name="statement_line_ids">
+                                    <field name="line_ids" context="{'date':date}" attrs="{'readonly': [('petty_cash_reconciled', '!=', False)]}">
+                                        <tree editable="bottom" string="Statement lines"
+                                              decoration-muted="journal_entry_ids">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="journal_entry_ids" invisible="1"/>
+                                            <field name="date"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                            <field name="name"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                            <field name="partner_id"
+                                                   domain="['|',('parent_id','=',False),('is_company','=',True)]"
+                                                   context="{'default_supplier': 1}"
+                                                   invisible="1"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                            <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
+                                                   groups="base.group_no_one"/>
+                                            <field name="amount"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
 
-                    <xpath expr="//field[@name='line_ids']" position="attributes">
-                        <attribute name="attrs">{'readonly': [('petty_cash_reconciled', '!=', False)]}</attribute>
-                    </xpath>
+                                            <field name="is_petty_cash_journal" invisible="1"/>
+                                            <field name="is_reconciled" invisible="1"/>
+                                            <field name="type_of_operation" invisible="1"/>
 
-                    <xpath expr="//field[@name='journal_id']" position="after">
-                        <field name="is_petty_cash_journal" invisible="1"/>
-                        <field name="temp_journal_id" invisible="1"/>
-                        <field name="id" invisible="1"/>
-                        <field name="petty_cash_reconciled" invisible="1"/>
-                        <field name="balance_start_duplicate" invisible="1"/>
-                    </xpath>
-
-                    <xpath expr="//field[@name='company_id']" position="after">
-                        <field name="type_of_operation"
-                               attrs="{'required':[('is_petty_cash_journal','=',True)],'readonly':[('id','!=',False)],'invisible':[('is_petty_cash_journal','=',False)]}"/>
-                    </xpath>
-
-
-                    <xpath expr="//button[@name='%(account.action_bank_reconcile_bank_statements)d']"
-                           position="after">
-                        <button name="action_reconcile_all"
-                                class="btn-danger mr24 oe_read_only"
-                                type="object"
-                                attrs="{'invisible':['|',('is_petty_cash_journal','=',False),('petty_cash_reconciled','=',True)]}"
-                                string="Reconcile"/>
-                        <button name="duplicate_validate_action"
-                                string="Validate" type="object"
-                                class="oe_highlight"
-                                attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open'),('petty_cash_reconciled','=',False)]}"/>
-                        <button name="duplicate_unreconcile_action"
-                                string="Unreconcile" type="object"
-                                class="oe_highlight"
-                                confirm="Are you sure to unreconcile?"
-                                attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('petty_cash_reconciled', '=', False),('state', '!=', 'open')]}"/>
-                    </xpath>
-
-                    <xpath expr="//button[@name='button_cancel']" position="replace">
-                        <button name="button_cancel" states="confirm"
-                                attrs="{'invisible':[('is_petty_cash_journal','=',True)]}" string="Cancel Statement"
-                                type="object"/>
-                    </xpath>
-
-
-                    <!--lines-->
-                    <xpath expr="//notebook//field[@name='line_ids']/tree/field[@name='amount']"
-                           position="after">
-                        <field name="is_petty_cash_journal" invisible="1"/>
-                        <field name="is_reconciled" invisible="1"/>
-                        <field name="type_of_operation" invisible="1"/>
-                    </xpath>
-
-                    <xpath expr="//sheet" position="after">
+                                            <field name="journal_currency_id" invisible="1"/>
+                                            <field name="amount_currency" invisible="1"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                            <field name="currency_id" options="{'no_create': True}" invisible="1"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                            <field name="bank_account_id" invisible="1"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
+                                                   domain="['|', ('partner_id', '=', partner_id), ('partner_id', '=', False)]"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="balance_end"/>
+                                </div>
+                                <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator"/>
+                            </group>
+                            <div class="oe_clear"/>
+                        </sheet>
                         <div class="oe_chatter">
                             <field name="message_follower_ids" widget="mail_followers"/>
                             <field name="message_ids" widget="mail_thread"/>
                         </div>
-                    </xpath>
-
-
-                    <!--existing reconcile button-->
-                    <xpath expr="//button[@name='%(account.action_bank_reconcile_bank_statements)d']"
-                           position="attributes">
-                        <attribute name="attrs">{
-                            'invisible': ['|', '|', ('line_ids', '=', []), ('state', '!=', 'open'),
-                            ('is_petty_cash_journal', '=', True)]}
-                        </attribute>
-                    </xpath>
-
-
-                </data>
+                    </form>
+                </xpath>
             </field>
         </record>
 
@@ -121,7 +147,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_tree"/>
             <field name="arch" type="xml">
                 <data>
-                     <xpath expr="//tree" position="attributes">
+                    <xpath expr="//tree" position="attributes">
                         <attribute name="duplicate">0</attribute>
                         <attribute name="delete">0</attribute>
                     </xpath>
