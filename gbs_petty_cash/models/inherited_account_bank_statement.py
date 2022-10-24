@@ -10,10 +10,13 @@ class InheritedAccountBankStatement(models.Model):
     _name = 'account.bank.statement'
     _inherit = ['account.bank.statement', 'mail.thread']
 
-
-
     @api.model
     def create(self, vals):
+        if 'line_ids' in vals:
+            if not vals['line_ids']:
+                raise UserError(
+                    _('Transaction lines cannot be empty!'))
+
         if 'temp_journal_id' in vals and 'is_petty_cash_journal' in vals:
             journal_id = vals['temp_journal_id']
             is_petty_cash_journal = vals['is_petty_cash_journal']
@@ -59,6 +62,10 @@ class InheritedAccountBankStatement(models.Model):
 
             values['balance_end_real'] = total + self.balance_end_real
         res = super(InheritedAccountBankStatement, self).write(values)
+        if not self.line_ids:
+            raise UserError(
+                _('Transaction lines cannot be empty!'))
+
         return res
 
     @api.model
@@ -130,7 +137,7 @@ class InheritedAccountBankStatement(models.Model):
 
     def get_move_line_vals(self, name, date, journal_id, account_id, operating_unit_id, department_id, cost_center_id,
                            debit, credit,
-                           company_id, statement_line_id, partner_id,analytic_account_id):
+                           company_id, statement_line_id, partner_id, analytic_account_id):
         if statement_line_id:
             return {
                 'name': name,
@@ -159,7 +166,7 @@ class InheritedAccountBankStatement(models.Model):
                 'debit': debit,
                 'credit': credit,
                 'partner_id': partner_id,
-                'analytic_account_id':analytic_account_id
+                'analytic_account_id': analytic_account_id
                 # 'company_id': company_id,
             }
 
@@ -209,7 +216,7 @@ class InheritedAccountBankStatement(models.Model):
                                                        aml.journal_id.operating_unit_id.id,
                                                        aml.department_id.id, aml.cost_center_id.id, 0,
                                                        aml.amount_residual,
-                                                       self.company_id.id, self.id, aml.partner_id.id,False)
+                                                       self.company_id.id, self.id, aml.partner_id.id, False)
 
                 else:
                     # debit
@@ -220,7 +227,7 @@ class InheritedAccountBankStatement(models.Model):
                                                        aml.department_id.id, aml.cost_center_id.id,
                                                        (-1) * aml.amount_residual,
                                                        0,
-                                                       self.company_id.id, self.id, aml.partner_id.id,False)
+                                                       self.company_id.id, self.id, aml.partner_id.id, False)
                 aml_vals['move_id'] = move.id
                 aml_vals['payment_id'] = payment.id
                 new_aml = self.env['account.move.line'].with_context(check_move_validity=False).create(aml_vals)
@@ -234,13 +241,13 @@ class InheritedAccountBankStatement(models.Model):
                                                        self.journal_id.default_debit_account_id.id,
                                                        self.journal_id.operating_unit_id.id, False, False, line.amount,
                                                        0,
-                                                       self.company_id.id, self.id, line.partner_id.id,False)
+                                                       self.company_id.id, self.id, line.partner_id.id, False)
                 else:
                     aml_vals = self.get_move_line_vals(line.name, line.date, self.journal_id.id,
                                                        self.journal_id.default_credit_account_id.id,
                                                        self.journal_id.operating_unit_id.id, False, False, 0,
                                                        (-1) * line.amount,
-                                                       self.company_id.id, self.id, line.partner_id.id,False)
+                                                       self.company_id.id, self.id, line.partner_id.id, False)
 
                 aml_vals['move_id'] = move.id
                 aml_vals['payment_id'] = payment.id
@@ -274,7 +281,8 @@ class InheritedAccountBankStatement(models.Model):
                                                        statement.journal_id.operating_unit_id.id,
                                                        manual_entry.department_id.id, manual_entry.cost_center_id.id, 0,
                                                        manual_entry.balance,
-                                                       statement.company_id.id, self.id, manual_entry.partner_id.id,manual_entry.analytic_account_id.id)
+                                                       statement.company_id.id, self.id, manual_entry.partner_id.id,
+                                                       manual_entry.analytic_account_id.id)
 
                 else:
                     # debit
@@ -284,7 +292,8 @@ class InheritedAccountBankStatement(models.Model):
                                                        manual_entry.department_id.id, manual_entry.cost_center_id.id,
                                                        (-1) * manual_entry.balance,
                                                        0,
-                                                       statement.company_id.id, self.id, manual_entry.partner_id.id,manual_entry.analytic_account_id.id)
+                                                       statement.company_id.id, self.id, manual_entry.partner_id.id,
+                                                       manual_entry.analytic_account_id.id)
 
                 move_lines.append((0, 0, aml_vals))
             total_amount = 0
@@ -297,13 +306,13 @@ class InheritedAccountBankStatement(models.Model):
                                                    self.journal_id.default_debit_account_id.id,
                                                    self.journal_id.operating_unit_id.id, False, False, total_amount,
                                                    0,
-                                                   self.company_id.id, self.id, False,False)
+                                                   self.company_id.id, self.id, False, False)
             else:
                 aml_vals = self.get_move_line_vals(self.name, self.date, self.journal_id.id,
                                                    self.journal_id.default_credit_account_id.id,
                                                    self.journal_id.operating_unit_id.id, False, False, 0,
                                                    (-1) * total_amount,
-                                                   self.company_id.id, self.id, False,False)
+                                                   self.company_id.id, self.id, False, False)
 
             move_lines.append((0, 0, aml_vals))
 

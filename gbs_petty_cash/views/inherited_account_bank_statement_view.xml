@@ -38,6 +38,7 @@
                                     type="object"/>
                             <button name="button_draft" states="confirm"
                                     groups="gbs_petty_cash.group_petty_cash_manager"
+                                    confirm="Are you sure to set the transaction to new?"
                                     string="Reset to New" type="object"/>
                             <button string="Export Excel" name="action_statement_print" class="oe_highlight"
                                     type="object"/>
