@@ -63,7 +63,7 @@
                                     <field name="cashbox_start_id" invisible="1"/>
                                     <field name="cashbox_end_id" invisible="1"/>
                                     <field name="journal_id" domain="[('type', '=', journal_type)]"
-                                           attrs="{'readonly': [('move_line_ids', '!=', [])]}" widget="selection"/>
+                                           attrs="{'readonly': ['|',('is_petty_cash_journal','=',True),('move_line_ids', '!=', [])]}" widget="selection"/>
                                     <field name="date"/>
                                     <field name="is_petty_cash_journal" invisible="1"/>
                                     <field name="temp_journal_id" invisible="1"/>
