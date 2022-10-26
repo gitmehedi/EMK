@@ -179,6 +179,7 @@ class EventEvent(models.Model):
                               ('verify', 'Verified'),
                               ('approve', 'Approved'),
                               ('confirm', 'Confirmed'),
+                              ('mark_close', 'Mark as Close'),
                               ('done', 'Done'),
                               ('cancel', 'Cancelled')])
 
