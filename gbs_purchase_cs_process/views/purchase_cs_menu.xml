@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <menuitem
+            name="Comparative Study"
+            id="main_cs_menu"
+            parent="purchase.menu_procurement_management"
+            sequence="99"
+            groups="base.group_user"/>
+
+    <record id='action_purchase_rfq_new' model='ir.actions.act_window'>
+        <field name="name">RFQ</field>
+        <field name="res_model">purchase.rfq</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="search_rfq_cs"/>
+        <field name="context">{
+            'search_default_draftrfq':1,
+            }
+        </field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('purchase_rfq_tree_view')}),]"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new RFQ.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            name="New"
+            id="draft_cs_menu"
+            parent="main_cs_menu"
+            sequence="3" action="action_purchase_rfq_new"
+            groups="purchase.group_purchase_user"/>
+    <record id='action_purchase_rfq_confirmed' model='ir.actions.act_window'>
+        <field name="name">RFQ</field>
+        <field name="res_model">purchase.rfq</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="search_rfq_cs"/>
+        <field name="context">{
+            'search_default_to_validate_rfq':1,
+            }
+        </field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('purchase_rfq_tree_view')}),]"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new RFQ.
+            </p>
+        </field>
+    </record>
+    <menuitem
+            name="Pending Validation"
+            id="confirmed_cs_menu"
+            parent="main_cs_menu"
+            sequence="4" action="action_purchase_rfq_confirmed"
+            groups="purchase.group_purchase_manager"/>
+
+    <record id='action_purchase_rfq_approved' model='ir.actions.act_window'>
+        <field name="name">RFQ</field>
+        <field name="res_model">purchase.rfq</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="search_rfq_cs"/>
+        <field name="context">{
+            'search_default_to_approve_rfq':1,
+            }
+        </field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('purchase_rfq_tree_view')}),]"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new RFQ.
+            </p>
+        </field>
+    </record>
+    <menuitem
+            name="Pending Approval"
+            id="approved_cs_menu"
+            parent="main_cs_menu"
+            sequence="5" action="action_purchase_rfq_approved"
+            groups="gbs_application_group.group_head_of_procurement"/>
+</odoo>
