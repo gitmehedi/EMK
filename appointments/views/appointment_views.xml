@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <record model="ir.ui.view" id="view_appointment_appointment_tree">
+        <record id="view_appointment_appointment_tree" model="ir.ui.view">
             <field name="name">appointment.appointment.tree</field>
             <field name="model">appointment.appointment</field>
             <field name="arch" type="xml">
-                <tree string="Appointment" decoration-info="state == 'draft'" decoration-danger="state=='reject'"
-                      decoration-bf="state in ('draft','confirm')"
-                      colors="gray:state=='done';green:state=='confirm';">
+                <tree string="Appointment"
+                      decoration-info="state == 'draft'"
+                      decoration-success="state in ('confirm','approve')"
+                      decoration-muted="state in ('done',)"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('draft','confirm')">
                     <field name="name"/>
                     <field name="first_name"/>
                     <field name="last_name"/>
@@ -21,22 +24,27 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_appointment_appointment_form">
+        <record id="view_appointment_appointment_form" model="ir.ui.view" >
             <field name="name">appointment.appointment.form</field>
             <field name="model">appointment.appointment</field>
             <field name="arch" type="xml">
                 <form string="Appointment">
                     <header>
-                        <button name="confirm_appointment" string="Confirm" states="draft"
-                                class="oe_highlight" type="object" groups="appointment_user.group_appoint_user"/>
+                        <button name="confirm_appointment" string="Confirm" states="draft" type="object"
+                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"
+                                class="oe_highlight"/>
                         <button name="approve_appointment" string="Approve" states="confirm" type="object"
-                                groups="appointment_user.group_appoint_user" class="oe_highlight"/>
+                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"
+                                class="oe_highlight"/>
                         <button name="finish_appointment" string="Finish" states="approve" type="object"
-                                groups="appointment_user.group_appoint_user" class="oe_highlight"/>
+                                class="oe_highlight"
+                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
                         <button name="reject_appointment" string="Reject" states="draft,confirm,approve"
-                                groups="appointment_user.group_appoint_user" type="object"/>
+                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"
+                                type="object"/>
                         <button name="%(action_appointment_wizard)d" string="Reschedule" states="confirm,approve"
-                                groups="appointment_user.group_appoint_user" type="action"/>
+                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"
+                                type="action"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done,reject"
                                statusbar_colors='{"reject":"red"}'/>
                     </header>
@@ -164,6 +172,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','approve')]</field>
         </record>
+
         <record model="ir.actions.act_window" id="action_appointment_finish">
             <field name="name">Appointment</field>
             <field name="res_model">appointment.appointment</field>
@@ -185,7 +194,6 @@
             <field name="res_model">appointment.appointment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-
         </record>
 
         <record id="action_appointment_appointment_calender" model="ir.actions.act_window">
@@ -196,7 +204,6 @@
             <field name="view_mode">calendar,tree,form</field>
             <field name="view_id" ref="view_appointment_appointment_calendar"/>
         </record>
-
 
         <menuitem id="menu_appointment_appointment" name="Appointment (Draft)" action="action_appointment_appointment"
                   parent="appointment_menu.sub_appoint_menu" sequence="30"
