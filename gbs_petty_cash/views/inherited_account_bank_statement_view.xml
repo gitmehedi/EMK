@@ -11,14 +11,14 @@
                     <form string="Bank Statement" duplicate="0" delete="0">
                         <header>
                             <field name="all_lines_reconciled" invisible="1"/>
-                            <button name="%(account.action_bank_reconcile_bank_statements)d" string="Reconcile" type="action"
+                            <button name="%(account.action_bank_reconcile_bank_statements)d" string="Reconcile"
+                                    type="action"
                                     class="oe_highlight"
                                     attrs="{'invisible': ['|', '|', ('line_ids', '=', []), ('state', '!=', 'open'),('is_petty_cash_journal', '=', True)]}"/>
                             <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight"
                                     attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
 
-                            <button string="Export Excel" name="action_statement_print" class="oe_highlight"
-                                    type="object"/>
+
                             <button name="action_reconcile_all"
                                     class="btn-danger mr24 oe_read_only"
                                     type="object"
@@ -26,6 +26,7 @@
                                     string="Reconcile"/>
                             <button name="duplicate_validate_action"
                                     string="Validate" type="object"
+                                    groups="gbs_petty_cash.group_petty_cash_manager"
                                     class="oe_highlight"
                                     attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open'),('petty_cash_reconciled','=',False)]}"/>
                             <button name="duplicate_unreconcile_action"
@@ -35,7 +36,12 @@
                                     attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('petty_cash_reconciled', '=', False),('state', '!=', 'open')]}"/>
                             <button name="button_cancel" states="confirm" invisible="1" string="Cancel Statement"
                                     type="object"/>
-                            <button name="button_draft" states="confirm" string="Reset to New" type="object"/>
+                            <button name="button_draft" states="confirm"
+                                    groups="gbs_petty_cash.group_petty_cash_manager"
+                                    confirm="Are you sure to set the transaction to new?"
+                                    string="Reset to New" type="object"/>
+                            <button string="Export Excel" name="action_statement_print" class="oe_highlight"
+                                    type="object"/>
                             <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                         </header>
                         <sheet>
@@ -57,7 +63,7 @@
                                     <field name="cashbox_start_id" invisible="1"/>
                                     <field name="cashbox_end_id" invisible="1"/>
                                     <field name="journal_id" domain="[('type', '=', journal_type)]"
-                                           attrs="{'readonly': [('move_line_ids', '!=', [])]}" widget="selection"/>
+                                           attrs="{'readonly': ['|',('is_petty_cash_journal','=',True),('move_line_ids', '!=', [])]}" widget="selection"/>
                                     <field name="date"/>
                                     <field name="is_petty_cash_journal" invisible="1"/>
                                     <field name="temp_journal_id" invisible="1"/>
@@ -89,7 +95,8 @@
 
                             <notebook>
                                 <page string="Transactions" name="statement_line_ids">
-                                    <field name="line_ids" context="{'date':date}" attrs="{'readonly': [('petty_cash_reconciled', '!=', False)]}">
+                                    <field name="line_ids" context="{'date':date}"
+                                           attrs="{'readonly': [('petty_cash_reconciled', '!=', False)]}">
                                         <tree editable="bottom" string="Statement lines"
                                               decoration-muted="journal_entry_ids">
                                             <field name="sequence" widget="handle"/>
@@ -101,7 +108,6 @@
                                             <field name="partner_id"
                                                    domain="['|',('parent_id','=',False),('is_company','=',True)]"
                                                    context="{'default_supplier': 1}"
-                                                   invisible="1"
                                                    attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                             <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
                                                    groups="base.group_no_one"/>

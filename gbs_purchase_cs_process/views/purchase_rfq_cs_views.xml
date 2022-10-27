@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_purchase_rfq_form_cs" model="ir.ui.view">
+        <field name="name">Purchase Comparison</field>
+        <field name="model">purchase.rfq.cs</field>
+        <field name="arch" type="xml">
+            <form string="Comparison" class="oe_form_configuration">
+                <header>
+                    <style type="text/css">
+                        .o_form_sheet {
+                        max-width: none !important;
+                        }
+                        .cs_process {
+                        max-height: calc(100vh - 200px;);
+                        overflow: auto;
+                        border: 1px solid #ddd;
+                        font-size: 12px;
+                        white-space:nowrap;
+                        }
+                        .td-color{
+                        background-color:#FAD7A0;
+                        color:black;
+                        font-weight:bold;
+                        }
+                        .success-modal{
+                            color:#CEE9D2;
+                        }
+                        .error-modal{
+                            color:#EBA19F;
+                        }
+
+                    </style>
+                </header>
+                <div class="row">
+                    <div class="col-md-6">
+                        <separator string="Comparative Study View"/>
+                    </div>
+                    <div class="col-md-6 text-right status_div" id="status_div">
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent_for_confirmation,confirmed,approved"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label for="rfq_id"/>
+                        <field name="rfq_id" id="rfq_id" class="oe_inline" colspan="4"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        <span style="margin-left:6px;"></span>
+                        <button string="View" class="oe_highlight" style="text-align:left;"
+                                custom="custom_click"/>
+                        <span style="margin-left:6px;"></span>
+                        <button string="Send to Manager" id="send_to_manager_btn" class="oe_highlight" style="text-align:left;"
+                                states='draft'
+                                confirm="Are you sure to send it to the manager?"
+                                groups="purchase.group_purchase_user"
+                                custom="send_to_manager_click"/>
+                        <span style="margin-left:6px;"></span>
+                        <button string="Confirm" id="confirm_btn" class="oe_highlight" style="text-align:left;"
+                                states='sent_for_confirmation'
+                                confirm="Are you sure to confirm?"
+                                groups="purchase.group_purchase_manager"
+                                custom="confirm_click"/>
+                        <span style="margin-left:6px;"></span>
+                        <button string="Approve" id="approve_btn" class="oe_highlight" style="text-align:left;"
+                                states='confirmed'
+                                confirm="Are you sure to approve?"
+                                groups="gbs_application_group.group_head_of_procurement"
+                                custom="approve_click"/>
+
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <button string="Save" id="save_btn" class="oe_highlight" states='draft' groups="purchase.group_purchase_user"
+                                custom="save_click"/>
+                        <button string="Cancel" id="cancel_btn"  class="btn btn-danger" states='draft' groups="purchase.group_purchase_user" style="margin-left:6px;text-align:left;"
+                                custom="cancel_click"/>
+                    </div>
+
+
+                </div>
+
+                <div class="o_form_sheet" style="padding-top:10px;">
+                    <div class="cs_process" id="cs_process">
+                        <table class="table table-condensed table-bordered">
+                            <thead>
+                                <tr class="tr_1" id="tr_1"></tr>
+                                <tr class="tr_2" id="tr_2"></tr>
+                                <tr class="tr_3" id="tr_3"></tr>
+                            </thead>
+                            <tbody class="tbody_1" id="tbody_1">
+                            </tbody>
+                        </table>
+                        <div class="remarks_div" id="remarks_div">
+                        </div>
+                    </div>
+
+
+                    <div id="alert-modal" class="modal fade" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 id="alert-modal-title" class="modal-title"></h4>
+                                </div>
+                                <div id="alert-modal-body" class="modal-body"></div>
+                                <div class="modal-footer">
+                                    <div style="text-align:right;">
+                                        <button string="Close" class="oe_inline" custom="close_click"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_cs" model="ir.actions.act_window">
+        <field name="name">View Comparative Study</field>
+        <field name="res_model">purchase.rfq.cs</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{"default_rfq_id": active_id,'rfq_id': active_id}</field>
+        <field name="view_id" ref="view_purchase_rfq_form_cs"/>
+    </record>
+    <record id="action_purchase_comparison" model="ir.actions.act_window">
+        <field name="name">View Comparative Study</field>
+        <field name="res_model">purchase.rfq.cs</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="view_id" ref="view_purchase_rfq_form_cs"/>
+    </record>
+
+
+    <record model="ir.ui.view" id="inherit_view_purchase_rfq_form">
+        <field name="name">purchase.rfq.inherit.validate</field>
+        <field name="model">purchase.rfq</field>
+        <field name="inherit_id" ref="gbs_purchase_rfq.view_purchase_rfq_form"/>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='confirm_for_mail']" position="before">
+                <button name="%(action_view_cs)d" type="action" string="View CS"
+                        class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <field name="state"
+                       widget="statusbar"
+                       statusbar_visible="draft,confirmed,approved"/>
+
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>
