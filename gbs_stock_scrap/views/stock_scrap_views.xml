@@ -50,7 +50,7 @@
                         <group>
                             <group>
                                 <field name="request_by"/>
-                                <field name="requested_date"/>
+                                <field name="requested_date" readonly="1"/>
                                 <field name="approved_date" attrs="{'invisible': [('state','!=','approved')]}"/>
                                 <field name="approver_id" attrs="{'invisible': [('state','!=','approved')]}"/>
                             </group>
