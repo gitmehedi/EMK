@@ -20,3 +20,5 @@ class ResPartner(models.Model):
             users = self.env['res.users'].sudo().create(vals)
             if users:
                 data.sudo().write({'partner_user_id': users.id})
+
+
