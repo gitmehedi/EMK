@@ -53,26 +53,18 @@
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'account_move'), ('name', '=', 'account_move_comp_rule')]"/>
+            <value eval="[('module', '=', 'account'), ('name', '=', 'account_move_comp_rule')]"/>
         </function>
         <value eval="{'noupdate': False}"/>
     </function>
 
     <record id="account.account_move_comp_rule" model="ir.rule">
-        <field name="name">Account Entry</field>
-        <field name="model_id" ref="account.model_account_move"/>
-        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','in',[g.id for g in user.company_ids])]</field>
-        <field eval="0" name="perm_unlink"/>
-        <field eval="0" name="perm_write"/>
-        <field eval="1" name="perm_read"/>
-        <field eval="0" name="perm_create"/>
         <field name="active" eval="False"/>
     </record>
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'account_move'), ('name', '=', 'account_move_comp_rule')]"/>
+            <value eval="[('module', '=', 'account'), ('name', '=', 'account_move_comp_rule')]"/>
         </function>
         <value eval="{'noupdate': True}"/>
     </function>
