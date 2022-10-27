@@ -13,6 +13,12 @@ class HrPayrollAdvice(models.Model):
 
     bank_acc_id = fields.Many2one('res.partner.bank', "Bank Account")
 
+    @api.multi
+    def unlink(self):
+        for a in self:
+            if a.state != 'draft':
+                raise UserError(_('Payment Advices cannot be deleted because of state isn\'t draft'))
+
 
 class HrPayslipEmployees(models.TransientModel):
     _inherit = 'hr.payslip.employees'

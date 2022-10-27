@@ -17,26 +17,32 @@ class GBSStockScrap(models.Model):
         return self.env['stock.location'].search([('scrap_location', '=', True)], limit=1).id
 
     def _get_default_location_id(self):
-        return self.env['stock.location'].search([('operating_unit_id', '=', self.env.user.default_operating_unit_id.id),('name','=','Stock')], limit=1).id
+        return self.env['stock.location'].search(
+            [('operating_unit_id', '=', self.env.user.default_operating_unit_id.id), ('name', '=', 'Stock')],
+            limit=1).id
 
-    name = fields.Char('Reference',  default=lambda self: _('New'),copy=False,
+    name = fields.Char('Reference', default=lambda self: _('New'), copy=False,
                        readonly=True, required=True, track_visibility='onchange',
                        states={'draft': [('readonly', False)]})
-    reason = fields.Text('Reason',readonly=True, required=True, track_visibility='onchange',
-                         states={'draft': [('readonly', False)]})
-    request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True, track_visibility='onchange',
+    reason = fields.Text('Reason', readonly=True, track_visibility='onchange',
+                         states={'confirm': [('readonly', False)]})
+    request_by = fields.Many2one('res.users', string='Request By', required=True, readonly=True,
+                                 track_visibility='onchange',
                                  default=lambda self: self.env.user)
-    requested_date = fields.Datetime('Request Date', required=True, default=fields.Datetime.now, track_visibility='onchange',)
+    requested_date = fields.Datetime('Request Date', required=True, default=fields.Datetime.now,
+                                     track_visibility='onchange', )
     approved_date = fields.Datetime('Approved Date', readonly=True, track_visibility='onchange')
     approver_id = fields.Many2one('res.users', string='Authority', readonly=True, track_visibility='onchange',
                                   help="who have approve or reject.")
-    location_id = fields.Many2one('stock.location', 'Location',default=_get_default_location_id,
-                                  domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",required=True,
+    location_id = fields.Many2one('stock.location', 'Location', default=_get_default_location_id,
+                                  domain="[('usage', '=', 'internal'),('operating_unit_id', '=',operating_unit_id)]",
+                                  required=True,
                                   states={'draft': [('readonly', False)]})
     scrap_location_id = fields.Many2one('stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
                                         domain="[('scrap_location', '=', True)]", readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True, states={'draft': [('readonly', False)]},
                                  default=lambda self: self.env.user.company_id, required=True)
+
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         states={'draft': [('readonly', False)]},
                                         default=lambda self: self.env.user.default_operating_unit_id)
@@ -46,9 +52,10 @@ class GBSStockScrap(models.Model):
     package_id = fields.Many2one('stock.quant.package', 'Package')
     move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True)
     product_lines = fields.One2many('gbs.stock.scrap.line', 'stock_scrap_id', 'Products', readonly=True,
-                                    states={'draft': [('readonly', False)]})
+                                    states={'confirm': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'Draft'),
+        ('confirm', 'In Progress'),
         ('waiting_approval', 'Waiting for Approval'),
         ('approved', 'Approved'),
         ('reject', 'Rejected'),
@@ -59,7 +66,21 @@ class GBSStockScrap(models.Model):
     ####################################################
 
     @api.multi
+    def scrap_start(self):
+        self.write({'state': 'confirm'})
+
+    @api.multi
     def scrap_confirm(self):
+        for product in self.product_lines:
+            location_id = self.location_id.id
+            product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),
+                                                            ('location_id', '=', location_id)])
+            quantity = sum([val.qty for val in product_quant])
+
+            if quantity <= 0:
+                raise UserError(_('Product "{0}" has not sufficient balance for this location'.format(
+                    product.product_id.display_name)))
+
         for scrap in self:
             if not scrap.product_lines:
                 raise UserError(_('You cannot confirm which has no line.'))
@@ -68,7 +89,8 @@ class GBSStockScrap(models.Model):
                 'state': 'waiting_approval'
             }
             requested_date = self.requested_date
-            new_seq = self.env['ir.sequence'].next_by_code_new('stock.scraping',requested_date)
+            new_seq = self.env['ir.sequence'].next_by_code_new('stock.scraping', requested_date,
+                                                               scrap.operating_unit_id)
             if new_seq:
                 res['name'] = new_seq
 
@@ -76,13 +98,28 @@ class GBSStockScrap(models.Model):
 
     @api.multi
     def scrap_approve(self):
+
+        for product in self.product_lines:
+            location_id = self.location_id.id
+            product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),
+                                                            ('location_id', '=', location_id)])
+            quantity = sum([val.qty for val in product_quant])
+
+            if quantity <= 0:
+                raise UserError(_('Product "{0}" has not sufficient balance for this location'.format(
+                    product.product_id.display_name)))
+
         self._add_operating_unit_in_context(self.operating_unit_id.id)
         picking_id = False
         if self.product_lines:
             picking_id = self._create_pickings_and_procurements()
             picking_objs = self.env['stock.picking'].search([('id', '=', picking_id)])
             picking_objs.action_confirm()
-            picking_objs.force_assign()
+            # picking_objs.force_assign()
+            picking_objs.action_assign()
+            trans_obj = picking_objs.do_new_transfer()
+            immediate_trans = self.env['stock.immediate.transfer'].search([('id', '=', trans_obj['res_id'])])
+            immediate_trans.process()
 
         res = {
             'state': 'approved',
@@ -92,6 +129,26 @@ class GBSStockScrap(models.Model):
         }
 
         self.write(res)
+
+
+    @api.onchange('operating_unit_id')
+    def _compute_allowed_operating_unit_ids(self):
+        domain = {}
+        domain['operating_unit_id'] = [('id', 'in', self.env.user.operating_unit_ids.ids)]
+        return {'domain': domain}
+
+    @api.onchange('operating_unit_id')
+    def _onchange_operating_unit_location_default_select(self):
+        for location in self:
+            stock_warehouse = self.env['stock.warehouse'].search(
+                [('operating_unit_id', '=', location.operating_unit_id.id)])
+            location.location_id = stock_warehouse.wh_main_stock_loc_id
+
+    @api.onchange('company_id')
+    def _compute_allowed_company_ids(self):
+        domain = {}
+        domain['company_id'] = [('id', 'in', self.env.user.company_ids.ids)]
+        return {'domain': domain}
 
     def _add_operating_unit_in_context(self, operating_unit_id=False):
         """ Adding operating unit in context. """
@@ -111,7 +168,8 @@ class GBSStockScrap(models.Model):
             if line.product_id:
                 if not picking_id:
                     picking_type = self.env['stock.picking.type'].search(
-                        [('default_location_dest_id', '=', self.scrap_location_id.id),('operating_unit_id', '=', self.operating_unit_id.id)])
+                        [('default_location_dest_id', '=', self.scrap_location_id.id),
+                         ('operating_unit_id', '=', self.operating_unit_id.id)])
                     if not picking_type:
                         raise UserError(_('Please create picking type for scraping.'))
 
@@ -171,7 +229,8 @@ class GBSStockScrap(models.Model):
         res = {
             'state': 'draft',
             'approver_id': self.env.user.id,
-            'approved_date': time.strftime('%Y-%m-%d %H:%M:%S')
+            'approved_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'product_lines': [(6, 0, False)]
         }
         self.write(res)
 
@@ -207,6 +266,7 @@ class GBSStockScrap(models.Model):
         else:
             return False
 
+
 class GBSStockScrapLines(models.Model):
     _name = 'gbs.stock.scrap.line'
     _description = 'GBS Stock Scrap Line'
@@ -217,8 +277,8 @@ class GBSStockScrapLines(models.Model):
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product UoS'),
                                    required=True, default=1)
     product_uom = fields.Many2one(related='product_id.uom_id', string='Unit of Measure', required=True)
-    qty_available = fields.Float('In Stock',compute = '_compute_quantity',store = True)
-    name = fields.Char(related='product_id.name',string='Specification')
+    qty_available = fields.Float('In Stock', compute='_compute_quantity', store=True)
+    name = fields.Char(related='product_id.name', string='Specification')
     sequence = fields.Integer('Sequence')
 
     ####################################################
@@ -234,7 +294,18 @@ class GBSStockScrapLines(models.Model):
             quantity = sum([val.qty for val in product_quant])
 
             if quantity <= 0:
-                raise UserError(_('Product "{0}" has not sufficient balance for this location'.format(self.product_id.display_name)))
+                raise UserError(_('Product "{0}" has not sufficient balance for this location'.format(
+                    self.product_id.display_name)))
+
+            query = """select scl.product_id from gbs_stock_scrap_line scl LEFT JOIN gbs_stock_scrap as sc ON 
+            scl.stock_scrap_id = sc.id WHERE scl.product_id=%s and sc.location_id=%s and sc.state in ('confirm', 
+            'waiting_approval') """ % (self.product_id.id, self.stock_scrap_id.location_id.id )
+            self.env.cr.execute(query)
+            pending_scrap = self.env.cr.dictfetchall()
+            if len(pending_scrap) > 1:
+                raise UserError("You cannot have two scrap in state 'in Progess' and 'waiting for approval' with the same product({0}), same location({1}). Please first validate the first scrap with this product before creating another one.".format(
+                    self.product_id.display_name, (self.stock_scrap_id.location_id.location_id.name + "/" + self.stock_scrap_id.location_id.name)))
+
             self.qty_available = quantity
 
     @api.multi

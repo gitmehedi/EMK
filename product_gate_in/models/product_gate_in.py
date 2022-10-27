@@ -30,7 +30,7 @@ class ProductGateIn(models.Model):
     ship_id = fields.Many2one('purchase.shipment', string='Shipment Number',
                               states={'confirm': [('readonly', True)]},
                               domain="['&','&','&',('operating_unit_id','=',operating_unit_id),('state','in',('cnf_clear', 'gate_in', 'done')),('lc_id.state','!=','done'),('lc_id.state','!=','cancel')]")
-    partner_id = fields.Many2one('res.partner', string='Supplier')
+    partner_id = fields.Many2one('res.partner', string='Supplier', domain=[('supplier', '=', True)])
 
     date = fields.Date(string="Date", readonly=True, states={'draft': [('readonly', False)]}, required=True)
     receive_type = fields.Selection([('lc', "LC"), ('others', "Others")], readonly=True,

@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_account_journal_petty_cash_user,access_account_journal_petty_cash_user,account.model_account_journal,group_petty_cash_user,1,1,0,0

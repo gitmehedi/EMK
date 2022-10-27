@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="gbs_purchase_rfq.action_rfq_to_quotation_list" model="ir.actions.act_window">
+            <field name="domain">[('rfq_id','=',active_id),('created_by_cs', '=', False)]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_create_po">
+            <field name="name">Purchase Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('rfq_id','=',active_id),('state','!=','cancel'),('created_by_cs', '=', True)]</field>
+            <field name="context">{"default_rfq_id":active_id, 'no_create':True}</field>
+        </record>
+
+        <record id="purchase_rfq_form_inherit" model="ir.ui.view">
+            <field name="name">inherited.purchase_rfq.form</field>
+            <field name="model">purchase.rfq</field>
+            <field name="inherit_id" ref="gbs_purchase_rfq.view_purchase_rfq_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='operating_unit_id']" position="after">
+                    <field name="user_remarks"/>
+                    <field name="manager_remarks"/>
+                    <field name="procurement_head_remarks"/>
+                </xpath>
+
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(action_create_po)d" type="action" class="oe_stat_button" icon="fa-cogs">
+                        <field name="order_count_" widget="statinfo" string="Orders"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

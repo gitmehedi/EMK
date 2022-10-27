@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="purchase_rfq_tree_view" model="ir.ui.view">
+            <field name="name">purchase.rfq.tree.custom</field>
+            <field name="model">purchase.rfq</field>
+            <field name="arch" type="xml">
+                <tree string="RFQ">
+                    <button name="%(gbs_purchase_cs_process.action_view_cs)d" type="action" string="View CS"
+                        class="btn btn-primary"/>
+                    <field name="name"/>
+                    <field name="operating_unit_id"/>
+                    <field name="rfq_date"/>
+                    <field name="company_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="search_rfq_cs" model="ir.ui.view">
+            <field name="name">purchase.rfq.search.1</field>
+            <field name="model">purchase.rfq</field>
+            <field name="arch" type="xml">
+                <search string="Search RFQ">
+                    <field name="name"/>
+                    <field name="rfq_date"/>
+                    <field name="operating_unit_id"/>
+                    <filter name="draftrfq" string="Draft"
+                            domain="[('state','=','draft')]"/>
+                    <filter name="to_validate_rfq" string="To Validate"
+                            domain="[('state','=','sent_for_confirmation')]"/>
+                    <filter name="to_approve_rfq" string="To Approve" domain="[('state','=','confirmed')]"/>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

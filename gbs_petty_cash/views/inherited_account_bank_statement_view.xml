@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="inherit_account_bank_statement_form_" model="ir.ui.view">
+            <field name="name">inherit.account.bank.statement.view.form</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="replace">
+                    <form string="Bank Statement" duplicate="0" delete="0">
+                        <header>
+                            <field name="all_lines_reconciled" invisible="1"/>
+                            <button name="%(account.action_bank_reconcile_bank_statements)d" string="Reconcile"
+                                    type="action"
+                                    class="oe_highlight"
+                                    attrs="{'invisible': ['|', '|', ('line_ids', '=', []), ('state', '!=', 'open'),('is_petty_cash_journal', '=', True)]}"/>
+                            <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight"
+                                    attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+
+
+                            <button name="action_reconcile_all"
+                                    class="btn-danger mr24 oe_read_only"
+                                    type="object"
+                                    attrs="{'invisible':['|',('is_petty_cash_journal','=',False),('petty_cash_reconciled','=',True)]}"
+                                    string="Reconcile"/>
+                            <button name="duplicate_validate_action"
+                                    string="Validate" type="object"
+                                    groups="gbs_petty_cash.group_petty_cash_manager"
+                                    class="oe_highlight"
+                                    attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open'),('petty_cash_reconciled','=',False)]}"/>
+                           <button name="button_cancel" states="confirm" invisible="1" string="Cancel Statement"
+                                    type="object"/>
+                            <button name="button_draft" states="confirm"
+                                    groups="gbs_petty_cash.group_petty_cash_manager"
+                                    confirm="Are you sure to set the transaction to new?"
+                                    string="Reset to New" type="object"/>
+                            <button string="Export Excel" name="action_statement_print" class="oe_highlight"
+                                    type="object"/>
+                             <button name="duplicate_unreconcile_action"
+                                    string="Unreconcile" type="object" style="margin-left:calc(100% - 450px);"
+                                    class="btn-primary btn-danger oe_read_only"
+                                    confirm="Are you sure to unreconcile?"
+                                    attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('petty_cash_reconciled', '=', False),('state', '!=', 'open')]}"/>
+
+                            <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
+                        </header>
+                        <sheet>
+                            <div class="oe_button_box" name="button_box">
+                                <button class="oe_stat_button" name="button_journal_entries"
+                                        string="Journal Entries" type="object"
+                                        attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
+                                <field name="move_line_ids" invisible="1" readonly="1"/>
+                            </div>
+                            <div class="oe_title oe_inline">
+                                <label for="name" class="oe_edit_only"/>
+                                <h1>
+                                    <field name="name" attrs="{'required':[('is_petty_cash_journal', '!=', False)]}"/>
+                                </h1>
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="journal_type" invisible="1"/>
+                                    <field name="cashbox_start_id" invisible="1"/>
+                                    <field name="cashbox_end_id" invisible="1"/>
+                                    <field name="journal_id" domain="[('type', '=', journal_type)]"
+                                           attrs="{'readonly': ['|',('is_petty_cash_journal','=',True),('move_line_ids', '!=', [])]}" widget="selection"/>
+                                    <field name="date"/>
+                                    <field name="is_petty_cash_journal" invisible="1"/>
+                                    <field name="temp_journal_id" invisible="1"/>
+                                    <field name="id" invisible="1"/>
+                                    <field name="petty_cash_reconciled" invisible="1"/>
+                                    <field name="balance_start_duplicate" invisible="1"/>
+
+                                    <field name='company_id' options="{'no_create': True}"
+                                           groups="base.group_multi_company"/>
+                                    <field name="type_of_operation"
+                                           attrs="{'required':[('is_petty_cash_journal','=',True)],'readonly':[('id','!=',False)],'invisible':[('is_petty_cash_journal','=',False)]}"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </group>
+                                <group>
+                                    <label for="balance_start"/>
+                                    <div>
+                                        <field class="oe_inline" name="balance_start"
+                                               attrs="{'readonly':['|',('is_petty_cash_journal', '!=', False),('state', '=', 'confirm')]}"/>
+
+                                    </div>
+                                    <label for="balance_end_real"/>
+                                    <div>
+                                        <field class="oe_inline" name="balance_end_real"
+                                               attrs="{'readonly':['|',('is_petty_cash_journal', '!=', False),('state', '=', 'confirm')]}"/>
+
+                                    </div>
+                                </group>
+                            </group>
+
+                            <notebook>
+                                <page string="Transactions" name="statement_line_ids">
+                                    <field name="line_ids" context="{'date':date}"
+                                           attrs="{'readonly': [('petty_cash_reconciled', '!=', False)]}">
+                                        <tree editable="bottom" string="Statement lines"
+                                              decoration-muted="journal_entry_ids">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="journal_entry_ids" invisible="1"/>
+                                            <field name="date"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                            <field name="name"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                            <field name="partner_id"
+                                                   domain="['|',('parent_id','=',False),('is_company','=',True)]"
+                                                   context="{'default_supplier': 1}"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                            <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
+                                                   groups="base.group_no_one"/>
+                                            <field name="amount"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+
+                                            <field name="is_petty_cash_journal" invisible="1"/>
+                                            <field name="is_reconciled" invisible="1"/>
+                                            <field name="type_of_operation" invisible="1"/>
+
+                                            <field name="journal_currency_id" invisible="1"/>
+                                            <field name="amount_currency" invisible="1"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                            <field name="currency_id" options="{'no_create': True}" invisible="1"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                            <field name="bank_account_id" invisible="1"
+                                                   attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
+                                                   domain="['|', ('partner_id', '=', partner_id), ('partner_id', '=', False)]"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="balance_end"/>
+                                </div>
+                                <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator"/>
+                            </group>
+                            <div class="oe_clear"/>
+                        </sheet>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                    </form>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="inherit_account_bank_statement_tree_" model="ir.ui.view">
+            <field name="name">inherit.account.bank.statement.tree.form</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//tree" position="attributes">
+                        <attribute name="duplicate">0</attribute>
+                        <attribute name="delete">0</attribute>
+                    </xpath>
+
+                    <xpath expr="//field[@name='date']" position="after">
+                        <field name="is_petty_cash_journal" invisible="1"/>
+                        <field name="type_of_operation" attrs="{'invisible':[('is_petty_cash_journal','=',False)]}"/>
+                    </xpath>
+
+                </data>
+            </field>
+        </record>
+
+        <!--modified view-->
+        <record id="view_bank_statement_tree_petty_cash" model="ir.ui.view">
+            <field name="name">account.bank.statement.tree.petty_cash</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="not is_difference_zero and state=='open'"
+                      decoration-info="state=='open' and is_difference_zero" string="Statements">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="type_of_operation"/>
+                    <field name="journal_id"/>
+                    <field name="balance_start"/>
+                    <field name="balance_end_real"/>
+                    <field name="balance_end" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="state"/>
+                    <field name="is_difference_zero" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_bank_statement_search_petty_cash" model="ir.ui.view">
+            <field name="name">account.bank.statement.search.petty_cash</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <search string="Search Bank Statements">
+                    <field name="name" string="Bank Statement"/>
+                    <field name="date"/>
+                    <filter string="Draft" name="draft" domain="[('state','=','open')]"/>
+                    <filter string="Confirmed" domain="[('state','=','confirm')]"/>
+                    <field name="journal_id" domain="[('type', '=', 'bank')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Journal" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Status" context="{'group_by': 'state'}"/>
+                        <filter string="Date" context="{'group_by': 'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_bank_statement_tree_petty_cash" model="ir.actions.act_window">
+            <field name="name">Cash Registers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="view_id" ref="view_bank_statement_tree_petty_cash"/>
+            <field name="search_view_id" ref="view_bank_statement_search_petty_cash"/>
+            <field name="domain">[('journal_id', '=', self.journal_id.id)]</field>
+            <field name="context">{'journal_type': 'cash'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new cash log.
+                </p>
+                <p>
+                    A Cash Register allows you to manage cash entries in your cash
+                    journals. This feature provides an easy way to follow up cash
+                    payments on a daily basis. You can enter the coins that are in
+                    your cash box, and then post entries when money comes in or
+                    goes out of the cash box.
+                </p>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

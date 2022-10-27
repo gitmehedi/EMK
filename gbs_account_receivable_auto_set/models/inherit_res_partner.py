@@ -1,5 +1,5 @@
 from odoo import api, models
-
+from odoo.exceptions import ValidationError
 
 class InheritResPartner(models.Model):
     _inherit = 'res.partner'
@@ -36,11 +36,20 @@ class InheritResPartner(models.Model):
     @api.model
     def create(self, vals):
         if 'parent_id' in vals and not vals['parent_id']:
+            name = vals['name'].strip()
             if vals['customer']:
+                partners = self._check_res_partner_duplicate(name, "customer")
+                if len(partners) > 0:
+                    raise ValidationError("Customer name already in use")
+
                 receivable_id = self._get_max_code_for_account_receivable(vals['company_id'], vals['name'])
                 vals['property_account_receivable_id'] = receivable_id
 
             elif vals['supplier'] and not vals['supplier_type'] == 'foreign':
+                partners = self._check_res_partner_duplicate(name, "supplier")
+                if len(partners) > 0:
+                    raise ValidationError("Supplier name already in use")
+
                 if 'supplier_type' in vals:
                     if not vals['supplier_type'] == 'foreign':
                         payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
@@ -48,14 +57,50 @@ class InheritResPartner(models.Model):
                 else:
                     payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
                     vals['property_account_payable_id'] = payable_id
+
+            elif vals['supplier'] and vals['supplier_type'] == 'foreign':
+                partners = self._check_res_partner_duplicate(name, "supplier")
+                if len(partners) > 0:
+                    raise ValidationError("Supplier name already in use")
+
             elif vals['is_cnf']:
+                partners = self._check_res_partner_duplicate(name, "is_cnf")
+                if len(partners) > 0:
+                    raise ValidationError("CNF Agent name already in use")
+
                 payable_id = self._get_max_code_for_account_payable(vals['company_id'], vals['name'])
                 vals['property_account_payable_id'] = payable_id
-
             else:
                 pass
 
+            vals['name'] = name
         return super(InheritResPartner, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if 'name' in vals:
+            name = vals['name'].strip()
+            if self.customer:
+                partners = self._check_res_partner_duplicate(name, "supplier")
+                if len(partners) > 0:
+                    raise ValidationError("Customer name already in use")
+            elif self.supplier:
+                partners = self._check_res_partner_duplicate(name, "supplier")
+                if len(partners) > 0:
+                    raise ValidationError("Supplier name already in use")
+            elif self.is_cnf:
+                partners = self._check_res_partner_duplicate(name, "is_cnf")
+                if len(partners) > 0:
+                    raise ValidationError("CNF Agent name already in use")
+
+            vals['name'] = name
+        return super(InheritResPartner, self).write(vals)
+    
+    def _check_res_partner_duplicate(self, name, key):
+        sql = """SELECT * FROM res_partner WHERE name ='%s' and %s=True""" % (name.strip(), key)
+        self._cr.execute(sql)
+        return self._cr.fetchall()
+
 
     # @api.multi
     # def unlink(self):
