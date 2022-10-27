@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from odoo import http, _
-from odoo.addons.opa_utility.helper.utility import Utility,Message
+from odoo.addons.opa_utility.helper.utility import Utility
 from odoo.http import request
 
 DATE_FORMAT = "%Y-%m-%d"
@@ -223,3 +223,42 @@ class WebsiteAppointmentReservation(http.Controller):
             'slots': slots,
             'days': days
         }
+
+    @http.route(['/booking/reservation'], type='http', auth="public", website=True, methods=['GET', 'POST'])
+    def booking_reservation(self, **post):
+        qctx = self.get_signup_context()
+        token = request.params.get('token')
+
+        if request.httprequest.method == 'POST' and ('error' not in qctx):
+            qctx['error'] = ""
+            try:
+                auth_data = self.post_events(qctx)
+                if auth_data:
+                    try:
+                        mail_ins = request.env['res.partner'].sudo()
+                        mail_applicant = {
+                            'template': 'appointments.appointment_application_email_tmpl',
+                            'email_to': auth_data['email'],
+                            'context': auth_data,
+                        }
+
+                        mail_ins.mailsend(mail_applicant)
+                        return http.redirect_with_hash('/appointment/success')
+                    except:
+                        return request.render('appointments.appointment_reservation_success')
+            except (WebsiteAppointmentReservation, AssertionError) as e:
+                qctx['error'] = _("Could not create a new account.")
+
+        room_ids = self.generateDropdown('booking.room')
+        qctx['room_ids'] = [('/booking/' + str(val[0]) + '/register', val[1]) for val in room_ids]
+
+        return request.render("appointments.booking_reservation", qctx)
+
+    @http.route(['/booking/<model("booking.room"):room>/register'], type='http', auth="public", website=True,
+                methods=['GET', 'POST'])
+    def booking_register(self, **post):
+        values = {
+            'room': post['room'],
+            'range': range,
+        }
+        return request.render("appointments.booking_reservation_details", values)

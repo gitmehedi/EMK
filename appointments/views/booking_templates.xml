@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="web_appointments_reserv" name="web_appointments_reserv" inherit_id="website.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/appointments/static/src/js/main.js"></script>
+            <script type="text/javascript" src="/appointments/static/src/js/bootstrap.validator.js"></script>
+            <link rel="stylesheet" href="/appointments/static/src/css/style.css"/>
+        </xpath>
+    </template>
+
+    <template id="booking_reservation" name="Booking Reservation">
+        <t t-call="web.login_layout">
+            <div class="container">
+                <div class="row" id="appointment_reservation">
+                    <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form"
+                          method="post" t-if="not message" data-toggle="validator2" id="appointment-reservation">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <script type="text/javascript">
+                            var config = {
+                            baseurl: "<t t-esc="baseurl"/>",
+                            };
+                        </script>
+                        <input type="hidden" name="redirect" t-att-value="redirect"/>
+                        <input type="hidden" name="token" t-att-value="token"/>
+                        <h1 class="text-center">Booking Reservation</h1>
+
+                        <div class="col-md-12 margin-top-15">
+                            <div class="panel panel-success">
+                                <div class="panel-heading odoobg">
+                                    <h3 class="panel-title text-center">Booking Information</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <t t-foreach="room_ids" t-as='label'>
+                                        <div>
+                                            <a class="text-success" t-attf-href="#{label_value[0]}">
+                                                <t t-esc="label_value[1]"/>
+                                            </a>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="booking_reservation_details" name="Booking Reservation">
+        <t t-call="web.login_layout">
+            <div class="container">
+                <div class="row" id="appointment_reservation">
+                    <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form"
+                          method="post" t-if="not message" data-toggle="validator2" id="appointment-reservation">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <script type="text/javascript">
+                            var config = {
+                            baseurl: "<t t-esc="baseurl"/>",
+                            };
+                        </script>
+                        <input type="hidden" name="redirect" t-att-value="redirect"/>
+                        <input type="hidden" name="token" t-att-value="token"/>
+                        <h1 class="text-center">Booking Reservation</h1>
+
+                        <div class="col-md-12 margin-top-15">
+                            <div class="panel panel-success">
+                                <div class="panel-heading odoobg">
+                                    <h3 class="panel-title text-center">Booking Information</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="glcm-matrix" class="col-md-5">
+                                        <table>
+                                            <tr>
+                                                <td>C1</td>
+                                                <td>C2</td>
+                                                <td>C3</td>
+                                                <td>C4</td>
+                                                <td>C5</td>
+                                                <td>C6</td>
+                                            </tr>
+                                            <tr>
+                                                <td>C1</td>
+                                                <td>C2</td>
+                                                <td>C3</td>
+                                                <td>C4</td>
+                                                <td>C5</td>
+                                                <td>C6</td>
+                                            </tr>
+                                            <tr>
+                                                <td>C1</td>
+                                                <td>C2</td>
+                                                <td>C3</td>
+                                                <td>C4</td>
+                                                <td>C5</td>
+                                                <td>C6</td>
+                                            </tr>
+                                            <tr>
+                                                <td>C1</td>
+                                                <td>C2</td>
+                                                <td>C3</td>
+                                                <td>C4</td>
+                                                <td>C5</td>
+                                                <td>C6</td>
+                                            </tr>
+                                            <tr>
+                                                <td>C1</td>
+                                                <td>C2</td>
+                                                <td>C3</td>
+                                                <td>C4</td>
+                                                <td>C5</td>
+                                                <td>C6</td>
+                                            </tr>
+                                            <tr>
+                                                <td>C1</td>
+                                                <td>C2</td>
+                                                <td>C3</td>
+                                                <td>C4</td>
+                                                <td>C5</td>
+                                                <td>C6</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div id="matrix" class="col-md-5">
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label>Seat No</label>
+                                                <div id="weekday_days"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="first_name" class="control-label">Name</label>
+                                                <input type="text" name="first_name" t-att-value="first_name"
+                                                       id="first_name" maxlength="100" placeholder="Name"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="last_name" class="control-label">Phone</label>
+                                                <input type="text" name="last_name" t-att-value="last_name"
+                                                       id="last_name" maxlength="100" placeholder="Phone"
+                                                       class="form-control input-sm reqfield" required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group form-field">
+                                                <label for="last_name" class="control-label">E-Mail</label>
+                                                <input type="text" name="last_name" t-att-value="last_name"
+                                                       id="last_name" maxlength="100" required="required"
+                                                       placeholder="E-mail" class="form-control input-sm reqfield"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4" style="margin-bottom: 100px;">
+                                            <div class="clearfix oe_login_buttons">
+                                                <button type="submit" class="btn btn-primary">Place Reservation
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="booking_reservation_success" name="Booking Reservation Success">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Thank you!</h1>
+                        <div>
+                            Your request has been submitted successfully. Check email for
+                            further processing.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="appointment_reservation_expire" name="Appointment Reservation Success">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Thank you!</h1>
+                        <div>
+                            Session has expired, please contact with administrator
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

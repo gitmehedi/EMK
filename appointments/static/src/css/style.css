@@ -42,3 +42,64 @@
     color: #454545;
     background: #F6F6F6;
 }
+
+#glcm-matrix td {
+    border: 2px solid green;
+    text-align: center;
+    height: 60px;
+    width: 60px;
+    padding: 4px;
+}
+
+#glcm-matrix td.active {
+    border-radius: 50%;
+    border: 1px solid green;
+    background: #345;
+    color: white;
+    cursor: pointer;
+}
+
+#glcm-matrix td:hover {
+    border: 1px solid yellow;
+    background: yellowgreen;
+    color: red;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 20ms;
+}
+.cls-theta{
+    width: 60px;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+.cls-distance{
+    width: 100px;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+#distance .d-active{
+   background-color: #28A745;
+   border: 1px solid black;
+   font-weight: bold;
+   color: black;
+}
+#theta .t-active{
+   background-color: #28A745;
+   border: 1px solid black;
+   font-weight: bold;
+   color: black;
+}
+.match{
+    border-radius: 50%;
+    border: 3px solid green;
+    font-weight: bold;
+}
+span{
+    font-weight: bold;
+}
+
+#booking{
+    width: 400px;
+}
