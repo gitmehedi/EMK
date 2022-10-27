@@ -6,6 +6,24 @@
     """,
 
     'description': """
+    **This module restricts price unit and quantity field on Invoice Lines**
+ 
+ 
+====================================================================================
+
+* Vendor Bills(Rate and qty) from a purchase order cannot be edited.
+
+* Vendor Bills qty will be loaded automatically from MRR qty and qty will be loaded from PO.
+
+* Only Vendor Invoice Editor group can edit vendor bill line(Rate and qty)
+
+* Customer Invoices manual create option omitted.
+
+* Customer Invoices (Rate and qty) from a sale order cannot be edited.
+
+* Service Order and Cnf Quotation Bills(Rate and qty) cannot be edited.
+
+* In Refund or Out Refund Invoices can be edited. 
     """,
 
     'author': "Genweb2 Limited",
