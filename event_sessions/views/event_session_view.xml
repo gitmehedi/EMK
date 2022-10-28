@@ -217,7 +217,7 @@
 
     <menuitem id="event_session_menu" name="Sessions" sequence="10"
               parent="event_management.menu_event_general" action="act_event_session_form"
-              groups="event_user.group_event_officer,event.group_event_manager"/>
+              groups="event.group_event_user,event_user.group_event_officer,event.group_event_manager"/>
 
     <record id="view_dashboard_event_session_calendar" model="ir.ui.view">
         <field name="name">event.session.calendar</field>

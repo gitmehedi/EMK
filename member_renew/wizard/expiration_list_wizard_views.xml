@@ -30,9 +30,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem name="Expiration" id="menu_expiration_list" parent="membership.menu_association"
-              groups="member_user.group_mem_user_officer"/>
-    <menuitem id="sub_expiration_list" parent="menu_expiration_list"
-              action="action_expiration_list"
-              groups="member_user.group_mem_user_officer"/>
+    <menuitem id="sub_expiration_list" parent="menu_report_association" action="action_expiration_list"
+              groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 </odoo>

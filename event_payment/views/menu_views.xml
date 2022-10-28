@@ -1,24 +1,52 @@
 <?xml version="1.0"?>
 <odoo>
-    <menuitem name="Event Payments" id="sub_event_payment" parent="emk_payment.main_menu_payment"
-              groups="event_user.group_event_officer,event.group_event_manager" sequence="10"/>
-    <record id="emk_payment.service_fee" model="ir.ui.menu">
+    <menuitem name="Event Payments" id="sub_event_payment" parent="emk_payment.main_menu_payment" sequence="10"
+              groups="event.group_event_user,event_user.group_event_officer,event.group_event_manager"/>
+
+    <record id="emk_payment.main_menu_payment" model="ir.ui.menu">
+        <field name="name">Payments</field>
         <field name="groups_id"
-               eval="[(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+               eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
     </record>
-    <record id="emk_payment.sub_menu_config" model="ir.ui.menu">
+
+    <record id="emk_payment.sub_menu_payment" model="ir.ui.menu">
+        <field name="name">Payments</field>
         <field name="groups_id"
-               eval="[(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+               eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
     </record>
+
+    <record id="emk_payment.menu_payment_session" model="ir.ui.menu">
+        <field name="name">Sessions</field>
+        <field name="groups_id"
+               eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+    </record>
+
     <record id="emk_payment.sub_due_invoice" model="ir.ui.menu">
+        <field name="name">Due Invoice</field>
         <field name="groups_id"
-               eval="[(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+               eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
     </record>
+
+    <record id="emk_payment.sub_payment_operation" model="ir.ui.menu">
+        <field name="name">Payment Operations</field>
+        <field name="groups_id"
+               eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+    </record>
+
     <record id="emk_payment.menu_invoice_payment" model="ir.ui.menu">
+        <field name="name">Invoice Payments</field>
         <field name="groups_id"
-               eval="[(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+               eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
     </record>
+
     <record id="emk_payment.menu_service_payment" model="ir.ui.menu">
+        <field name="name">Service Payments</field>
+        <field name="groups_id"
+               eval="[(4, ref('event.group_event_user')),(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
+    </record>
+
+    <record id="emk_payment.sub_menu_config" model="ir.ui.menu">
+        <field name="name">Configuration</field>
         <field name="groups_id"
                eval="[(4, ref('event_user.group_event_officer')),(4, ref('event.group_event_manager'))]"/>
     </record>

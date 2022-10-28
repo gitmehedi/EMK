@@ -14,16 +14,15 @@
     font-white: bold;
 }
 
-#weekday_days span {
-  border: none;
-  color: black;
-  padding: 5px 5px;
+#seat_no {
+  border: 1px solid black;
+  background: green;
+  color: white;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 14px;
+  font-size: 20px;
   margin: 4px 2px;
-  cursor: pointer;
 }
 
 #weekday span {
@@ -42,3 +41,70 @@
     color: #454545;
     background: #F6F6F6;
 }
+
+#glcm-matrix td {
+    border: 1px solid black;
+    text-align: center;
+    color: black;
+    font-size: 16px;
+    height: 60px;
+    width: 60px;
+    padding: 4px;
+}
+
+#glcm-matrix td.available {
+    background: #dcdcdb;
+}
+#glcm-matrix td.available:hover {
+    background: green;
+    color: white;
+    cursor: pointer;
+}
+
+#glcm-matrix td.booked {
+    background: green;
+    color: white;
+}
+
+#glcm-matrix td.booked:hover {
+    background: green;
+    color: white;
+}
+
+.cls-theta{
+    width: 60px;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+.cls-distance{
+    width: 100px;
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+#distance .d-active{
+   background-color: #28A745;
+   border: 1px solid black;
+   font-weight: bold;
+   color: black;
+}
+#theta .t-active{
+   background-color: #28A745;
+   border: 1px solid black;
+   font-weight: bold;
+   color: black;
+}
+.match{
+    border-radius: 50%;
+    border: 3px solid green;
+    font-weight: bold;
+}
+span{
+    font-weight: bold;
+}
+
+#booking{
+    width: 400px;
+}
+

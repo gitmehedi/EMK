@@ -125,24 +125,22 @@
 
         <menuitem id="menu_inventory_gate_pass" name="Inventory Gate Pass" sequence="22"
                   parent="stock.menu_stock_root"
-                  groups="inventory_user.grp_inv_store_executive,inventory_user.grp_inv_department_executive"/>
+                  groups="stock.group_stock_user,stock.group_stock_manager"/>
 
         <menuitem action="action_gate_pass_draft" name="Gate Pass (Draft)"
                   parent="menu_inventory_gate_pass" id="menu_stock_inventory_gate_pass_raise" sequence="5"
-                  groups="inventory_user.grp_inv_store_executive,inventory_user.grp_inv_department_executive"/>
+                  groups="stock.group_stock_user,stock.group_stock_manager"/>
 
         <menuitem action="action_gate_pass_confirm" name="Gate Pass (Confirmed)"
-                  parent="menu_inventory_gate_pass" id="menu_stock_inventory_gate_pass"
-                  sequence="10"
-                  groups="inventory_user.grp_inv_store_executive,inventory_user.grp_inv_department_executive"/>
+                  parent="menu_inventory_gate_pass" id="menu_stock_inventory_gate_pass" sequence="10"
+                  groups="stock.group_stock_user,stock.group_stock_manager"/>
 
         <menuitem action="action_gate_pass_approve" name="Gate Pass (Approved)"
-                  parent="menu_inventory_gate_pass" id="menu_indent_waiting_for_approval"
-                  sequence="15"
-                  groups="inventory_user.grp_inv_store_executive,inventory_user.grp_inv_department_executive"/>
+                  parent="menu_inventory_gate_pass" id="menu_indent_waiting_for_approval" sequence="15"
+                  groups="stock.group_stock_user,stock.group_stock_manager"/>
 
         <menuitem action="action_gate_pass_reject" name="Gate Pass (Rejected)"
                   parent="menu_inventory_gate_pass" id="menu_indent_reject" sequence="20"
-                  groups="inventory_user.grp_inv_store_executive,inventory_user.grp_inv_department_executive"/>
+                  groups="stock.group_stock_user,stock.group_stock_manager"/>
     </data>
 </odoo>

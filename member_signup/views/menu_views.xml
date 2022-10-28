@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <odoo>
+    <record id="membership.menu_association" model="ir.ui.menu">
+        <field name="name">Members</field>
+        <field name="sequence">35</field>
+    </record>
+
     <record id="account.act_account_partner_ledger_payable" model="ir.actions.act_window">
         <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer'))]"/>
     </record>
@@ -23,10 +28,11 @@
               groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
     <menuitem name="Membership Applications" id="menu_member_app" sequence="0" parent="membership.menu_association"
-              groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+              groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
-    <menuitem name="Membership Operations" id="menu_member_internal_app" sequence="0" parent="membership.menu_association"
-              groups="member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
+    <menuitem name="Membership Operations" id="menu_member_internal_app" sequence="0"
+              parent="membership.menu_association"
+              groups="member_user.group_user_member,member_user.group_mem_user_officer,membership_extension.group_membership_manager"/>
 
     <menuitem name="Application" id="menu_main_applicant" sequence="0"
               groups="member_user.group_mem_user_applicant"/>
@@ -38,14 +44,8 @@
     <record id="membership_withdrawal.menu_membership_withdrawal_reason" model="ir.ui.menu">
         <field name="name">Membership Withdrawal</field>
     </record>
-
-    <record id="membership.menu_association" model="ir.ui.menu">
-        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer')),
-               (4, ref('member_user.group_user_member'))]"/>
-        <field name="sequence">45</field>
-    </record>
     <record id="membership.menu_marketing_config_association" model="ir.ui.menu">
-        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_officer'))]"/>
+        <field name="groups_id" eval="[(4, ref('membership_extension.group_membership_manager'))]"/>
     </record>
     <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
         <field name="groups_id" eval="[(3, ref('member_user.group_mem_user_applicant'))]"/>
@@ -54,7 +54,16 @@
         <field name="groups_id" eval="[(4, ref('member_user.group_user_member'))]"/>
     </record>
     <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
-        <field name="groups_id" eval="[(4, ref('member_user.group_mem_user_applicant')),(4, ref('member_user.group_user_member'))]"/>
+        <field name="groups_id"
+               eval="[(4, ref('member_user.group_mem_user_applicant')),(4, ref('member_user.group_user_member'))]"/>
     </record>
+
+<!--    <record id="membership.menu_report_membership" model="ir.ui.menu">-->
+<!--        <field name="name">Members Analysis</field>-->
+<!--        <field name="groups_id"-->
+<!--               eval="[(4, ref('member_user.group_user_member')),(4, ref('member_user.group_mem_user_officer')),(4, ref('membership_extension.group_membership_manager'))]">-->
+<!--        </field>-->
+<!--    </record>-->
+
 
 </odoo>

@@ -14,6 +14,7 @@
         'account_fam_menu',
         'base_vat_bd',
         'purchase',
+        'product_access',
     ],
     "data": [
         'views/vendor_view.xml',

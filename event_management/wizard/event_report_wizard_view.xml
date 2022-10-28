@@ -42,7 +42,7 @@
             <field name="auto" eval="False"/>
         </record>
 
-        <menuitem id="event_report_menu" groups="event_user.group_event_officer"
+        <menuitem id="event_report_menu" groups="event_user.group_event_organizer,event.group_event_user,event_user.group_event_officer"
                   parent="event.menu_reporting_events" sequence="10" action="action_event_lists_report_view"/>
     </data>
 </odoo>

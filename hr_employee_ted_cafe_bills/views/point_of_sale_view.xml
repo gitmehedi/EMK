@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_pos_order_invoice']" position="before">
                 <button name="%(employee_credit_sale_wizard_action)d" string="Assign Credit Sale" type="action"
+                        groups="point_of_sale.group_pos_user,point_of_sale.group_pos_manager"
                         class="oe_highlight" attrs="{'invisible':[('credit_sale_id','!=',False)]}"/>
             </xpath>
             <xpath expr="//field[@name='amount_total']" position="after">

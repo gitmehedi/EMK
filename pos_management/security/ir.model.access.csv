@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+acc_acc_bank_st_guser,acc_acc_bank_st_guser,account.model_account_bank_statement,pos_users.group_pos_gen_user,0,0,0,0
+acc_acc_bank_st_off,acc_acc_bank_st_off,account.model_account_bank_statement,point_of_sale.group_pos_user,1,1,1,0
+acc_acc_bank_st_mng,acc_acc_bank_st_mng,account.model_account_bank_statement,point_of_sale.group_pos_manager,1,1,1,1
+
+acc_acc_move_guser,acc_acc_move_guser,account.model_account_move,pos_users.group_pos_gen_user,0,0,0,0
+acc_acc_move_off,acc_acc_move_off,account.model_account_move,point_of_sale.group_pos_user,1,1,1,0
+acc_acc_move_mng,acc_acc_move_mng,account.model_account_move,point_of_sale.group_pos_manager,1,1,1,1

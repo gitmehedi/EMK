@@ -175,6 +175,13 @@ class EventEvent(models.Model):
                                       states={'mark_close': [('readonly', False)]})
     view_not_say = fields.Integer(string='Prefer Not to Say', readonly=True,
                                   states={'mark_close': [('readonly', False)]})
+    state = fields.Selection([('draft', 'Draft'),
+                              ('verify', 'Verified'),
+                              ('approve', 'Approved'),
+                              ('confirm', 'Confirmed'),
+                              ('mark_close', 'Mark as Close'),
+                              ('done', 'Done'),
+                              ('cancel', 'Cancelled')])
 
     @api.depends('event_book_ids')
     def compute_total_seat(self):
@@ -244,8 +251,13 @@ class EventEvent(models.Model):
             self.state = 'mark_close'
 
     @api.one
-    def button_approve(self):
+    def button_verify(self):
         if self.state == 'draft':
+            self.state = 'verify'
+
+    @api.one
+    def button_approve(self):
+        if self.state == 'verify':
             self.state = 'approve'
 
     @api.one
@@ -359,11 +371,6 @@ class EventRegistration(models.Model):
     @api.model
     def _needaction_domain_get(self):
         return [('state', 'in', ['draft', 'open'])]
-
-    # @api.one
-    # def button_reg_close(self):
-    #     res = super(EventRegistration, self).button_reg_close()
-    #     self.write({'event_fee': self.event_id.participating_amount})
 
     @api.one
     def button_reg_payment(self):

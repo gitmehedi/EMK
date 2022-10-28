@@ -2,12 +2,14 @@
 <odoo>
     <menuitem id="main_appoint_menu" name="Appointments" sequence="20"
               web_icon="account_fam,static/description/icon.png"
-              groups="appointment_user.group_appoint_user,appointment_user.group_appoint_temp_user"/>
+              groups="appointment_user.group_appoint_user,appointment_user.group_appoint_temp_user,appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
 
-    <menuitem id="sub_appoint_menu" name="Appointments" sequence="10"
-              parent="main_appoint_menu"
-              groups="appointment_user.group_appoint_user"/>
+    <menuitem id="sub_appoint_menu" name="Appointment Operation" sequence="10" parent="main_appoint_menu"
+              groups="appointment_user.group_appoint_user,appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
+
+    <menuitem id="sub_booking_menu" name="Booking Operation" sequence="15" parent="main_appoint_menu"
+              groups="appointment_user.group_appoint_user,appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
 
     <menuitem id="sub_configuration_menu" name="Configurations" sequence="50"
-              parent="main_appoint_menu" groups="appointment_user.group_appoint_user"/>
+              parent="main_appoint_menu" groups="appointment_user.group_appoint_manager"/>
 </odoo>

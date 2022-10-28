@@ -2,6 +2,7 @@
 <odoo>
     <data>
         <menuitem id="hr_cafe_operations_menu" name="Cafe Operations" parent="point_of_sale.menu_point_root"
-                  groups="hr.group_hr_user" sequence="92"/>
+                  groups="point_of_sale.group_pos_user,pos_users.group_pos_gen_user,point_of_sale.group_pos_manager"
+                  sequence="92"/>
     </data>
 </odoo>

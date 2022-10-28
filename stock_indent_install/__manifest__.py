@@ -12,7 +12,6 @@
     'depends': [
         'stock_indent_access',
         'stock_indent',
-        'stock_indent_menu',
     ],
     'installable': True,
     'application': True,

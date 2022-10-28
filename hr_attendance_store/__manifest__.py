@@ -15,6 +15,7 @@
         'hr_attendance',
         'hr_manual_attendance',
         'gbs_interface',
+        'hr_attendance_user',
     ],
     "data": [
         "security/ir.model.access.csv",

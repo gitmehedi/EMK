@@ -194,26 +194,28 @@
                 </p>
             </field>
         </record>
-        <!-- Indent Menu -->
-        <menuitem name="Indents" parent="stock.menu_stock_root" id="menu_indent_indent_main"
-                  sequence="1" groups="base.group_user"/>
+
+        <menuitem name="Indents" parent="stock.menu_stock_root" id="menu_indent_indent_main" sequence="1"
+                  groups="inventory_user.grp_inv_gen_user,stock.group_stock_user,stock.group_stock_manager"/>
 
         <menuitem action="action_indent_indent" name="Indent (Draft)"
-                  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_indent_raise" sequence="5"
-                  groups="base.group_user"/>
+                  parent="menu_stock_indent" id="menu_indent_indent_raise" sequence="5"
+                  groups="inventory_user.grp_inv_gen_user,stock.group_stock_user,stock.group_stock_manager"/>
 
         <menuitem action="action_indent_confirm" name="Indent (Confirmed)"
-                  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_indent" sequence="10"
-                  groups="base.group_user"/>
+                  parent="menu_stock_indent" id="menu_indent_indent" sequence="10"
+                  groups="inventory_user.grp_inv_gen_user,stock.group_stock_user,stock.group_stock_manager"/>
 
         <menuitem action="action_indent_waiting_for_approval" name="Indent (Approved)"
-                  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_waiting_for_approval" sequence="15"
-                  groups="inventory_user.grp_inv_supervisor"/>
+                  parent="menu_stock_indent" id="menu_indent_waiting_for_approval" sequence="15"
+                  groups="inventory_user.grp_inv_gen_user,stock.group_stock_user,stock.group_stock_manager"/>
 
         <menuitem action="action_indent_done" name="Indent (Done)"
-                  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_done" sequence="20"
-                  groups="inventory_user.grp_inv_supervisor"/>
+                  parent="menu_stock_indent" id="menu_indent_done" sequence="20"
+                  groups="inventory_user.grp_inv_gen_user,stock.group_stock_user,stock.group_stock_manager"/>
+
         <menuitem action="action_indent_reject" name="Indent (Rejected)"
-                  parent="stock_indent_menu.menu_stock_indent" id="menu_indent_reject" sequence="20"/>
+                  parent="menu_stock_indent" id="menu_indent_reject" sequence="20"
+                  groups="inventory_user.grp_inv_gen_user,stock.group_stock_user,stock.group_stock_manager"/>/>
     </data>
 </odoo>
