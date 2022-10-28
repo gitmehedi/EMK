@@ -227,38 +227,42 @@ class WebsiteAppointmentReservation(http.Controller):
     @http.route(['/booking/reservation'], type='http', auth="public", website=True, methods=['GET', 'POST'])
     def booking_reservation(self, **post):
         qctx = self.get_signup_context()
-        token = request.params.get('token')
+        # token = request.params.get('token')
 
         if request.httprequest.method == 'POST' and ('error' not in qctx):
-            qctx['error'] = ""
-            try:
-                auth_data = self.post_events(qctx)
-                if auth_data:
-                    try:
-                        mail_ins = request.env['res.partner'].sudo()
-                        mail_applicant = {
-                            'template': 'appointments.appointment_application_email_tmpl',
-                            'email_to': auth_data['email'],
-                            'context': auth_data,
-                        }
+            reservation = request.env['booking.reservation'].sudo().search([('booking_room_id', '=', int(post['room_id'])),
+                                                                     ('timeslot_id', '=', int(post['slot_id'])),
+                                                                     ('date', '=', post['date'])])
+            qctx['reservation'] = reservation
+            qctx['seats'] = self.chunkIt(
+                reservation.line_ids.search([('line_id', '=', reservation.id)], order='seat_id ASC'), 5)
 
-                        mail_ins.mailsend(mail_applicant)
-                        return http.redirect_with_hash('/appointment/success')
-                    except:
-                        return request.render('appointments.appointment_reservation_success')
-            except (WebsiteAppointmentReservation, AssertionError) as e:
-                qctx['error'] = _("Could not create a new account.")
+            return request.render("appointments.booking_reservation_details", qctx)
 
-        room_ids = self.generateDropdown('booking.room')
-        qctx['room_ids'] = [('/booking/' + str(val[0]) + '/register', val[1]) for val in room_ids]
+        qctx['slot_id'] = None if 'slot_id' not in qctx else int(qctx['slot_id'])
+        qctx['room_id'] = None if 'room_id' not in qctx else int(qctx['room_id'])
+        qctx['date'] = None if 'date' not in qctx else datetime.strptime(qctx.get('date'), '%Y-%m-%d')
+        qctx['room_ids'] = self.generateDropdown('booking.room')
+        qctx['slot_ids'] = self.generateDropdown('booking.timeslot')
 
         return request.render("appointments.booking_reservation", qctx)
 
-    @http.route(['/booking/<model("booking.room"):room>/register'], type='http', auth="public", website=True,
-                methods=['GET', 'POST'])
+    @http.route(['/booking/register'], type='http', auth="public", website=True, methods=['GET', 'POST'])
     def booking_register(self, **post):
-        values = {
-            'room': post['room'],
-            'range': range,
-        }
-        return request.render("appointments.booking_reservation_details", values)
+
+        seat = request.env['booking.reservation.line'].sudo().search([('line_id', '=', int(post['room_id'])),
+                                                               ('seat_id.name', '=', str(post['seat_no']))])
+        seat.sudo().write({'name': post['name'],
+                           'phone': post['phone'],
+                           'email': post['email'],
+                           'status': 'booked'})
+
+        return request.render('appointments.booking_reservation_success')
+
+    def chunkIt(self, lst, n):
+        """Yield successive n-sized chunks from lst."""
+        out = []
+        for i in xrange(0, len(lst), n):
+            out.append(lst[i:i + n])
+
+        return out

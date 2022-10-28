@@ -30,14 +30,53 @@
                                     <h3 class="panel-title text-center">Booking Information</h3>
                                 </div>
                                 <div class="panel-body">
-                                    <t t-foreach="room_ids" t-as='label'>
-                                        <div>
-                                            <a class="text-success" t-attf-href="#{label_value[0]}">
-                                                <t t-esc="label_value[1]"/>
-                                            </a>
+                                    <div class="col-md-12">
+                                        <div class="col-md-6">
+                                            <div class="form-group form-field">
+                                                <label for="room_id" class="control-label">Booking Room</label>
+                                                <select class="form-control input-sm reqfield" name="room_id"
+                                                        id="room_id" required="required">
+                                                    <option value="">--Please Select--</option>
+                                                    <t t-foreach="room_ids" t-as='label'>
+                                                        <option t-att-value="label_value[0]"
+                                                                t-att-selected="'selected' if room_id==label_value[0] else None">
+                                                            <t t-esc="label_value[1]"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </t>
+                                        <div class="col-md-6">
+                                            <div class="form-group form-field">
+                                                <label for="topic_id" class="control-label">Booking Slot</label>
+                                                <select class="form-control input-sm reqfield" name="slot_id"
+                                                        id="slot_id" required="required">
+                                                    <option value="">--Please Select--</option>
+                                                    <t t-foreach="slot_ids" t-as='label'>
+                                                        <option t-att-value="label_value[0]"
+                                                                t-att-selected="'selected' if slot_id==label_value[0] else None">
+                                                            <t t-esc="label_value[1]"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group form-field">
+                                                <label for="date" class="control-label">Date</label>
+                                                <input type="text" name="date" t-att-value="date"
+                                                       maxlength="10" placeholder="1960-12-31"
+                                                       minlength="10" class="form-control input-sm reqfield"
+                                                       id="date" required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-md-offset-5" style="margin-bottom: 100px;">
+                            <div class="clearfix oe_login_buttons">
+                                <button type="submit" class="btn btn-primary btn-lg">Search Booking</button>
                             </div>
                         </div>
                     </form>
@@ -51,6 +90,7 @@
             <div class="container">
                 <div class="row" id="appointment_reservation">
                     <form class="s_website_form container-fluid mt32" enctype="multipart/form-data" role="form"
+                          action="/booking/register"
                           method="post" t-if="not message" data-toggle="validator2" id="appointment-reservation">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <script type="text/javascript">
@@ -64,101 +104,82 @@
 
                         <div class="col-md-12 margin-top-15">
                             <div class="panel panel-success">
-                                <div class="panel-heading odoobg">
-                                    <h3 class="panel-title text-center">Booking Information</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div id="glcm-matrix" class="col-md-5">
-                                        <table>
-                                            <tr>
-                                                <td>C1</td>
-                                                <td>C2</td>
-                                                <td>C3</td>
-                                                <td>C4</td>
-                                                <td>C5</td>
-                                                <td>C6</td>
-                                            </tr>
-                                            <tr>
-                                                <td>C1</td>
-                                                <td>C2</td>
-                                                <td>C3</td>
-                                                <td>C4</td>
-                                                <td>C5</td>
-                                                <td>C6</td>
-                                            </tr>
-                                            <tr>
-                                                <td>C1</td>
-                                                <td>C2</td>
-                                                <td>C3</td>
-                                                <td>C4</td>
-                                                <td>C5</td>
-                                                <td>C6</td>
-                                            </tr>
-                                            <tr>
-                                                <td>C1</td>
-                                                <td>C2</td>
-                                                <td>C3</td>
-                                                <td>C4</td>
-                                                <td>C5</td>
-                                                <td>C6</td>
-                                            </tr>
-                                            <tr>
-                                                <td>C1</td>
-                                                <td>C2</td>
-                                                <td>C3</td>
-                                                <td>C4</td>
-                                                <td>C5</td>
-                                                <td>C6</td>
-                                            </tr>
-                                            <tr>
-                                                <td>C1</td>
-                                                <td>C2</td>
-                                                <td>C3</td>
-                                                <td>C4</td>
-                                                <td>C5</td>
-                                                <td>C6</td>
-                                            </tr>
-                                        </table>
+                                <t t-if="not reservation">
+                                    <div class="panel-heading odoobg">
+                                        <h3 class="panel-title text-center">Booking Information</h3>
                                     </div>
-                                    <div id="matrix" class="col-md-5">
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label>Seat No</label>
-                                                <div id="weekday_days"></div>
-                                            </div>
+                                    <div class="panel-body">
+                                        <h1>Booking Information is not available, please search again</h1>
+                                    </div>
+                                </t>
+
+                                <t t-if="reservation">
+                                    <div class="panel-heading odoobg">
+                                        <h3 class="panel-title text-center">
+                                            <t t-esc="reservation.booking_room_id.name"/>
+                                            Booking
+                                        </h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="glcm-matrix" class="col-md-5">
+                                            <table>
+                                                <t t-foreach="seats" t-as='seat'>
+                                                    <tr>
+                                                        <t t-foreach="seat" t-as='label'>
+                                                            <td t-att-class="label.status">
+                                                                <t t-esc="label.seat_id.name"/>
+                                                            </td>
+                                                        </t>
+                                                    </tr>
+                                                </t>
+                                            </table>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label for="first_name" class="control-label">Name</label>
-                                                <input type="text" name="first_name" t-att-value="first_name"
-                                                       id="first_name" maxlength="100" placeholder="Name"
-                                                       class="form-control input-sm reqfield" required="required"/>
+                                        <div id="matrix" class="col-md-5">
+                                            <div class="col-md-12">
+                                                <div class="form-group form-field">
+                                                    <label>Seat No</label><br/>
+                                                    <div id="seat_no"></div>
+                                                    <input type="text" name="seat_no" id="seat_no_input" style="display:none;"/>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label for="last_name" class="control-label">Phone</label>
-                                                <input type="text" name="last_name" t-att-value="last_name"
-                                                       id="last_name" maxlength="100" placeholder="Phone"
-                                                       class="form-control input-sm reqfield" required="required"/>
+                                            <div class="col-md-12">
+                                                <div class="form-group form-field">
+                                                    <label for="first_name" class="control-label">Name</label>
+                                                    <input type="text" name="name"
+                                                           id="first_name" maxlength="100" placeholder="Name"
+                                                           class="form-control input-sm reqfield" required="required"/>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group form-field">
-                                                <label for="last_name" class="control-label">E-Mail</label>
-                                                <input type="text" name="last_name" t-att-value="last_name"
-                                                       id="last_name" maxlength="100" required="required"
-                                                       placeholder="E-mail" class="form-control input-sm reqfield"/>
+                                            <div class="col-md-12">
+                                                <div class="form-group form-field">
+                                                    <label for="last_name" class="control-label">Phone</label>
+                                                    <input type="text" name="phone"
+                                                           id="last_name" maxlength="100" placeholder="Phone"
+                                                           pattern="(880)([0-9]{10})"
+                                                           class="form-control input-sm reqfield" required="required"/>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-4" style="margin-bottom: 100px;">
-                                            <div class="clearfix oe_login_buttons">
-                                                <button type="submit" class="btn btn-primary">Place Reservation
-                                                </button>
+                                            <div class="col-md-12">
+                                                <div class="form-group form-field">
+                                                    <label for="last_name" class="control-label">E-Mail</label>
+                                                    <input type="text" name="email"
+                                                           id="last_name" maxlength="100" required="required"
+                                                           pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+                                                           placeholder="E-mail" class="form-control input-sm reqfield"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <input type="text" name="room_id" t-att-value="reservation.id" style="display: none;"/>
+                                            </div>
+                                            <div class="col-md-4" style="margin-bottom: 100px;">
+                                                <div class="clearfix oe_login_buttons">
+                                                    <button type="submit" class="btn btn-primary">Place Reservation
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </t>
                             </div>
                         </div>
                     </form>
@@ -175,8 +196,7 @@
                     <div class="jumbotron mt32">
                         <h1>Thank you!</h1>
                         <div>
-                            Your request has been submitted successfully. Check email for
-                            further processing.
+                            Your request has been submitted successfully.
                         </div>
                     </div>
                 </div>

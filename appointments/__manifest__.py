@@ -29,6 +29,8 @@
         'views/booking_templates.xml',
         'views/appointment_type_views.xml',
         'views/appointment_topics_views.xml',
+        'views/booking_timeslot_views.xml',
+        'views/booking_reservation_views.xml',
         'views/meeting_room_views.xml',
         'views/appointment_contact_views.xml',
         'views/appointment_timeslot_views.xml',

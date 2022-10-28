@@ -5,3 +5,5 @@ from . import appointment_contact
 from . import appointment_time_slot
 from . import appointment
 from . import booking_room
+from . import booking_timeslot
+from . import booking_reservation

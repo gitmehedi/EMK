@@ -14,16 +14,15 @@
     font-white: bold;
 }
 
-#weekday_days span {
-  border: none;
-  color: black;
-  padding: 5px 5px;
+#seat_no {
+  border: 1px solid black;
+  background: green;
+  color: white;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 14px;
+  font-size: 20px;
   margin: 4px 2px;
-  cursor: pointer;
 }
 
 #weekday span {
@@ -44,29 +43,34 @@
 }
 
 #glcm-matrix td {
-    border: 2px solid green;
+    border: 1px solid black;
     text-align: center;
+    color: black;
+    font-size: 16px;
     height: 60px;
     width: 60px;
     padding: 4px;
 }
 
-#glcm-matrix td.active {
-    border-radius: 50%;
-    border: 1px solid green;
-    background: #345;
+#glcm-matrix td.available {
+    background: #dcdcdb;
+}
+#glcm-matrix td.available:hover {
+    background: green;
     color: white;
     cursor: pointer;
 }
 
-#glcm-matrix td:hover {
-    border: 1px solid yellow;
-    background: yellowgreen;
-    color: red;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 20ms;
+#glcm-matrix td.booked {
+    background: green;
+    color: white;
 }
+
+#glcm-matrix td.booked:hover {
+    background: green;
+    color: white;
+}
+
 .cls-theta{
     width: 60px;
     color: #fff;
@@ -103,3 +107,4 @@ span{
 #booking{
     width: 400px;
 }
+
