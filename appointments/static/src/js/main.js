@@ -25,6 +25,14 @@ odoo.define('appointments.main', function (require) {
                 beforeShowDay: _nonScheduleDate
             });
 
+            $("#date").datepicker({
+                minDate: '+1D',
+                maxDate: new Date(2050,12,31),
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy-mm-dd',
+            });
+
             function _nonScheduleDate(date){
                 var day_of_week = date.getDay();
                 if ( active_day.indexOf(day_of_week) !== -1){
@@ -71,7 +79,12 @@ odoo.define('appointments.main', function (require) {
                 }
                 $("#timeslot_id").val('');
             });
-
+            $("#glcm-matrix td").on("click",function(){
+                var value = $(this).text().trim();
+                console.log(value);
+                $("#seat_no").text(value);
+                $("input#seat_no_input").val(value);
+            });
         },
         _format_date: function (date) {
             var self = this;

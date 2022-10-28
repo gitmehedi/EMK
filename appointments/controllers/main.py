@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from odoo import http, _
-from odoo.addons.opa_utility.helper.utility import Utility,Message
+from odoo.addons.opa_utility.helper.utility import Utility
 from odoo.http import request
 
 DATE_FORMAT = "%Y-%m-%d"
@@ -223,3 +223,46 @@ class WebsiteAppointmentReservation(http.Controller):
             'slots': slots,
             'days': days
         }
+
+    @http.route(['/booking/reservation'], type='http', auth="public", website=True, methods=['GET', 'POST'])
+    def booking_reservation(self, **post):
+        qctx = self.get_signup_context()
+        # token = request.params.get('token')
+
+        if request.httprequest.method == 'POST' and ('error' not in qctx):
+            reservation = request.env['booking.reservation'].sudo().search([('booking_room_id', '=', int(post['room_id'])),
+                                                                     ('timeslot_id', '=', int(post['slot_id'])),
+                                                                     ('date', '=', post['date'])])
+            qctx['reservation'] = reservation
+            qctx['seats'] = self.chunkIt(
+                reservation.line_ids.search([('line_id', '=', reservation.id)], order='seat_id ASC'), 5)
+
+            return request.render("appointments.booking_reservation_details", qctx)
+
+        qctx['slot_id'] = None if 'slot_id' not in qctx else int(qctx['slot_id'])
+        qctx['room_id'] = None if 'room_id' not in qctx else int(qctx['room_id'])
+        qctx['date'] = None if 'date' not in qctx else datetime.strptime(qctx.get('date'), '%Y-%m-%d')
+        qctx['room_ids'] = self.generateDropdown('booking.room')
+        qctx['slot_ids'] = self.generateDropdown('booking.timeslot')
+
+        return request.render("appointments.booking_reservation", qctx)
+
+    @http.route(['/booking/register'], type='http', auth="public", website=True, methods=['GET', 'POST'])
+    def booking_register(self, **post):
+
+        seat = request.env['booking.reservation.line'].sudo().search([('line_id', '=', int(post['room_id'])),
+                                                               ('seat_id.name', '=', str(post['seat_no']))])
+        seat.sudo().write({'name': post['name'],
+                           'phone': post['phone'],
+                           'email': post['email'],
+                           'status': 'booked'})
+
+        return request.render('appointments.booking_reservation_success')
+
+    def chunkIt(self, lst, n):
+        """Yield successive n-sized chunks from lst."""
+        out = []
+        for i in xrange(0, len(lst), n):
+            out.append(lst[i:i + n])
+
+        return out

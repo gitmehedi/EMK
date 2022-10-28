@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_booking_reservation_tree" model="ir.ui.view">
+            <field name="name">booking.reservation.tree</field>
+            <field name="model">booking.reservation</field>
+            <field name="arch" type="xml">
+                <tree string="Booking Reservation"
+                      decoration-info="state == 'draft'"
+                      decoration-success="state in ('confirm','approve')"
+                      decoration-muted="state in ('done',)"
+                      decoration-danger="state=='reject'"
+                      decoration-bf="state in ('draft','confirm')">
+                    <field name="name"/>
+                    <field name="timeslot_id"/>
+                    <field name="booking_room_id"/>
+                    <field name="date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_booking_reservation_form" model="ir.ui.view">
+            <field name="name">booking.reservation.form</field>
+            <field name="model">booking.reservation</field>
+            <field name="arch" type="xml">
+                <form string="Booking Reservation">
+                    <header>
+                        <button name="confirm_appointment" string="Confirm" states="draft" type="object"
+                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"
+                                class="oe_highlight"/>
+                        <button name="approve_appointment" string="Approve" states="confirm" type="object"
+                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"
+                                class="oe_highlight"/>
+                        <button name="finish_appointment" string="Finish" states="approve" type="object"
+                                class="oe_highlight"
+                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
+                        <button name="reject_appointment" string="Reject" states="draft,confirm,approve"
+                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"
+                                type="object"/>
+                        <button name="%(action_appointment_wizard)d" string="Reschedule" states="confirm,approve"
+                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"
+                                type="action"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done,reject"
+                               statusbar_colors='{"reject":"red"}'/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="booking_room_id" domain="[('state','=','approve')]"
+                                       options="{'no_create':True,'no_open':True}"
+                                       attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                            </group>
+                            <group>
+                                <field name="date"
+                                       attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                                <field name="timeslot_id" domain="[('state','=','approve')]"
+                                       options="{'no_create':True,'no_open':True}"
+                                       attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                            </group>
+                        </group>
+
+                        <field name="description" placeholder="Describe about this reservation"
+                               attrs="{'readonly':[('state','in',('reject','confirm','approve','done'))]}"/>
+                        <notebook>
+                            <page string="Reservation">
+                                <field name="line_ids">
+                                    <tree decoration-success="status == 'booked'" decoration-info="status=='available'">
+                                        <field name="seat_id"/>
+                                        <field name="name"/>
+                                        <field name="email"/>
+                                        <field name="phone"/>
+                                        <field name="gender_id"/>
+                                        <field name="status"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="seat_id"/>
+                                                <field name="name"/>
+                                                <field name="email"/>
+                                            </group>
+                                            <group>
+                                                <field name="phone"/>
+                                                <field name="gender_id"/>
+                                                <field name="status"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_booking_reservation_calendar" model="ir.ui.view">
+            <field name="name">view.booking.reservation.calendar</field>
+            <field name="model">booking.reservation</field>
+            <field name="arch" type="xml">
+                <calendar string="Booking Reservation" date_start="date" color="booking_room_id"
+                          mode="month" all_day="date">
+                    <field name="name" style="background-color:red;"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="appointment_search_view" model="ir.ui.view">
+            <field name="name">appointment.search.view</field>
+            <field name="model">booking.reservation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Date" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Time Slot" domain="[]" context="{'group_by':'timeslot_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_booking_reservation">
+            <field name="name">Booking Reservation</field>
+            <field name="res_model">booking.reservation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain">[('state','=','draft')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_booking_confirm">
+            <field name="name">Booking Reservation</field>
+            <field name="res_model">booking.reservation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain">[('state','=','confirm')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_booking_approve">
+            <field name="name">Booking Reservation</field>
+            <field name="res_model">booking.reservation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain">[('state','=','approve')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_booking_finish">
+            <field name="name">Booking Reservation</field>
+            <field name="res_model">booking.reservation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,pivot</field>
+            <field name="domain">[('state','=','done')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_booking_reject">
+            <field name="name">Booking Reservation</field>
+            <field name="res_model">booking.reservation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain">[('state','=','reject')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_booking_temp">
+            <field name="name">Booking Reservation</field>
+            <field name="res_model">booking.reservation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+        </record>
+
+        <record id="action_booking_reservation_calender" model="ir.actions.act_window">
+            <field name="name">Booking Reservation Calendar</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">booking.reservation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="view_id" ref="view_booking_reservation_calendar"/>
+        </record>
+
+        <menuitem id="menu_booking_reservation" name="Reservation (Draft)" action="action_booking_reservation"
+                  parent="appointment_menu.sub_booking_menu" sequence="30"
+                  groups="appointment_user.group_appoint_user,appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
+
+        <menuitem id="menu_booking_reservation_confirm" name="Reservation (Confirmed)" action="action_booking_confirm"
+                  parent="appointment_menu.sub_booking_menu" sequence="35"
+                  groups="appointment_user.group_appoint_user,appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
+
+        <menuitem id="menu_booking_reservation_approve" name="Reservation (Approved)" action="action_booking_approve"
+                  parent="appointment_menu.sub_booking_menu" sequence="40"
+                  groups="appointment_user.group_appoint_user,appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
+
+        <menuitem id="menu_booking_reservation_done" name="Reservation (Finished)" action="action_booking_finish"
+                  parent="appointment_menu.sub_booking_menu" sequence="45"
+                  groups="appointment_user.group_appoint_user,appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
+
+        <menuitem id="menu_booking_reservation_reject" name="Reservation (Rejected)" action="action_booking_reject"
+                  parent="appointment_menu.sub_booking_menu" sequence="50"
+                  groups="appointment_user.group_appoint_user,appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
+
+        <menuitem id="menu_booking_reservation_temporary" name="Booking Schedule" action="action_booking_temp"
+                  parent="appointment_menu.sub_booking_menu" sequence="55"
+                  groups="appointment_user.group_appoint_temp_user"/>
+    </data>
+</odoo>
