@@ -93,23 +93,11 @@ class Appointment(models.Model):
     @api.multi
     def approve_appointment(self):
         if self.state == 'confirm':
-            # app = {'template': 'appointments.mail_template_appointment_app'}
-            # self.env['mail.mail'].mail_send(self.id, app)
-
-            app_emk = {'template': 'appointments.mail_template_appointment_app_emk'}
-            self.env['mail.mail'].mail_send(self.id, app_emk)
-
             self.state = 'approve'
 
     @api.multi
     def finish_appointment(self):
         if self.state == 'approve':
-            # app = {'template': 'appointments.mail_template_appointment_app'}
-            # self.env['mail.mail'].mail_send(self.id, app)
-
-            app_emk = {'template': 'appointments.mail_template_appointment_app_emk'}
-            self.env['mail.mail'].mail_send(self.id, app_emk)
-
             self.state = 'done'
 
     def unlink(self):
