@@ -64,11 +64,13 @@
 #glcm-matrix td.booked {
     background: green;
     color: white;
+    pointer-events: none;
 }
 
 #glcm-matrix td.booked:hover {
     background: green;
     color: white;
+    pointer-events: none;
 }
 
 .cls-theta{

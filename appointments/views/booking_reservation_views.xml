@@ -70,13 +70,16 @@
                         <notebook>
                             <page string="Reservation">
                                 <field name="line_ids">
-                                    <tree decoration-success="status == 'booked'" decoration-info="status=='available'">
+                                    <tree decoration-info="status=='available'">
                                         <field name="seat_id"/>
                                         <field name="name"/>
                                         <field name="email"/>
                                         <field name="phone"/>
-                                        <field name="gender_id"/>
+                                        <field name="membership_id"/>
                                         <field name="status"/>
+                                        <button name="cancel_booking" string="Cancel Booking" type="object"
+                                                 style="color:red !important, font-size: 24px;"
+                                                attrs="{'invisible':[('status','=','available')]}"/>
                                     </tree>
                                     <form>
                                         <group>
