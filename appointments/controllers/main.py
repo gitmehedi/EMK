@@ -230,9 +230,10 @@ class WebsiteAppointmentReservation(http.Controller):
         # token = request.params.get('token')
 
         if request.httprequest.method == 'POST' and ('error' not in qctx):
-            reservation = request.env['booking.reservation'].sudo().search([('booking_room_id', '=', int(post['room_id'])),
-                                                                     ('timeslot_id', '=', int(post['slot_id'])),
-                                                                     ('date', '=', post['date'])])
+            reservation = request.env['booking.reservation'].sudo().search(
+                [('booking_room_id', '=', int(post['room_id'])),
+                 ('timeslot_id', '=', int(post['slot_id'])),
+                 ('date', '=', post['date'])])
             qctx['reservation'] = reservation
             qctx['seats'] = self.chunkIt(
                 reservation.line_ids.search([('line_id', '=', reservation.id)], order='seat_id ASC'), 5)
@@ -251,10 +252,13 @@ class WebsiteAppointmentReservation(http.Controller):
     def booking_register(self, **post):
 
         seat = request.env['booking.reservation.line'].sudo().search([('line_id', '=', int(post['room_id'])),
-                                                               ('seat_id.name', '=', str(post['seat_no']))])
+                                                                      ('seat_id.name', '=', str(post['seat_no']))])
+        member = request.env['res.partner'].sudo().search([('email', '=', str(post['email']))])
+
         seat.sudo().write({'name': post['name'],
                            'phone': post['phone'],
                            'email': post['email'],
+                           'membership_id': member.id if member else None,
                            'status': 'booked'})
 
         return request.render('appointments.booking_reservation_success')
