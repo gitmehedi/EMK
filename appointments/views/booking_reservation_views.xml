@@ -38,9 +38,6 @@
                         <button name="reject_appointment" string="Reject" states="draft,confirm,approve"
                                 groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"
                                 type="object"/>
-                        <button name="%(action_appointment_wizard)d" string="Reschedule" states="confirm,approve"
-                                groups="appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"
-                                type="action"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve,done,reject"
                                statusbar_colors='{"reject":"red"}'/>
                     </header>

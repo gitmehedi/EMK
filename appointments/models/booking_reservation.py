@@ -82,11 +82,6 @@ class Appointment(models.Model):
     @api.multi
     def reject_appointment(self):
         if self.state in ('confirm', 'draft', 'approve'):
-            reject = {'template': 'appointments.mail_template_appointment_rej'}
-            self.env['mail.mail'].mail_send(self.id, reject)
-
-            rej_emk = {'template': 'appointments.mail_template_appointment_rej_emk'}
-            self.env['mail.mail'].mail_send(self.id, rej_emk)
 
             self.state = 'reject'
 
