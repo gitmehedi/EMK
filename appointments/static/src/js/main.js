@@ -81,7 +81,6 @@ odoo.define('appointments.main', function (require) {
             });
             $("#glcm-matrix td").on("click",function(){
                 var value = $(this).text().trim();
-                console.log(value);
                 $("#seat_no").text(value);
                 $("input#seat_no_input").val(value);
             });

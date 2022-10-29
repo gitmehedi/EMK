@@ -133,7 +133,16 @@ class Appointment(models.Model):
         name = fields.Char(string="Name", track_visibility='onchange')
         phone = fields.Char(string="Phone", track_visibility='onchange')
         email = fields.Char(string="Email", track_visibility='onchange')
+        membership_id = fields.Many2one('res.partner',string="Membership", track_visibility='onchange')
         line_id = fields.Many2one('booking.reservation', ondelete='cascade')
         seat_id = fields.Many2one('booking.room.line', string="Seat No")
         gender_id = fields.Many2one('res.gender', string='Gender', track_visibility='onchange')
         status = fields.Selection([('available', 'Available'), ('booked', 'Booked')], default='available')
+
+        @api.multi
+        def cancel_booking(self):
+            if self.status == 'booked':
+                self.status = 'available'
+                self.name = ''
+                self.phone = ''
+                self.email = ''
