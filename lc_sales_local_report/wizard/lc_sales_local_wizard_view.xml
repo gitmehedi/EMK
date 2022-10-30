@@ -10,7 +10,7 @@
                 <form string="Report Options">
                     <group>
                         <group>
-                            <field name="product_temp_id" String="Select Product"
+                            <field name="product_temp_id" String="Select Products" widget="many2many_tags"
                                    options='{"no_create": 1, "no_create_edit":1}'/>
                         </group>
                         <group>
@@ -60,7 +60,7 @@
                 <form string="Report Options">
                     <group>
                         <group>
-                            <field name="product_temp_id" String="Select Product"
+                            <field name="product_temp_id" String="Select Products" widget="many2many_tags"
                                    options='{"no_open": 1, "no_create": 1, "no_create_edit":1}'/>
                         </group>
                         <group>
@@ -103,7 +103,7 @@
                 <form string="Report Options">
                     <group>
                         <group>
-                            <field name="product_temp_id" String="Select Product"
+                            <field name="product_temp_id" String="Select Products" widget="many2many_tags"
                                    options='{"no_create": 1, "no_create_edit":1}'/>
                         </group>
                         <group>
