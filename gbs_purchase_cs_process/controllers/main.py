@@ -17,7 +17,8 @@ class PurchaseQuotationsController(http.Controller):
             {'user_remarks': remarks_maker, 'manager_remarks': remarks_checker,
              'procurement_head_remarks': remarks_approver})
         if listOfObjects:
-            po_orders = request.env['purchase.order'].search([('rfq_id', '=', rfq_id)], order='id ASC')
+            po_orders = request.env['purchase.order'].search([('rfq_id', '=', rfq_id), ('created_by_cs', '=', False)],
+                                                             order='id ASC')
             for order in po_orders:
                 for line in order.order_line:
                     line.suspend_security().write({'is_cs_processed': False})
@@ -125,9 +126,9 @@ class PurchaseQuotationsController(http.Controller):
                 'operating_unit_id': rfq_obj.operating_unit_id.id,
                 'company_id': company_id,
                 'picking_type_id': types[0].id,
-                'rfq_id':rfq_id,
+                'rfq_id': rfq_id,
                 'date_order': datetime.now(),
-                'created_by_cs':True,
+                'created_by_cs': True,
                 'state': 'done'
             }
             created_po_obj = request.env['purchase.order'].suspend_security().create(order_obj)
@@ -173,7 +174,8 @@ class PurchaseQuotationsController(http.Controller):
 
         data_list = []
         rfq_obj = request.env['purchase.rfq'].browse(rfq_id)
-        pq_list = request.env['purchase.order'].search([('rfq_id', '=', rfq_id)], order='id ASC')
+        pq_list = request.env['purchase.order'].search([('rfq_id', '=', rfq_id), ('created_by_cs', '=', False)],
+                                                       order='id ASC')
         if not pq_list:
             raise UserError('No Quotation created for this RFQ.\n'
                             ' Please create quotation to see the comparative study!!!')
@@ -246,11 +248,12 @@ class PurchaseQuotationsController(http.Controller):
                     created_po = pq.created_po.get(product_row['product_id'])
                     product_row['quotations'].append(
                         {'price': price_pq, 'total': total_pq, 'po_line_id': po_line_id, 'vendor_id': vendor,
-                         'cq_processed': cq_processed,'created_po': created_po})
+                         'cq_processed': cq_processed, 'created_po': created_po})
 
                 else:
                     product_row['quotations'].append(
-                        {'price': None, 'total': None, 'po_line_id': None, 'vendor_id': None, 'cq_processed': None, 'created_po': None})
+                        {'price': None, 'total': None, 'po_line_id': None, 'vendor_id': None, 'cq_processed': None,
+                         'created_po': None})
         return {'products': product_row_list}
 
     def get_purchase_data(self, rfq_obj):
@@ -288,7 +291,8 @@ class PurchaseQuotationsController(http.Controller):
                 cs_processed[pq_line.product_id.id] = pq_line.is_cs_processed
                 created_po[pq_line.product_id.id] = pq_line.created_po
 
-            quotations.append(TempPQ(pq.id, pq.name, pq.state, product_line, po_line, vendors, cs_processed,created_po))
+            quotations.append(
+                TempPQ(pq.id, pq.name, pq.state, product_line, po_line, vendors, cs_processed, created_po))
         return quotations
 
 
