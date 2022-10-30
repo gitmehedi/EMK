@@ -52,22 +52,22 @@
     padding: 4px;
 }
 
-#glcm-matrix td.available {
+#glcm-matrix span.available {
     background: #dcdcdb;
 }
-#glcm-matrix td.available:hover {
+#glcm-matrix span.available:hover {
     background: green;
     color: white;
     cursor: pointer;
 }
 
-#glcm-matrix td.booked {
+#glcm-matrix span.booked {
     background: green;
     color: white;
     pointer-events: none;
 }
 
-#glcm-matrix td.booked:hover {
+#glcm-matrix span.booked:hover {
     background: green;
     color: white;
     pointer-events: none;
@@ -109,4 +109,342 @@ span{
 #booking{
     width: 400px;
 }
+
+.library {
+  position: relative;
+  display: grid;
+  grid-template-columns: 50px auto 70px;
+  grid-template-rows: auto auto auto;
+  grid-gap: 2em;
+  border: 2px solid grey;
+}
+.window-top {
+  display: flex;
+  flex: 1 0 auto;
+  flex-flow: column wrap;
+  gap: 16px;
+  /* width: 100%; */
+  text-align: center;
+}
+.window-top .door {
+  padding: 12px;
+}
+.window-top .officers {
+  display: flex;
+  justify-content: space-between;
+}
+.window-top .officer {
+  padding: 12px;
+}
+
+.window-left {
+  display: flex;
+  flex: 1 0 auto;
+  flex-flow: row nowrap;
+  gap: 16px;
+  /* width: 50px; */
+  text-align: center;
+  /* height: 100%; */
+}
+.window-left .door {
+  padding: 12px;
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+  width: 50px;
+}
+
+.seats {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  justify-content: stretch;
+  align-items: stretch;
+  gap: 10px;
+}
+.seats .available {
+  box-sizing: border-box;
+  width: -webkit-fill-available;
+  height: fit-content;
+  /* aspect-ratio: 16 / 9; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #252525;
+  padding: .5em;
+}
+
+.seats .booked {
+  box-sizing: border-box;
+  width: -webkit-fill-available;
+  height: fit-content;
+  /* aspect-ratio: 16 / 9; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #252525;
+  padding: .5em;
+}
+
+
+.window-right {
+  display: flex;
+  flex: 1 0 auto;
+  flex-flow: column nowrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: flex-end;
+}
+.window-right .door {
+  padding: 12px;
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+}
+.window-right .pc {
+  padding: 12px;
+}
+
+.window-bottom {
+  display: flex;
+  flex: 1 0 auto;
+  flex-flow: row nowrap;
+  gap: 16px;
+  justify-content: center;
+}
+.window-bottom .door {
+  padding: 12px;
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+}
+.window-bottom .pc {
+  padding: 12px;
+}
+
+/* #E3C800 */
+/* #60A916 */
+/* #ffffff */
+/* #DAE8FC */
+/* #7091C0 */
+/* #F7CDCC */
+/* #E51400 */
+
+.d-flex {
+  display: flex !important;
+}
+.flex-wrap {
+  flex-wrap: wrap !important;
+}
+.flex-row {
+  flex-direction: row !important;
+}
+.flex-column {
+  flex-direction: column !important;
+}
+.bg-yellow {
+  background: #e3c800;
+}
+.bg-green {
+  background: #60a916;
+}
+.bg-red {
+  background: #e51400;
+}
+.bg-light-red {
+  background: #f7cdcc;
+}
+.bg-light-blue {
+  background: #dae8fc;
+}
+.bg-white {
+  background: #ffffff;
+}
+.border {
+  border: 1px solid #252525;
+}
+
+.maker-lab {
+  position: relative;
+  display: grid;
+  grid-template-columns: 140px auto 140px;
+  grid-template-rows: auto auto auto;
+  grid-gap: 1em;
+  border: 2px solid grey;
+}
+.maker-lab .window-top {
+  display: flex;
+  flex: 1 0 auto;
+  flex-flow: column wrap;
+  gap: 16px;
+  /* width: 100%; */
+  text-align: center;
+}
+.maker-lab .window-top .door {
+  padding: 12px;
+}
+.maker-lab .window-top .officers {
+  display: flex;
+  justify-content: space-between;
+}
+.maker-lab .window-top .officer {
+  padding: 12px;
+}
+.maker-lab .window-left {
+  display: flex;
+  flex: 1 0 auto;
+  flex-flow: row nowrap;
+  gap: 16px;
+  /* width: 50px; */
+  text-align: center;
+  /* height: 100%; */
+}
+.maker-lab .window-left .employees {
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  justify-items: start;
+  padding: 2em 0;
+  gap: .5em;
+}
+.maker-lab .window-left .employees span {
+  padding: 12px;
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+}
+.maker-lab .window-left .officer {
+    display: inline-flex;
+    text-align: center;
+    margin-left: 2em;
+}
+.maker-lab .window-left .door {
+  padding: 12px;
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+  width: 50px;
+}
+
+.maker-lab .seats {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: stretch;
+  align-items: stretch;
+  align-content: space-between;
+  gap: 10px;
+}
+.maker-lab .seats .seat-item {
+  box-sizing: border-box;
+  width: -webkit-fill-available;
+  height: fit-content;
+  /* aspect-ratio: 16 / 9; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #252525;
+  padding: 1em;
+}
+.maker-lab .grid-span-3 {
+    grid-column: 1/3;
+}
+.maker-lab .window-right {
+  display: flex;
+  flex: 1 0 auto;
+  flex-flow: row nowrap;
+  gap: 16px;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 2em 0;
+}
+.maker-lab .window-right .door {
+  padding: 12px;
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+}
+.maker-lab .window-right .pc,
+.maker-lab .window-right .lc {
+  padding: 12px;
+  margin-bottom: 1em;
+}
+
+.maker-lab .window-bottom {
+  display: flex;
+  flex: 1 0 auto;
+  flex-flow: row nowrap;
+  gap: 16px;
+  justify-content: flex-end;
+}
+.maker-lab .window-bottom .door {
+  padding: 12px;
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+}
+.maker-lab .window-bottom .pc {
+  padding: 12px;
+}
+
+/* Utilites */
+
+.d-flex {
+  display: flex !important;
+}
+.flex-wrap {
+  flex-wrap: wrap !important;
+}
+.flex-row {
+  flex-direction: row !important;
+}
+.flex-column {
+  flex-direction: column !important;
+}
+.bg-yellow {
+  background: #e3c800;
+}
+.bg-green {
+  background: #60a916;
+}
+.bg-red {
+  background: #e51400;
+}
+.bg-light-red {
+  background: #f7cdcc;
+}
+.bg-light-blue {
+  background: #dae8fc;
+}
+.bg-white {
+  background: #ffffff;
+}
+.border {
+  border: 1px solid #252525;
+}
+
+
+.lcs div {
+    border: 1px solid black;
+    text-align: center;
+    color: black;
+    font-size: 14px;
+    height: 47px;
+    width: 55px;
+    padding: 4px;
+    margin-bottom: 13px;
+}
+
+.lcs div.available {
+    background: #dcdcdb;
+}
+
+.lcs div.available:hover {
+    background: green;
+    color: white;
+    cursor: pointer;
+}
+
+.lcs div.booked {
+    background: green;
+    color: white;
+    pointer-events: none;
+}
+
+.lcs div.booked:hover {
+    background: green;
+    color: white;
+    pointer-events: none;
+}
+
 

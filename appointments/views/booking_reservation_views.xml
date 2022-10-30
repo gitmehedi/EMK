@@ -75,19 +75,26 @@
                                         <field name="membership_id"/>
                                         <field name="status"/>
                                         <button name="cancel_booking" string="Cancel Booking" type="object"
-                                                 style="color:red !important, font-size: 24px;"
-                                                attrs="{'invisible':[('status','=','available')]}"/>
+                                                states="available"/>
+                                        <field name="state" invisible="1"/>
                                     </tree>
                                     <form>
+                                        <header>
+                                            <button name="act_checkin" string="Check In" states="available"
+                                                    type="object" class="oe_highlight"/>
+                                            <button name="act_checkout" string="Check Out" states="checkin"
+                                                    type="object" class="oe_highlight"/>
+                                            <field name="state" widget="statusbar" statusbar_visible="checkin,checkout"/>
+                                        </header>
                                         <group>
                                             <group>
                                                 <field name="seat_id"/>
                                                 <field name="name"/>
                                                 <field name="email"/>
+                                                <field name="qr_code" widget="image"/>
                                             </group>
                                             <group>
                                                 <field name="phone"/>
-                                                <field name="gender_id"/>
                                                 <field name="status"/>
                                             </group>
                                         </group>

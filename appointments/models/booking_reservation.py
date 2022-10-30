@@ -82,7 +82,6 @@ class Appointment(models.Model):
     @api.multi
     def reject_appointment(self):
         if self.state in ('confirm', 'draft', 'approve'):
-
             self.state = 'reject'
 
     @api.multi
@@ -116,16 +115,56 @@ class Appointment(models.Model):
         name = fields.Char(string="Name", track_visibility='onchange')
         phone = fields.Char(string="Phone", track_visibility='onchange')
         email = fields.Char(string="Email", track_visibility='onchange')
-        membership_id = fields.Many2one('res.partner',string="Membership", track_visibility='onchange')
+        membership_id = fields.Many2one('res.partner', string="Membership", track_visibility='onchange')
         line_id = fields.Many2one('booking.reservation', ondelete='cascade')
         seat_id = fields.Many2one('booking.room.line', string="Seat No")
         gender_id = fields.Many2one('res.gender', string='Gender', track_visibility='onchange')
+        qr_code = fields.Binary("QR Code", )
+        qr_code_name = fields.Char("QR Name", )
         status = fields.Selection([('available', 'Available'), ('booked', 'Booked')], default='available')
+        state = fields.Selection([('available', 'Available'), ('checkin', 'Check In'), ('checkout', 'Check Out')])
 
         @api.multi
         def cancel_booking(self):
             if self.status == 'booked':
                 self.status = 'available'
+                self.state = ''
                 self.name = ''
                 self.phone = ''
                 self.email = ''
+
+        @api.one
+        def act_checkin(self):
+            if self.state == 'available':
+                self.state = 'checkin'
+
+        @api.one
+        def act_checkout(self):
+            if self.state == 'checkin':
+                self.state = 'checkout'
+
+        @api.model
+        def mailsend(self, vals):
+            template = False
+            try:
+                template = self.env.ref(vals['template'], raise_if_not_found=False)
+            except ValueError:
+                pass
+
+            assert template._name == 'mail.template'
+
+            template.write({
+                'email_to': vals['email_to'] if 'email_to' in vals else '',
+                'attachment_ids': vals['attachment_ids'] if 'attachment_ids' in vals else [],
+            })
+
+            context = {
+                'base_url': self.env['ir.config_parameter'].get_param('web.base.url'),
+                'lang': self.env.user.lang,
+            }
+
+            for key, val in vals['context'].iteritems():
+                context[key] = val
+
+            template.with_context(context).send_mail(self.env.user.id, force_send=True, raise_exception=True)
+            _logger.info("Email sending status of user.")

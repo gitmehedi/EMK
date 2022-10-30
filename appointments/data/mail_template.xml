@@ -239,4 +239,36 @@
             <field name="user_signature" eval="False"/>
         </record>
     </data>
+
+    <record id="mail_template_booking_reservation_emk" model="mail.template">
+            <field name="name">Booking Reservation</field>
+            <field name="model_id" ref="appointments.model_booking_reservation_line"/>
+            <field name="email_from">
+                <![CDATA["${user.company_id.name|safe}" <${(user.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_to">${object.email}</field>
+            <field name="subject">Booking Reservation (Ref ${object.name})</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 0px;">
+                        <p>
+                            Dear ${object.name},
+                            <br/>
+                            <br/>
+                            EMK received a request to booking reservation of EMK Center.
+                            This is a notification that serves as confirmation that request has been approved.
+                            <br/>
+                            ${object.qr_code}
+                            <br/>
+                        </p>
+                        If you have queries feel free to ask.
+                        <br/>
+                        <br/>
+                        Additionally, I thank you for being a part of ${user.company_id.name}.
+                    </p>
+                    <p style="font-size: 11px; margin-top: 10px;">
+                        <strong>Sent by ${user.company_id.name}</strong>
+                    </p>
+                </div>
+            </field>
+        </record>
 </odoo>
