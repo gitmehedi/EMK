@@ -26,7 +26,7 @@
         <div class="header">
                 <style type="text/css">
                     .header-content {
-                        height:81px; position:relative; margin:0; padding:0; text-align:center;
+                        height:100px; position:relative; margin:0; padding:0; text-align:center;
                     }
                     .company-info {
                         width:100%; height:81px;
