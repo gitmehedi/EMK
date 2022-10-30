@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "GBS Invoice Line Qty Based On MRR or Delivery",
+    'name': "GBS Invoice Line Restriction",
 
     'summary': """
     """,
