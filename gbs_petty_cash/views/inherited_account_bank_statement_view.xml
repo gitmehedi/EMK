@@ -29,12 +29,7 @@
                                     groups="gbs_petty_cash.group_petty_cash_manager"
                                     class="oe_highlight"
                                     attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('state', '!=', 'open'),('petty_cash_reconciled','=',False)]}"/>
-                            <button name="duplicate_unreconcile_action"
-                                    string="Unreconcile" type="object"
-                                    class="oe_highlight"
-                                    confirm="Are you sure to unreconcile?"
-                                    attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('petty_cash_reconciled', '=', False),('state', '!=', 'open')]}"/>
-                            <button name="button_cancel" states="confirm" invisible="1" string="Cancel Statement"
+                           <button name="button_cancel" states="confirm" invisible="1" string="Cancel Statement"
                                     type="object"/>
                             <button name="button_draft" states="confirm"
                                     groups="gbs_petty_cash.group_petty_cash_manager"
@@ -42,6 +37,12 @@
                                     string="Reset to New" type="object"/>
                             <button string="Export Excel" name="action_statement_print" class="oe_highlight"
                                     type="object"/>
+                             <button name="duplicate_unreconcile_action"
+                                    string="Unreconcile" type="object" style="margin-left:calc(100% - 450px);"
+                                    class="btn-primary btn-danger oe_read_only"
+                                    confirm="Are you sure to unreconcile?"
+                                    attrs="{'invisible':['|','|','|',('is_petty_cash_journal','=',False),('line_ids','=',[]),('petty_cash_reconciled', '=', False),('state', '!=', 'open')]}"/>
+
                             <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                         </header>
                         <sheet>
