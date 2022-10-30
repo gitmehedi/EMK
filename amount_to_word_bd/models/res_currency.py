@@ -4,17 +4,8 @@ from odoo import api, fields, models, tools, _
 class Currency(models.Model):
     _inherit = "res.currency"
 
-    start_word_map = {}  # Where key is Currency and value is String
-    end_word_map = {}  # Where key is Currency and value is String
-    start_word_map['USD'] = ' Dollars'
-    start_word_map['EUR'] = ' Euro'
-    start_word_map['BDT'] = ' Taka'
-    start_word_map['CHF'] = ' CHF'
-
-    end_word_map['USD'] = ' Cents'
-    end_word_map['EUR'] = ' Cents'
-    end_word_map['BDT'] = ' Paisa'
-    end_word_map['CHF'] = ' Coins'
+    in_word_start_map = fields.Char(string='In Word Start Map', required=True, track_visibility=True)
+    in_word_end_map = fields.Char(string='In Word End Map', required=True, track_visibility=True)
 
     @api.model
     def amount_to_word(self, number, is_add_currency=True,currency='BDT'):
@@ -66,8 +57,9 @@ class Currency(models.Model):
             if int(end_word) > 0:
                 end_word = int(end_word) if len(end_word) > 1 else int(end_word) * 10
                 paisa = self.handel_upto_99(end_word)
+                res_currency = self.env['res.currency'].search([('name', '=', currency)])
                 if start_word_total > 0:
-                    result = result + self.start_word_map.get(currency) + ' and ' + paisa + self.end_word_map.get(currency)
+                    result = result + ' ' + res_currency.in_word_start_map + ' and ' + paisa + ' ' + res_currency.in_word_end_map
                 else:
                     result = paisa + self.end_word_map.get(currency)
             else:

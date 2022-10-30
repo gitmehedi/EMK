@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="base.CHF" model="res.currency">
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+		</record>
+    </data>
+</odoo>

@@ -173,6 +173,10 @@ class IndentIndent(models.Model):
 
     @api.multi
     def action_close_indent(self):
+        picking_state = self.picking_id.state
+        if picking_state not in ('draft', 'cancel', 'done'):
+            raise ValidationError(_('You can\'t close, because of already pending issue products. '
+                                    'Please cancel or done before close.'))
         res = {
             'state': 'received',
             'closer_id': self.env.user.id,
