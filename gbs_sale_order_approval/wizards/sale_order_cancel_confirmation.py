@@ -10,7 +10,9 @@ class SaleOrderCancelConfirmation(models.TransientModel):
     def action_yes(self):
         sale_order_id = self._context['sale_order_id']
         sale_order_obj = self.env['sale.order'].browse(sale_order_id)
-        dc_objs = self.env['stock.picking'].sudo().search([('origin', '=', sale_order_obj.name)])
+        dc_objs = self.env['stock.picking'].search([('origin', '=', sale_order_obj.name)])
+        do_objs = self.env['delivery.order'].search([('sale_order_id', '=', sale_order_obj.id)])
+        stock_move_objs = self.env['stock.move'].search([('picking_id', '=', dc_objs.id)])
 
         #************************* Check pre condition
         for dc_obj in dc_objs:
@@ -22,9 +24,15 @@ class SaleOrderCancelConfirmation(models.TransientModel):
         for dc_obj in dc_objs:
             dc_obj.write({'state': 'cancel'})
 
-        da_objs = self.env['delivery.authorization'].sudo().search([('sale_order_id', '=', sale_order_obj.id)])
+        da_objs = self.env['delivery.authorization'].search([('sale_order_id', '=', sale_order_obj.id)])
         for da_obj in da_objs:
             da_obj.write({'state': 'refused'})
+
+        for do_obj in do_objs:
+            do_obj.write({'state': 'refused'})
+
+        for sm_obj in stock_move_objs:
+            sm_obj.write({'state': 'cancel'})
 
         return sale_order_obj.write({'state': 'cancel'})
 

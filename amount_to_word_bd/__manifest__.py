@@ -31,7 +31,10 @@
     'sequence': 4,
     'website' : 'http://www.genweb2.com',
     'depends' : ['base'],
-    'data' : [],
+    'data' : [
+        'data/res_currency_data.xml',
+        'views/res_currency.xml',
+    ],
     'auto_install': False,
     'application': False,
     'installable': True,

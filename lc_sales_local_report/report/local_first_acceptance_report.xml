@@ -23,24 +23,21 @@
                             .report-title { text-align:center; }
                             .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
                         </style>
-                        <br/>
                         <h4 class="report-title">First Acceptance Report</h4>
-                        <br/>
-                        <t t-foreach="record['product_temp_name']" t-as="rec">
 
-                            <div class="clearfix">
-
-                                <div class="row" style="padding-bottom:5px;">
-                                    <div class="col-xs-6 text-left">
-                                        <strong>Product: </strong><span t-esc="rec"/>
-                                    </div>
-                                    <div class="col-xs-6 text-right">
-                                        <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y, %H:%M %p')"/></div>
-                                    </div>
+                            <div class="row" style="padding-bottom:0px;">
+                                <div class="col-xs-6 text-left">
+                                    <strong>Product: </strong>
+                                    <t t-foreach="record['product_temp_name']" t-as="rec">
+                                        <span t-esc="rec"/>,
+                                    </t>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y, %H:%M %p')"/></div>
                                 </div>
                             </div>
                             <table class="table table-bordered table-report-xs table-striped"
-                                   style="margin-bottom: 10px;table-layout: fixed;">
+                                   style="margin-bottom: 10px;padding-top:0; margin-top:0; table-layout: fixed;">
                                 <thead>
                                     <tr class="odo-bg-gray">
                                         <th class="text-center" style="width:2%;">SL</th>
@@ -61,7 +58,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-if="lines">
+                                <t t-foreach="record['product_temp_name']" t-as="rec">
+                                    <t t-if="len(lines[rec])>1">
+                                        <tr>
+                                            <td colspan="4" class="text-left">
+                                                <strong><span t-esc="rec"/></strong>
+                                            </td>
+                                        </tr>
                                         <t t-foreach="lines[rec]" t-as="line">
                                             <tr>
                                                 <td class="text-left">
@@ -122,34 +125,34 @@
                                                 </td>
                                             </tr>
                                         </t>
-                                    </t>
-                                    <t t-if="total">
-                                        <t t-foreach="total[rec]" t-as="t">
-                                            <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
-                                                <td colspan="4" class="text-left">
-                                                    <t t-esc="t['title']"/>
-                                                </td>
-                                                <td class="text-right">
-                                                    <t t-esc="t['total_val']"/>
-                                                </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
+                                        <t t-if="total">
+                                            <t t-foreach="total[rec]" t-as="t">
+                                                <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
+                                                    <td colspan="4" class="text-left">
+                                                        <t t-esc="t['title']"/>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-esc="t['total_val']"/>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </t>
                                         </t>
                                     </t>
 
-                                </tbody>
-                            </table>
-                            <p style="page-break-after:always;"></p>
-                        </t>
+                                    <br/>
+                                </t>
+                            </tbody>
+                        </table>
                             <!--<t t-call="report_layout.report_signing"></t>-->
                     </div>
                 </div>
