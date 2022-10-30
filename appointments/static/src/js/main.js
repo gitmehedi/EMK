@@ -79,7 +79,12 @@ odoo.define('appointments.main', function (require) {
                 }
                 $("#timeslot_id").val('');
             });
-            $("#glcm-matrix td").on("click",function(){
+            $("#glcm-matrix span").on("click",function(){
+                var value = $(this).text().trim();
+                $("#seat_no").text(value);
+                $("input#seat_no_input").val(value);
+            });
+            $(".lcs div").on("click",function(){
                 var value = $(this).text().trim();
                 $("#seat_no").text(value);
                 $("input#seat_no_input").val(value);

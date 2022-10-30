@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+import base64
+import cStringIO
 from datetime import datetime
 
+# -*- coding: utf-8 -*-
+import qrcode
 from odoo import http, _
 from odoo.addons.opa_utility.helper.utility import Utility
 from odoo.http import request
@@ -233,10 +237,13 @@ class WebsiteAppointmentReservation(http.Controller):
             reservation = request.env['booking.reservation'].sudo().search(
                 [('booking_room_id', '=', int(post['room_id'])),
                  ('timeslot_id', '=', int(post['slot_id'])),
-                 ('date', '=', post['date'])])
+                 ('date', '=', post['date']),
+                 ('state', '=', 'confirm')])
             qctx['reservation'] = reservation
-            qctx['seats'] = self.chunkIt(
-                reservation.line_ids.search([('line_id', '=', reservation.id)], order='seat_id ASC'), 5)
+            room_template = request.env['booking.room'].sudo().search([('id', '=', int(post['room_id']))])
+            qctx['room_tmpl'] = room_template.type if room_template else 'others'
+            qctx['seats'] = self.chunkIt(reservation.line_ids.search([('line_id', '=', reservation.id)],
+                                                                     order='seat_id ASC'), 5)
 
             return request.render("appointments.booking_reservation_details", qctx)
 
@@ -254,12 +261,23 @@ class WebsiteAppointmentReservation(http.Controller):
         seat = request.env['booking.reservation.line'].sudo().search([('line_id', '=', int(post['room_id'])),
                                                                       ('seat_id.name', '=', str(post['seat_no']))])
         member = request.env['res.partner'].sudo().search([('email', '=', str(post['email']))])
+        code = self.generate_qr_code(post['email'])
 
-        seat.sudo().write({'name': post['name'],
+        data = {'name': post['name'],
                            'phone': post['phone'],
                            'email': post['email'],
                            'membership_id': member.id if member else None,
-                           'status': 'booked'})
+                           'qr_code': code,
+                           'state': 'available',
+                           'qr_code_name': "{0}.png".format(post['email']),
+                           'status': 'booked'}
+
+        seat.sudo().write(data)
+
+        try:
+            app_emk = {'template': 'appointments.mail_template_booking_reservation_emk'}
+        except:
+            return request.env['mail.mail'].sudo().mail_send(seat.id, app_emk)
 
         return request.render('appointments.booking_reservation_success')
 
@@ -270,3 +288,14 @@ class WebsiteAppointmentReservation(http.Controller):
             out.append(lst[i:i + n])
 
         return out
+
+    def generate_qr_code(self, url):
+        qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=20, border=4, )
+        qr.add_data(url)
+        qr.make(fit=True)
+
+        img = qr.make_image()
+        temp = cStringIO.StringIO()
+        img.save(temp, format="PNG")
+        qr_img = base64.b64encode(temp.getvalue())
+        return qr_img

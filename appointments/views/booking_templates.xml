@@ -109,7 +109,7 @@
                                         <h3 class="panel-title text-center">Booking Information</h3>
                                     </div>
                                     <div class="panel-body">
-                                        <h1>Booking Information is not available, please search again</h1>
+                                        <h4>Booking Information is not available, please search again</h4>
                                     </div>
                                 </t>
 
@@ -121,25 +121,111 @@
                                         </h3>
                                     </div>
                                     <div class="panel-body">
-                                        <div id="glcm-matrix" class="col-md-5">
-                                            <table>
-                                                <t t-foreach="seats" t-as='seat'>
-                                                    <tr>
-                                                        <t t-foreach="seat" t-as='label'>
-                                                            <td t-att-class="label.status">
-                                                                <t t-esc="label.seat_id.name"/>
-                                                            </td>
+                                        <t t-if="room_tmpl=='library'">
+                                            <div id="glcm-matrix" class="col-md-6">
+                                                <section class="library">
+                                                    <div>-</div>
+                                                    <div class="window-top">
+                                                        <div class="door bg-white border">Window</div>
+                                                        <div class="officers">
+                                                            <span class="officer border">Officer</span>
+                                                            <span class="officer border">Office</span>
+                                                        </div>
+                                                    </div>
+                                                    <div>-</div>
+                                                    <div class="window-left">
+                                                        <div class="door bg-light-blue border">Window</div>
+                                                    </div>
+                                                    <div class="seats">
+                                                        <t t-foreach="seats" t-as='seat'>
+                                                            <t t-foreach="seat" t-as='label'>
+                                                                <span t-att-class="label.status">
+                                                                    <t t-esc="label.seat_id.name"/>
+                                                                </span>
+                                                            </t>
                                                         </t>
-                                                    </tr>
-                                                </t>
-                                            </table>
-                                        </div>
-                                        <div id="matrix" class="col-md-5">
+                                                    </div>
+                                                    <div class="window-right">
+                                                        <div class="pc border">PC-01</div>
+                                                        <div class="pc border">PC-01</div>
+                                                        <div class="pc border">PC-01</div>
+                                                        <div class="door bg-light-blue border">Door</div>
+                                                    </div>
+                                                    <!--  -->
+                                                    <div>-</div>
+                                                    <div class="window-bottom">
+                                                        <div class="pc border">PC-01</div>
+                                                        <div class="pc border">PC-01</div>
+                                                        <div class="pc border">PC-01</div>
+                                                    </div>
+                                                    <div>-</div>
+                                                </section>
+                                            </div>
+                                        </t>
+                                        <t t-if="room_tmpl !='library'">
+                                            <div id="glcm-matrix" class="col-md-6">
+                                                <section class="maker-lab">
+                                                    <div class="window-left">
+                                                        <div class="door bg-light-blue border">Window</div>
+                                                        <div class="employees">
+                                                            <div class="employee bg-yellow border">
+                                                                <span>Employee</span>
+                                                            </div>
+                                                            <div class="employee bg-yellow border">
+                                                                <span>Employee</span>
+                                                            </div>
+                                                            <div class="employee bg-yellow border">
+                                                                <span>Employee</span>
+                                                            </div>
+                                                            <div class="officer bg-yellow border">
+                                                                <span>Officer</span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="seats">
+                                                        <span class="grid-span-3 bg-white"></span>
+                                                        <span class="seat-item bg-light-red">Instructor</span>
+                                                        <span class="seat-item bg-yellow">Officer</span>
+                                                    </div>
+                                                    <div class="window-right">
+                                                        <div class="lcs">
+                                                            <t t-foreach="seats" t-as='seat'>
+                                                                <t t-foreach="seat" t-as='label'>
+                                                                    <div t-att-class="label.status">
+                                                                        <t t-esc="label.seat_id.name"/>
+                                                                    </div>
+                                                                </t>
+                                                            </t>
+                                                        </div>
+                                                        <div class="pcs">
+                                                            <div class="pc border">PC-01</div>
+                                                            <div class="pc border">PC-02</div>
+                                                            <div class="pc border">PC-03</div>
+                                                            <div class="pc border">PC-04</div>
+                                                            <div class="pc border">PC-05</div>
+                                                        </div>
+                                                    </div>
+                                                    <!--  -->
+                                                    <div>-</div>
+                                                    <div>
+                                                        -
+                                                    </div>
+                                                    <div class="window-bottom">
+                                                        <div class="door bg-light-blue border">Door</div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </t>
+
+                                        <div id="matrix" class="col-md-6">
                                             <div class="col-md-12">
                                                 <div class="form-group form-field">
-                                                    <label>Seat No</label><br/>
+                                                    <label>Seat No</label>
+                                                    <br/>
                                                     <div id="seat_no"></div>
-                                                    <input type="text" name="seat_no" id="seat_no_input" style="display:none;"/>
+                                                    <input type="text" name="seat_no" id="seat_no_input"
+                                                           style="display:none;"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -169,7 +255,8 @@
                                                 </div>
                                             </div>
                                             <div>
-                                                <input type="text" name="room_id" t-att-value="reservation.id" style="display: none;"/>
+                                                <input type="text" name="room_id" t-att-value="reservation.id"
+                                                       style="display: none;"/>
                                             </div>
                                             <div class="col-md-4" style="margin-bottom: 100px;">
                                                 <div class="clearfix oe_login_buttons">
