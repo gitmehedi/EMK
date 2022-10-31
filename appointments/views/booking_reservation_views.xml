@@ -200,7 +200,7 @@
 
         <menuitem id="menu_booking_reservation_confirm" name="Reservation (Confirmed)" action="action_booking_confirm"
                   parent="appointment_menu.sub_booking_menu" sequence="35"
-                  groups="appointment_user.group_appoint_user,appointment_user.group_appoint_officer,appointment_user.group_appoint_manager"/>
+                  groups="appointment_user.group_appoint_user,appointment_user.group_appoint_officer,appointment_user.group_appoint_manager,appointment_user.group_appoint_security_user"/>
 
         <menuitem id="menu_booking_reservation_approve" name="Reservation (Approved)" action="action_booking_approve"
                   parent="appointment_menu.sub_booking_menu" sequence="40"

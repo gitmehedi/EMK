@@ -70,6 +70,6 @@
         </record>
 
         <menuitem id="menu_appointment_type" action="action_appointment_type" sequence="5"
-                  groups="" parent="appointment_menu.sub_configuration_menu"/>
+                  groups="appointment_user.group_appoint_manager" parent="appointment_menu.sub_configuration_menu"/>
     </data>
 </odoo>
