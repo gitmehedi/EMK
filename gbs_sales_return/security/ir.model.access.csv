@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gbs_sales_return_gbs_sales_return,gbs_sales_return.gbs_sales_return,model_gbs_sales_return_gbs_sales_return,,1,0,0,0
