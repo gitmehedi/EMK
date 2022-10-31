@@ -55,6 +55,7 @@ class AcceptanceReportsUtility(models.TransientModel):
     sql_in_tk = '''SELECT DISTINCT pt.id as template_id,
                                   lc.id as lc_id,
                                   ps.id as shipment_id,
+                                  ps.bill_id as bill_id,
                                   pt.name as product_name,
                                   pt.id as product_id,
                                   ps.name as shipment_name,
