@@ -42,6 +42,7 @@
                                 <field name="line_ids">
                                     <tree editable="top">
                                         <field name="name"/>
+                                        <field name="row"/>
                                     </tree>
                                 </field>
                             </page>
@@ -84,6 +85,6 @@
         </record>
 
         <menuitem id="menu_booking_room" action="action_booking_room" sequence="50"
-                  groups="" parent="appointment_menu.sub_configuration_menu"/>
+                  groups="appointment_user.group_appoint_manager" parent="appointment_menu.sub_configuration_menu"/>
     </data>
 </odoo>

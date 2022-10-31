@@ -86,4 +86,5 @@ class BookingRoomLine(models.Model):
     _order = "id desc"
 
     name = fields.Char(string='Name', required=True, track_visibility="onchange")
+    row = fields.Char(string="Row", track_visibility="onchange")
     line_id = fields.Many2one('booking.room', string='Line', ondelete='cascade')

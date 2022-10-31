@@ -147,16 +147,16 @@
                                                     </div>
                                                     <div class="window-right">
                                                         <div class="pc border">PC-01</div>
-                                                        <div class="pc border">PC-01</div>
-                                                        <div class="pc border">PC-01</div>
+                                                        <div class="pc border">PC-02</div>
+                                                        <div class="pc border">PC-03</div>
                                                         <div class="door bg-light-blue border">Door</div>
                                                     </div>
                                                     <!--  -->
                                                     <div>-</div>
                                                     <div class="window-bottom">
-                                                        <div class="pc border">PC-01</div>
-                                                        <div class="pc border">PC-01</div>
-                                                        <div class="pc border">PC-01</div>
+                                                        <div class="pc border">PC-04</div>
+                                                        <div class="pc border">PC-05</div>
+                                                        <div class="pc border">PC-06</div>
                                                     </div>
                                                     <div>-</div>
                                                 </section>
@@ -190,20 +190,18 @@
                                                     </div>
                                                     <div class="window-right">
                                                         <div class="lcs">
-                                                            <t t-foreach="seats" t-as='seat'>
-                                                                <t t-foreach="seat" t-as='label'>
-                                                                    <div t-att-class="label.status">
-                                                                        <t t-esc="label.seat_id.name"/>
-                                                                    </div>
-                                                                </t>
+                                                            <t t-foreach="lc_row" t-as='label'>
+                                                                <div t-att-class="label.status">
+                                                                    <t t-esc="label.seat_id.name"/>
+                                                                </div>
                                                             </t>
                                                         </div>
-                                                        <div class="pcs">
-                                                            <div class="pc border">PC-01</div>
-                                                            <div class="pc border">PC-02</div>
-                                                            <div class="pc border">PC-03</div>
-                                                            <div class="pc border">PC-04</div>
-                                                            <div class="pc border">PC-05</div>
+                                                        <div class="lcs">
+                                                            <t t-foreach="pc_row" t-as='label'>
+                                                                <div t-att-class="label.status">
+                                                                    <t t-esc="label.seat_id.name"/>
+                                                                </div>
+                                                            </t>
                                                         </div>
                                                     </div>
                                                     <!--  -->

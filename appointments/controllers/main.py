@@ -242,8 +242,19 @@ class WebsiteAppointmentReservation(http.Controller):
             qctx['reservation'] = reservation
             room_template = request.env['booking.room'].sudo().search([('id', '=', int(post['room_id']))])
             qctx['room_tmpl'] = room_template.type if room_template else 'others'
-            qctx['seats'] = self.chunkIt(reservation.line_ids.search([('line_id', '=', reservation.id)],
-                                                                     order='seat_id ASC'), 5)
+
+            seats = reservation.line_ids.search([('line_id', '=', reservation.id)], order='seat_id ASC')
+            if qctx['room_tmpl'] == 'library':
+                qctx['seats'] = self.chunkIt(seats, 5)
+            else:
+                qctx['lc_row'] = []
+                qctx['pc_row'] = []
+
+                for seat in seats:
+                    if seat.seat_id.row == '1':
+                        qctx['lc_row'].append(seat)
+                    if seat.seat_id.row == '2':
+                        qctx['pc_row'].append(seat)
 
             return request.render("appointments.booking_reservation_details", qctx)
 
@@ -264,13 +275,13 @@ class WebsiteAppointmentReservation(http.Controller):
         code = self.generate_qr_code(post['email'])
 
         data = {'name': post['name'],
-                           'phone': post['phone'],
-                           'email': post['email'],
-                           'membership_id': member.id if member else None,
-                           'qr_code': code,
-                           'state': 'available',
-                           'qr_code_name': "{0}.png".format(post['email']),
-                           'status': 'booked'}
+                'phone': post['phone'],
+                'email': post['email'],
+                'membership_id': member.id if member else None,
+                'qr_code': code,
+                'state': 'available',
+                'qr_code_name': "{0}.png".format(post['email']),
+                'status': 'booked'}
 
         seat.sudo().write(data)
 

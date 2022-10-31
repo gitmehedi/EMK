@@ -37,4 +37,11 @@
         <field name="comment">Manager will have access on all features.</field>
     </record>
 
+    <record id="group_appoint_security_user" model="res.groups">
+        <field name="name">Appointment: Security User</field>
+        <field name="sequence">1</field>
+        <field name="category_id" ref="module_category_appointment"/>
+        <field name="comment">Security general user will have access on some features.</field>
+    </record>
+
 </odoo>

@@ -82,6 +82,6 @@
         </record>
 
         <menuitem id="menu_appointment_topics" action="action_appointment_topics" sequence="20"
-                  groups="" parent="appointment_menu.sub_configuration_menu"/>
+                  groups="appointment_user.group_appoint_manager" parent="appointment_menu.sub_configuration_menu"/>
     </data>
 </odoo>
