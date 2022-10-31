@@ -42,6 +42,7 @@
                                 <field name="line_ids">
                                     <tree editable="top">
                                         <field name="name"/>
+                                        <field name="row"/>
                                     </tree>
                                 </field>
                             </page>
