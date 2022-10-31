@@ -56,19 +56,19 @@
     background: #dcdcdb;
 }
 #glcm-matrix span.available:hover {
-    background: green;
+    background: red;
     color: white;
     cursor: pointer;
 }
 
 #glcm-matrix span.booked {
-    background: green;
+    background: red;
     color: white;
     pointer-events: none;
 }
 
 #glcm-matrix span.booked:hover {
-    background: green;
+    background: red;
     color: white;
     pointer-events: none;
 }
@@ -430,19 +430,19 @@ span{
 }
 
 .lcs div.available:hover {
-    background: green;
+    background: red;
     color: white;
     cursor: pointer;
 }
 
 .lcs div.booked {
-    background: green;
+    background: red;
     color: white;
     pointer-events: none;
 }
 
 .lcs div.booked:hover {
-    background: green;
+    background: red;
     color: white;
     pointer-events: none;
 }
