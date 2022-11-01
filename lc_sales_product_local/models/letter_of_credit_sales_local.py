@@ -55,6 +55,8 @@ class LetterOfCreditCommon(models.Model):
                   'context': {'shipment_number': comm_utility_pool.getStrNumber(shipmentNo) + ' Shipment',
                               'lc_id': self.id,
                               'operating_unit_id': self.operating_unit_id.id,
+                              'default_transport_by': 'BY TRUCK',
+                              'default_freight': 'PREPAID',
                               'company_id': self.first_party.id},
                   'type': 'ir.actions.act_window',
                   'target': 'current'}
