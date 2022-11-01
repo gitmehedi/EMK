@@ -16,6 +16,7 @@ class ShipmentProductLine(models.Model):
     product_qty = fields.Float(string='Quantity')
     price_unit = fields.Float(string='Unit Price')
     shipment_id = fields.Many2one('purchase.shipment', string='Purchase Shipment')
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order')
 
 
 class ShipmentProduct(models.Model):

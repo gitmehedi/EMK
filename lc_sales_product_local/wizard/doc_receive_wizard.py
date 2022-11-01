@@ -9,13 +9,13 @@ class DocReceiveWizard(models.TransientModel):
     shipment_id = fields.Many2one('purchase.shipment', string='Purchase Shipment',
                                   default=lambda self: self.env.context.get('active_id'))
 
-
     @api.onchange('shipment_id')
     def po_product_line(self):
         self.product_lines = []
         vals = []
+        sale_order = self.shipment_id.lc_id.product_lines
         pro_lc_line_pool = self.env['lc.product.line'].search([('lc_id', '=', self.shipment_id.lc_id.id)])
-        for obj in pro_lc_line_pool:
+        for obj in sale_order:
             product_qty = obj.product_qty - obj.product_received_qty
             if product_qty > 0:
                 vals.append((0, 0, {'product_id': obj.product_id,
@@ -26,6 +26,7 @@ class DocReceiveWizard(models.TransientModel):
                                     'date_planned': obj.date_planned,
                                     'product_uom': obj.product_uom,
                                     'price_unit': obj.price_unit,
+                                    'sale_order_id': obj.sale_order_id
                                     }))
         self.product_lines = vals
 
@@ -36,6 +37,7 @@ class DocReceiveWizard(models.TransientModel):
         shipment_pool = self.env['purchase.shipment']
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
         shipment_obj.write({'state': 'receive_doc'})
+
         vals = []
         for pro_line in self.product_lines:
             vals.append((0, 0, {'product_id': pro_line.product_id,
@@ -45,6 +47,7 @@ class DocReceiveWizard(models.TransientModel):
                             'date_planned': pro_line.date_planned,
                             'product_uom':pro_line.product_uom,
                             'price_unit':pro_line.price_unit,
+                            'sale_order_id':pro_line.sale_order_id,
                             }))
             pro_lc_line_pool = self.env['lc.product.line'].search([('id', '=', pro_line.lc_pro_line_id)])
             res_received_qty = pro_lc_line_pool.product_received_qty+pro_line.product_qty
@@ -75,6 +78,7 @@ class ShipmentProductLineWizard(models.TransientModel):
     price_unit = fields.Float(string='Unit Price')
     lc_pro_line_id = fields.Integer(string='LC Line ID')
     shipment_pro_line_id = fields.Integer(string='Shipment Line ID')
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order')
 
 
 

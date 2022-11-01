@@ -134,6 +134,7 @@
                                             <field name="delivered_qty" string="Delivered Qty" readonly='1'/>
                                             <field name="product_received_qty" string="Document Qty" readonly='1'/>
                                             <field name="price_unit" readonly='1'/>
+                                            <field name="sale_order_id" invisible='1'/>
                                         </tree>
                                     </field>
                                     <div class="oe_clear"/>

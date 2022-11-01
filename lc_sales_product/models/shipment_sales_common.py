@@ -47,35 +47,17 @@ class ShipmentCommon(models.Model):
 
     @api.multi
     def action_draft_local_sales(self):
-
         lc_state = self.lc_id.state
         if lc_state == 'done' or lc_state == 'cancel':
-            raise ValidationError(_("This LC already in "+ lc_state.capitalize()  +". Before 'Reset To Draft', Need to Active This LC"))
+            raise ValidationError(
+                _("This LC already in " + lc_state.capitalize() + ". Before 'Reset To Draft', Need to Active This LC"))
 
-        if self.shipment_product_lines:
-            for obj in self.shipment_product_lines:
-                lc_product_line = self.env['lc.product.line'].search([('lc_id', '=', self.lc_id.id),
-                                                                      ('product_id', '=', obj.product_id.id)])
-
-                if len(lc_product_line) > 1:
-                    # raise ValidationError(("Unable to update due to multiple same product."))
-                    # break
-                    res_wizard_view = self.env.ref('lc_sales_product.reset_lc_wizard_view')
-                    res = {
-                        'name': _('Please Select LC Product to return document qty for reset'),
-                        'view_type': 'form',
-                        'view_mode': 'form',
-                        'view_id': res_wizard_view and res_wizard_view.id or False,
-                        'res_model': 'reset.lc.wizard',
-                        'type': 'ir.actions.act_window',
-                        'nodestroy': True,
-                        'target': 'new',
-                    }
-                    return res
-                else:
+        for obj in self.shipment_product_lines:
+            if self.state != 'cancel':
+                lc_product_line = self.env['lc.product.line'].search([('sale_order_id', '=', obj.sale_order_id.id), ('lc_id', '=', self.lc_id.id)])
+                if lc_product_line:
                     lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty-obj.product_qty})
-
-            self.shipment_product_lines.unlink()
+            obj.unlink()
 
         self.sudo().update({'state': 'draft', 'invoice_ids': [(6, 0, [])], 'invoice_value': 0})
 
