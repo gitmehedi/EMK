@@ -11,6 +11,7 @@
     'data': [
 
         "views/hr_employee_view.xml",
+        "views/hr_job_view.xml",
 
     ],
     'summary': 'Shows job titles and employee tin informations ',
