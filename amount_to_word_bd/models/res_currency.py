@@ -21,6 +21,15 @@ class Currency(models.Model):
         start_word_total = start_word
         end_word = len(list)>1 and list[1] or 0
 
+        res_currency = self.env['res.currency'].search([('name', '=', currency)])
+        in_word_start_map = res_currency.in_word_start_map
+        if not res_currency.in_word_start_map:
+            in_word_start_map = ''
+
+        in_word_end_map = res_currency.in_word_end_map
+        if not res_currency.in_word_end_map:
+            in_word_end_map = ''
+
         # Amount to word for integer portion
         if start_word is 0:
             result = ''
@@ -57,13 +66,12 @@ class Currency(models.Model):
             if int(end_word) > 0:
                 end_word = int(end_word) if len(end_word) > 1 else int(end_word) * 10
                 paisa = self.handel_upto_99(end_word)
-                res_currency = self.env['res.currency'].search([('name', '=', currency)])
                 if start_word_total > 0:
-                    result = result + ' ' + res_currency.in_word_start_map + ' and ' + paisa + ' ' + res_currency.in_word_end_map
+                    result = result + ' ' + in_word_start_map + ' and ' + paisa + ' ' + in_word_end_map
                 else:
                     result = paisa + self.end_word_map.get(currency)
             else:
-                result = result + self.start_word_map.get(currency)
+                result = result + ' ' + in_word_start_map
 
         else:
             if int(end_word) > 0:
@@ -75,8 +83,6 @@ class Currency(models.Model):
                     result = ' Point '+paisa
             else:
                 result = result
-
-
 
         return result
 
