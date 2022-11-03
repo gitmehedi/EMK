@@ -163,7 +163,7 @@ class ReturnPicking(models.TransientModel):
         for move in return_moves:
             qty = 0
             for rtns in pro_returns:
-                if rtns.move_id == move.id:
+                if rtns.move_id.id == move.id:
                     qty = rtns.quantity
 
             invoice_line = {
