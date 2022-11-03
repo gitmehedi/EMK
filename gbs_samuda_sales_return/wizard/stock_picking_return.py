@@ -137,11 +137,9 @@ class ReturnPicking(models.TransientModel):
 
     ################# NEW Implementation #################
 
-
-    def do_operation(self, rec, picking, return_moves):
+    def do_operation(self, rec, picking, return_moves, pro_returns, main_invoice):
         new_picking_id, pick_type_id = rec._create_returns()
         print('new_picking_id', new_picking_id)
-        print('pick_type_id', pick_type_id)
         partner_acc_rec = picking.partner_id.property_account_receivable_id.id
         sale_journal_id = self.env['account.journal'].search([('type', '=', 'sale'),
                                                               ('company_id', '=', picking.company_id.id)])[0]
@@ -161,20 +159,29 @@ class ReturnPicking(models.TransientModel):
             'account_id': partner_acc_rec
         }
         invoice_obj = self.env['account.invoice'].create(refund_obj)
+       
+	
         for move in return_moves:
+            qty = 0
+            for rtns in pro_returns:
+                if rtns.move_id.id == move.id:
+                    qty = rtns.quantity
+            print('qty',qty)
             invoice_line = {
                 'product_id': move.product_id.id,
                 'name': move.product_id.name,
                 'account_id': move.product_id.property_account_income_id.id,
-                'quantity': move.product_qty,
+                'quantity': qty,
                 'uom_id': move.product_id.uom_id.id,
-                'price_unit': rec.price_unit,
+                'price_unit': move.price_unit,
                 'invoice_id': invoice_obj.id
             }
             invoice_line_obj = self.env['account.invoice.line'].create(invoice_line)
         picking_obj = self.env['stock.picking'].browse(new_picking_id)
         picking_obj.write({'invoice_ids': [(4, invoice_obj.id)]})
         print('invoice_obj', invoice_obj)
+	invoice_obj.write({'state':'open'})
+	
 
     @api.multi
     def create_return_obj(self):
@@ -193,7 +200,6 @@ class ReturnPicking(models.TransientModel):
             #
             #     print('month close logic')
             return_moves = self.product_return_moves.mapped('move_id')
-
             if not picking.invoice_ids:
                 raise UserError(_("Invoice not found for this DC!"))
             else:
@@ -203,7 +209,7 @@ class ReturnPicking(models.TransientModel):
                     elif inv.state == 'paid':
                         raise UserError(_("Invoice is already paid\n You need to unreconcile the invoice first!"))
                     elif inv.state == 'open':
-                        self.do_operation(rec, picking, return_moves)
+                        self.do_operation(rec, picking, return_moves, self.product_return_moves, inv)
                     else:
                         raise UserError(_("Invoice needs to be in open state!"))
 
