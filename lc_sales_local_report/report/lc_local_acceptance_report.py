@@ -31,7 +31,7 @@ class LocalSecondAcceptanceReport(models.AbstractModel):
     @api.multi
     def render_html(self, docids, data=None):
 
-        state_condition = 'to_seller_bank','to_buyer_bank'
+        state_condition = 'to_seller_bank','to_buyer_bank','to_bill_id'
         acceptance_utility_pool = self.env['acceptance.report.utility']
         get_data = acceptance_utility_pool.get_report_data(data,state_condition)
         report_utility_pool = self.env['report.utility']
