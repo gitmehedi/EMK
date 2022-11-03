@@ -166,7 +166,7 @@ class ReturnPicking(models.TransientModel):
                 'product_id': move.product_id.id,
                 'name': move.product_id.name,
                 'account_id': move.product_id.property_account_income_id.id,
-                'quantity': move.quantity,
+                'quantity': move.product_qty,
                 'uom_id': move.product_id.uom_id.id,
                 'price_unit': rec.price_unit,
                 'invoice_id': invoice_obj.id
