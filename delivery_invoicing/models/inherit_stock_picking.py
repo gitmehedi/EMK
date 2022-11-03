@@ -108,10 +108,12 @@ class Picking(models.Model):
 
     def update_invoice_for_picking_return(self):
         """ Update customer invoice for DC return from customer """
-        invoices = self.sale_id.invoice_ids.filtered(lambda inv: inv.state == 'draft')
-        if not invoices:
-            raise UserError(
-                _('Unable to return the product because there are no invoice in draft stage for this Sale Order.'))
+        invoices = self.sale_id.invoice_ids.filtered(lambda inv: inv.state == 'open')
+        #########[FIXED for new sales return] shoaib
+        #invoices = self.sale_id.invoice_ids.filtered(lambda inv: inv.state == 'draft')
+        # if not invoices:
+        #     raise UserError(
+        #         _('Unable to return the product because there are no invoice in draft stage for this Sale Order.'))
 
         return_qty = sum(pack.qty_done or pack.product_qty for pack in self.pack_operation_product_ids)
         invoice_qty = sum(line.quantity for inv in invoices for line in inv.invoice_line_ids)
