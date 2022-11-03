@@ -166,13 +166,14 @@ class ReturnPicking(models.TransientModel):
                 'product_id': move.product_id.id,
                 'name': move.product_id.name,
                 'account_id': move.product_id.property_account_income_id.id,
-                'quantity': move.quantity,
+                'quantity': move.product_qty,
                 'uom_id': move.product_id.uom_id.id,
                 'price_unit': rec.price_unit,
                 'invoice_id': invoice_obj.id
             }
             invoice_line_obj = self.env['account.invoice.line'].create(invoice_line)
-        new_picking_id.write({'invoice_ids': [(4, invoice_obj.id)]})
+        picking_obj = self.env['stock.picking'].browse(new_picking_id)
+        picking_obj.write({'invoice_ids': [(4, invoice_obj.id)]})
         print('invoice_obj', invoice_obj)
 
     @api.multi
