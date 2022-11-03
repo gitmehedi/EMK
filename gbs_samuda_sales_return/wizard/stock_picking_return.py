@@ -26,6 +26,9 @@ class ReturnPicking(models.TransientModel):
     price_unit = fields.Float(string='COGS Unit Price', digits=dp.get_precision('Product Price'),
                               default=_get_default_price_unit)
 
+    return_date = fields.Date(string='Return Date', default=datetime.today())
+    return_reason = fields.Text(string='Return Reason', limit=20)
+
     @api.constrains('product_return_moves')
     def _check_quantity(self):
         if any(move.quantity < 0 for move in self.product_return_moves):
@@ -134,8 +137,6 @@ class ReturnPicking(models.TransientModel):
 
     ################# NEW Implementation #################
 
-    return_date = fields.Date(string='Return Date', default=datetime.today())
-    return_reason = fields.Text(string='Return Reason', limit=20)
 
     def do_operation(self, rec, picking, return_moves):
         new_picking_id, pick_type_id = rec._create_returns()
