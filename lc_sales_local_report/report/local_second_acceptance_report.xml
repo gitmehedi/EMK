@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <!--<template id="head_local_second_acceptance_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">-->
-        <!--<xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">-->
-            <!--<attribute name="t-call">lc_sales_local_report.external_local_second_acceptance_temp</attribute>-->
-        <!--</xpath>-->
-    <!--</template>-->
-    <!--<template id="external_local_second_acceptance_temp" inherit_id="report_layout.gbs_internal_layout_header" primary="True">-->
-        <!--<xpath expr="//div[@class='company-info']" position="after">-->
-            <!--<div name="company_address" style="margin-top: -25px;">-->
-                <!--<h5><span t-esc="address"/></h5>-->
-            <!--</div>-->
-        <!--</xpath>-->
-    <!--</template>-->
     <!-- Main template -->
     <template id="local_second_acceptance_temp">
         <t t-call="report.html_container">
@@ -32,7 +19,10 @@
                                 <div class="col-xs-6 text-left">
                                     <strong>Product: </strong>
                                     <t t-foreach="record['product_temp_name']" t-as="rec">
-                                        <span t-esc="rec"/>,
+                                        <span t-esc="rec"/>
+                                        <t t-if="rec_index &lt; len(record['product_temp_name'])-1">
+                                            <b>,</b>
+                                        </t>
                                     </t>
                                 </div>
                                 <div class="col-xs-6 text-right">
@@ -66,7 +56,7 @@
                                 <t t-foreach="record['product_temp_name']" t-as="rec">
                                     <t t-if="len(lines[rec])>1">
                                         <tr>
-                                            <td colspan="4" class="text-left">
+                                            <td colspan="16" class="text-left">
                                                 <strong><span t-esc="rec"/></strong>
                                             </td>
                                         </tr>
@@ -137,12 +127,12 @@
                                         </t>
                                         <t t-if="total">
                                         <t t-foreach="total[rec]" t-as="t">
-                                            <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
+                                            <tr>
                                                 <td colspan="4" class="text-left">
-                                                    <t t-esc="t['title']"/>
+                                                    <b><t t-esc="t['title']"/></b>
                                                 </td>
                                                 <td class="text-right">
-                                                    <t t-esc="t['total_val']"/>
+                                                    <b><t t-esc="t['total_val']"/></b>
                                                 </td>
                                                 <td></td>
                                                 <td></td>
