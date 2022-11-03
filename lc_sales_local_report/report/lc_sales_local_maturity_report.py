@@ -70,6 +70,6 @@ class LCSalesMaturityReport(models.AbstractModel):
                         vals['value'] = formatLang(self.env, vals['value']) if vals['value'] else 'None'
                         data_list.append(vals)
             acceptances[product] = data_list
-            total_value_lines.append({'title': 'TOTAL VALUE', 'total_val': footer_total_value})
+            total_value_lines.append({'title': 'SUB TOTAL', 'total_val': footer_total_value})
             total_value[product] = total_value_lines
         return {'data_list': acceptances ,'total': total_value}

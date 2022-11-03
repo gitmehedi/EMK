@@ -131,6 +131,6 @@ class AcceptanceReportsUtility(models.TransientModel):
                     vals['value'] = formatLang(self.env, vals['value']) if vals['value'] else None
                     acceptance_lines.append(vals)
             acceptances[product] = acceptance_lines
-            total_value_lines.append({'title': 'TOTAL VALUE', 'total_val': footer_total_value})
+            total_value_lines.append({'title': 'SUB TOTAL', 'total_val': footer_total_value})
             total_value[product] = total_value_lines
         return {'acceptances': acceptances,'total': total_value}
