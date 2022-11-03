@@ -1,5 +1,10 @@
 # imports of odoo
+import json
+from lxml import etree
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
+from odoo.tools import float_is_zero, float_compare
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from datetime import datetime
@@ -139,7 +144,6 @@ class ReturnPicking(models.TransientModel):
 
     def do_operation(self, rec, picking, return_moves, pro_returns, main_invoice):
         new_picking_id, pick_type_id = rec._create_returns()
-        print('new_picking_id', new_picking_id)
         partner_acc_rec = picking.partner_id.property_account_receivable_id.id
         sale_journal_id = self.env['account.journal'].search([('type', '=', 'sale'),
                                                               ('company_id', '=', picking.company_id.id)])[0]
@@ -159,14 +163,12 @@ class ReturnPicking(models.TransientModel):
             'account_id': partner_acc_rec
         }
         invoice_obj = self.env['account.invoice'].create(refund_obj)
-       
-	
+
         for move in return_moves:
             qty = 0
             for rtns in pro_returns:
                 if rtns.move_id.id == move.id:
                     qty = rtns.quantity
-            print('qty',qty)
             invoice_line = {
                 'product_id': move.product_id.id,
                 'name': move.product_id.name,
@@ -179,9 +181,69 @@ class ReturnPicking(models.TransientModel):
             invoice_line_obj = self.env['account.invoice.line'].create(invoice_line)
         picking_obj = self.env['stock.picking'].browse(new_picking_id)
         picking_obj.write({'invoice_ids': [(4, invoice_obj.id)]})
-        print('invoice_obj', invoice_obj)
-	invoice_obj.write({'state':'open'})
-	
+        # invoice_obj.write({'state': 'open'})
+        invoice_obj.action_invoice_open()
+
+        # Reconciliation
+        move_id = invoice_obj.move_id
+        main_invoice_move = main_invoice.move_id
+        info = self._get_outstanding_info(invoice_obj, main_invoice_move)
+        self.assign_outstanding_credit(invoice_obj, info['content'][0]['id'])
+        # call assign_outstanding_credit using main_invoice credit aml id
+        # _get_outstanding_info_JSON to get info
+
+    def _get_outstanding_info(self, invoice_obj, main_invoice_move):
+
+        if invoice_obj.state == 'open':
+            domain = [('account_id', '=', invoice_obj.account_id.id),
+                      ('move_id', '=', main_invoice_move.id),
+                      ('partner_id', '=', self.env['res.partner']._find_accounting_partner(invoice_obj.partner_id).id),
+                      ('reconciled', '=', False),
+                      '|',
+                      '&', ('amount_residual_currency', '!=', 0.0), ('currency_id', '!=', None),
+                      '&', ('amount_residual_currency', '=', 0.0), '&', ('currency_id', '=', None),
+                      ('amount_residual', '!=', 0.0)]
+            if invoice_obj.type in ('out_invoice', 'in_refund'):
+                domain.extend([('credit', '>', 0), ('debit', '=', 0)])
+                type_payment = _('Outstanding credits')
+            else:
+                domain.extend([('credit', '=', 0), ('debit', '>', 0)])
+                type_payment = _('Outstanding debits')
+            info = {'title': '', 'outstanding': True, 'content': [], 'invoice_id': invoice_obj.id}
+            lines = self.env['account.move.line'].search(domain)
+            currency_id = invoice_obj.currency_id
+            if len(lines) != 0:
+                for line in lines:
+                    # get the outstanding residual value in invoice currency
+                    if line.currency_id and line.currency_id == invoice_obj.currency_id:
+                        amount_to_show = abs(line.amount_residual_currency)
+                    else:
+                        amount_to_show = line.company_id.currency_id.with_context(date=line.date).compute(
+                            abs(line.amount_residual), invoice_obj.currency_id)
+                    if float_is_zero(amount_to_show, precision_rounding=invoice_obj.currency_id.rounding):
+                        continue
+                    info['content'].append({
+                        'journal_name': line.ref or line.move_id.name,
+                        'amount': amount_to_show,
+                        'currency': currency_id.symbol,
+                        'id': line.id,
+                        'position': currency_id.position,
+                        'digits': [69, invoice_obj.currency_id.decimal_places],
+                    })
+                info['title'] = type_payment
+
+            return info
+
+    def assign_outstanding_credit(self, refund_invoice, credit_aml_id):
+        credit_aml = self.env['account.move.line'].browse(credit_aml_id)
+        if not credit_aml.currency_id and refund_invoice.currency_id != refund_invoice.company_id.currency_id:
+            credit_aml.with_context(allow_amount_currency=True, check_move_validity=False).write({
+                'amount_currency': refund_invoice.company_id.currency_id.with_context(date=credit_aml.date).compute(
+                    credit_aml.balance, refund_invoice.currency_id),
+                'currency_id': refund_invoice.currency_id.id})
+        if credit_aml.payment_id:
+            credit_aml.payment_id.write({'invoice_ids': [(4, refund_invoice.id, None)]})
+        return refund_invoice.register_payment(credit_aml)
 
     @api.multi
     def create_return_obj(self):
