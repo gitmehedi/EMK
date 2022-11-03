@@ -4,6 +4,27 @@
         <menuitem id="menu_pf_report" name="PF Report"
                   parent="hr_payslip_monthly_report.menu_hr_payslip_reports" action="action_provident_fund_wizard"
                   groups="hr.group_hr_manager" sequence="11"/>
+        <menuitem
+            id="hr_payroll.menu_hr_salary_rule_category_tree_view"
+            action="hr_payroll.action_hr_salary_rule_category_tree_view"
+            parent="hr_payroll.menu_hr_payroll_configuration"
+            sequence="12"
+            groups="base.group_no_one,hr_payroll.group_hr_payroll_manager" />
+
+        <menuitem
+            id="hr_payroll.menu_hr_salary_rule_category"
+            action="hr_payroll.action_hr_salary_rule_category"
+            parent="hr_payroll.menu_hr_payroll_configuration"
+            sequence="11"
+            groups="base.group_no_one,hr_payroll.group_hr_payroll_manager"/>
+
+        <record id="hr_payroll.menu_hr_payroll_structure_view" model="ir.ui.menu">
+            <field name="groups_id" eval="[(4,ref('hr_payroll.group_hr_payroll_manager'))]"/>
+        </record>
+
+        <record id="hr_payroll.menu_hr_payroll_structure_tree" model="ir.ui.menu">
+            <field name="groups_id" eval="[(4,ref('hr_payroll.group_hr_payroll_manager'))]"/>
+        </record>
 
         <record id="inherited_hr_payslip_run_views" model="ir.ui.view">
             <field name="name">Inherited HR Payslip Run</field>
