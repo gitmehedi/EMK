@@ -73,6 +73,14 @@ class InheritResPartner(models.Model):
             else:
                 pass
 
+            if 'child_ids' in vals:
+                child_ids = vals['child_ids']
+                vals['child_ids'] = []
+                for index, child in enumerate(child_ids):
+                    if 'customer' in child[2]:
+                        child[2]['customer'] = False
+                        child[2]['supplier'] = False
+                        vals['child_ids'].append(child)
             vals['name'] = name
         return super(InheritResPartner, self).create(vals)
 
