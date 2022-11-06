@@ -19,6 +19,10 @@
                        position="attributes">
                     <attribute name="attrs">{'readonly': [('can_edit_bill_line', '=', False)]}</attribute>
                 </xpath>
+                <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='uom_id']"
+                       position="attributes">
+                    <attribute name="attrs">{'readonly': [('can_edit_bill_line', '=', False)]}</attribute>
+                </xpath>
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='name']"
                        position="attributes">
                     <attribute name="attrs">{'readonly': [('can_edit_bill_line', '=', False)]}</attribute>
