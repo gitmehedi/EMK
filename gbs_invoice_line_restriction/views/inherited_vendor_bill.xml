@@ -11,9 +11,17 @@
                 </xpath>
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
                        position="before">
-<!--                    <field name="mrr_qty" string="MRR Qty" invisible="1"/>-->
-<!--                    <field name="available_qty" string="Available Qty" invisible="1"/>-->
+                    <!--                    <field name="mrr_qty" string="MRR Qty" invisible="1"/>-->
+                    <!--                    <field name="available_qty" string="Available Qty" invisible="1"/>-->
                     <field name="can_edit_bill_line" invisible="1"/>
+                </xpath>
+                <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='product_id']"
+                       position="attributes">
+                    <attribute name="attrs">{'readonly': [('can_edit_bill_line', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='name']"
+                       position="attributes">
+                    <attribute name="attrs">{'readonly': [('can_edit_bill_line', '=', False)]}</attribute>
                 </xpath>
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='quantity']"
                        position="attributes">
@@ -36,7 +44,7 @@
             </field>
         </record>
 
-         <record id="purchase.action_invoice_pending" model="ir.actions.act_window">
+        <record id="purchase.action_invoice_pending" model="ir.actions.act_window">
             <field name="context">
                 {'default_type':'in_invoice',
                 'type':'in_invoice',

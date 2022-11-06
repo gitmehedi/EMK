@@ -6,6 +6,23 @@ from odoo.exceptions import UserError, ValidationError
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
+    @api.model
+    def create(self, vals):
+        if 'invoice_line_ids' in vals:
+            if not vals['invoice_line_ids']:
+                raise UserError(
+                    _('Invoice lines cannot be empty!'))
+        return super(AccountInvoice, self).create(vals)
+
+    # @api.multi
+    # def write(self, vals):
+    #     res = super(AccountInvoice, self).write(vals)
+    #     if not self.invoice_line_ids:
+    #         raise UserError(
+    #             _('Invoice lines cannot be empty!'))
+    #
+    #     return res
+
     from_po_form = fields.Boolean(default=False)
 
     def _prepare_invoice_line_from_po_line(self, line):
@@ -19,9 +36,12 @@ class AccountInvoice(models.Model):
         if self.type == 'in_invoice' and not order_id.is_service_order and not order_id.cnf_quotation:
             if order_line and product:
                 mrr_qty = self.env['account.invoice.utility'].get_mrr_qty(order_id, lc_number, product)
+                if mrr_qty <= 0:
+                    raise UserError(_('No MRR completed for this order!'))
                 available_qty = self.env['account.invoice.utility'].get_available_qty(order_id, product.id, mrr_qty)
                 # if available_qty  is 0 then don't load
                 if available_qty <= 0:
+                    raise UserError(_('Bill created for all MRR!'))
                     return False
 
                 invoice_line.update({'quantity': available_qty})
@@ -85,9 +105,8 @@ class AccountInvoice(models.Model):
                         raise ValidationError("Line Quantity cannot be 0!")
                     if line.price_unit <= 0:
                         raise ValidationError("Line Unit Price cannot be 0!")
-                        
-                        
-    #overriden odoo method                    
+
+    # overriden odoo method
     @api.onchange('state', 'partner_id', 'invoice_line_ids')
     def _onchange_allowed_purchase_ids(self):
         '''
@@ -100,7 +119,7 @@ class AccountInvoice(models.Model):
         purchase_line_ids = self.invoice_line_ids.mapped('purchase_line_id')
         purchase_ids = self.invoice_line_ids.mapped('purchase_id').filtered(lambda r: r.order_line <= purchase_line_ids)
 
-        domain = [('invoice_status', 'in', ('to invoice','invoiced'))]
+        domain = [('invoice_status', 'in', ('to invoice', 'invoiced'))]
         if self.partner_id:
             domain += [('partner_id', 'child_of', self.partner_id.id)]
         if purchase_ids:
