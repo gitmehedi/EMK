@@ -54,7 +54,7 @@
                             </thead>
                             <tbody>
                                 <t t-foreach="record['product_temp_name']" t-as="rec">
-                                    <t t-if="len(lines[rec])>1">
+                                    <t t-if="len(lines[rec])>0">
                                         <tr>
                                             <td colspan="16" class="text-left">
                                                 <strong><span t-esc="rec"/></strong>
