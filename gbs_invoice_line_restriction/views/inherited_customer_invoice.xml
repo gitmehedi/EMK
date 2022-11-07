@@ -33,8 +33,7 @@
                 </xpath>
             </field>
         </record>
-        
-        
+
         <record id="account.action_invoice_tree1" model="ir.actions.act_window">
             <field name="context">
                 {'type':'out_invoice',
@@ -43,7 +42,7 @@
                 }
             </field>
         </record>
-        
-        
+
+
     </data>
 </odoo>

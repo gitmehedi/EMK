@@ -7,8 +7,8 @@
     'depends': [
         'hr',
         'base_suspend_security',
-	'hr_contract',
-	'hr_recruitment'
+        'hr_contract',
+        'hr_recruitment'
     ],
     'data': [
 

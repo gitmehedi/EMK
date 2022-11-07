@@ -6,6 +6,7 @@
             <field name="model">stock.return.picking</field>
             <field name="arch" type="xml">
                 <form>
+
                     <field name="move_dest_exists" invisible="1"/>
                     <group attrs="{'invisible': [('move_dest_exists', '=', False)]}">
                         <div class="oe_grey">
@@ -23,9 +24,13 @@
                             </tree>
                         </field>
                     </group>
-                    <group colspan="1" col="4">
+                    <group>
                         <field name="return_date" required="1"/>
-                        <field name="price_unit" readonly="1"/>
+                        <field name="cogs_move" invisible="1"/>
+                        <field name="price_unit" readonly="1" attrs="{'invisible':[('cogs_move','=',False)]}"/>
+                        <field name="price_unit_text" attrs="{'invisible':[('cogs_move','!=',False)]}"/>
+                    </group>
+                    <group>
                         <field name="return_reason" required="1"/>
                         <field name="parent_location_id" invisible="1"/>
                         <field name="original_location_id" invisible="1"/>
@@ -34,9 +39,6 @@
                     </group>
                     <footer>
                         <button name="create_return_obj" string="Return" type="object" class="btn-primary"/>
-
-                        <!--                        <button name="create_returns" string="Return" type="object" class="btn-primary"/>-->
-                        <!--                        -->
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
@@ -44,7 +46,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="act_stock_return_picking_duplicate">
-            <field name="name">Reverse Transfer 2</field>
+            <field name="name">Reverse Transfer</field>
             <field name="res_model">stock.return.picking</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -56,13 +58,18 @@
             <field name="name">stock.picking.form.inherit</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
-            <field name="priority" eval="8"/>
+            <field name="priority" eval="204"/>
             <field name="arch" type="xml">
+
+                <xpath expr="//header/button[@name='%(stock.act_stock_return_picking)d']" position="replace">
+                    <button name="%(stock.act_stock_return_picking)d" string="Return(Default)" states="done"
+                            type="action" groups="base.group_private_addresses"/>
+                </xpath>
                 <xpath expr="//header" position="inside">
-                    <button name="%(gbs_samuda_sales_return.act_stock_return_picking_duplicate)d" string="Return Custom"
+                    <button name="%(gbs_samuda_sales_return.act_stock_return_picking_duplicate)d" string="Return"
                             class="btn-danger"
                             states="done" type="action"
-                            groups="base.group_user"/>
+                            groups="gbs_application_group.group_sale_return"/>
                 </xpath>
             </field>
         </record>
