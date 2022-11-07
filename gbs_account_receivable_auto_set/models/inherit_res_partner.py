@@ -77,7 +77,7 @@ class InheritResPartner(models.Model):
                 child_ids = vals['child_ids']
                 vals['child_ids'] = []
                 for index, child in enumerate(child_ids):
-                    if 'customer' in child[2]:
+                    if child[2]:
                         child[2]['customer'] = False
                         child[2]['supplier'] = False
                         vals['child_ids'].append(child)
@@ -100,8 +100,16 @@ class InheritResPartner(models.Model):
                 partners = self._check_res_partner_duplicate(name, "is_cnf")
                 if len(partners) > 0:
                     raise ValidationError("CNF Agent name already in use")
-
             vals['name'] = name
+
+        if 'child_ids' in vals:
+            child_ids = vals['child_ids']
+            vals['child_ids'] = []
+            for index, child in enumerate(child_ids):
+                if child[2]:
+                    child[2]['customer'] = False
+                    child[2]['supplier'] = False
+                    vals['child_ids'].append(child)
         return super(InheritResPartner, self).write(vals)
     
     def _check_res_partner_duplicate(self, name, key):
