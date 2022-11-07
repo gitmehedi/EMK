@@ -13,6 +13,9 @@
         'reports/payslip_bangla_report.xml',
 
     ],
+    "external_dependencies": {
+        'python': ['bangla'],
+    },
 
 
     'installable': True,
