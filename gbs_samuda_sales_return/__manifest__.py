@@ -12,6 +12,7 @@
     ],
     'data': [
         'wizard/stock_picking_return_views.xml',
-        'wizard/inherited_stock_picking_return_view.xml'
+        'wizard/inherited_stock_picking_return_view.xml',
+        'wizard/success_wizard.xml'
     ]
 }

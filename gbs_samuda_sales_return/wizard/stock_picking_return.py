@@ -2,7 +2,8 @@
 import json
 from lxml import etree
 from dateutil.relativedelta import relativedelta
-
+import pytz
+from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.tools import float_is_zero, float_compare
 from odoo.addons import decimal_precision as dp
@@ -30,6 +31,17 @@ class ReturnPicking(models.TransientModel):
 
     price_unit = fields.Float(string='COGS Unit Price', digits=dp.get_precision('Product Price'),
                               default=_get_default_price_unit)
+
+    def _get_default_cogs_move(self):
+        if 'active_id' in self.env.context:
+            picking = self.env['stock.picking'].browse(self.env.context['active_id'])
+            return picking.cogs_move_id.id
+        else:
+            return False
+
+    cogs_move = fields.Many2one('account.move', default=_get_default_cogs_move)
+
+    price_unit_text = fields.Float(string='COGS Unit Price', digits=dp.get_precision('Product Price'))
 
     return_date = fields.Date(string='Return Date', default=datetime.today())
     return_reason = fields.Text(string='Return Reason', limit=20)
@@ -104,8 +116,9 @@ class ReturnPicking(models.TransientModel):
             # reverse cogs entry
             move = self.env['account.move'].search([('id', '=', picking.cogs_move_id.id)])
             if move:
-                self.do_cogs_reverse_accounting(new_picking, move)
-
+                self.do_cogs_reverse_accounting(new_picking, move, False)
+            if not picking.cogs_move_id:
+                self.do_cogs_reverse_accounting(new_picking, False, self.price_unit_text)
             # Create DC with return qty or Add return qty with existing DC
             existing_dc = self.env['stock.picking'].search([('origin', '=', picking.origin),
                                                             ('picking_type_id', '=', picking.picking_type_id.id),
@@ -119,26 +132,88 @@ class ReturnPicking(models.TransientModel):
 
         return new_picking_id, picking_type_id
 
-    def do_cogs_reverse_accounting(self, picking, move):
+    @api.multi
+    def do_reverse_cogs_with_text_price_unit(self):
+        ref = "reversal of: cogs"
+        picking = self.env['stock.picking'].browse(self.env.context['active_id'])
+        for line in self.product_return_moves:
+            amount = self.price_unit_text * line.quantity
+            label = line.product_id.display_name + "; Rate: " + str(self.price_unit_text) + "; Qty: " + str(
+                line.quantity)
+
+            credit_line_vals = {
+                'name': label,
+                'product_id': line.product_id.id,
+                'product_uom_id': line.product_id.uom_id.id,
+                'account_id': line.product_id.product_tmpl_id.raw_cogs_account_id.id,
+                'quantity': line.quantity,
+                'ref': ref,
+                'partner_id': False,
+                'debit': amount if amount > 0 else 0,
+                'credit': -amount if amount < 0 else 0,
+                'operating_unit_id': picking.operating_unit_id.id
+            }
+
+            debit_line_vals = {
+                'name': label,
+                'product_id': line.product_id.id,
+                'product_uom_id': line.product_id.uom_id.id,
+                'account_id': line.product_id.categ_id.property_stock_valuation_account_id.id,
+                'quantity': line.quantity,
+                'ref': ref,
+                'partner_id': False,
+                'credit': amount if amount > 0 else 0,
+                'debit': -amount if amount < 0 else 0,
+                'operating_unit_id': picking.operating_unit_id.id,
+                'cost_center_id': line.product_id.product_tmpl_id.cost_center_id.id
+            }
+            move_lines = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+
+            AccountMove = self.env['account.move']
+            journal_id = line.product_id.categ_id.property_stock_journal.id
+
+            # convert datetime to local time
+            user_tz = self.env.user.tz or pytz.utc
+            local = pytz.timezone(user_tz)
+            dt = datetime.strftime(
+                pytz.utc.localize(datetime.strptime(self.return_date, "%Y-%m-%d")).astimezone(local),
+                "%Y-%m-%d %H:%M:%S")
+
+            new_account_move = AccountMove.create({
+                'journal_id': journal_id,
+                'line_ids': move_lines,
+                'date': dt,
+                'operating_unit_id': picking.operating_unit_id.id,
+                'ref': ref})
+
+            return new_account_move
+
+    def do_cogs_reverse_accounting(self, picking, move, price_unit_text):
         product = picking.pack_operation_product_ids[0].product_id
         stock_pack_operation = picking.pack_operation_product_ids[0]
 
-        ref = "reversal of: " + move.name
-        amount = self.price_unit * stock_pack_operation.qty_done
-        name = product.display_name + "; Rate: " + str(self.price_unit) + "; Qty: " + str(stock_pack_operation.qty_done)
+        if price_unit_text:
+            # no cogs entry
+            move = self.do_reverse_cogs_with_text_price_unit()
+            move.post()
+        else:
+            ref = "reversal of: " + move.name
+            amount = self.price_unit * stock_pack_operation.qty_done
+            name = product.display_name + "; Rate: " + str(self.price_unit) + "; Qty: " + str(
+                stock_pack_operation.qty_done)
 
-        move_of_reverse_cogs = move.copy(default={'ref': ref})
-        for aml in move_of_reverse_cogs.line_ids:
-            if aml.debit > 0:
-                aml.name = name
-                aml.debit = 0
-                aml.credit = amount
-            else:
-                aml.name = name
-                aml.credit = 0
-                aml.debit = amount
+            move_of_reverse_cogs = move.copy(default={'ref': ref})
+            for aml in move_of_reverse_cogs.line_ids:
+                if aml.debit > 0:
+                    aml.name = name
+                    aml.debit = 0
+                    aml.credit = amount
+                else:
+                    aml.name = name
+                    aml.credit = 0
+                    aml.debit = amount
 
-        move_of_reverse_cogs.post()
+            move_of_reverse_cogs.post()
 
     ################# NEW Implementation #################
 
@@ -160,7 +235,13 @@ class ReturnPicking(models.TransientModel):
             'operating_unit_id': picking.operating_unit_id.id,
             'journal_id': sale_journal_id.id,
             'company_id': picking.company_id.id,
-            'account_id': partner_acc_rec
+            'account_id': partner_acc_rec,
+            'conversion_rate': main_invoice.conversion_rate,
+            'cost_center_id': main_invoice.cost_center_id.id or False,
+            'pack_type': main_invoice.pack_type.id or False,
+            'lc_id': main_invoice.lc_id.id or False,
+            'payment_term_id': main_invoice.payment_term_id.id or False,
+
         }
         invoice_obj = self.env['account.invoice'].create(refund_obj)
 
@@ -176,12 +257,12 @@ class ReturnPicking(models.TransientModel):
                 'quantity': qty,
                 'uom_id': move.product_id.uom_id.id,
                 'price_unit': move.price_unit,
-                'invoice_id': invoice_obj.id
+                'invoice_id': invoice_obj.id,
+                'cost_center_id': main_invoice.cost_center_id.id or False,
             }
             invoice_line_obj = self.env['account.invoice.line'].create(invoice_line)
         picking_obj = self.env['stock.picking'].browse(new_picking_id)
         picking_obj.write({'invoice_ids': [(4, invoice_obj.id)]})
-        # invoice_obj.write({'state': 'open'})
         invoice_obj.action_invoice_open()
 
         # Reconciliation
@@ -189,8 +270,8 @@ class ReturnPicking(models.TransientModel):
         main_invoice_move = main_invoice.move_id
         info = self._get_outstanding_info(invoice_obj, main_invoice_move)
         self.assign_outstanding_credit(invoice_obj, info['content'][0]['id'])
-        # call assign_outstanding_credit using main_invoice credit aml id
-        # _get_outstanding_info_JSON to get info
+
+        return True
 
     def _get_outstanding_info(self, invoice_obj, main_invoice_move):
 
@@ -247,6 +328,7 @@ class ReturnPicking(models.TransientModel):
 
     @api.multi
     def create_return_obj(self):
+        return_success = 0
         for rec in self:
             picking = self.env['stock.picking'].browse(self.env.context['active_id'])
 
@@ -256,11 +338,7 @@ class ReturnPicking(models.TransientModel):
 
             if not picking.partner_id.property_account_receivable_id:
                 raise UserError(_("Receivable account not found for this customer!"))
-            # if picking.cogs_move_id:
-            #     print('use cogs value!')
-            # else:
-            #
-            #     print('month close logic')
+
             return_moves = self.product_return_moves.mapped('move_id')
             if not picking.invoice_ids:
                 raise UserError(_("Invoice not found for this DC!"))
@@ -271,8 +349,21 @@ class ReturnPicking(models.TransientModel):
                     elif inv.state == 'paid':
                         raise UserError(_("Invoice is already paid\n You need to unreconcile the invoice first!"))
                     elif inv.state == 'open':
-                        self.do_operation(rec, picking, return_moves, self.product_return_moves, inv)
+                        return_operation = self.do_operation(rec, picking, return_moves, self.product_return_moves, inv)
+                        if return_operation:
+                            return_success = return_success + 1
                     else:
                         raise UserError(_("Invoice needs to be in open state!"))
-
-            # TODO: _create_returns(self): this method functionality study
+        if return_success > 0:
+            message_id = self.env['return.success.wizard'].create({'message': _(
+                "Return Operation Successful!\nReverse COGS Entry Created Successfully.")
+            })
+            return {
+                'name': _('Success'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'return.success.wizard',
+                'context': {'picking_id': picking.id},
+                'res_id': message_id.id,
+                'target': 'new'
+            }
