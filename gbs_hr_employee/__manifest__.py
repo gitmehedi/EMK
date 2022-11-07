@@ -6,7 +6,9 @@
     'version': '10.0.1.0.0',
     'depends': [
         'hr',
-        'base_suspend_security'
+        'base_suspend_security',
+	'hr_contract',
+	'hr_recruitment'
     ],
     'data': [
 
