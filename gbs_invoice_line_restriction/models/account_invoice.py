@@ -14,16 +14,17 @@ class AccountInvoice(models.Model):
                     _('Invoice lines cannot be empty!'))
         return super(AccountInvoice, self).create(vals)
 
-    # @api.multi
-    # def write(self, vals):
-    #     res = super(AccountInvoice, self).write(vals)
-    #     if not self.invoice_line_ids:
-    #         raise UserError(
-    #             _('Invoice lines cannot be empty!'))
-    #
-    #     return res
-
     from_po_form = fields.Boolean(default=False)
+
+    @api.depends('partner_id')
+    def _compute_direct_vendor_bill(self):
+        default_direct_vendor_bill = self.env.context.get('default_direct_vendor_bill')
+        if default_direct_vendor_bill:
+            self.direct_vendor_bill= True
+        else:
+            self.direct_vendor_bill = False
+
+    direct_vendor_bill = fields.Boolean(compute='_compute_direct_vendor_bill')
 
     def _prepare_invoice_line_from_po_line(self, line):
         """ Override parent's method to add lc analytic account on invoice line"""
@@ -83,7 +84,6 @@ class AccountInvoice(models.Model):
 
         doc = etree.XML(res['arch'])
         no_create_edit_button = self.env.context.get('no_create_edit_button')
-
         if no_create_edit_button:
             if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
                 for node_form in doc.xpath("//kanban"):

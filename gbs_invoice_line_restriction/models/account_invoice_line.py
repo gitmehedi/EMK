@@ -4,7 +4,13 @@ from odoo import fields, models, api
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    @api.depends('invoice_id')
+    @api.model
+    def _default_direct_vendor_bill(self):
+        return self._context.get('direct_vendor_bill')
+
+    direct_vendor_bill = fields.Boolean(default=lambda self: self._default_direct_vendor_bill())
+
+    @api.depends('invoice_id', 'direct_vendor_bill', 'purchase_id')
     def _can_edit_bill_line(self):
         for rec in self:
             rec.can_edit_bill_line = False
@@ -13,11 +19,13 @@ class AccountInvoiceLine(models.Model):
                     if self.env.user.has_group(
                             'gbs_invoice_line_restriction.group_vendor_invoice_editor'):
                         rec.can_edit_bill_line = True
-                else:
-                    if len(rec.purchase_id) <= 0 or self.env.user.has_group('gbs_invoice_line_restriction.group_vendor_invoice_editor'):
-                        rec.can_edit_bill_line = True
-            # if rec.invoice_id.type == 'in_invoice':
-            #     rec.can_edit_bill_line = True
+
+                if len(rec.invoice_id.purchase_id) <= 0 and rec.direct_vendor_bill:
+                    rec.can_edit_bill_line = True
+                if len(rec.invoice_id.purchase_id) > 0 and self.env.user.has_group(
+                        'gbs_invoice_line_restriction.group_vendor_invoice_editor'):
+                    rec.can_edit_bill_line = True
+
             elif rec.invoice_id.type == 'out_refund':
                 rec.can_edit_bill_line = True
             elif rec.invoice_id.type == 'in_refund':
