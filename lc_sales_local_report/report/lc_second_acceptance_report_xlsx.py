@@ -101,6 +101,7 @@ class SecondAcceptanceInfoXLSX(ReportXlsx):
         sheet.write(row, col + 13, 'F.P.R', th_cell_center)
         sheet.write(row, col + 14, 'Bank', th_cell_center)
         sheet.write(row, col + 15, 'Branch', th_cell_center)
+        row += 1
 
         # TABLE BODY
         for product_data in result_data['acceptances']:
