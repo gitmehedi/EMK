@@ -18,7 +18,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="report_print" string="Print" type="object" class="oe_highlight"/>
+                        <button name="report_print" string="Print(PDF)" type="object" class="oe_highlight"/>
+                        <button name="report_print_xls" string="Export(Excel)" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -68,7 +69,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="report_print" string="Print" type="object" class="oe_highlight"/>
+                        <button name="report_print" string="Print(PDF)" type="object" class="oe_highlight"/>
+                        <button name="report_print_xls" string="Export(Excel)" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -110,7 +112,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="report_print" string="Print" type="object" class="oe_highlight"/>
+                        <button name="report_print" string="Print(PDF)" type="object" class="oe_highlight"/>
+                        <button name="report_print_xls" string="Export(Excel)" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
