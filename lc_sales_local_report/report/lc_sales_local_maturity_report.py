@@ -54,7 +54,7 @@ class LCSalesMaturityReport(models.AbstractModel):
                           LEFT JOIN res_bank rb on bank_acc.bank_id = rb.id
                           LEFT JOIN res_currency rc on lc.currency_id = rc.id
                        WHERE pt.id in %s AND lc.type ='export' AND lc.region_type = 'local' AND ps.state = 'to_maturity'
-                       ORDER BY aging ASC
+                       ORDER BY aging DESC
                     '''
 
         self.env.cr.execute(sql_in_tk, (product_temp_id,))
