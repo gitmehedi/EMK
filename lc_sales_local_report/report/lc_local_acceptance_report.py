@@ -90,7 +90,7 @@ class AcceptanceReportsUtility(models.TransientModel):
                               LEFT JOIN res_bank rb on bank_acc.bank_id = rb.id
                               LEFT JOIN res_currency rc on lc.currency_id = rc.id
                            WHERE pt.id in %s AND lc.type = 'export' AND lc.region_type = 'local' AND ps.state in %s
-                           ORDER BY aging ASC'''
+                           ORDER BY aging DESC'''
 
     def get_report_data(self, data,state_condition):
         acceptances = {}
