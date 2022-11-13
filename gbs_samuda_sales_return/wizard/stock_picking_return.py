@@ -43,6 +43,14 @@ class ReturnPicking(models.TransientModel):
 
     price_unit_text = fields.Float(string='COGS Unit Price', digits=dp.get_precision('Product Price'))
 
+    @api.constrains('return_date')
+    def _check_return_date(self):
+        date = fields.Date.today()
+        if self.return_date:
+            if self.return_date > date:
+                raise ValidationError(
+                    "Return Date must be lesser than current date")
+
     return_date = fields.Date(string='Return Date', default=datetime.today())
     return_reason = fields.Text(string='Return Reason', limit=20)
 
@@ -202,8 +210,9 @@ class ReturnPicking(models.TransientModel):
             name = product.display_name + "; Rate: " + str(self.price_unit) + "; Qty: " + str(
                 stock_pack_operation.qty_done)
 
-            move_of_reverse_cogs = move.copy(default={'ref': ref})
+            move_of_reverse_cogs = move.copy(default={'ref': ref, 'date': self.return_date})
             for aml in move_of_reverse_cogs.line_ids:
+                aml.date = self.return_date
                 if aml.debit > 0:
                     aml.name = name
                     aml.debit = 0
@@ -236,12 +245,14 @@ class ReturnPicking(models.TransientModel):
             'journal_id': sale_journal_id.id,
             'company_id': picking.company_id.id,
             'account_id': partner_acc_rec,
+            'so_id': sale_order_obj.id,
             'conversion_rate': main_invoice.conversion_rate,
             'cost_center_id': main_invoice.cost_center_id.id or False,
             'pack_type': main_invoice.pack_type.id or False,
             'lc_id': main_invoice.lc_id.id or False,
             'payment_term_id': main_invoice.payment_term_id.id or False,
-
+            'origin': main_invoice.number,
+            'refund_invoice_id': main_invoice.id
         }
         invoice_obj = self.env['account.invoice'].create(refund_obj)
 
@@ -263,7 +274,7 @@ class ReturnPicking(models.TransientModel):
             invoice_line_obj = self.env['account.invoice.line'].create(invoice_line)
         picking_obj = self.env['stock.picking'].browse(new_picking_id)
         picking_obj.write({'invoice_ids': [(4, invoice_obj.id)]})
-        invoice_obj.action_invoice_open()
+        invoice_obj.sudo().action_invoice_open()
 
         # Reconciliation
         move_id = invoice_obj.move_id

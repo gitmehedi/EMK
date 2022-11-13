@@ -7,12 +7,4 @@ class SuccessWizard(models.TransientModel):
     message = fields.Text('Message')
 
     def action_yes(self):
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'stock.picking',
-            'res_id': self._context['picking_id'],
-            'target': 'main',
-            'type': 'ir.actions.act_window'
-        }
-
+        return {'type': 'ir.actions.act_window_close'}
