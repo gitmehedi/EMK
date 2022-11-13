@@ -86,6 +86,7 @@ class LocalMaturityInfoXLSX(ReportXlsx):
         sheet.write(row, col + 7, 'Maturity', th_cell_center)
         sheet.write(row, col + 8, 'Aging', th_cell_center)
         sheet.write(row, col + 9, 'Bill Id', th_cell_center)
+        row += 1
 
         # TABLE BODY
         for product_data in result_data['data_list']:
