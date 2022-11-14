@@ -17,5 +17,5 @@ class InheritedAccountInvoice(models.Model):
         values.update({'cost_center_id': invoice.cost_center_id.id or False, 'lc_id': invoice.lc_id.id or False,
                        'payment_term_id': invoice.payment_term_id.id or False,
                        'pack_type': invoice.pack_type.id or False, 'currency_id': invoice.currency_id.id or False,
-                       'sale_type_id': invoice.sale_type_id.id or False, 'so_id': invoice.so_id.id or False})
+                       'conversion_rate': invoice.conversion_rate, 'sale_type_id': invoice.sale_type_id.id or False, 'so_id': invoice.so_id.id or False})
         return values
