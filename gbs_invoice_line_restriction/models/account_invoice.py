@@ -20,7 +20,7 @@ class AccountInvoice(models.Model):
     def _compute_direct_vendor_bill(self):
         default_direct_vendor_bill = self.env.context.get('default_direct_vendor_bill')
         if default_direct_vendor_bill:
-            self.direct_vendor_bill= True
+            self.direct_vendor_bill = True
         else:
             self.direct_vendor_bill = False
 
@@ -37,12 +37,9 @@ class AccountInvoice(models.Model):
         if self.type == 'in_invoice' and not order_id.is_service_order and not order_id.cnf_quotation:
             if order_line and product:
                 mrr_qty = self.env['account.invoice.utility'].get_mrr_qty(order_id, lc_number, product)
-                if mrr_qty <= 0:
-                    raise UserError(_('No MRR completed for this order!'))
                 available_qty = self.env['account.invoice.utility'].get_available_qty(order_id, product.id, mrr_qty)
                 # if available_qty  is 0 then don't load
                 if available_qty <= 0:
-                    raise UserError(_('Bill created for all MRR!'))
                     return False
 
                 invoice_line.update({'quantity': available_qty})
@@ -73,7 +70,30 @@ class AccountInvoice(models.Model):
                     new_lines += new_line
 
         self.invoice_line_ids += new_lines
+
+        # all not cancelled invoice for this order
+        order_lines = self.env['purchase.order.line'].search([('order_id', '=', self.purchase_id.id)])
+        invoice_lines = self.env['account.invoice.line'].search(
+            [('purchase_line_id', 'in', order_lines.ids)])
+        total_invoiced = 0
+        for line in invoice_lines:
+            if line.invoice_id.state != 'cancel':
+                total_invoiced = total_invoiced + line.quantity
+
+        total_invoiced = float("{:.4f}".format(total_invoiced))
+
+        pickings = self.env['stock.picking'].search(
+            ['|', ('origin', '=', self.purchase_id.name), ('origin', '=', self.purchase_id.po_lc_id.name),
+             ('check_mrr_button', '=', True)])
+
+        moves = self.env['stock.move'].search(
+            [('picking_id', 'in', pickings.ids), ('state', '=', 'done')])
+        total_mrr_qty = float("{:.4f}".format(sum(move.product_qty for move in moves)))
+        if total_invoiced != 0 and total_mrr_qty != 0 and total_invoiced >= total_mrr_qty:
+            raise UserError(_('All MRR has been billed for this order!'))
+
         self.purchase_id = False
+
         return {}
 
     @api.model
