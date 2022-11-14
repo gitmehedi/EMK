@@ -240,7 +240,7 @@ class ReturnPicking(models.TransientModel):
             'currency_id': sale_order_obj.currency_id.id,
             'sale_type_id': sale_order_obj.type_id.id,
             'type': 'out_refund',
-            'user_id': self.env.user.id,
+            'user_id': main_invoice.user_id.id,
             'operating_unit_id': picking.operating_unit_id.id,
             'journal_id': sale_journal_id.id,
             'company_id': picking.company_id.id,
@@ -261,19 +261,21 @@ class ReturnPicking(models.TransientModel):
             for rtns in pro_returns:
                 if rtns.move_id.id == move.id:
                     qty = rtns.quantity
+
+            main_invoice_price_unit = self.get_main_invoice_price_unit(main_invoice.id, move.product_id.id)
             invoice_line = {
                 'product_id': move.product_id.id,
                 'name': move.product_id.name,
                 'account_id': move.product_id.property_account_income_id.id,
                 'quantity': qty,
                 'uom_id': move.product_id.uom_id.id,
-                'price_unit': move.price_unit,
+                'price_unit': main_invoice_price_unit,
                 'invoice_id': invoice_obj.id,
                 'cost_center_id': main_invoice.cost_center_id.id or False,
             }
             invoice_line_obj = self.env['account.invoice.line'].create(invoice_line)
         picking_obj = self.env['stock.picking'].browse(new_picking_id)
-        picking_obj.write({'invoice_ids': [(4, invoice_obj.id)]})
+        picking_obj.write({'invoice_ids': [(4, invoice_obj.id)], 'date_done': rec.return_date})
         invoice_obj.sudo().action_invoice_open()
 
         # Reconciliation
@@ -284,6 +286,10 @@ class ReturnPicking(models.TransientModel):
 
         return True
 
+    def get_main_invoice_price_unit(self, main_invoice_id, pro_id):
+        invoice_line = self.env['account.invoice.line'].sudo().search(
+            [('invoice_id', '=', main_invoice_id), ('product_id', '=', pro_id)], limit=1)
+        return invoice_line.price_unit
     def _get_outstanding_info(self, invoice_obj, main_invoice_move):
 
         if invoice_obj.state == 'open':
