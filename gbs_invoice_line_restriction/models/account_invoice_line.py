@@ -17,7 +17,7 @@ class AccountInvoiceLine(models.Model):
         else:
             return False
 
-    manual_invoice = fields.Boolean(default=lambda self: self._default_manual_invoice())
+    manual_invoice = fields.Boolean(default=lambda self: self._default_manual_invoice(), store=True)
 
     @api.depends('invoice_id', 'direct_vendor_bill', 'purchase_id')
     def _can_edit_bill_line(self):

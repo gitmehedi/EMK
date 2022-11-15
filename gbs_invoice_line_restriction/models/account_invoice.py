@@ -13,7 +13,7 @@ class AccountInvoice(models.Model):
         else:
             return False
 
-    manual_invoice = fields.Boolean(default=lambda self: self._default_manual_invoice(),store=True)
+    manual_invoice = fields.Boolean(default=lambda self: self._default_manual_invoice(), store=True)
 
     @api.model
     def create(self, vals):
