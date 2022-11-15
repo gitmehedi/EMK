@@ -10,15 +10,6 @@ class AccountInvoiceLine(models.Model):
 
     direct_vendor_bill = fields.Boolean(default=lambda self: self._default_direct_vendor_bill())
 
-    @api.model
-    def _default_manual_invoice(self):
-        if self._context.get('create_edit_button'):
-            return True
-        else:
-            return False
-
-    manual_invoice = fields.Boolean(default=lambda self: self._default_manual_invoice(), store=True)
-
     @api.depends('invoice_id', 'direct_vendor_bill', 'purchase_id')
     def _can_edit_bill_line(self):
         for rec in self:
