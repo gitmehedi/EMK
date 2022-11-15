@@ -12,7 +12,7 @@ class InheritedPurchaseOrder(models.Model):
         pickings = self.env['stock.picking'].search(
             ['|', ('origin', '=', self.name), ('origin', '=', self.po_lc_id.name),
              ('check_mrr_button', '=', True)])
-        if not pickings:
+        if not pickings and not self.cnf_quotation and not self.is_service_order:
             raise UserError(_('No MRR completed for this order!'))
 
         moves = self.env['stock.move'].search(
