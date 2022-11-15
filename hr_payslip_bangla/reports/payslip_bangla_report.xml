@@ -8,7 +8,7 @@
             report_type="qweb-pdf"
             file="hr_payslip_bangla.payslip_bangla_report"
             name="hr_payslip_bangla.payslip_bangla_report"
-            paperformat="report_layout.paperformat_voucher"
+            paperformat="report_layout.paperformat_po"
         />
 
 
@@ -35,6 +35,7 @@
                                 }
 
                             </style>
+                            <br></br>
                             <div class="clearfix">
                                 <h2 class="report-title">বেতন স্লিপ <span t-esc="title"/></h2>
                                 <br/>
@@ -89,6 +90,12 @@
                                     </td>
                                 </div>
                             </table>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
                             <p class="text-right"><strong>অনুমোদিত স্বাক্ষর</strong></p>
 
                         </div>
