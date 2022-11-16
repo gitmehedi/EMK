@@ -22,10 +22,8 @@ class AccountInvoiceLine(models.Model):
 
                 if len(rec.invoice_id.purchase_id) <= 0 and rec.direct_vendor_bill:
                     rec.can_edit_bill_line = True
-                if len(rec.invoice_id.purchase_id) > 0 and self.env.user.has_group(
-                        'gbs_invoice_line_restriction.group_vendor_invoice_editor'):
+                if self.env.user.has_group('gbs_invoice_line_restriction.group_vendor_invoice_editor'):
                     rec.can_edit_bill_line = True
-
             elif rec.invoice_id.type == 'out_refund':
                 rec.can_edit_bill_line = True
             elif rec.invoice_id.type == 'in_refund':
@@ -33,7 +31,7 @@ class AccountInvoiceLine(models.Model):
 
     can_edit_bill_line = fields.Boolean(compute='_can_edit_bill_line', store=False)
 
-    @api.depends('invoice_id')
+    @api.depends('invoice_id','partner_id')
     def _can_edit_invoice_line(self):
         for rec in self:
             rec.can_edit_invoice_line = False
@@ -43,6 +41,10 @@ class AccountInvoiceLine(models.Model):
             elif rec.invoice_id.type == 'out_refund':
                 rec.can_edit_invoice_line = True
             elif rec.invoice_id.type == 'in_refund':
+                rec.can_edit_invoice_line = True
+
+            create_edit_button = self._context.get('create_edit_button')
+            if create_edit_button and self.env.user.has_group('gbs_invoice_line_restriction.group_customer_invoice_editor'):
                 rec.can_edit_invoice_line = True
 
     can_edit_invoice_line = fields.Boolean(compute='_can_edit_invoice_line', store=False)

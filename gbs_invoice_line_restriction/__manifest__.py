@@ -39,8 +39,10 @@
     # always loaded
     'data': [
         'security/security.xml',
+        # 'views/inherited_purchase_config_settings_views.xml',
         'views/inherited_vendor_bill.xml',
         'views/inherited_customer_invoice.xml',
+        'views/manual_invoice_view.xml'
     ],
 
 }
