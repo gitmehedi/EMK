@@ -4,10 +4,10 @@
     'summary': 'Custom Report of Account Invoice',
     'sequence': 300,
     'description': """
-        Invoicing & Payments
-        ====================
-        The specific and easy-to-view report of account invoice.This is custom analytic report 
-            """,
+Invoicing & Payments
+====================
+The specific and easy-to-view report of account invoice.This is custom analytic report 
+    """,
     'category': 'Accounting',
     'website': 'www.genweb2.com',
     'author': 'Genweb2 Limited',
