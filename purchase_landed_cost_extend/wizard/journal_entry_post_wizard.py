@@ -84,7 +84,6 @@ class JournalEntryPost(models.TransientModel):
 
         move_lines.append((0, 0, debit_entry))
         vals = {
-            'name': 'Total Landed Cost Charge to Inventory Dept By Acc Dept',
             'journal_id': journal_id.id,
             'operating_unit_id': self.distribution_id.operating_unit_id.id,
             'date': self.distribution_id.date,
