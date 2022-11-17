@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!--Scheduler sync Receive Request-->
+        <record id="sale_analysis_scheduler" model="ir.cron">
+            <field name="name" >Sales Analysis Scheduler</field>
+            <field eval="True" name="active"/>
+            <field name="interval_number">6</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field eval="(DateTime.now() + timedelta(days= +1)).strftime('%Y-%m-%d 2:30:00')" name="nextcall"/>
+            <field name="doall" eval="False" />
+            <field name="model" eval="'gbs.account.invoice.report'"></field>
+            <field name="function" eval="'init'"/>
+        </record>
+    </data>
+</odoo>

@@ -135,7 +135,7 @@ class LcRegisterXLSX(ReportXlsx):
                 lc_qty = data['product_qty'] if 'product_qty' in data else '0'
                 region_type = data['region_type'] if 'region_type' in data else ''
 
-                if lc_qty and delivered_qty:
+                if lc_qty:
                     undelivered_qty = lc_qty - delivered_qty
                 else:
                     undelivered_qty = 0
@@ -773,7 +773,7 @@ class LcRegisterXLSX(ReportXlsx):
                 where lc.expiry_date < CURRENT_DATE  
                 and spl.product_qty-(select SUM(sol.qty_delivered) as qty_delivered 
                  from sale_order as so LEFT JOIN sale_order_line as sol ON so.id = sol.order_id 
-                     where so.pi_id=plr.pi_id) > 0 %s group by ps.id
+                     where so.lc_id=lc.id) > 0 %s group by ps.id
                             ''' % where_so
         else:
             query = '''

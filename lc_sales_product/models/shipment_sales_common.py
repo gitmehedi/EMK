@@ -55,10 +55,22 @@ class ShipmentCommon(models.Model):
         for obj in self.shipment_product_lines:
             if self.state != 'cancel':
                 lc_product_line = self.env['lc.product.line'].search([('sale_order_id', '=', obj.sale_order_id.id), ('lc_id', '=', self.lc_id.id)])
-                if lc_product_line:
+                if len(lc_product_line) == 1:
                     lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty-obj.product_qty})
+                else:
+                    for prod_line in lc_product_line:
+                        reset_qty = prod_line.product_received_qty - obj.product_qty
+
+                        if reset_qty >= 0:
+                            prod_line.write({'product_received_qty': reset_qty})
+                        else:
+                            for p_line in lc_product_line:
+                                reset_qty = p_line.product_received_qty - obj.product_qty
+                                if reset_qty >= 0:
+                                    p_line.write({'product_received_qty': reset_qty})
             obj.unlink()
 
+        self.reset_shipment()
         self.sudo().update({'state': 'draft', 'invoice_ids': [(6, 0, [])], 'invoice_value': 0})
 
     @api.onchange('invoice_id')
@@ -66,6 +78,40 @@ class ShipmentCommon(models.Model):
         self.invoice_value = None
         if self.invoice_id:
             self.invoice_value = self.invoice_id.amount_total
+
+    def reset_shipment(self):
+        self.to_sales_date = False
+        self.to_buyer_date = False
+        self.to_first_acceptance_date = False
+        self.to_seller_bank_date = False
+        self.to_buyer_bank_date = False
+        self.bill_id = False
+        self.to_second_acceptance_date = False
+        self.to_maturity_date = False
+        self.shipment_done_date = False
+        self.ait_amount = False
+        self.payment_rec_date = False
+        self.payment_rec_amount = False
+        self.discrepancy_amount = False
+        self.payment_charge = False
+        self.invoice_value = False
+        self.doc_preparation_date = False
+        self.transport_by = False
+        self.vehical_no = False
+        self.freight = False
+        self.gross_weight = False
+        self.net_weight = False
+        self.count_qty = False
+        self.count_uom = False
+        self.weight_uom = False
+        self.bl_date = False
+        self.truck_receipt_no = False
+        self.truck_receipt_no = False
+        self.container_no = False
+        self.freight_Value = False
+        self.fob_value = False
+        self.invoice_number_dummy = False
+        self.invoice_date_dummy = False
 
     @api.multi
     def purchase_shipment_m2o_to_m2m(self):
