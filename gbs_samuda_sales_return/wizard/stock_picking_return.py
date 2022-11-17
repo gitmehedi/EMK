@@ -52,7 +52,7 @@ class ReturnPicking(models.TransientModel):
                     "Return Date must be lesser than current date")
 
     return_date = fields.Date(string='Return Date', default=datetime.today())
-    return_reason = fields.Text(string='Return Reason', limit=20)
+    return_reason = fields.Text(string='Return Reason', size=50)
 
     @api.constrains('product_return_moves')
     def _check_quantity(self):
@@ -290,6 +290,7 @@ class ReturnPicking(models.TransientModel):
         invoice_line = self.env['account.invoice.line'].sudo().search(
             [('invoice_id', '=', main_invoice_id), ('product_id', '=', pro_id)], limit=1)
         return invoice_line.price_unit
+
     def _get_outstanding_info(self, invoice_obj, main_invoice_move):
 
         if invoice_obj.state == 'open':
