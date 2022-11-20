@@ -52,23 +52,45 @@ class ShipmentCommon(models.Model):
             raise ValidationError(
                 _("This LC already in " + lc_state.capitalize() + ". Before 'Reset To Draft', Need to Active This LC"))
 
+        index = 0
         for obj in self.shipment_product_lines:
             if self.state != 'cancel':
-                lc_product_line = self.env['lc.product.line'].search([('sale_order_id', '=', obj.sale_order_id.id), ('lc_id', '=', self.lc_id.id)])
-                if len(lc_product_line) == 1:
-                    lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty-obj.product_qty})
-                else:
-                    for prod_line in lc_product_line:
-                        reset_qty = prod_line.product_received_qty - obj.product_qty
+                if obj.sale_order_id:
+                    lc_product_line = self.env['lc.product.line'].search([('sale_order_id', '=', obj.sale_order_id.id), ('lc_id', '=', self.lc_id.id)])
+                    if len(lc_product_line) == 1:
+                        lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty-obj.product_qty})
+                    else:
+                        for prod_line in lc_product_line:
+                            reset_qty = prod_line.product_received_qty - obj.product_qty
 
-                        if reset_qty >= 0:
-                            prod_line.write({'product_received_qty': reset_qty})
-                        else:
-                            for p_line in lc_product_line:
-                                reset_qty = p_line.product_received_qty - obj.product_qty
-                                if reset_qty >= 0:
-                                    p_line.write({'product_received_qty': reset_qty})
-            obj.unlink()
+                            if reset_qty >= 0:
+                                prod_line.write({'product_received_qty': reset_qty})
+                            else:
+                                for p_line in lc_product_line:
+                                    reset_qty = p_line.product_received_qty - obj.product_qty
+                                    if reset_qty >= 0:
+                                        p_line.write({'product_received_qty': reset_qty})
+                    obj.unlink()
+                else:
+                    lc_product_line_list = self.env['lc.product.line'].search([('lc_id', '=', self.lc_id.id), ('product_id', '=', obj.product_id.id)])
+                    if len(lc_product_line_list) > 1:
+                        lc_product_line = lc_product_line_list[index]
+                        if lc_product_line.product_received_qty == 0:
+                            index += 1
+                            lc_product_line = lc_product_line_list[index]
+
+                        if lc_product_line.product_received_qty - obj.product_qty < 0:
+                            lc_product_line.write({'product_received_qty': 0})
+                            index += 1
+                            lc_product_line = lc_product_line_list[index]
+                            lc_product_line.write({'product_received_qty': obj.product_qty - lc_product_line.product_received_qty})
+
+                        index += 1
+
+                        lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty - obj.product_qty})
+                    else:
+                        lc_product_line_list.write({'product_received_qty': lc_product_line_list.product_received_qty - obj.product_qty})
+                obj.unlink()
 
         self.reset_shipment()
         self.sudo().update({'state': 'draft', 'invoice_ids': [(6, 0, [])], 'invoice_value': 0})
