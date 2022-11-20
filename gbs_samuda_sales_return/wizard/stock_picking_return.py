@@ -52,7 +52,7 @@ class ReturnPicking(models.TransientModel):
                     "Return Date must be lesser than current date")
 
     return_date = fields.Date(string='Return Date', default=datetime.today())
-    return_reason = fields.Text(string='Return Reason', size=50)
+    return_reason = fields.Char(string='Return Reason', size=50)
 
     @api.constrains('product_return_moves')
     def _check_quantity(self):
