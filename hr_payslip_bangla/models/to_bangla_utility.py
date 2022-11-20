@@ -2,7 +2,7 @@
 
 from odoo import fields, models, api
 import math
-
+from collections import OrderedDict
 
 class ToBanglaUtility(models.TransientModel):
     _name = 'to.bangla.utility'
@@ -41,16 +41,16 @@ class ToBanglaUtility(models.TransientModel):
         """
         Generating the unit segments such as koti, lokkho
         """
-        segments = dict()
-        segments['koti'] = math.floor(number / 10000000)
+        segments = OrderedDict()
+        segments['akoti'] = math.floor(number / 10000000)
         number = number % 10000000
-        segments['lokkho'] = math.floor(number / 100000)
+        segments['blokkho'] = math.floor(number / 100000)
         number = number % 100000
-        segments['hazar'] = math.floor(number / 1000)
+        segments['chazar'] = math.floor(number / 1000)
         number = number % 1000
-        segments['sotok'] = math.floor(number / 100)
+        segments['dsotok'] = math.floor(number / 100)
         number = number % 100
-        segments['ekok'] = number
+        segments['eekok'] = number
 
         return segments
 
@@ -175,11 +175,11 @@ class ToBanglaUtility(models.TransientModel):
         }
 
         units = {
-            'koti': 'কোটি',
-            'lokkho': 'লক্ষ',
-            'hazar': 'হাজার',
-            'sotok': 'শত',
-            'ekok': '',
+            'akoti': 'কোটি',
+            'blokkho': 'লক্ষ',
+            'chazar': 'হাজার',
+            'dsotok': 'শত',
+            'eekok': '',
         }
 
         generated_words = ''
@@ -311,11 +311,11 @@ class ToBanglaUtility(models.TransientModel):
         }
 
         units = {
-            'koti': 'কোটি',
-            'lokkho': 'লক্ষ',
-            'hazar': 'হাজার',
-            'sotok': 'শত',
-            'ekok': '',
+            'akoti': 'কোটি',
+            'blokkho': 'লক্ষ',
+            'chazar': 'হাজার',
+            'dsotok': 'শত',
+            'eekok': '',
         }
         generated_words = numeric_words[str(fraction)]
         return generated_words

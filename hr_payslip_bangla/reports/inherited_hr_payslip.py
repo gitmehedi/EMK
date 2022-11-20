@@ -50,7 +50,6 @@ class HRPayslipBanglaReport(models.AbstractModel):
                     number = to_bangla_utility.input_sanitizer(float(line.total))
                     whole, fraction = to_bangla_utility.float_int_extraction(number)
                     whole_segments = to_bangla_utility.generate_segments(whole)
-
                     generated_words = to_bangla_utility.whole_part_word_gen(whole_segments)
                     if fraction and fraction > 0:
                         bangla_words = generated_words + " টাকা " + to_bangla_utility.fraction_to_words(
