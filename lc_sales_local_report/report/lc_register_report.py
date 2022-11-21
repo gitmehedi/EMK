@@ -674,7 +674,7 @@ class LcRegisterXLSX(ReportXlsx):
             where += "where ps.doc_preparation_date is null and (ps.state = 'receive_doc' or ps.state = 'draft' ) and sol.qty_delivered > 0 "
         elif filter_by == 'first_acceptance':
             filter_by_text = '1st Acceptance'
-            where += "where CURRENT_DATE-(Date(ps.to_first_acceptance_date)) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
+            where += "where CURRENT_DATE-(Date(ps.to_buyer_date)) > " + acceptance_default_value + " and ps.to_first_acceptance_date is null "
         elif filter_by == 'second_acceptance':
             filter_by_text = "2nd Acceptance"
             where += "where CURRENT_DATE - (Date(ps.to_seller_bank_date)) > " + acceptance_default_value + " and ps.to_maturity_date is null "
@@ -683,7 +683,7 @@ class LcRegisterXLSX(ReportXlsx):
             where += "where ps.payment_rec_date is null and ps.to_maturity_date is not null "
         elif filter_by == 'percentage_of_first_acceptance_collection':
             filter_by_text = 'Percentage of First Acceptance Collection'
-            where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' and ps.to_first_acceptance_date is not null and ps.to_buyer_date is not null "
+            where += "where ps.to_first_acceptance_date >= '" + obj.date_from + "' and ps.to_first_acceptance_date <= '" + obj.date_to + "' and ps.to_first_acceptance_date is not null and ps.to_buyer_date is not null "
         elif filter_by == 'lc_history':
             filter_by_text = 'LC Shipment History'
             where += "where ps.shipment_done_date >= '" + obj.date_from + "' and ps.shipment_done_date <= '" + obj.date_to + "' "
