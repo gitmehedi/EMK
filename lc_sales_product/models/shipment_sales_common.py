@@ -79,7 +79,7 @@ class ShipmentCommon(models.Model):
                             index += 1
                             lc_product_line = lc_product_line_list[index]
 
-                        if lc_product_line.product_received_qty - obj.product_qty < 0:
+                        elif lc_product_line.product_received_qty - obj.product_qty < 0:
                             lc_product_line.write({'product_received_qty': 0})
                             index += 1
                             lc_product_line = lc_product_line_list[index]
