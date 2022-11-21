@@ -85,7 +85,7 @@ class ShipmentCommon(models.Model):
                             lc_product_line = lc_product_line_list[index]
                             lc_product_line.write({'product_received_qty': obj.product_qty - lc_product_line.product_received_qty})
 
-                        index += 1
+                        #index += 1
 
                         lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty - obj.product_qty})
                     else:
