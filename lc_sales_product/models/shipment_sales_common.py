@@ -75,7 +75,7 @@ class ShipmentCommon(models.Model):
                     lc_product_line_list = self.env['lc.product.line'].search([('lc_id', '=', self.lc_id.id), ('product_id', '=', obj.product_id.id)])
                     if len(lc_product_line_list) > 1:
                         lc_product_line = lc_product_line_list[index]
-                        if lc_product_line.product_received_qty == 0:
+                        if lc_product_line.product_received_qty == 0 and lc_product_line.product_received_qty - obj.product_qty > 0:
                             for lc_prod_line in lc_product_line_list:
                                 if lc_prod_line.product_received_qty != 0:
                                     lc_product_line = lc_prod_line
@@ -83,14 +83,19 @@ class ShipmentCommon(models.Model):
                             lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty - obj.product_qty})
 
                         elif lc_product_line.product_received_qty - obj.product_qty < 0:
+                            index = 0
                             diff_qty = obj.product_qty - lc_product_line.product_received_qty
-                            lc_product_line.write({'product_received_qty': 0})
                             for lc_prod_line in lc_product_line_list:
-                                if lc_prod_line.product_received_qty > diff_qty:
+                                if lc_prod_line.product_received_qty >= diff_qty:
                                     lc_prod_line.write({'product_received_qty': lc_prod_line.product_received_qty - diff_qty})
                                     break
+                                else:
+                                    if index != 0:
+                                        diff_qty = diff_qty - lc_prod_line.product_received_qty
+                                    lc_prod_line.write({'product_received_qty': 0})
+                                    index += 1
                         else:
-                            lc_product_line.write({'product_received_qty': 0})
+                            lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty - obj.product_qty})
                     else:
                         lc_product_line_list.write({'product_received_qty': lc_product_line_list.product_received_qty - obj.product_qty})
                 obj.unlink()
