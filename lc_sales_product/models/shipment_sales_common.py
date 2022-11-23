@@ -76,18 +76,21 @@ class ShipmentCommon(models.Model):
                     if len(lc_product_line_list) > 1:
                         lc_product_line = lc_product_line_list[index]
                         if lc_product_line.product_received_qty == 0:
-                            index += 1
-                            lc_product_line = lc_product_line_list[index]
+                            for lc_prod_line in lc_product_line_list:
+                                if lc_prod_line.product_received_qty != 0:
+                                    lc_product_line = lc_prod_line
+                                    break
+                            lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty - obj.product_qty})
 
                         elif lc_product_line.product_received_qty - obj.product_qty < 0:
+                            diff_qty = obj.product_qty - lc_product_line.product_received_qty
                             lc_product_line.write({'product_received_qty': 0})
-                            index += 1
-                            lc_product_line = lc_product_line_list[index]
-                            lc_product_line.write({'product_received_qty': obj.product_qty - lc_product_line.product_received_qty})
-
-                        #index += 1
-
-                        lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty - obj.product_qty})
+                            for lc_prod_line in lc_product_line_list:
+                                if lc_prod_line.product_received_qty > diff_qty:
+                                    lc_prod_line.write({'product_received_qty': lc_prod_line.product_received_qty - diff_qty})
+                                    break
+                        else:
+                            lc_product_line.write({'product_received_qty': 0})
                     else:
                         lc_product_line_list.write({'product_received_qty': lc_product_line_list.product_received_qty - obj.product_qty})
                 obj.unlink()
