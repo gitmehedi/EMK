@@ -75,7 +75,7 @@ class ShipmentCommon(models.Model):
                     lc_product_line_list = self.env['lc.product.line'].search([('lc_id', '=', self.lc_id.id), ('product_id', '=', obj.product_id.id)])
                     if len(lc_product_line_list) > 1:
                         lc_product_line = lc_product_line_list[index]
-                        if lc_product_line.product_received_qty == 0 and lc_product_line.product_received_qty - obj.product_qty > 0:
+                        if lc_product_line.product_received_qty == 0 and lc_product_line.product_received_qty - obj.product_qty >= 0:
                             for lc_prod_line in lc_product_line_list:
                                 if lc_prod_line.product_received_qty != 0:
                                     lc_product_line = lc_prod_line
@@ -132,8 +132,8 @@ class ShipmentCommon(models.Model):
         self.gross_weight = False
         self.net_weight = False
         self.count_qty = False
-        self.count_uom = False
-        self.weight_uom = False
+        # self.count_uom = False
+        # self.weight_uom = False
         self.bl_date = False
         self.truck_receipt_no = False
         self.truck_receipt_no = False
