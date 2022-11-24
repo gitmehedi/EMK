@@ -6,6 +6,22 @@ class InheritedStockPicking(models.Model):
     _inherit = "stock.picking"
 
     @api.multi
+    def name_get(self):
+        display_mrr_no = self.env.context.get('display_mrr_no')
+        result = []
+        if display_mrr_no:
+            for rec in self:
+                if rec.check_mrr_button and rec.mrr_no:
+                    name = rec.mrr_no
+                    result.append((rec.id, name))
+                else:
+                    result.append((rec.id, ''))
+        else:
+            for rec in self:
+                result.append((rec.id, rec.name))
+        return result
+
+    @api.multi
     def button_approve(self):
         for picking in self:
             picking.approval_comment = 'Final Approval'
@@ -20,3 +36,4 @@ class InheritedStockPicking(models.Model):
             # setting available quantity
             for move in picking.move_lines:
                 move.sudo().write({'available_qty': move.product_qty})
+

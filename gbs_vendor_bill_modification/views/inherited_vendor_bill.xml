@@ -23,7 +23,7 @@
                     <field name="direct_vendor_bill" invisible="1"/>
                     <field name="is_after_automation" invisible="1"/>
                     <field name="pickings" widget="many2many_tags"
-                           attrs="{'invisible':[('is_after_automation','=',False)]}"/>
+                           attrs="{'invisible':[('is_after_automation','=',False)]}" context="{'display_mrr_no': True}"/>
                 </xpath>
 
                 <field name="invoice_line_ids" position="attributes">
