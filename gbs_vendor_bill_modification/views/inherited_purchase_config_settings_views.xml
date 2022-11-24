@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_purchase_config" model="ir.ui.view">
+            <field name="name">purchase.config.settings.extend</field>
+            <field name="model">purchase.config.settings</field>
+            <field name="inherit_id" ref="purchase.view_purchase_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/group[2]" position="after">
+                    <group string="MRR and Bill">
+                        <div>
+                            <div>
+                                 <label for="mrr_bill_automation_date"/>
+                                <field name="mrr_bill_automation_date" class="oe_inline"/>
+
+                            </div>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
