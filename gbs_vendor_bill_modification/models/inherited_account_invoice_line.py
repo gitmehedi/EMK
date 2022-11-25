@@ -10,7 +10,8 @@ class AccountInvoiceLine(models.Model):
     def _default_direct_vendor_bill(self):
         return self._context.get('direct_vendor_bill')
 
-    direct_vendor_bill = fields.Boolean(default=lambda self: self._default_direct_vendor_bill())
+    direct_vendor_bill = fields.Boolean(default=lambda self: self._default_direct_vendor_bill(), store=False)
+    move_ref = fields.Char(string="Move Reference")
 
     @api.depends('invoice_id', 'direct_vendor_bill', 'purchase_id')
     def _can_edit_bill_line(self):

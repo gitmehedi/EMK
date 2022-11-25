@@ -1,13 +1,12 @@
 from odoo import _, api, fields, models
 from lxml import etree
 from odoo.exceptions import UserError, ValidationError
+import re
 
 
 class AccountInvoiceInherit(models.Model):
     _inherit = 'account.invoice'
 
-    # TODO: create,write,delete,cancel
-    # TODO: need to check for direct vendor bill, customer invoice, refund, service order bill, cnf bill
     @api.model
     def create(self, vals):
         order_id = self.env.context.get('purchase_order')
@@ -82,77 +81,94 @@ class AccountInvoiceInherit(models.Model):
                                 if picking_len != 1:
                                     raise UserError(
                                         _('You have to select only one MRR when editing the quantity!\n Special note : If you cannot keep one MRR selected then you need to cancel this bill, then create a fresh bill by selecting MRRs'))
-                                for picking in self.pickings:
-                                    stock_move_obj = self.env['stock.move'].search(
-                                        [('product_id', '=', invoice_line_obj.product_id.id),
-                                         ('picking_id', '=', picking.id)])
-                                    for move in stock_move_obj:
-                                        if float("{:.4f}".format(invoice_line_obj.quantity)) < float(
-                                                "{:.4f}".format(line[2]['quantity'])):
-                                            raise UserError(_('You cannot edit increase previous quantity'))
-                                        available_qty = float(
-                                            "{:.4f}".format(invoice_line_obj.quantity - line[2]['quantity']))
-                                        move.sudo().write(
-                                            {'available_qty': available_qty})
-                                    picking.sudo().write({'mrr_status': 'partial_billed'})
+                                if float("{:.4f}".format(invoice_line_obj.quantity)) < float("{:.4f}".format(line[2]['quantity'])):
+                                    raise UserError(_('You cannot edit increase previous quantity'))
+                                diff_qty = float("{:.4f}".format(invoice_line_obj.quantity - line[2]['quantity']))
+
+                                move_refs = invoice_line_obj.move_ref.split(',')
+                                used = 0
+                                for mr in move_refs:
+                                    x = mr.split(':')
+                                    move_id = x[0][1:]
+                                    used_qty = x[1][:-1]
+                                    qty = float(used_qty)
+                                    if diff_qty <= float(used_qty) and used == 0:
+                                        qty = float(used_qty) - float("{:.4f}".format(line[2]['quantity']))
+                                        used = used + 1
+                                    stock_move = self.env['stock.move'].browse(int(move_id))
+                                    stock_move.sudo().write(
+                                        {'available_qty': stock_move.available_qty + qty})
+                                # for picking in self.pickings:
+                                #     stock_move_obj = self.env['stock.move'].search(
+                                #         [('product_id', '=', invoice_line_obj.product_id.id),
+                                #          ('picking_id', '=', picking.id)])
+                                #     for move in stock_move_obj:
+                                #         if float("{:.4f}".format(invoice_line_obj.quantity)) < float(
+                                #                 "{:.4f}".format(line[2]['quantity'])):
+                                #             raise UserError(_('You cannot edit increase previous quantity'))
+                                #         available_qty = float(
+                                #             "{:.4f}".format(invoice_line_obj.quantity - line[2]['quantity']))
+                                #         move.sudo().write(
+                                #             {'available_qty': available_qty})
+                                #     picking.sudo().write({'mrr_status': 'partial_billed'})
 
         res = super(AccountInvoiceInherit, self).write(values)
         return res
 
     @api.multi
     def action_invoice_cancel(self):
+        # TODO : edited quantity not mentioned
         res = super(AccountInvoiceInherit, self).action_invoice_cancel()
-        if self.invoice_line_ids and self.type == 'in_invoice':
+        if self.invoice_line_ids and self.type == 'in_invoice' and self.is_after_automation:
             if not self.purchase_id.cnf_quotation and not self.purchase_id.is_service_order:
                 for line in self.invoice_line_ids:
-                    for picking in self.pickings:
-                        stock_move_obj = self.env['stock.move'].search(
-                            [('product_id', '=', line.product_id.id),
-                             ('picking_id', '=', picking.id)])
-                        available_qty = float("{:.4f}".format(line.quantity))
-                        for move in stock_move_obj:
-                            move.sudo().write(
-                                {'available_qty': move.available_qty + available_qty})
-                        picking.sudo().write({'mrr_status': 'partial_billed'})
+                    move_refs = line.move_ref.split(',')
+                    for mr in move_refs:
+                        x = mr.split(':')
+                        move_id = x[0][1:]
+                        used_qty = float(x[1][:-1])
+                        stock_move = self.env['stock.move'].browse(int(move_id))
+                        stock_move.sudo().write(
+                            {'available_qty': stock_move.available_qty + float(used_qty)})
         return res
 
     @api.multi
     def action_invoice_draft(self):
+        # TODO : edited quantity not mentioned write method workd
         res = super(AccountInvoiceInherit, self).action_invoice_draft()
-        if self.invoice_line_ids and self.type == 'in_invoice':
+        if self.invoice_line_ids and self.type == 'in_invoice' and self.is_after_automation:
             if not self.purchase_id.cnf_quotation and not self.purchase_id.is_service_order:
                 for line in self.invoice_line_ids:
-                    for picking in self.pickings:
-                        stock_move_obj = self.env['stock.move'].search(
-                            [('product_id', '=', line.product_id.id),
-                             ('picking_id', '=', picking.id)])
-                        if float("{:.4f}".format(stock_move_obj.available_qty)) < float(line.quantity):
+                    move_refs = line.move_ref.split(',')
+                    for mr in move_refs:
+                        x = mr.split(':')
+                        move_id = x[0][1:]
+                        used_qty = float(x[1][:-1])
+                        stock_move = self.env['stock.move'].browse(int(move_id))
+                        if float("{:.4f}".format(stock_move.available_qty)) - float("{:.4f}".format(used_qty)) < 0:
                             raise UserError(
-                                _('This bill cannot be set to draft because fresh bill may have been created!\n You cannot edit increase previous quantity'))
+                                _('This bill cannot be reset to draft!\n Fresh Bill may have create using selected MRR quantity!'))
 
-                        available_qty = float("{:.4f}".format(stock_move_obj.available_qty - line.quantity))
+                        stock_move.sudo().write(
+                            {'available_qty': stock_move.available_qty - float(used_qty)})
 
-                        for move in stock_move_obj:
-                            move.sudo().write(
-                                {'available_qty': move.available_qty - available_qty})
-                        picking.sudo().write({'mrr_status': 'partial_billed'})
         return res
 
     @api.multi
     def unlink(self):
         res = super(AccountInvoiceInherit, self).unlink()
-        if self.invoice_line_ids and self.type == 'in_invoice':
+        if self.invoice_line_ids and self.type == 'in_invoice' and self.is_after_automation:
             if not self.purchase_id.cnf_quotation and not self.purchase_id.is_service_order:
                 for line in self.invoice_line_ids:
-                    for picking in self.pickings:
-                        stock_move_obj = self.env['stock.move'].search(
-                            [('product_id', '=', line.product_id.id),
-                             ('picking_id', '=', picking.id)])
-                        available_qty = float("{:.4f}".format(line.quantity))
-                        for move in stock_move_obj:
-                            move.sudo().write(
-                                {'available_qty': available_qty})
-                        picking.sudo().write({'mrr_status': 'partial_billed'})
+                    for line in self.invoice_line_ids:
+                        move_refs = line.move_ref.split(',')
+                        for mr in move_refs:
+                            x = mr.split(':')
+                            move_id = x[0][1:]
+                            used_qty = float(x[1][:-1])
+                            stock_move = self.env['stock.move'].browse(int(move_id))
+                            stock_move.sudo().write(
+                                {'available_qty': stock_move.available_qty + float(used_qty)})
         return res
 
     @api.multi

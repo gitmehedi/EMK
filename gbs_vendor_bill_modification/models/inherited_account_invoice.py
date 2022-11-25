@@ -26,6 +26,8 @@ class AccountInvoice(models.Model):
                                 val[2]['quantity'] = existing_qty + aval_qty
                                 val[2]['duplc_qty'] = existing_qty + aval_qty
                                 found_product = found_product + 1
+                                val[2]['move_ref'] = val[2]['move_ref'] + "," + "(" + str(move.id) + ":" + str(
+                                    aval_qty) + ")"
 
                         if found_product == 0:
                             if not picking.origin:
@@ -53,6 +55,8 @@ class AccountInvoice(models.Model):
                                     analytic_account_id = self.env.user.company_id.lc_pad_account.id
 
                             if float("{:.4f}".format(aval_qty)) != 0:
+                                move_ref = "(" + str(move.id) + ":" + str(aval_qty) + ")"
+
                                 vals.append((0, 0, {'product_id': move.product_id.id,
                                                     'quantity': aval_qty,
                                                     'duplc_qty': aval_qty,
@@ -61,7 +65,8 @@ class AccountInvoice(models.Model):
                                                     'uom_id': move.product_uom.id,
                                                     'purchase_line_id': order_line.id,
                                                     'analytic_account_id': analytic_account_id,
-                                                    'account_id': move.product_id.property_account_expense_id.id or move.product_id.categ_id.property_account_expense_categ_id.id
+                                                    'account_id': move.product_id.property_account_expense_id.id or move.product_id.categ_id.property_account_expense_categ_id.id,
+                                                    'move_ref': move_ref
                                                     }))
 
                 self.invoice_line_ids = vals
@@ -82,7 +87,6 @@ class AccountInvoice(models.Model):
         column2='picking_id', string='''MRR's''', domain=get_domain)
 
     from_po_form = fields.Boolean(default=False)
-
 
     @api.depends('partner_id')
     def _compute_direct_vendor_bill(self):
