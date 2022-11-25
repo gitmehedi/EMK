@@ -98,6 +98,7 @@ class AccountInvoiceInherit(models.Model):
                                     stock_move = self.env['stock.move'].browse(int(move_id))
                                     stock_move.sudo().write(
                                         {'available_qty': stock_move.available_qty + qty})
+                                    stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
                                 # for picking in self.pickings:
                                 #     stock_move_obj = self.env['stock.move'].search(
                                 #         [('product_id', '=', invoice_line_obj.product_id.id),
@@ -130,6 +131,7 @@ class AccountInvoiceInherit(models.Model):
                         stock_move = self.env['stock.move'].browse(int(move_id))
                         stock_move.sudo().write(
                             {'available_qty': stock_move.available_qty + float(line.quantity)})
+                        stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
         return res
 
     @api.multi
@@ -151,6 +153,7 @@ class AccountInvoiceInherit(models.Model):
 
                         stock_move.sudo().write(
                             {'available_qty': stock_move.available_qty - float(line.quantity)})
+                        stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
 
         return res
 
@@ -174,6 +177,7 @@ class AccountInvoiceInherit(models.Model):
 
                             stock_move.sudo().write(
                                 {'available_qty': stock_move.available_qty + float(line.quantity)})
+                            stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
         return res
 
     @api.multi
