@@ -112,7 +112,7 @@ class AccountInvoiceInherit(models.Model):
                         available_qty = float("{:.4f}".format(line.quantity))
                         for move in stock_move_obj:
                             move.sudo().write(
-                                {'available_qty': available_qty})
+                                {'available_qty': move.available_qty + available_qty})
                         picking.sudo().write({'mrr_status': 'partial_billed'})
         return res
 
@@ -134,7 +134,7 @@ class AccountInvoiceInherit(models.Model):
 
                         for move in stock_move_obj:
                             move.sudo().write(
-                                {'available_qty': available_qty})
+                                {'available_qty': move.available_qty - available_qty})
                         picking.sudo().write({'mrr_status': 'partial_billed'})
         return res
 
