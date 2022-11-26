@@ -99,19 +99,6 @@ class AccountInvoiceInherit(models.Model):
                                     stock_move.sudo().write(
                                         {'available_qty': stock_move.available_qty + qty})
                                     stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
-                                # for picking in self.pickings:
-                                #     stock_move_obj = self.env['stock.move'].search(
-                                #         [('product_id', '=', invoice_line_obj.product_id.id),
-                                #          ('picking_id', '=', picking.id)])
-                                #     for move in stock_move_obj:
-                                #         if float("{:.4f}".format(invoice_line_obj.quantity)) < float(
-                                #                 "{:.4f}".format(line[2]['quantity'])):
-                                #             raise UserError(_('You cannot edit increase previous quantity'))
-                                #         available_qty = float(
-                                #             "{:.4f}".format(invoice_line_obj.quantity - line[2]['quantity']))
-                                #         move.sudo().write(
-                                #             {'available_qty': available_qty})
-                                #     picking.sudo().write({'mrr_status': 'partial_billed'})
 
         res = super(AccountInvoiceInherit, self).write(values)
         return res
@@ -124,17 +111,23 @@ class AccountInvoiceInherit(models.Model):
             if not self.purchase_id.cnf_quotation and not self.purchase_id.is_service_order:
                 for line in self.invoice_line_ids:
                     move_refs = line.move_ref.split(',')
+                    remaining_qty = 0.0
                     for mr in move_refs:
                         x = mr.split(':')
                         move_id = x[0][1:]
                         used_qty = float(x[1][:-1])
-                        stock_move = self.env['stock.move'].browse(int(move_id))
-                        line_qty =float(line.quantity)
-                        #if line_qty < used_qty:
-
-                        stock_move.sudo().write(
-                            {'available_qty': stock_move.available_qty + used_qty})
-                        stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
+                        move = self.env['stock.move'].browse(int(move_id))
+                        move_capacity = float("{:.4f}".format(move.product_qty - move.available_qty))
+                        line_qty = float("{:.4f}".format(line.quantity))
+                        if remaining_qty != 0.0:
+                            line_qty = remaining_qty
+                        if move_capacity >= line_qty:
+                            aval_qty = move.available_qty + line_qty
+                        else:
+                            aval_qty = move.available_qty + move_capacity
+                            remaining_qty = line_qty - move_capacity
+                        move.sudo().write({'available_qty':aval_qty})
+                        move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
         return res
 
     @api.multi
@@ -145,19 +138,29 @@ class AccountInvoiceInherit(models.Model):
             if not self.purchase_id.cnf_quotation and not self.purchase_id.is_service_order:
                 for line in self.invoice_line_ids:
                     move_refs = line.move_ref.split(',')
+                    remaining_qty = 0.0
                     for mr in move_refs:
                         x = mr.split(':')
                         move_id = x[0][1:]
                         used_qty = float(x[1][:-1])
-                        stock_move = self.env['stock.move'].browse(int(move_id))
-                        if float("{:.4f}".format(stock_move.available_qty)) - float("{:.4f}".format(used_qty)) < 0:
+                        move = self.env['stock.move'].browse(int(move_id))
+                        move_capacity = float("{:.4f}".format(move.available_qty))
+                        if move_capacity == 0:
                             raise UserError(
-                                _('This bill cannot be reset to draft!\n Fresh Bill may have create using selected MRR quantity!'))
+                                _('''You cannot reset this bill to draft!\n This may have caused because a bill has been already created using this bill's MRR quantity'''))
 
-                        stock_move.sudo().write(
-                            {'available_qty': stock_move.available_qty - used_qty})
-                        stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
+                        line_qty = float("{:.4f}".format(line.quantity))
+                        if remaining_qty != 0.0:
+                            line_qty = remaining_qty
 
+                        if move_capacity >= line_qty:
+                            aval_qty = move_capacity - line_qty
+                        else:
+                            aval_qty = move_capacity - move_capacity
+                            remaining_qty = line_qty - move_capacity
+
+                        move.sudo().write({'available_qty': aval_qty})
+                        move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
         return res
 
     @api.multi
@@ -172,15 +175,18 @@ class AccountInvoiceInherit(models.Model):
                             x = mr.split(':')
                             move_id = x[0][1:]
                             used_qty = float(x[1][:-1])
-                            stock_move = self.env['stock.move'].browse(int(move_id))
-                            if float("{:.4f}".format(stock_move.available_qty)) - float(
-                                    "{:.4f}".format(used_qty)) < 0:
-                                raise UserError(
-                                    _('This bill cannot be reset to draft!\n Fresh Bill may have create using selected MRR quantity!'))
-
-                            stock_move.sudo().write(
-                                {'available_qty': stock_move.available_qty + used_qty})
-                            stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
+                            move = self.env['stock.move'].browse(int(move_id))
+                            move_capacity = float("{:.4f}".format(move.product_qty - move.available_qty))
+                            line_qty = float("{:.4f}".format(line.quantity))
+                            if remaining_qty != 0.0:
+                                line_qty = remaining_qty
+                            if move_capacity >= line_qty:
+                                aval_qty = move.available_qty + line_qty
+                            else:
+                                aval_qty = move.available_qty + move_capacity
+                                remaining_qty = line_qty - move_capacity
+                            move.sudo().write({'available_qty': aval_qty})
+                            move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
         return res
 
     @api.multi
