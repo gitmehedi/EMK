@@ -84,7 +84,9 @@ class AccountInvoice(models.Model):
     pickings = fields.Many2many(
         comodel_name='stock.picking',
         relation='invoice_picking_rel', column1='invoice_id',
-        column2='picking_id', string='''MRR's''', domain=get_domain)
+        column2='picking_id', string='''MRR's''', domain=get_domain,
+        help="Removing and Adding MRR option available only when your are creating a fresh vendor bill.\n  If you want to remove or add MRR  after saving the bill, you have to first cancel the existing bill then again try to create vendor bill by selecting MRRs"
+    )
 
     from_po_form = fields.Boolean(default=False)
 

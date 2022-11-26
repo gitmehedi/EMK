@@ -23,7 +23,8 @@
                     <field name="direct_vendor_bill" invisible="1"/>
                     <field name="is_after_automation" invisible="1"/>
                     <field name="pickings" widget="many2many_tags"
-                           attrs="{'invisible':[('is_after_automation','=',False)]}" context="{'display_mrr_no': True}"/>
+                           attrs="{'invisible':[('is_after_automation','=',False)],'readonly':[('id','>',0)]}"
+                           context="{'display_mrr_no': True}"/>
                 </xpath>
 
                 <field name="invoice_line_ids" position="attributes">
@@ -37,7 +38,7 @@
                     <field name="can_edit_bill_line" invisible="1"/>
                     <field name="direct_vendor_bill" invisible="1"/>
                     <field name="duplc_qty" invisible="1"/>
-                    <field name="move_ref"/>
+                    <field name="move_ref" groups="base.group_private_addresses"/>
                 </xpath>
                 <xpath expr="//notebook//field[@name='invoice_line_ids']/tree/field[@name='product_id']"
                        position="attributes">
