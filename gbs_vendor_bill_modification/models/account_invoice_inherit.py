@@ -129,8 +129,11 @@ class AccountInvoiceInherit(models.Model):
                         move_id = x[0][1:]
                         used_qty = float(x[1][:-1])
                         stock_move = self.env['stock.move'].browse(int(move_id))
+                        line_qty =float(line.quantity)
+                        #if line_qty < used_qty:
+
                         stock_move.sudo().write(
-                            {'available_qty': stock_move.available_qty + float(line.quantity)})
+                            {'available_qty': stock_move.available_qty + used_qty})
                         stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
         return res
 
@@ -147,12 +150,12 @@ class AccountInvoiceInherit(models.Model):
                         move_id = x[0][1:]
                         used_qty = float(x[1][:-1])
                         stock_move = self.env['stock.move'].browse(int(move_id))
-                        if float("{:.4f}".format(stock_move.available_qty)) - float("{:.4f}".format(line.quantity)) < 0:
+                        if float("{:.4f}".format(stock_move.available_qty)) - float("{:.4f}".format(used_qty)) < 0:
                             raise UserError(
                                 _('This bill cannot be reset to draft!\n Fresh Bill may have create using selected MRR quantity!'))
 
                         stock_move.sudo().write(
-                            {'available_qty': stock_move.available_qty - float(line.quantity)})
+                            {'available_qty': stock_move.available_qty - used_qty})
                         stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
 
         return res
@@ -171,12 +174,12 @@ class AccountInvoiceInherit(models.Model):
                             used_qty = float(x[1][:-1])
                             stock_move = self.env['stock.move'].browse(int(move_id))
                             if float("{:.4f}".format(stock_move.available_qty)) - float(
-                                    "{:.4f}".format(line.quantity)) < 0:
+                                    "{:.4f}".format(used_qty)) < 0:
                                 raise UserError(
                                     _('This bill cannot be reset to draft!\n Fresh Bill may have create using selected MRR quantity!'))
 
                             stock_move.sudo().write(
-                                {'available_qty': stock_move.available_qty + float(line.quantity)})
+                                {'available_qty': stock_move.available_qty + used_qty})
                             stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
         return res
 
