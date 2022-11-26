@@ -22,6 +22,7 @@
                     <field name="from_po_form" invisible="1"/>
                     <field name="direct_vendor_bill" invisible="1"/>
                     <field name="is_after_automation" invisible="1"/>
+                    <field name="id" invisible="1"/>
                     <field name="pickings" widget="many2many_tags"
                            attrs="{'invisible':[('is_after_automation','=',False)],'readonly':[('id','>',0)]}"
                            context="{'display_mrr_no': True}"/>
