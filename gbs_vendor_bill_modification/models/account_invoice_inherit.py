@@ -169,28 +169,27 @@ class AccountInvoiceInherit(models.Model):
 
     @api.multi
     def unlink(self):
-        res = super(AccountInvoiceInherit, self).unlink()
         if self.invoice_line_ids and self.type == 'in_invoice' and self.is_after_automation:
             if not self.purchase_id.cnf_quotation and not self.purchase_id.is_service_order:
                 for line in self.invoice_line_ids:
-                    for line in self.invoice_line_ids:
-                        move_refs = line.move_ref.split(',')
-                        for mr in move_refs:
-                            x = mr.split(':')
-                            move_id = x[0][1:]
-                            used_qty = float(x[1][:-1])
-                            move = self.env['stock.move'].browse(int(move_id))
-                            move_capacity = float("{:.4f}".format(move.product_qty - move.available_qty))
-                            line_qty = float("{:.4f}".format(line.quantity))
-                            if remaining_qty != 0.0:
-                                line_qty = remaining_qty
-                            if move_capacity >= line_qty:
-                                aval_qty = move.available_qty + line_qty
-                            else:
-                                aval_qty = move.available_qty + move_capacity
-                                remaining_qty = line_qty - move_capacity
-                            move.sudo().write({'available_qty': aval_qty})
-                            move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
+                    move_refs = line.move_ref.split(',')
+                    for mr in move_refs:
+                        x = mr.split(':')
+                        move_id = x[0][1:]
+                        used_qty = float(x[1][:-1])
+                        move = self.env['stock.move'].browse(int(move_id))
+                        move_capacity = float("{:.4f}".format(move.product_qty - move.available_qty))
+                        line_qty = float("{:.4f}".format(line.quantity))
+                        if remaining_qty != 0.0:
+                            line_qty = remaining_qty
+                        if move_capacity >= line_qty:
+                            aval_qty = move.available_qty + line_qty
+                        else:
+                            aval_qty = move.available_qty + move_capacity
+                            remaining_qty = line_qty - move_capacity
+                        move.sudo().write({'available_qty': aval_qty})
+                        move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
+        res = super(AccountInvoiceInherit, self).unlink()
         return res
 
     @api.multi
