@@ -23,9 +23,15 @@
                     <field name="direct_vendor_bill" invisible="1"/>
                     <field name="is_after_automation" invisible="1"/>
                     <field name="id" invisible="1"/>
-                    <field name="pickings" widget="many2many_tags"
-                           attrs="{'invisible':[('is_after_automation','=',False)],'readonly':[('id','>',0)]}"
-                           context="{'display_mrr_no': True}"/>
+
+                </xpath>
+
+                <xpath expr="//sheet/group/group[2]" position="after">
+                    <group colspan="4">
+                        <field name="pickings" widget="many2many_tags"
+                               attrs="{'invisible':[('is_after_automation','=',False)],'readonly':[('id','>',0)]}"
+                               context="{'display_mrr_no': True}"/>
+                    </group>
                 </xpath>
 
                 <field name="invoice_line_ids" position="attributes">

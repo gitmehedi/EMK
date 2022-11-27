@@ -164,7 +164,7 @@ class AccountInvoice(models.Model):
         if total_invoiced != 0 and total_mrr_qty != 0 and total_invoiced >= total_mrr_qty:
             raise UserError(_('All MRR has been billed for this order!'))
 
-        if self.env.user.company_id.mrr_bill_automation_date < self.purchase_id.date_approve:
+        if self.env.user.company_id.mrr_bill_automation_date < self.purchase_id.date_order:
             pickings_ids = []
             for picking in pickings:
                 moves = self.env['stock.move'].search(

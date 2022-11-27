@@ -19,7 +19,7 @@ class InheritedPurchaseOrder(models.Model):
         result['context']['invoice_type'] = 'in_invoice'
         # result['context']['default_pickings'] = pickings.ids
         # is_after_automation = False
-        # if self.env.user.company_id.mrr_bill_automation_date < self.date_approve:
+        # if self.env.user.company_id.mrr_bill_automation_date < self.date_order:
         #     pickings_ids = []
         #     for picking in pickings:
         #         moves = self.env['stock.move'].search(
