@@ -173,6 +173,7 @@ class AccountInvoiceInherit(models.Model):
             if not self.purchase_id.cnf_quotation and not self.purchase_id.is_service_order:
                 for line in self.invoice_line_ids:
                     move_refs = line.move_ref.split(',')
+                    remaining_qty = 0.0
                     for mr in move_refs:
                         x = mr.split(':')
                         move_id = x[0][1:]
