@@ -11,12 +11,11 @@ class AccountInvoiceInherit(models.Model):
     def create(self, vals):
         order_id = self.env.context.get('purchase_order')
         type = self.env.context.get('invoice_type')
-
         default_direct_vendor_bill = self.env.context.get('default_direct_vendor_bill')
         default_type = self.env.context.get('default_type')
         purchase_order_obj = self.env['purchase.order'].browse(order_id)
         if type == 'in_invoice' or default_type == 'in_invoice':
-            if not purchase_order_obj.cnf_quotation and not purchase_order_obj.is_service_order and not default_direct_vendor_bill:
+            if not vals.get('cnf_quotation') and not vals.get('is_service_order'):
                 if 'invoice_line_ids' in vals:
                     if not vals['invoice_line_ids']:
                         raise UserError(
