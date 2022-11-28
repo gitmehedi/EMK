@@ -109,7 +109,6 @@ class AccountInvoiceInherit(models.Model):
 
     @api.multi
     def action_invoice_cancel(self):
-        # TODO : edited quantity not mentioned
         res = super(AccountInvoiceInherit, self).action_invoice_cancel()
         if self.invoice_line_ids and self.type == 'in_invoice' and self.is_after_automation:
             if not self.purchase_id.cnf_quotation and not self.purchase_id.is_service_order:
@@ -136,7 +135,6 @@ class AccountInvoiceInherit(models.Model):
 
     @api.multi
     def action_invoice_draft(self):
-        # TODO : edited quantity not mentioned write method workd
         res = super(AccountInvoiceInherit, self).action_invoice_draft()
         if self.invoice_line_ids and self.type == 'in_invoice' and self.is_after_automation:
             if not self.purchase_id.cnf_quotation and not self.purchase_id.is_service_order:
@@ -169,27 +167,28 @@ class AccountInvoiceInherit(models.Model):
 
     @api.multi
     def unlink(self):
-        if self.invoice_line_ids and self.type == 'in_invoice' and self.is_after_automation:
-            if not self.purchase_id.cnf_quotation and not self.purchase_id.is_service_order:
-                for line in self.invoice_line_ids:
-                    move_refs = line.move_ref.split(',')
-                    remaining_qty = 0.0
-                    for mr in move_refs:
-                        x = mr.split(':')
-                        move_id = x[0][1:]
-                        used_qty = float(x[1][:-1])
-                        move = self.env['stock.move'].browse(int(move_id))
-                        move_capacity = float("{:.4f}".format(move.product_qty - move.available_qty))
-                        line_qty = float("{:.4f}".format(line.quantity))
-                        if remaining_qty != 0.0:
-                            line_qty = remaining_qty
-                        if move_capacity >= line_qty:
-                            aval_qty = move.available_qty + line_qty
-                        else:
-                            aval_qty = move.available_qty + move_capacity
-                            remaining_qty = line_qty - move_capacity
-                        move.sudo().write({'available_qty': aval_qty})
-                        move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
+        for invoice in self:
+            if invoice.invoice_line_ids and invoice.type == 'in_invoice' and invoice.is_after_automation:
+                if not invoice.purchase_id.cnf_quotation and not invoice.purchase_id.is_service_order:
+                    for line in invoice.invoice_line_ids:
+                        move_refs = line.move_ref.split(',')
+                        remaining_qty = 0.0
+                        for mr in move_refs:
+                            x = mr.split(':')
+                            move_id = x[0][1:]
+                            used_qty = float(x[1][:-1])
+                            move = self.env['stock.move'].browse(int(move_id))
+                            move_capacity = float("{:.4f}".format(move.product_qty - move.available_qty))
+                            line_qty = float("{:.4f}".format(line.quantity))
+                            if remaining_qty != 0.0:
+                                line_qty = remaining_qty
+                            if move_capacity >= line_qty:
+                                aval_qty = move.available_qty + line_qty
+                            else:
+                                aval_qty = move.available_qty + move_capacity
+                                remaining_qty = line_qty - move_capacity
+                            move.sudo().write({'available_qty': aval_qty})
+                            move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
         res = super(AccountInvoiceInherit, self).unlink()
         return res
 
