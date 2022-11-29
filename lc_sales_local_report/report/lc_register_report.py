@@ -770,7 +770,7 @@ class LcRegisterXLSX(ReportXlsx):
                 LEFT JOIN pi_lc_rel as plr ON plr.lc_id = lc.id
                 LEFT JOIN sale_order as so ON so.pi_id = plr.pi_id
                 LEFT JOIN sale_order_line as sol ON sol.order_id = so.id
-                where lc.expiry_date < CURRENT_DATE  
+                where lc.shipment_date < CURRENT_DATE  
                 and spl.product_qty-(select SUM(sol.qty_delivered) as qty_delivered 
                  from sale_order as so LEFT JOIN sale_order_line as sol ON so.id = sol.order_id 
                      where so.lc_id=lc.id) > 0 %s group by ps.id
