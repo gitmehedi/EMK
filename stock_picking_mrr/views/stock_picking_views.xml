@@ -10,6 +10,9 @@
             <xpath expr="/tree/field[@name='name']" position="after">
                 <field name="mrr_no"/>
             </xpath>
+            <xpath expr="/tree/field[@name='state']" position="after">
+                <field name="mrr_status"/>
+            </xpath>
         </field>
     </record>
 
@@ -47,6 +50,10 @@
             </xpath>
             <xpath expr="//sheet/group/group/field[@name='backorder_id']" position="after">
                 <field name="approval_comment" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='picking_type_id']" position="after">
+                <field name="mrr_status"/>
             </xpath>
         </field>
     </record>

@@ -8,6 +8,14 @@ from odoo.tools import frozendict
 class Picking(models.Model):
     _inherit = "stock.picking"
 
+    mrr_status = fields.Selection([
+        ('mrr_pending', 'MRR Pending'),
+        ('waiting_bills', 'Waiting Bills'),
+        ('partial_billed', 'Partially Billed'),
+        ('full_billed', 'Full Billed'),
+        ('cancel', 'Cancel')
+    ], string='MRR Status', store=True, readonly=True, default='mrr_pending')
+
     check_mrr_button = fields.Boolean(default=False,string='MRR Button Check')
     check_approve_button = fields.Boolean(default=False,string='Approve Button Check',compute='_compute_approve_button',store=True)
     check_ac_approve_button = fields.Boolean(default=False,string='AC Button Check',compute='_compute_approve_button',store=True)
