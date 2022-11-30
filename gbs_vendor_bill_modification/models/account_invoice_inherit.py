@@ -20,9 +20,9 @@ class AccountInvoiceInherit(models.Model):
             if total_po < invoice_len and total_po != 0:
                 raise UserError(
                     _('You cannot do this operation! \nYou cannot do Purchase Order, Service Order or Cnf Quotation bill together!'))
-        else:
-            raise UserError(
-                _('Invoice lines cannot be empty!'))
+        # else:
+        #     raise UserError(
+        #         _('Invoice lines cannot be empty!'))
 
         order_id = self.env.context.get('purchase_order')
         type = self.env.context.get('invoice_type')
@@ -78,46 +78,45 @@ class AccountInvoiceInherit(models.Model):
     def write(self, values):
         order_id = self.env.context.get('purchase_order')
         purchase_order_obj = self.env['purchase.order'].browse(order_id)
-        for rec in self:
-            if rec.invoice_line_ids and rec.type == 'in_invoice':
-                if not purchase_order_obj.cnf_quotation and not purchase_order_obj.is_service_order:
-                    if 'pickings' in values:
-                        after_edit_selected_pickings = values['pickings'][0][2]
-                        before_edit_selected_pickings = rec.pickings.ids
-                        removed_pickings = list(set(before_edit_selected_pickings).difference(after_edit_selected_pickings))
+        if self.invoice_line_ids and self.type == 'in_invoice':
+            if not purchase_order_obj.cnf_quotation and not purchase_order_obj.is_service_order:
+                if 'pickings' in values:
+                    after_edit_selected_pickings = values['pickings'][0][2]
+                    before_edit_selected_pickings = self.pickings.ids
+                    removed_pickings = list(set(before_edit_selected_pickings).difference(after_edit_selected_pickings))
 
-                        if removed_pickings:
-                            raise UserError(
-                                _('You cannot remove or add mrr in edit mode!\n Special note : You need to cancel this bill, then create a fresh bill by selecting MRRs'))
+                    if removed_pickings:
+                        raise UserError(
+                            _('You cannot remove or add mrr in edit mode!\n Special note : You need to cancel this bill, then create a fresh bill by selecting MRRs'))
 
-                    if 'invoice_line_ids' in values:
-                        for line in values['invoice_line_ids']:
-                            invoice_line_obj = self.env['account.invoice.line'].browse(line[1])
-                            if line[2]:
-                                if invoice_line_obj and 'quantity' in line[2] and line[2]['quantity'] != invoice_line_obj.quantity:
-                                    picking_len = len(self.pickings)
-                                    if picking_len != 1:
-                                        raise UserError(
-                                            _('You have to select only one MRR when editing the quantity!\n Special note : If you cannot keep one MRR selected then you need to cancel this bill, then create a fresh bill by selecting MRRs'))
-                                    if float("{:.4f}".format(invoice_line_obj.quantity)) < float(
-                                            "{:.4f}".format(line[2]['quantity'])):
-                                        raise UserError(_('You cannot edit increase previous quantity'))
-                                    diff_qty = float("{:.4f}".format(invoice_line_obj.quantity - line[2]['quantity']))
+                if 'invoice_line_ids' in values:
+                    for line in values['invoice_line_ids']:
+                        invoice_line_obj = self.env['account.invoice.line'].browse(line[1])
+                        if line[2]:
+                            if invoice_line_obj and 'quantity' in line[2] and line[2]['quantity'] != invoice_line_obj.quantity:
+                                picking_len = len(self.pickings)
+                                if picking_len != 1:
+                                    raise UserError(
+                                        _('You have to select only one MRR when editing the quantity!\n Special note : If you cannot keep one MRR selected then you need to cancel this bill, then create a fresh bill by selecting MRRs'))
+                                if float("{:.4f}".format(invoice_line_obj.quantity)) < float(
+                                        "{:.4f}".format(line[2]['quantity'])):
+                                    raise UserError(_('You cannot edit increase previous quantity'))
+                                diff_qty = float("{:.4f}".format(invoice_line_obj.quantity - line[2]['quantity']))
 
-                                    move_refs = invoice_line_obj.move_ref.split(',')
-                                    used = 0
-                                    for mr in move_refs:
-                                        x = mr.split(':')
-                                        move_id = x[0][1:]
-                                        used_qty = x[1][:-1]
-                                        qty = float(used_qty)
-                                        if diff_qty <= float(used_qty) and used == 0:
-                                            qty = float(used_qty) - float("{:.4f}".format(line[2]['quantity']))
-                                            used = used + 1
-                                        stock_move = self.env['stock.move'].browse(int(move_id))
-                                        stock_move.sudo().write(
-                                            {'available_qty': stock_move.available_qty + qty})
-                                        stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
+                                move_refs = invoice_line_obj.move_ref.split(',')
+                                used = 0
+                                for mr in move_refs:
+                                    x = mr.split(':')
+                                    move_id = x[0][1:]
+                                    used_qty = x[1][:-1]
+                                    qty = float(used_qty)
+                                    if diff_qty <= float(used_qty) and used == 0:
+                                        qty = float(used_qty) - float("{:.4f}".format(line[2]['quantity']))
+                                        used = used + 1
+                                    stock_move = self.env['stock.move'].browse(int(move_id))
+                                    stock_move.sudo().write(
+                                        {'available_qty': stock_move.available_qty + qty})
+                                    stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
 
         res = super(AccountInvoiceInherit, self).write(values)
         return res
