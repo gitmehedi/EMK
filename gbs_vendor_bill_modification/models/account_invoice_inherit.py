@@ -19,7 +19,7 @@ class AccountInvoiceInherit(models.Model):
             invoice_len = len(vals['invoice_line_ids'])
             if total_po < invoice_len and total_po != 0:
                 raise UserError(
-                    _('You cannot do this operation!'))
+                    _('You cannot do this operation! \nYou cannot do Purchase Order, Service Order or Cnf Quotation bill together!'))
         else:
             raise UserError(
                 _('Invoice lines cannot be empty!'))
