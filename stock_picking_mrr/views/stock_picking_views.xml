@@ -11,7 +11,7 @@
                 <field name="mrr_no"/>
             </xpath>
             <xpath expr="/tree/field[@name='state']" position="after">
-                <field name="mrr_status"/>
+                <field name="mrr_status" attrs="{'invisible': [('location_dest_id.name','!=','Stock')]}"/>
             </xpath>
         </field>
     </record>

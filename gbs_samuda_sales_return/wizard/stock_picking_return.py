@@ -213,6 +213,7 @@ class ReturnPicking(models.TransientModel):
             move_of_reverse_cogs = move.copy(default={'ref': ref, 'date': self.return_date})
             for aml in move_of_reverse_cogs.line_ids:
                 aml.date = self.return_date
+                aml.date_maturity = self.return_date
                 if aml.debit > 0:
                     aml.name = name
                     aml.debit = 0
