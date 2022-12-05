@@ -773,7 +773,7 @@ class LcRegisterXLSX(ReportXlsx):
                 where lc.shipment_date < CURRENT_DATE  
                 and spl.product_qty-(select SUM(sol.qty_delivered) as qty_delivered 
                  from sale_order as so LEFT JOIN sale_order_line as sol ON so.id = sol.order_id 
-                     where so.lc_id=lc.id) > 0 %s group by ps.id
+                     where so.lc_id=lc.id) > 0 and ps.state != 'cancel' %s group by ps.id
                             ''' % where_so
         else:
             query = '''
