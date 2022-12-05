@@ -8,9 +8,11 @@
     'version': '10.0.0.1',
     'depends': [
         'stock',
+        'gbs_account',
         'sale_stock'
     ],
     'data': [
+        'wizard/inherited_account_invoice_view.xml',
         'wizard/stock_picking_return_views.xml',
         'wizard/inherited_stock_picking_return_view.xml',
         'wizard/success_wizard.xml'

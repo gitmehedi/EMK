@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_invoice_form_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.form.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="attributes">
+                    <attribute name="string">Shortfall Invoice(Refund)</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

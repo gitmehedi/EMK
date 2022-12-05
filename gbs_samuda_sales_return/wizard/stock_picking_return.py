@@ -52,7 +52,7 @@ class ReturnPicking(models.TransientModel):
                     "Return Date must be lesser than current date")
 
     return_date = fields.Date(string='Return Date', default=datetime.today())
-    return_reason = fields.Char(string='Return Reason', size=50)
+    return_reason = fields.Char(string='Return Reason', size=16)
 
     @api.constrains('product_return_moves')
     def _check_quantity(self):
@@ -252,7 +252,8 @@ class ReturnPicking(models.TransientModel):
             'lc_id': main_invoice.lc_id.id or False,
             'payment_term_id': main_invoice.payment_term_id.id or False,
             'origin': main_invoice.number,
-            'refund_invoice_id': main_invoice.id
+            'refund_invoice_id': main_invoice.id,
+            'from_return': True
         }
         invoice_obj = self.env['account.invoice'].create(refund_obj)
 
@@ -263,6 +264,7 @@ class ReturnPicking(models.TransientModel):
                     qty = rtns.quantity
 
             main_invoice_price_unit = self.get_main_invoice_price_unit(main_invoice.id, move.product_id.id)
+            self.update_main_invoice_product_qty(main_invoice.id, move.product_id.id, qty)
             invoice_line = {
                 'product_id': move.product_id.id,
                 'name': move.product_id.name,
@@ -290,6 +292,15 @@ class ReturnPicking(models.TransientModel):
         invoice_line = self.env['account.invoice.line'].sudo().search(
             [('invoice_id', '=', main_invoice_id), ('product_id', '=', pro_id)], limit=1)
         return invoice_line.price_unit
+
+    def update_main_invoice_product_qty(self, main_invoice_id, pro_id, return_qty):
+        invoice_line = self.env['account.invoice.line'].sudo().search(
+            [('invoice_id', '=', main_invoice_id), ('product_id', '=', pro_id)], limit=1)
+        total_refund_qty = 0.0
+        if invoice_line.auto_refunded_qty:
+            total_refund_qty = total_refund_qty + invoice_line.auto_refunded_qty
+        invoice_line.write(
+            {'quantity': invoice_line.quantity + return_qty, 'auto_refunded_qty': total_refund_qty + return_qty})
 
     def _get_outstanding_info(self, invoice_obj, main_invoice_move):
 
