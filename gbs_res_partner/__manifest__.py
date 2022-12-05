@@ -9,6 +9,7 @@
         'mail',
         'account',
         'purchase',
+        'contacts'
     ],
     "data": [
         'views/inherited_res_partner_view.xml',
