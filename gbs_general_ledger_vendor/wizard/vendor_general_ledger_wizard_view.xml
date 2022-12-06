@@ -35,7 +35,7 @@
             name="General Ledger (Vendor)"
             res_model="vendor.general.ledger.wizard"
             src_model="res.partner"
-            groups="account.group_account_user"
+            groups="account.group_account_user,purchase.group_purchase_user"
             view_mode="form" target="new" view_type="form" />
 
     </data>
