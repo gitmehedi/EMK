@@ -43,24 +43,3 @@ class InheritedAccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     auto_refunded_qty = fields.Float(default=0.0)
-
-    # @api.onchange('account_id')
-    # def _onchange_account_id(self):
-    #     invoice_id = self._origin.invoice_id.id
-    #     if not invoice_id:
-    #         raise UserError(
-    #             _("You cannot change GL! Contact Administrator!"))
-    #
-    #     if not isinstance(invoice_id, int):
-    #         raise UserError(
-    #             _("You cannot change GL! Contact Administrator!"))
-    #
-    #     print('self.account', self.account_id)
-    #     invoice_obj = self.env['account.invoice'].browse(invoice_id)
-    #
-    #     #invoice_obj.sudo().write({'from_return': True})
-    #
-    #     return super(InheritedAccountInvoiceLine, self)._onchange_account_id()
-
-
-
