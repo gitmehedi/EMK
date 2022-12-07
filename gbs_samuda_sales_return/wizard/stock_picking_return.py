@@ -373,17 +373,18 @@ class ReturnPicking(models.TransientModel):
             if not picking.invoice_ids:
                 raise UserError(_("Invoice not found for this DC!"))
             else:
-                for inv in picking.invoice_ids:
-                    if inv.state == 'draft':
+                invoice_obj = self.env['account.invoice'].sudo().search([('picking_ids', 'in', picking.id)])
+                if invoice_obj.state != 'open':
+                    if invoice_obj.state == 'draft':
                         raise UserError(_("You need to validate the invoice. Invoice needs to be in open state!"))
-                    elif inv.state == 'paid':
+                    elif invoice_obj.state == 'paid':
                         raise UserError(_("Invoice is already paid\n You need to unreconcile the invoice first!"))
-                    elif inv.state == 'open':
-                        return_operation = self.do_operation(rec, picking, return_moves, self.product_return_moves, inv)
-                        if return_operation:
-                            return_success = return_success + 1
                     else:
                         raise UserError(_("Invoice needs to be in open state!"))
+                return_operation = self.do_operation(rec, picking, return_moves, self.product_return_moves, invoice_obj)
+                if return_operation:
+                    return_success = return_success + 1
+
         if return_success > 0:
             message_id = self.env['return.success.wizard'].create({'message': _(
                 "Return Operation Successful!\nReverse COGS Entry Created Successfully.")
