@@ -749,7 +749,7 @@ class LcRegisterXLSX(ReportXlsx):
                 LEFT JOIN product_pricelist as ppl on ppl.id = so.pricelist_id
                 LEFT JOIN res_currency as rc on rc.id = ppl.currency_id
                 where lc.shipment_date < CURRENT_DATE and sol.product_uom_qty-sol.qty_delivered > 0
-                and sot.sale_order_type='lc_sales' and sol.qty_delivered > 0 %s 
+                and sot.sale_order_type='lc_sales' %s 
                 group by so.id,party_name,executive_name,product_name,so.region_type, so.name,pi.name,rc.name,lc.name,lc.shipment_date,lc.expiry_date,lc.issue_date,
                 lc.lc_value,lc.region_type
                             ''' % where_so
