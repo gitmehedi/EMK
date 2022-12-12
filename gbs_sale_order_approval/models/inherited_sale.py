@@ -191,7 +191,9 @@ class SaleOrder(models.Model):
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         res = super(SaleOrder, self).action_invoice_create()
-        self.invoice_ids.write({'is_commission_generated': False})
+        for rec in self.invoice_ids:
+            rec.write({'is_commission_generated': False})
+        #self.invoice_ids.write({'is_commission_generated': False})
         return res
 
     @api.depends('order_line.da_qty')

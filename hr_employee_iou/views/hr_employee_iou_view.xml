@@ -61,5 +61,10 @@
 
         <menuitem id="hr_emp_iou_menu_item" name="Employee IOU" parent="hr_emp_iou" action="action_hr_employee_iou" groups="gbs_hr_security.group_payroll_user"/>
 
+		<record id="hr_employee_iou.hr_emp_iou" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6,0,[ref('gbs_application_group.make_invisible')])]"/>
+        </record>
+
+
 	</data>
 </odoo>

@@ -17,7 +17,7 @@ class ResPartner(models.Model):
 
     name = fields.Char(index=True, track_visibility='onchange')
 
-    customer = fields.Boolean(string='Is a Customer', default=True, track_visibility='onchange',
+    customer = fields.Boolean(string='Is a Customer', default=False, track_visibility='onchange',
                                help="Check this box if this contact is a customer.")
     supplier = fields.Boolean(string='Is a Vendor',track_visibility='onchange',
                                help="Check this box if this contact is a vendor. "

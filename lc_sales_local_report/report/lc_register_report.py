@@ -131,11 +131,11 @@ class LcRegisterXLSX(ReportXlsx):
                 shipment_id = data['shipment_id'] if 'shipment_id' in data else ''
                 so_name = data['so_name'] if 'so_name' in data else ''
                 delivery_details_date_of_trans = self.get_delivery_detail(lc_id, shipment_id, so_name)
-                lc_qty = self.get_lc_qty(lc_id)
-
+                # lc_qty = self.get_lc_qty(lc_id)
+                lc_qty = data['product_qty'] if 'product_qty' in data else 0
                 region_type = data['region_type'] if 'region_type' in data else ''
 
-                if lc_qty and delivered_qty:
+                if lc_qty:
                     undelivered_qty = lc_qty - delivered_qty
                 else:
                     undelivered_qty = 0
@@ -156,7 +156,7 @@ class LcRegisterXLSX(ReportXlsx):
                             name_border_format_colored_text_right)
                 sheet.write(row, 8, lc_qty, name_border_format_colored_text_right)
                 footer_lc_quantity += float(lc_qty)
-                sheet.write(row, 9, data['lc_amount'] if 'lc_amount' in data else '', name_border_format_colored_text_right)
+                sheet.write(row, 9, data['lc_amount'] if 'lc_amount' in data else '0', name_border_format_colored_text_right)
                 footer_lc_amount += float(data['lc_amount'] if 'lc_amount' in data else 0)
                 sheet.write(row, 10, data['currency'] if 'currency' in data else '', name_border_format_colored)
                 sheet.write(row, 11, str(delivered_qty) if lc_id != '' else data['qty_delivery'], name_border_format_colored_text_right)
@@ -298,7 +298,7 @@ class LcRegisterXLSX(ReportXlsx):
                 sheet.write(row, 44, data['bill_id_no'] if 'bill_id_no' in data else '', name_border_format_colored)
 
 
-                # shipment not create line
+                #shipment not create line
                 if un_shipment_qty > 0 and delivered_qty > 0 and data['lc_number'] not in lc_list and str(obj.filter_by) == 'goods_delivered_doc_not_prepared':
                     lc_list.append(data['lc_number'])
 
@@ -432,7 +432,7 @@ class LcRegisterXLSX(ReportXlsx):
 
         # footer
         row += 1
-        for n in range(0, 44):
+        for n in range(0, 45):
             if n in (0, 8, 9, 11, 13, 14, 15, 16, 26, 27, 30, 33, 34, 36, 37, 38):
                 if n == 0:
                     sheet.write(row, n, 'Total ', name_border_format_colored_bold)
@@ -533,7 +533,6 @@ class LcRegisterXLSX(ReportXlsx):
                 date_done = ReportUtility.get_date_from_string(str(date_done_uniformat))
         return lc_delivery_details_str, str(date_done)
 
-
     def get_lc_qty(self, lc_id):
         if lc_id:
             query = """
@@ -543,7 +542,6 @@ class LcRegisterXLSX(ReportXlsx):
             query_res = self.env.cr.dictfetchall()
 
             lc_qty = 0
-            a = query_res[0]['lc_qty']
             if query_res[0]['lc_qty'] is not None:
                 lc_qty = query_res[0]['lc_qty']
             return lc_qty
@@ -621,13 +619,13 @@ class LcRegisterXLSX(ReportXlsx):
         city_zip_country = docs[0].company_id.city + "-" + docs[0].company_id.zip + ", " + docs[
             0].company_id.country_id.name
 
-        sheet.merge_range('A1:AR1', company_id.name, title_format_center)
-        sheet.merge_range('A2:AR2', street, sub_title_format_center)
-        sheet.merge_range('A3:AR3', street2, sub_title_format_center)
-        sheet.merge_range('A4:AR4', city_zip_country, sub_title_format_center)
-        sheet.merge_range('A5:AR5', "LC Register", subject_format_center)
-        sheet.merge_range('A6:AR6', "Filter By: " + filter_by_text, header_format_left)
-        sheet.merge_range('A7:AR7', "Type: " + type_text, header_format_left)
+        sheet.merge_range('A1:AS1', company_id.name, title_format_center)
+        sheet.merge_range('A2:AS2', street, sub_title_format_center)
+        sheet.merge_range('A3:AS3', street2, sub_title_format_center)
+        sheet.merge_range('A4:AS4', city_zip_country, sub_title_format_center)
+        sheet.merge_range('A5:AS5', "LC Register", subject_format_center)
+        sheet.merge_range('A6:AS6', "Filter By: " + filter_by_text, header_format_left)
+        sheet.merge_range('A7:AS7', "Type: " + type_text, header_format_left)
 
     def generate_xlsx_report(self, workbook, data, obj):
 
@@ -660,40 +658,36 @@ class LcRegisterXLSX(ReportXlsx):
         sheet.set_column(20, 20, 20)
 
         # FORMAT
-
         footer_border_format_left = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'bold': True, 'size': 10})
         footer_border_format_left.set_font_name('Times New Roman')
-
         sub_header_format_left = workbook.add_format(
             {'num_format': '#,###0.00', 'align': 'left', 'bg_color': '#81d41a', 'bold': False, 'size': 10, 'border': 1,
              'text_wrap': True})
         sub_header_format_left.set_font_name('Times New Roman')
 
-        lc_static_issue_date = '01/01/2022'
+        shipment_write_date = '01/10/2022'
         where = ''
         filter_by_text = ''
         if filter_by == 'goods_delivered_doc_not_prepared':
             filter_by_text = 'Goods Delivered but doc. not prepared'
             where += "where ps.doc_preparation_date is null and (ps.state = 'receive_doc' or ps.state = 'draft' ) and sol.qty_delivered > 0 "
-
         elif filter_by == 'first_acceptance':
             filter_by_text = '1st Acceptance'
-            where += "where CURRENT_DATE-(Date(ps.to_first_acceptance_date)) > " + acceptance_default_value + " and ps.to_seller_bank_date is null "
-
+            where += "where CURRENT_DATE-(Date(ps.to_buyer_date)) > " + acceptance_default_value + " and ps.to_first_acceptance_date is null "
         elif filter_by == 'second_acceptance':
             filter_by_text = "2nd Acceptance"
             where += "where CURRENT_DATE - (Date(ps.to_seller_bank_date)) > " + acceptance_default_value + " and ps.to_maturity_date is null "
-
         elif filter_by == 'maturated_but_amount_not_collect':
             filter_by_text = 'Matured but Amount not collected'
             where += "where ps.payment_rec_date is null and ps.to_maturity_date is not null "
         elif filter_by == 'percentage_of_first_acceptance_collection':
             filter_by_text = 'Percentage of First Acceptance Collection'
-            where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' and ps.to_first_acceptance_date is not null and ps.to_buyer_date is not null "
+            where += "where to_first_acceptance_date BETWEEN '" + obj.date_from + "' AND '" + obj.date_to + "' and ps.to_buyer_date is not null "
+            # where += "where ps.to_first_acceptance_date >= '" + obj.date_from + "' and ps.to_first_acceptance_date <= '" + obj.date_to + "' and ps.to_buyer_date is not null "
         elif filter_by == 'lc_history':
             filter_by_text = 'LC Shipment History'
-            where += "where lc.issue_date >= '" + obj.date_from + "' and lc.issue_date <= '" + obj.date_to + "' "
+            where += "where ps.shipment_done_date >= '" + obj.date_from + "' and ps.shipment_done_date <= '" + obj.date_to + "' "
 
         type_text = ''
         where_so = ''
@@ -714,15 +708,15 @@ class LcRegisterXLSX(ReportXlsx):
             filter_by_text = 'LC Number: ' + obj.lc_number.name
             where += " where lc.id ='" + str(obj.lc_number.id) + "'"
         else:
-            where += " and lc.issue_date >='" + lc_static_issue_date + "' "
+            where += " and ps.write_date >='" + shipment_write_date + "' "
 
         if filter_by == 'goods_delivered_but_lc_not_received':
             filter_by_text = 'Goods Delivered but LC not received'
-
             query = '''
                 select so.id,rp.name as party_name, rp2.name as executive_name, sol.name as product_name, 
                 so.region_type as region_type, so.name as so_name, 
-                pi.name as pi_name,rc.name as currency, sol.qty_delivered as qty_delivery,sol.product_uom_qty-sol.qty_delivered as undelivered_qty
+                pi.name as pi_name,rc.name as currency, SUM(sol.qty_delivered) as qty_delivery,
+                SUM(sol.product_uom_qty)-SUM(sol.qty_delivered) as undelivered_qty
                 from sale_order as so 
                 LEFT JOIN sale_order_type as sot on so.type_id = sot.id 
                 LEFT JOIN sale_order_line as sol on so.id = sol.order_id
@@ -733,28 +727,51 @@ class LcRegisterXLSX(ReportXlsx):
                 LEFT JOIN product_pricelist as ppl on ppl.id = so.pricelist_id
                 LEFT JOIN res_currency as rc on rc.id = ppl.currency_id
                 where so.lc_id is null
-                and sot.sale_order_type='lc_sales' and sol.qty_delivered > 0 %s
+                and sot.sale_order_type='lc_sales' and sol.qty_delivered > 0 %s 
+                group by so.id,party_name,executive_name,product_name,so.region_type,so_name,pi_name,currency
             ''' % where_so
-            self.env.cr.execute(query)
-            datas_excel = self.env.cr.dictfetchall()
+        elif filter_by == 'shipment_date_expired_but_goods_undelivered':
+            filter_by_text = 'Shipment date expired but goods undelivered'
+            query = '''
+                select so.id,rp.name as party_name, rp2.name as executive_name, sol.name as product_name, 
+                so.region_type as region_type, so.name as so_name, lc.name as lc_number,
+                pi.name as pi_name,rc.name as currency,SUM(sol.product_uom_qty) as product_qty, SUM(sol.qty_delivered) as qty_delivery,
+                SUM(sol.product_uom_qty)-SUM(sol.qty_delivered) as undelivered_qty,lc.shipment_date as shipment_date, lc.expiry_date as expiry_date, 
+                lc.issue_date as lc_date,coalesce(lc.lc_value,0) as lc_amount,lc.region_type as region_type
+                from sale_order as so
+                LEFT JOIN letter_credit as lc ON lc.id = so.lc_id
+                LEFT JOIN sale_order_type as sot on so.type_id = sot.id 
+                LEFT JOIN sale_order_line as sol on so.id = sol.order_id
+                LEFT JOIN res_partner as rp on rp.id = so.partner_id
+                LEFT JOIN res_users as ru on ru.id = rp.user_id
+                LEFT JOIN proforma_invoice as pi on pi.id = so.pi_id
+                LEFT JOIN res_partner as rp2 on rp2.id = ru.partner_id
+                LEFT JOIN product_pricelist as ppl on ppl.id = so.pricelist_id
+                LEFT JOIN res_currency as rc on rc.id = ppl.currency_id
+                where lc.shipment_date < CURRENT_DATE and sol.product_uom_qty-sol.qty_delivered > 0
+                and sot.sale_order_type='lc_sales' %s 
+                group by so.id,party_name,executive_name,product_name,so.region_type, so.name,pi.name,rc.name,lc.name,lc.shipment_date,lc.expiry_date,lc.issue_date,
+                lc.lc_value,lc.region_type
+                            ''' % where_so
         else:
             query = '''
-                    SELECT distinct on (ps.id) ps.id as shipment_id, rp.name as party_name,rp2.name as executive_name,lpl.name as product_name, lc.name as lc_number, 
-                    ps.name as shipment_no, coalesce(spl.product_qty,0) as shipment_qty, coalesce(ps.invoice_value,0) as shipment_amount, lc.tenure as tenure,
-                    ps.bl_date as doc_dispatch_to_party_date_foreign,coalesce((CURRENT_DATE-ps.bl_date),0) as aging_first_acceptance_days_foreign,
-                    date(ps.to_first_acceptance_date + INTERVAL '7 day') as to_buyer_bank_date_foreign,
-                    ps.to_buyer_bank_date as to_buyer_bank_date,ps.to_seller_bank_date as to_seller_bank_date,
-                    coalesce((CURRENT_DATE-ps.to_seller_bank_date),0) as aging_2nd_acceptance_days, 
-                    rc.name as currency, 
-                    lc.id as lc_id, lc.shipment_date as shipment_date, lc.expiry_date as expiry_date, ps.doc_preparation_date as doc_preparation_date,
-                    lc.issue_date as lc_date,coalesce(lc.lc_value,0) as lc_amount,lc.region_type as region_type,
-                    ps.to_buyer_date as doc_dispatch_to_party_date, ps.to_first_acceptance_date as first_acceptance_doc_submission_date,
-                    coalesce((CURRENT_DATE-ps.to_buyer_date),0) as aging_first_acceptance_days,ps.to_maturity_date as maturity_date, 
-                    ps.shipment_done_date as shipment_done_date, 
-                    coalesce(ps.discrepancy_amount,0) as discrepancy_amount, coalesce(ps.ait_amount,0) as ait_amount, ps.payment_rec_date, coalesce(ps.payment_rec_amount,0) as payment_rec_amount, coalesce(ps.payment_charge,0) as payment_charge, 
-                    ps.comment as comment, lc.second_party_bank as second_party_bank, rb.bic as samuda_bank_name,
-                    pu.name as packing_type, ps.bill_id as bill_id_no, coalesce(lpl.product_received_qty,0) as document_qty,
-                    coalesce((ps.to_first_acceptance_date-ps.to_buyer_date),0) as percentage_of_first_acceptance
+                    SELECT distinct ps.id, MAX(rp.name) as party_name,MAX(rp2.name) as executive_name,MAX(lpl.name) as product_name, MAX(lc.name) as lc_number, 
+                    MAX(ps.name) as shipment_no, SUM(coalesce(spl.product_qty,0)) as shipment_qty, SUM(coalesce(ps.invoice_value,0)) as shipment_amount, MAX(lc.tenure) as tenure,
+                    MAX(ps.bl_date) as doc_dispatch_to_party_date_foreign,MAX(coalesce((CURRENT_DATE-ps.bl_date),0)) as aging_first_acceptance_days_foreign,
+                    MAX(date(ps.to_first_acceptance_date + INTERVAL '7 day')) as to_buyer_bank_date_foreign,
+                    MAX(ps.to_buyer_bank_date) as to_buyer_bank_date,MAX(ps.to_seller_bank_date) as to_seller_bank_date,
+                    MAX(coalesce((CURRENT_DATE-ps.to_seller_bank_date),0)) as aging_2nd_acceptance_days, 
+                    MAX(rc.name) as currency, 
+                    MAX(lc.id) as lc_id, MAX(lc.shipment_date) as shipment_date, MAX(lc.expiry_date) as expiry_date, MAX(ps.doc_preparation_date) as doc_preparation_date,
+                    MAX(lc.issue_date) as lc_date,MAX(coalesce(lc.lc_value,0)) as lc_amount,MAX(lc.region_type) as region_type,
+                    MAX(ps.to_buyer_date) as doc_dispatch_to_party_date, MAX(ps.to_first_acceptance_date) as first_acceptance_doc_submission_date,
+                    MAX(coalesce((CURRENT_DATE-ps.to_buyer_date),0)) as aging_first_acceptance_days,MAX(ps.to_maturity_date) as maturity_date, 
+                    MAX(ps.shipment_done_date) as shipment_done_date, 
+                    MAX(coalesce(ps.discrepancy_amount,0)) as discrepancy_amount, MAX(coalesce(ps.ait_amount,0)) as ait_amount, MAX(ps.payment_rec_date) as payment_rec_date, MAX(coalesce(ps.payment_rec_amount,0)) as payment_rec_amount, MAX(coalesce(ps.payment_charge,0)) as payment_charge, 
+                    MAX(ps.comment) as comment, MAX(lc.second_party_bank) as second_party_bank, MAX(rb.bic) as samuda_bank_name,
+                    MAX(pu.name) as packing_type, MAX(ps.bill_id) as bill_id_no, MAX(coalesce(lpl.product_received_qty,0)) as document_qty,
+                    SUM(coalesce(lpl.product_qty,0)) as product_qty,
+                    MAX(coalesce((CURRENT_DATE-ps.to_buyer_date),0)) as percentage_of_first_acceptance
                     FROM purchase_shipment AS ps 
                     LEFT JOIN letter_credit AS lc ON ps.lc_id = lc.id
                     LEFT JOIN res_partner AS rp ON rp.id = lc.second_party_applicant
@@ -769,9 +786,9 @@ class LcRegisterXLSX(ReportXlsx):
                     LEFT JOIN pi_lc_rel as plr ON plr.lc_id = lc.id
                     LEFT JOIN sale_order as so ON so.pi_id = plr.pi_id
                     LEFT JOIN sale_order_line as sol ON sol.order_id = so.id
-                    ''' + where + ''' '''
-            self.env.cr.execute(query)
-            datas_excel = self.env.cr.dictfetchall()
+                    ''' + where + ''' group by ps.id '''
+        self.env.cr.execute(query)
+        datas_excel = self.env.cr.dictfetchall()
 
         # SHEET HEADER
         self.get_sheet_header(sheet, docs, workbook, filter_by_text, type_text)

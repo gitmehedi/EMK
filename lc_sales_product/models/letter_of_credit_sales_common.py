@@ -48,13 +48,22 @@ class LetterOfCreditCommon(models.Model):
                 self.lc_value += pi_id.total
                 self.operating_unit_id = pi_id.operating_unit_id.id
                 self.first_party_bank_acc = pi_id.advising_bank_acc_id
+
+            product_received_qty = 0
+            if pi_id.lc_id:
+                for product_line in pi_id.lc_id.product_lines:
+                    if so_id.id == product_line.sale_order_id.id:
+                        product_received_qty += product_line.product_received_qty
+
             for obj in pi_id.line_ids:
                 vals.append((0, 0, {'product_id': obj.product_id,
                                     'name': obj.product_id.name,
                                     'product_qty': obj.quantity,
                                     'price_unit': obj.price_unit,
                                     'currency_id': pi_id.currency_id,
-                                    'product_uom': obj.uom_id
+                                    'product_uom': obj.uom_id,
+                                    'sale_order_id': so_id.id,
+                                    'product_received_qty': product_received_qty
                                     }))
         self.product_lines = vals
 

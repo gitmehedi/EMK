@@ -13,7 +13,7 @@
                 </group>
                 <footer>
                     <button name="save" string="Save" type="object" class="btn-primary"/>
-                    <button string="close" class="btn-default" special="cancel" />
+                    <button string="Close" class="btn-default" special="cancel" />
                 </footer>
             </form>
         </field>

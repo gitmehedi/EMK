@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_manual_invoice" model="ir.actions.act_window">
+            <field name="name">Manual Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                    (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('account.invoice_tree')}),
+                    (0, 0, {'sequence': 1002, 'view_mode': 'form', 'view_id': ref('account.invoice_form')}),
+                ]"/>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="domain">[('type','=','out_invoice'),('manual_invoice','=',True)]</field>
+            <field name="context">{'type':'out_invoice', 'journal_type': 'sale','default_manual_invoice':True,'create_edit_button':True}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a manual invoice.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem action="action_manual_invoice" id="menu_action_manual_invoice"
+                  parent="account.menu_finance_receivables" sequence="2"/>
+
+    </data>
+</odoo>

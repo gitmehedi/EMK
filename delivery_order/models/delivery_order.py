@@ -57,6 +57,7 @@ class DeliveryOrder(models.Model):
     state = fields.Selection([
         ('draft', "Submit"),
         ('approved', "Approved"),
+        ('refused', "Refused")
     ], default='draft', track_visibility='onchange')
 
     company_id = fields.Many2one('res.company', string='Company', readonly=True,

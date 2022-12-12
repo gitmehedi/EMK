@@ -31,7 +31,7 @@ class LocalSecondAcceptanceReport(models.AbstractModel):
     @api.multi
     def render_html(self, docids, data=None):
 
-        state_condition = 'to_seller_bank','to_buyer_bank'
+        state_condition = 'to_seller_bank','to_buyer_bank','to_bill_id'
         acceptance_utility_pool = self.env['acceptance.report.utility']
         get_data = acceptance_utility_pool.get_report_data(data,state_condition)
         report_utility_pool = self.env['report.utility']
@@ -55,7 +55,9 @@ class AcceptanceReportsUtility(models.TransientModel):
     sql_in_tk = '''SELECT DISTINCT pt.id as template_id,
                                   lc.id as lc_id,
                                   ps.id as shipment_id,
+                                  ps.bill_id as bill_id,
                                   pt.name as product_name,
+                                  pt.id as product_id,
                                   ps.name as shipment_name,
                                   lc.unrevisioned_name as lc_name, 
                                   COALESCE((ps.invoice_value),0) as value,
@@ -87,42 +89,48 @@ class AcceptanceReportsUtility(models.TransientModel):
                               LEFT JOIN res_partner_bank bank_acc on lc.first_party_bank_acc = bank_acc.id
                               LEFT JOIN res_bank rb on bank_acc.bank_id = rb.id
                               LEFT JOIN res_currency rc on lc.currency_id = rc.id
-                           WHERE pt.id = %s AND lc.type = 'export' AND lc.region_type = 'local' AND ps.state in %s
-                           ORDER BY pt.id ASC'''
+                           WHERE pt.id in %s AND lc.type = 'export' AND lc.region_type = 'local' AND ps.state in %s
+                           ORDER BY aging DESC'''
 
     def get_report_data(self, data,state_condition):
-        acceptances = []
-        current_date =  fields.Date.context_today(self)
+        acceptances = {}
+        total_value = {}
+        current_date = fields.Date.context_today(self)
 
-        product_temp_id = data['product_temp_id']
+        product_temp_id = tuple(i for i in data['product_temp_id'])
 
-        total_value = {
-            'title': 'TOTAL VALUE',
-            'total_val': 0,
-        }
         self.env.cr.execute(self.sql_in_tk,(current_date, current_date, current_date, current_date, product_temp_id, state_condition))
-        for vals in self.env.cr.dictfetchall():
-            sale_person_list = []
-            picking_id_list = []
-            lc_obj = self.env['letter.credit'].search([('id','=',vals['lc_id'])])
-            so_ids = self.env['sale.order'].search([('lc_id', '=', lc_obj.id)])
-            for so_id in so_ids:
-                sale_person_list.append(so_id.user_id.sudo().name)
-                picking_id_list = picking_id_list + so_id.sudo().picking_ids.ids
-            sale_persons = ','.join(sale_person_list)
-            vals.update({'sale_persons': sale_persons, })
-            picking_ids = self.env['stock.picking'].sudo().search([('id','in',picking_id_list),('state','=','done')] , order='date_done asc')
-            first_delivery_date = False
-            last_delivery_date = False
-            if picking_ids:
-                first_delivery_date =picking_ids[0].date_done
-                last_delivery_date =picking_ids[-1].date_done
-            vals.update({'first_delivery_date': first_delivery_date, })
-            vals.update({'last_delivery_date': last_delivery_date, })
+        datas = self.env.cr.dictfetchall()
+        for product in data['product_temp_name']:
+            acceptance_lines = []
+            total_value_lines = []
+            footer_total_value = 0.0
+            for vals in datas:
+                if product == vals['product_name']:
+                    sale_person_list = []
+                    picking_id_list = []
+                    lc_obj = self.env['letter.credit'].search([('id','=',vals['lc_id'])])
+                    so_ids = self.env['sale.order'].search([('lc_id', '=', lc_obj.id)])
+                    for so_id in so_ids:
+                        sale_person_list.append(so_id.user_id.sudo().name)
+                        picking_id_list = picking_id_list + so_id.sudo().picking_ids.ids
+                    sale_persons = ''
+                    if so_id.user_id.sudo().name:
+                        sale_persons = ','.join(sale_person_list)
+                    vals.update({'sale_persons': sale_persons, })
+                    picking_ids = self.env['stock.picking'].sudo().search([('id','in',picking_id_list),('state','=','done')] , order='date_done asc')
+                    first_delivery_date = False
+                    last_delivery_date = False
+                    if picking_ids:
+                        first_delivery_date =picking_ids[0].date_done
+                        last_delivery_date =picking_ids[-1].date_done
+                    vals.update({'first_delivery_date': first_delivery_date, })
+                    vals.update({'last_delivery_date': last_delivery_date, })
 
-            total_value['total_val'] = total_value['total_val'] + vals['value']
-            vals['value'] = formatLang(self.env, vals['value']) if vals['value'] else None
-            acceptances.append(vals)
-
-        total_value['total_val'] = formatLang(self.env, total_value['total_val']) if total_value['total_val'] else None
+                    footer_total_value = footer_total_value + vals['value']
+                    vals['value'] = formatLang(self.env, vals['value']) if vals['value'] else None
+                    acceptance_lines.append(vals)
+            acceptances[product] = acceptance_lines
+            total_value_lines.append({'title': 'SUB TOTAL', 'total_val': footer_total_value})
+            total_value[product] = total_value_lines
         return {'acceptances': acceptances,'total': total_value}

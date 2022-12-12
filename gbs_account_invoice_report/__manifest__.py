@@ -14,6 +14,7 @@ The specific and easy-to-view report of account invoice.This is custom analytic 
     'depends' : ['account','sale', 'gbs_product', 'gbs_samuda_sales_access', 'gbs_procure_n_commercial_access'],
     'data': [
         'security/ir.model.access.csv',
+        'security/ir_cron.xml',
         'report/account_invoice_report_view.xml',
     ],
     'installable': True,

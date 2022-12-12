@@ -20,6 +20,7 @@
                                     <field name="product_uom" readonly='1'/>
                                      <field name="product_received_qty" readonly='1'/>
                                     <field name="price_unit" readonly='1'/>
+                                    <field name="price_unit" readonly='1'/>
 
                                 </tree>
 

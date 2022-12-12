@@ -47,36 +47,60 @@ class ShipmentCommon(models.Model):
 
     @api.multi
     def action_draft_local_sales(self):
-
         lc_state = self.lc_id.state
         if lc_state == 'done' or lc_state == 'cancel':
-            raise ValidationError(_("This LC already in "+ lc_state.capitalize()  +". Before 'Reset To Draft', Need to Active This LC"))
+            raise ValidationError(
+                _("This LC already in " + lc_state.capitalize() + ". Before 'Reset To Draft', Need to Active This LC"))
 
-        if self.shipment_product_lines:
-            for obj in self.shipment_product_lines:
-                lc_product_line = self.env['lc.product.line'].search([('lc_id', '=', self.lc_id.id),
-                                                                      ('product_id', '=', obj.product_id.id)])
+        index = 0
+        for obj in self.shipment_product_lines:
+            if self.state != 'cancel':
+                if obj.sale_order_id:
+                    lc_product_line = self.env['lc.product.line'].search([('sale_order_id', '=', obj.sale_order_id.id), ('lc_id', '=', self.lc_id.id)])
+                    if len(lc_product_line) == 1:
+                        lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty-obj.product_qty})
+                    else:
+                        for prod_line in lc_product_line:
+                            reset_qty = prod_line.product_received_qty - obj.product_qty
 
-                if len(lc_product_line) > 1:
-                    # raise ValidationError(("Unable to update due to multiple same product."))
-                    # break
-                    res_wizard_view = self.env.ref('lc_sales_product.reset_lc_wizard_view')
-                    res = {
-                        'name': _('Please Select LC Product to return document qty for reset'),
-                        'view_type': 'form',
-                        'view_mode': 'form',
-                        'view_id': res_wizard_view and res_wizard_view.id or False,
-                        'res_model': 'reset.lc.wizard',
-                        'type': 'ir.actions.act_window',
-                        'nodestroy': True,
-                        'target': 'new',
-                    }
-                    return res
+                            if reset_qty >= 0:
+                                prod_line.write({'product_received_qty': reset_qty})
+                            else:
+                                for p_line in lc_product_line:
+                                    reset_qty = p_line.product_received_qty - obj.product_qty
+                                    if reset_qty >= 0:
+                                        p_line.write({'product_received_qty': reset_qty})
+                    obj.unlink()
                 else:
-                    lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty-obj.product_qty})
+                    lc_product_line_list = self.env['lc.product.line'].search([('lc_id', '=', self.lc_id.id), ('product_id', '=', obj.product_id.id)])
+                    if len(lc_product_line_list) > 1:
+                        lc_product_line = lc_product_line_list[index]
+                        if lc_product_line.product_received_qty == 0 and lc_product_line.product_received_qty - obj.product_qty >= 0:
+                            for lc_prod_line in lc_product_line_list:
+                                if lc_prod_line.product_received_qty != 0:
+                                    lc_product_line = lc_prod_line
+                                    break
+                            lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty - obj.product_qty})
 
-            self.shipment_product_lines.unlink()
+                        elif lc_product_line.product_received_qty - obj.product_qty < 0:
+                            index = 0
+                            diff_qty = obj.product_qty - lc_product_line.product_received_qty
+                            for lc_prod_line in lc_product_line_list:
+                                if lc_prod_line.product_received_qty >= diff_qty:
+                                    lc_prod_line.write({'product_received_qty': lc_prod_line.product_received_qty - diff_qty})
+                                    break
+                                else:
+                                    if index != 0:
+                                        diff_qty = diff_qty - lc_prod_line.product_received_qty
+                                    lc_prod_line.write({'product_received_qty': 0})
+                                    index += 1
+                        else:
+                            lc_product_line.write({'product_received_qty': lc_product_line.product_received_qty - obj.product_qty})
+                    else:
+                        lc_product_line_list.write({'product_received_qty': lc_product_line_list.product_received_qty - obj.product_qty})
+                obj.unlink()
 
+        self.reset_shipment()
         self.sudo().update({'state': 'draft', 'invoice_ids': [(6, 0, [])], 'invoice_value': 0})
 
     @api.onchange('invoice_id')
@@ -84,6 +108,41 @@ class ShipmentCommon(models.Model):
         self.invoice_value = None
         if self.invoice_id:
             self.invoice_value = self.invoice_id.amount_total
+
+    def reset_shipment(self):
+        self.to_sales_date = False
+        self.to_buyer_date = False
+        self.to_first_acceptance_date = False
+        self.to_seller_bank_date = False
+        self.to_buyer_bank_date = False
+        self.bill_id = False
+        self.to_second_acceptance_date = False
+        self.to_maturity_date = False
+        self.shipment_done_date = False
+        self.ait_amount = False
+        self.payment_rec_date = False
+        self.payment_rec_amount = False
+        self.discrepancy_amount = False
+        self.payment_charge = False
+        self.invoice_value = False
+        self.doc_preparation_date = False
+        self.transport_by = False
+        self.vehical_no = False
+        self.freight = False
+        self.gross_weight = False
+        self.net_weight = False
+        self.count_qty = False
+        # self.count_uom = False
+        # self.weight_uom = False
+        self.bl_date = False
+        self.truck_receipt_no = False
+        self.truck_receipt_no = False
+        self.container_no = False
+        self.freight_Value = False
+        self.fob_value = False
+        self.invoice_number_dummy = False
+        self.invoice_date_dummy = False
+        self.comment = False
 
     @api.multi
     def purchase_shipment_m2o_to_m2m(self):

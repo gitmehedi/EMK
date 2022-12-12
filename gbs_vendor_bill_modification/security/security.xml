@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="group_vendor_invoice_editor" model="res.groups">
+            <field name="name">Vendor Invoice Editor</field>
+            <field name="category_id" ref="gbs_application_group.module_category_sale"/>
+        </record>
+
+    </data>
+</odoo>

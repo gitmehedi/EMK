@@ -43,5 +43,59 @@
             <field name="model">stock.picking</field>
             <field name="code">8</field>
         </record>
+        <record id="pi_confirm" model="users.action">
+            <field name="name">PI Confirm</field>
+            <field name="model">proforma.invoice</field>
+            <field name="code">9</field>
+        </record>
+
+        <record id="so_approval" model="users.action">
+            <field name="name">Sales Approval</field>
+            <field name="model">sale.order</field>
+            <field name="code">10</field>
+        </record>
+
+        <record id="so_accounts_approval" model="users.action">
+            <field name="name">Accounts Approval</field>
+            <field name="model">sale.order</field>
+            <field name="code">11</field>
+        </record>
+
+        <record id="so_cxo_approval" model="users.action">
+            <field name="name">CXO Approval</field>
+            <field name="model">sale.order</field>
+            <field name="code">12</field>
+        </record>
+
+        <record id="submit_to_so_approval" model="users.action">
+            <field name="name">Submit To SO Approval</field>
+            <field name="model">sale.order</field>
+            <field name="code">13</field>
+        </record>
+
+        <record id="da_confirm" model="users.action">
+            <field name="name">DA Confirm</field>
+            <field name="model">delivery.authorization</field>
+            <field name="code">14</field>
+        </record>
+
+        <record id="da_approve" model="users.action">
+            <field name="name">DA Second Approval</field>
+            <field name="model">delivery.authorization</field>
+            <field name="code">15</field>
+        </record>
+
+        <record id="delivery_schedules" model="users.action">
+            <field name="name">Delivery Schedules</field>
+            <field name="model">delivery.schedules</field>
+            <field name="code">16</field>
+        </record>
+
+        <record id="dc_validate" model="users.action">
+            <field name="name">DC Validate</field>
+            <field name="model">stock.date.transfer</field>
+            <field name="code">17</field>
+        </record>
+
     </data>
 </odoo>

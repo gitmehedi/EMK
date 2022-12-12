@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <!--<template id="head_local_second_acceptance_temp" inherit_id="report_layout.gbs_internal_layout" primary="True">-->
-        <!--<xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">-->
-            <!--<attribute name="t-call">lc_sales_local_report.external_local_second_acceptance_temp</attribute>-->
-        <!--</xpath>-->
-    <!--</template>-->
-    <!--<template id="external_local_second_acceptance_temp" inherit_id="report_layout.gbs_internal_layout_header" primary="True">-->
-        <!--<xpath expr="//div[@class='company-info']" position="after">-->
-            <!--<div name="company_address" style="margin-top: -25px;">-->
-                <!--<h5><span t-esc="address"/></h5>-->
-            <!--</div>-->
-        <!--</xpath>-->
-    <!--</template>-->
     <!-- Main template -->
     <template id="local_second_acceptance_temp">
         <t t-call="report.html_container">
@@ -23,12 +10,20 @@
                             .report-title { text-align:center; }
                             .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
                         </style>
+                        <h4 class="report-title">Second Acceptance Report</h4>
+                        <br/>
+
                         <div class="clearfix">
-                            <h4 class="report-title">Second Acceptance Report</h4>
-                            <br/>
+
                             <div class="row" style="padding-bottom:5px;">
                                 <div class="col-xs-6 text-left">
-                                    <strong>Product: </strong><span t-esc="record['product_temp_name']"/>
+                                    <strong>Product: </strong>
+                                    <t t-foreach="record['product_temp_name']" t-as="rec">
+                                        <span t-esc="rec"/>
+                                        <t t-if="rec_index &lt; len(record['product_temp_name'])-1">
+                                            <b>,</b>
+                                        </t>
+                                    </t>
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     <div><strong>Reported On: </strong><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y, %H:%M %p')"/></div>
@@ -50,6 +45,7 @@
                                     <th class="text-center" style="width:3%;">Aging</th>
                                     <th class="text-center" style="width:5.5%;">First Delivery</th>
                                     <th class="text-center" style="width:5.5%;">Last Delivery</th>
+                                    <th class="text-center" style="width:5.5%;">Bill ID</th>
                                     <th class="text-center" style="width:8%;">Remarks/Status</th>
                                     <th class="text-center" style="width:8%;">F.P.R</th>
                                     <th class="text-center" style="width:8%;">Bank</th>
@@ -57,87 +53,104 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <t t-if="lines">
-                                    <t t-foreach="lines" t-as="line">
+                                <t t-foreach="record['product_temp_name']" t-as="rec">
+                                    <t t-if="len(lines[rec])>0">
                                         <tr>
-                                            <td class="text-left">
-                                                <t t-esc="line_index+1"/>
-                                            </td>
-                                            <td class="text-left">
-                                                <span t-esc="line['customer']" />&amp;nbsp;
-                                                <t t-if="line['beneficiary_bank']">
-                                                    (<span t-esc="line['beneficiary_bank']"/>)
-                                                </t>
-                                            </td>
-                                            <td class="text-left">
-                                                <t t-esc="line['lc_name']"/>
-                                            </td>
-                                            <td class="text-left">
-                                                <t t-esc="line['shipment_name']"/>
-                                            </td>
-                                            <td>
-                                                <span t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span t-esc="line['value']"/>
-                                            </td>
-                                            <td class="text-left">
-                                                <t t-esc="line['tenor'][0:9]"/>
-                                            </td>
-                                            <td class="text-left">
-                                                <t t-if="line['seller_bank_date']">
-                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['seller_bank_date'],'%Y-%m-%d'))"/>
-                                                </t>
-                                            </td>
-                                            <td class="text-left">
-                                                <t t-if="line['buyer_bank_date']">
-                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['buyer_bank_date'],'%Y-%m-%d'))"/>
-                                                </t>
-
-                                            </td>
-                                            <td class="text-right">
-                                                <t t-esc="line['aging']"/>
-                                            </td>
-                                            <td class="text-left">
-                                                <t t-if="line['first_delivery_date']">
-                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['first_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
-                                                </t>
-                                            </td>
-                                            <td class="text-left">
-                                                <t t-if="line['last_delivery_date']">
-                                                    <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['last_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
-                                                </t>
-                                            </td>
-                                            <td class="text-left" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
-                                                <t t-esc="line['comment']" />
-                                            </td>
-                                            <td class="text-left">
-                                                <t t-esc="line['sale_persons']"/>
-                                            </td>
-                                            <td class="text-left">
-                                                <t t-esc="line['bank_code']"/>
-                                            </td>
-                                            <td class="text-left">
-                                                <t t-esc="line['bank_branch']"/>
+                                            <td colspan="16" class="text-left">
+                                                <strong><span t-esc="rec"/></strong>
                                             </td>
                                         </tr>
+
+                                        <t t-foreach="lines[rec]" t-as="line">
+                                            <tr>
+                                                <td class="text-left">
+                                                    <t t-esc="line_index+1"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <span t-esc="line['customer']" />&amp;nbsp;
+                                                    <t t-if="line['beneficiary_bank']">
+                                                        (<span t-esc="line['beneficiary_bank']"/>)
+                                                    </t>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-esc="line['lc_name']"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-esc="line['shipment_name']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="line['currency']"/>&amp;nbsp;&amp;nbsp;<span t-esc="line['value']"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-esc="line['tenor'][0:9]"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-if="line['seller_bank_date']">
+                                                        <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['seller_bank_date'],'%Y-%m-%d'))"/>
+                                                    </t>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-if="line['buyer_bank_date']">
+                                                        <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['buyer_bank_date'],'%Y-%m-%d'))"/>
+                                                    </t>
+
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-esc="line['aging']"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-if="line['first_delivery_date']">
+                                                        <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['first_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                                    </t>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-if="line['last_delivery_date']">
+                                                        <t t-esc="time.strftime('%d-%b-%Y',time.strptime(line['last_delivery_date'],'%Y-%m-%d %H:%M:%S'))"/>
+                                                    </t>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-esc="line['bill_id']"/>
+                                                </td>
+                                                <td class="text-left" style="white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">
+                                                    <t t-esc="line['comment']" />
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-esc="line['sale_persons']"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-esc="line['bank_code']"/>
+                                                </td>
+                                                <td class="text-left">
+                                                    <t t-esc="line['bank_branch']"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-if="total">
+                                        <t t-foreach="total[rec]" t-as="t">
+                                            <tr>
+                                                <td colspan="4" class="text-left">
+                                                    <b><t t-esc="t['title']"/></b>
+                                                </td>
+                                                <td class="text-right">
+                                                    <b><t t-esc="t['total_val']"/></b>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+
+                                            </tr>
+                                        </t>
+                                    </t>
                                     </t>
                                 </t>
-                                <tr style="font-weight: bold; background-color: #897d79; border-bottom: 1px solid black;">
-                                    <td colspan="4" class="text-left">
-                                        <t t-esc="total['title']"/>
-                                    </td>
-                                    <td class="text-right">
-                                        <t t-esc="total['total_val']"/>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>

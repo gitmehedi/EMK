@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_inherit_currency_form_in_word" model="ir.ui.view">
+        <field name="name">inherit.res.currency.form.in.word</field>
+        <field name="model">res.currency</field>
+        <field name="inherit_id" ref="base.view_currency_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']/.." position="after">
+                <group string="Amount to Word Mapping">
+                    <field name="in_word_start_map" required="1"/>
+                    <field name="in_word_end_map" required="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

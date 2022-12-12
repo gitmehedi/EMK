@@ -25,5 +25,8 @@
         'report/local_first_acceptance_report.xml',
         'report/local_second_acceptance_report.xml',
         'report/lc_sales_local_maturity_report.xml',
+        'report/lc_first_acceptance_report_xlsx_view.xml',
+        'report/lc_second_acceptance_report_xlsx_view.xml',
+        'report/lc_local_maturity_report_xlsx_view.xml',
     ]
 }

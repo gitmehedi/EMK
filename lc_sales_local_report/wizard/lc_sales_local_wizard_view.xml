@@ -10,7 +10,7 @@
                 <form string="Report Options">
                     <group>
                         <group>
-                            <field name="product_temp_id" String="Select Product"
+                            <field name="product_temp_id" String="Select Products" widget="many2many_tags"
                                    options='{"no_create": 1, "no_create_edit":1}'/>
                         </group>
                         <group>
@@ -18,7 +18,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="report_print" string="Print" type="object" class="oe_highlight"/>
+                        <button name="report_print" string="Print(PDF)" type="object" class="oe_highlight"/>
+                        <button name="report_print_xls" string="Export(Excel)" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -60,7 +61,7 @@
                 <form string="Report Options">
                     <group>
                         <group>
-                            <field name="product_temp_id" String="Select Product"
+                            <field name="product_temp_id" String="Select Products" widget="many2many_tags"
                                    options='{"no_open": 1, "no_create": 1, "no_create_edit":1}'/>
                         </group>
                         <group>
@@ -68,7 +69,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="report_print" string="Print" type="object" class="oe_highlight"/>
+                        <button name="report_print" string="Print(PDF)" type="object" class="oe_highlight"/>
+                        <button name="report_print_xls" string="Export(Excel)" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -103,14 +105,15 @@
                 <form string="Report Options">
                     <group>
                         <group>
-                            <field name="product_temp_id" String="Select Product"
+                            <field name="product_temp_id" String="Select Products" widget="many2many_tags"
                                    options='{"no_create": 1, "no_create_edit":1}'/>
                         </group>
                         <group>
                         </group>
                     </group>
                     <footer>
-                        <button name="report_print" string="Print" type="object" class="oe_highlight"/>
+                        <button name="report_print" string="Print(PDF)" type="object" class="oe_highlight"/>
+                        <button name="report_print_xls" string="Export(Excel)" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="report_payslip_menu"
+            string="Bangla Payslip"
+            model="hr.payslip"
+            report_type="qweb-pdf"
+            file="hr_payslip_bangla.payslip_bangla_report"
+            name="hr_payslip_bangla.payslip_bangla_report"
+            paperformat="report_layout.paperformat_po"
+        />
+
+
+         <template id="payslip_bangla_report">
+            <t t-call="report.html_container">
+                 <t t-call="report_layout.gbs_internal_layout">
+                     <div class="page" style="page-break-inside:auto;">
+                        <div class="row">
+                            <style type="text/css">
+                                .report-title { text-align:center; }
+                                .odo-bg-gray, .odo-bg-gray > td { background-color: #f5f5f5; }
+                                .font { font-size: 16px; }
+                                .single-tab { padding-left: 1.2em; }
+                                .double-tab { padding-left: 2.4em; }
+
+                                .table-report-vr > thead > tr > th,
+                                .table-report-vr > tbody > tr > th,
+                                .table-report-vr > tfoot > tr > th,
+                                .table-report-vr > thead > tr > td,
+                                .table-report-vr > tbody > tr > td,
+                                .table-report-vr > tfoot > tr > td {
+                                    padding: 1px 3px !important;
+                                    font-size: 13px !important;
+                                }
+
+                            </style>
+                            <br></br>
+                            <div class="clearfix">
+                                <h2 class="report-title">বেতন স্লিপ <span t-esc="title"/></h2>
+                                <br/>
+                                <div class="row" style="padding-bottom:5px;">
+                                    <div class="col-xs-6">
+                                        <span>নাম : </span>
+                                        <strong t-esc="data['employee_name']"/>
+                                        <br/>
+                                        <span>পদবী : </span>
+                                        <strong t-esc="data['employee_designation']"/>
+                                    </div>
+                                    <div class="col-xs-6 text-left">
+                                        <span>বিভাগ : </span>
+                                        <strong t-esc="data['employee_department']"/>
+                                        <br/>
+                                        <span>ই-মেইল : </span>
+                                        <strong t-esc="data['employee_email']"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-report-vr table-bordered table-striped">
+                                <thead>
+                                    <tr class="odo-bg-gray">
+                                        <th class="text-center" style="width:32%;">নাম</th>
+                                        <th class="text-center" style="width:20%;">কোড</th>
+<!--                                        <th class="text-center" style="width:28%;">সংখ্যা</th>-->
+                                        <th class="text-right" style="width:10%;">পরিমাণ</th>
+                                        <th class="text-right" style="width:10%;">মোট</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="data['lines']" t-as="line">
+                                        <tr>
+                                            <td style="line-height: 110%;">
+                                                <span t-esc="line['salary_bangla_name']"/>
+                                            </td>
+                                            <td style="line-height: 110%;"><span t-esc="line['salary_code']"/></td>
+<!--                                            <td style="line-height: 110%;"><span t-esc="line['quantity']"/></td>-->
+                                            <td class="text-right" style="line-height: 110%;"><span t-esc="line['amount']"/>
+                                            </td>
+                                            <td class="text-right" style="line-height: 110%;"><span t-esc="line['total']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <table class="table_word_amount">
+                                <div>
+                                    <td class="text-left">
+                                        <span>বাংলায় সর্বমোট(কথায়): </span><strong t-esc="data['word_amount']"/> <strong>মাত্র</strong>
+                                    </td>
+                                </div>
+                            </table>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <p class="text-right"><strong>অনুমোদিত স্বাক্ষর</strong></p>
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+
+
+    </data>
+</odoo>

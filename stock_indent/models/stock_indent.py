@@ -173,12 +173,27 @@ class IndentIndent(models.Model):
 
     @api.multi
     def action_close_indent(self):
+        if self.picking_id:
+            self._get_stock_picking_state(self.picking_id)
+
         res = {
             'state': 'received',
             'closer_id': self.env.user.id,
         }
         self.write(res)
 
+    def _get_stock_picking_state(self, stock_picking):
+        stock_picking_back_order = self.env['stock.picking'].search([('backorder_id', '=', stock_picking.id)])
+        if stock_picking.state not in ('draft', 'cancel', 'done'):
+            raise ValidationError(_('You can\'t close because of already pending issue products. '
+                                    'Please cancel or done before close.'))
+        else:
+            status = False
+
+        if stock_picking_back_order.backorder_id and not status:
+            self._get_stock_picking_state(stock_picking_back_order)
+        else:
+            return status
     @api.multi
     def indent_confirm(self):
         for indent in self:

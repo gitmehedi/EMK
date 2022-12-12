@@ -3,7 +3,7 @@ import pytz
 from datetime import datetime
 
 # import of odoo
-from odoo import models, fields, api,_
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
@@ -108,10 +108,16 @@ class Picking(models.Model):
 
     def update_invoice_for_picking_return(self):
         """ Update customer invoice for DC return from customer """
-        invoices = self.sale_id.invoice_ids.filtered(lambda inv: inv.state == 'draft')
+        # New Return Fix (Shoaib)
+        # invoices = self.sale_id.invoice_ids.filtered(lambda inv: inv.state == 'open')
+        pick = self.env.context.get('active_id')
+        invoices = self.env['account.invoice'].sudo().search([('picking_ids', 'in', pick), ('state', '=', 'open')])
+
+        #########[FIXED for new sales return] shoaib
+        # invoices = self.sale_id.invoice_ids.filtered(lambda inv: inv.state == 'draft')
         if not invoices:
             raise UserError(
-                _('Unable to return the product because there are no invoice in draft stage for this Sale Order.'))
+                _('Unable to return the product because invoice is not in open state!'))
 
         return_qty = sum(pack.qty_done or pack.product_qty for pack in self.pack_operation_product_ids)
         invoice_qty = sum(line.quantity for inv in invoices for line in inv.invoice_line_ids)
@@ -123,7 +129,8 @@ class Picking(models.Model):
             is_deduct = False
             pack_qty = pack.qty_done or pack.product_qty
             for inv in invoices:
-                line = inv.invoice_line_ids.filtered(lambda line: line.product_id.id == pack.product_id.id and line.quantity >= pack_qty)
+                line = inv.invoice_line_ids.filtered(
+                    lambda line: line.product_id.id == pack.product_id.id and line.quantity >= pack_qty)
                 if line:
                     qty = line.quantity - return_qty
                     line.sudo().write({'quantity': qty})
@@ -141,5 +148,7 @@ class Picking(models.Model):
     def convert_time_as_timezone(self, datetime_str):
         user_tz = self.env.user.tz or pytz.utc
         local = pytz.timezone(user_tz)
-        dt = datetime.strftime(pytz.utc.localize(datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")).astimezone(local), "%Y-%m-%d %H:%M:%S")
+        dt = datetime.strftime(
+            pytz.utc.localize(datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")).astimezone(local),
+            "%Y-%m-%d %H:%M:%S")
         return dt

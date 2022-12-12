@@ -127,7 +127,8 @@
                        position="replace">
                     <button name="%(purchase_landed_cost.action_picking_import_wizard)d"
                             string="Import incoming shipment"
-                            states="draft" type="action"
+                            attrs="{'invisible':['|',('state','!=','draft'),('name','=','/')]}"
+                            type="action"
                             class="oe_highlight"/>
                 </xpath>
 
@@ -141,7 +142,7 @@
                 <xpath expr="//header" position="inside">
                     <button name="action_update_rate"
                             string="Confirm"
-                            states="draft"
+                            attrs="{'invisible':['|',('state','!=','draft'),('name','=','/')]}"
                             type="object"
                             class="oe_highlight"/>
                 </xpath>
