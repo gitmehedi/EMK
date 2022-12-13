@@ -182,6 +182,7 @@
                                 <field name="payment_rec_date" readonly="1"/>
                                 <field name="payment_rec_amount" readonly="1"/>
                                 <field name="payment_charge" readonly="1"/>
+                                <field name="exp_number" readonly="1"/>
                             </group>
 
                             <group colspan="4">

@@ -87,12 +87,13 @@ class InheritedPurchaseOrder(models.Model):
     @api.multi
     @api.constrains('order_line')
     def _check_exist_product_in_line(self):
-        for purchase in self:
-            exist_product_list = []
-            for line in purchase.order_line:
-                if line.product_id.id in exist_product_list:
-                    raise ValidationError(_('Product should be one per line.'))
-                exist_product_list.append(line.product_id.id)
+        if not self.is_service_order:
+            for purchase in self:
+                exist_product_list = []
+                for line in purchase.order_line:
+                    if line.product_id.id in exist_product_list:
+                        raise ValidationError(_('Product should be one per line.'))
+                    exist_product_list.append(line.product_id.id)
 
 
 class InheritedPurchaseOrderLine(models.Model):

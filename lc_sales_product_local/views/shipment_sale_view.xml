@@ -81,6 +81,7 @@
                                 <group>
                                     <field name="payment_charge" readonly="1"/>
                                     <field name="discrepancy_amount" readonly="1"/>
+                                    <field name="exp_number" readonly="1"/>
                                 </group>
                             </group>
                             <!---->

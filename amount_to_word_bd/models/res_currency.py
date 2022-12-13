@@ -4,8 +4,8 @@ from odoo import api, fields, models, tools, _
 class Currency(models.Model):
     _inherit = "res.currency"
 
-    in_word_start_map = fields.Char(string='Word Map (Start)', track_visibility=True)
-    in_word_end_map = fields.Char(string='Word Map (End)', track_visibility=True)
+    in_word_start_map = fields.Char(string='Currency in Word', track_visibility=True)
+    in_word_end_map = fields.Char(string='Fraction in Word', track_visibility=True)
 
     @api.model
     def amount_to_word(self, number, is_add_currency=True,currency='BDT'):

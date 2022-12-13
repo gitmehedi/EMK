@@ -48,7 +48,8 @@ class AccountInvoice(models.Model):
     def finalize_invoice_move_lines(self, move_lines):
         move_lines = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
         # check the type of invoice
-        if self.type == 'in_invoice':
+        purchase_order = self.env['purchase.order'].search([('name', '=', self.origin)])
+        if self.type == 'in_invoice' and not purchase_order.is_service_order:
             dict_obj = {}
             for line_tuple in move_lines:
                 account_id = line_tuple[2]['account_id']

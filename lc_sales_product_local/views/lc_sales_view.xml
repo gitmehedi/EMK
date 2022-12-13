@@ -82,6 +82,7 @@
                                     <field name="ship_mode"/>
                                     <field name="inco_terms"/>
                                     <field name="partial_shipment"/>
+                                    <field name="is_required_exp"/>
                                 </group>
                             </group>
                             <notebook colspan="4">
