@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_acc_batch_hos,access_acc_hos,model_account_payment_batch,account.group_account_user,1,1,1,0
+access_acc_batch_hoa,access_acc_hoa,model_account_payment_batch,gbs_application_group.group_head_account,1,1,1,0
+access_acc_batch_director,access_acc_director,model_account_payment_batch,gbs_application_group.group_cxo,1,1,1,0
