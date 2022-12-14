@@ -3,7 +3,13 @@
 .settings/org.eclipse.core.resources.prefs
 *.pyc
 .pyc
+__pycache__
 aeroolib/build/lib.linux-i686-2.7/aeroolib/*
 aeroolib/build/*
 *.egg
+*.idea
+.idea
 /aeroolib/
+/venv/
+venv/
+
