@@ -2,11 +2,10 @@ import time
 from select import select
 from selenium import webdriver
 from selenium.webdriver import ActionChains
-from selenium.webdriver.common.keys import keys
-driver=webdriver.Firefox(executable_path="F:\Selenium\geckodriver")
+driver=webdriver.Firefox(executable_path="E:\Selenium\geckodriver")
 driver.get("http://192.168.1.105:8060/web/database/selector")
 time.sleep(2)
-driver.find_element_by_xpath("html/body/div[1]/div/div[2]/a[3]").click()
+driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/a[10]").click()
 element=driver.find_element_by_id("login").send_keys("abdulhye.niloy@gmail.com")
 element=driver.find_element_by_id("password").send_keys("@dminsccl")
 time.sleep(3)
@@ -86,3 +85,4 @@ element=driver.find_element_by_id("password").send_keys("@dminsccl")
 time.sleep(2)
 driver.find_element_by_xpath("/html/body/div/main/div/form/div[4]/button").click()
 time.sleep(2)
+driver.close()
