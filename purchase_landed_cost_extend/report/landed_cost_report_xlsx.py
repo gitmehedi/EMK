@@ -49,27 +49,34 @@ class LandedCostInfoXLSX(ReportXlsx):
         history_table_data_list = []
         cost_history_tbl_query = """
 
-                        select DATE(msg.date) as cost_update,sub.lc_number,sub.product_qty,sub.unit_cost from 
-                            (select 
-                            main.id as main_id,
-                            lc.name as lc_number,
-                            line.product_qty as product_qty,
-                            line.standard_price_old + sum(line_child.cost_ratio) as unit_cost
-                            from 
-                            purchase_cost_distribution_line_expense as line_child
-                            left join purchase_cost_distribution_line as line on line.id = line_child.distribution_line
-                            left join purchase_cost_distribution as main on main.id = line.distribution
-                            left join letter_credit as lc on lc.id = main.lc_id
-                            where line.product_id = %s
-                            and main.id <= %s
-                            GROUP BY line.standard_price_old,lc_number,product_qty,main_id) sub
-
-                            LEFT JOIN mail_message msg on msg.res_id = sub.main_id
-                            and msg.model = 'purchase.cost.distribution'
-                            LIMIT 1
+                        SELECT 
+                                id as main_id,
+                                DATE(datetime) as cost_update, 
+                                name as lc_number,
+                                sum(product_qty) as product_qty,
+                                cost as unit_cost
+                                FROM 
+                                (
+                                    SELECT 
+                                    main.id,
+                                    pph.datetime,
+                                    lc.name,
+                                    line.product_qty,
+                                    pph.cost
+                                
+                                    FROM 
+                                    purchase_cost_distribution_line as line
+                                    LEFT JOIN purchase_cost_distribution as main on main.id = line.distribution
+                                    LEFT JOIN mail_message as msg on msg.res_id = main.id and msg.model = 'purchase.cost.distribution'
+                                    LEFT JOIN letter_credit as lc on lc.id = main.lc_id
+                                    LEFT JOIN product_price_history as pph on pph.product_id = line.product_id and (pph.datetime = msg.date or pph.datetime + interval '10 seconds' = msg.date) 
+                                    WHERE line.product_id = %s and pph.datetime is not null
+                                    AND  main.id <= %s
+                                
+                                ) AS sub
+                                GROUP BY main_id,cost_update,lc_number,unit_cost
 
                         """ % (product_id, landed_cost_id)
-
         self.env.cr.execute(cost_history_tbl_query)
         for row in self.env.cr.dictfetchall():
             history_table_data_list.append(row)
@@ -248,7 +255,7 @@ class LandedCostInfoXLSX(ReportXlsx):
         row = row + 1
 
         history_table_data_list = self.get_history_table_data(obj.landed_cost_id.id, obj.product_id.id)
-
+        cost_price_history_start_row = row
         for rec in history_table_data_list:
             sheet.write(row, 0, ReportUtility.get_date_from_string(rec['cost_update']), td_cell_left)
             sheet.write(row, 1, rec['lc_number'], td_cell_left)
@@ -260,11 +267,11 @@ class LandedCostInfoXLSX(ReportXlsx):
         duty_tax_table_data_list = self.get_duty_tax_table_data(obj.landed_cost_id.id, obj.product_id.id)
         # merge_range(row_from, col_from, row_to, col_to, value = "", format = nil)
         for rec in duty_tax_table_data_list:
-            sheet.write(row-1, 5, rec['acc_name'], td_cell_left)
-            sheet.write(row-1, 6, rec['name'], td_cell_left)
-            sheet.write(row-1, 7, rec['debit'], td_cell_left)
+            sheet.write(cost_price_history_start_row, 5, rec['acc_name'], td_cell_left)
+            sheet.write(cost_price_history_start_row, 6, rec['name'], td_cell_left)
+            sheet.write(cost_price_history_start_row, 7, rec['debit'], td_cell_left)
 
-            row = row + 1
+            cost_price_history_start_row = cost_price_history_start_row + 1
 
 
 LandedCostInfoXLSX('report.purchase_landed_cost_extend.landed_cost_report_xlsx', 'landed.cost.report.wizard',
