@@ -5,3 +5,4 @@ import purchase_expense_type
 import inherited_purchase_cost_distribution_line_expense
 import update_product_cost_transient
 import inherited_stock_picking
+import inherited_product_template

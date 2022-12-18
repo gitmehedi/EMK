@@ -224,6 +224,17 @@ class PurchaseCostDistribution(models.Model):
             'target': 'new',
         }
 
+    def action_excel_report(self):
+
+        return {
+            'name': 'Landed Cost Report',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'landed.cost.report.wizard',
+            'target': 'new',
+        }
+
     def get_journal_entry(self):
         self.ensure_one()
         return {
@@ -234,6 +245,9 @@ class PurchaseCostDistribution(models.Model):
             'domain': [('id', '=', self.account_move_id.id)],
             'context': "{'create': False}"
         }
+
+
+
 
 
 class PurchaseCostDistributionLine(models.Model):
@@ -275,3 +289,4 @@ class PurchaseCostDistributionLine(models.Model):
             'res_model': 'update.product.cost',
             'target': 'new',
         }
+
