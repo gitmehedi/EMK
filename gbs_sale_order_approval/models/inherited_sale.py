@@ -218,6 +218,8 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_reset(self):
+        if self.state == 'done':
+            raise ValidationError(_('Sale order has been already approved, you can\'t reset to draft'))
         self.state = 'to_submit'
 
     @api.multi

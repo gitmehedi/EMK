@@ -53,7 +53,8 @@ class AccountInvoice(models.Model):
         #         line_tuple[2]['company_id'] = self.company_id.id
 
         # check the type of invoice
-        if self.type == 'in_invoice':
+        purchase_order = self.env['purchase.order'].search([('name', '=', self.origin)])
+        if self.type == 'in_invoice' and not purchase_order.is_service_order:
             dict_obj = {}
             for line_tuple in move_lines:
                 account_id = line_tuple[2]['account_id']

@@ -59,7 +59,8 @@ ACCOUNT_TAG = {
     'distribution': 'CS-Dist Exp'
 }
 
-GROUP_TOTAL_NAMES = ['direct_material', 'prime_cost', 'manufacturing_cost', 'direct_cost_and_depreciation', 'total_cost', 'profit_loss']
+GROUP_TOTAL_NAMES = ['direct_material', 'prime_cost', 'manufacturing_cost', 'direct_cost_and_depreciation',
+                     'total_cost', 'profit_loss']
 INCOME_USER_TYPE_IDS = [14]
 RM_CATEGORY_ID = 69
 PM_CATEGORY_ID = 70
@@ -69,7 +70,8 @@ class CostSheetXLSX(ReportXlsx):
 
     def _get_query_where_clause(self, obj, date_from, date_to):
         where_clause = " WHERE aml.date BETWEEN '%s' AND '%s'" % (date_from, date_to)
-        where_clause += " AND aml.cost_center_id=%s AND aml.company_id=%s" % (obj.cost_center_id.id, self.env.user.company_id.id)
+        where_clause += " AND aml.cost_center_id=%s AND aml.company_id=%s" % (
+        obj.cost_center_id.id, self.env.user.company_id.id)
         if not obj.all_entries:
             where_clause += " AND mv.state='posted'"
         if obj.operating_unit_ids:
@@ -89,6 +91,15 @@ class CostSheetXLSX(ReportXlsx):
         # execute the query
         self.env.cr.execute(sql_str_of_sales_qty)
         sales_qty = sum(row['quantity'] for row in self.env.cr.dictfetchall()) or 0.0
+
+        # get returned invoice qty and subtract return qty from sales qty
+        sql_of_return_refund_qty = self._prepare_query_of_return_refund_qty(where_clause)
+        # execute the query
+        self.env.cr.execute(sql_of_return_refund_qty)
+        return_refund_qty = sum(row['quantity'] for row in self.env.cr.dictfetchall()) or 0.0
+        sales_qty = sales_qty - return_refund_qty
+
+        ################################################################
 
         # Net revenue
         account_ids = self.env['account.account'].search([('user_type_id', 'in', INCOME_USER_TYPE_IDS)]).ids
@@ -128,7 +139,8 @@ class CostSheetXLSX(ReportXlsx):
                                                     JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
                                                     JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                                                 WHERE
-                                                    aat.name='%s' AND aa.company_id=%s)""" % (ACCOUNT_TAG['indirect_income'], self.env.user.company_id.id)
+                                                    aat.name='%s' AND aa.company_id=%s)""" % (
+        ACCOUNT_TAG['indirect_income'], self.env.user.company_id.id)
 
         sql_str = """SELECT
                         aml.account_id,
@@ -233,7 +245,8 @@ class CostSheetXLSX(ReportXlsx):
                                                     JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
                                                     JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                                                 WHERE
-                                                    aat.name='%s' AND aa.company_id=%s)""" % (ACCOUNT_TAG['utility_bill'], self.env.user.company_id.id)
+                                                    aat.name='%s' AND aa.company_id=%s)""" % (
+        ACCOUNT_TAG['utility_bill'], self.env.user.company_id.id)
 
         sql_str = """SELECT
                         aml.account_id,
@@ -266,7 +279,8 @@ class CostSheetXLSX(ReportXlsx):
                                                     JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
                                                     JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                                                 WHERE
-                                                    aat.name='%s' AND aa.company_id=%s)""" % (ACCOUNT_TAG['labour_charge'], self.env.user.company_id.id)
+                                                    aat.name='%s' AND aa.company_id=%s)""" % (
+        ACCOUNT_TAG['labour_charge'], self.env.user.company_id.id)
 
         sql_str = """SELECT
                         aml.account_id,
@@ -299,7 +313,8 @@ class CostSheetXLSX(ReportXlsx):
                                                     JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
                                                     JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                                                 WHERE
-                                                    aat.name='%s' AND aa.company_id=%s)""" % (ACCOUNT_TAG['factory_overhead'], self.env.user.company_id.id)
+                                                    aat.name='%s' AND aa.company_id=%s)""" % (
+        ACCOUNT_TAG['factory_overhead'], self.env.user.company_id.id)
 
         sql_str = """SELECT
                         aml.account_id,
@@ -332,7 +347,8 @@ class CostSheetXLSX(ReportXlsx):
                                                     JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
                                                     JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                                                 WHERE
-                                                    aat.name='%s' AND aa.company_id=%s)""" % (ACCOUNT_TAG['amortization'], self.env.user.company_id.id)
+                                                    aat.name='%s' AND aa.company_id=%s)""" % (
+        ACCOUNT_TAG['amortization'], self.env.user.company_id.id)
 
         sql_str = """SELECT
                         aml.account_id,
@@ -365,7 +381,8 @@ class CostSheetXLSX(ReportXlsx):
                                                     JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
                                                     JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                                                 WHERE
-                                                    aat.name='%s' AND aa.company_id=%s)""" % (ACCOUNT_TAG['depreciation'], self.env.user.company_id.id)
+                                                    aat.name='%s' AND aa.company_id=%s)""" % (
+        ACCOUNT_TAG['depreciation'], self.env.user.company_id.id)
 
         sql_str = """SELECT
                         aml.account_id,
@@ -392,7 +409,8 @@ class CostSheetXLSX(ReportXlsx):
 
         where_clause = self._get_query_where_clause(obj, date_from, date_to)
         where_clause += """ AND aml.account_id IN ((SELECT raw_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id=%s) UNION
-                                                    (SELECT packing_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id=%s))""" % (obj.cost_center_id.id, obj.cost_center_id.id)
+                                                    (SELECT packing_cogs_account_id AS account_id FROM product_template WHERE sale_ok=true AND active=true AND cost_center_id=%s))""" % (
+        obj.cost_center_id.id, obj.cost_center_id.id)
 
         sql_str = """SELECT
                         aml.cost_center_id,
@@ -424,7 +442,8 @@ class CostSheetXLSX(ReportXlsx):
                                                     JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
                                                     JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                                                 WHERE
-                                                    aat.name='%s' AND aa.company_id=%s)""" % (ACCOUNT_TAG['administrative'], self.env.user.company_id.id)
+                                                    aat.name='%s' AND aa.company_id=%s)""" % (
+        ACCOUNT_TAG['administrative'], self.env.user.company_id.id)
 
         sql_str = """SELECT
                         aml.account_id,
@@ -457,7 +476,8 @@ class CostSheetXLSX(ReportXlsx):
                                                     JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
                                                     JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                                                 WHERE
-                                                    aat.name='%s' AND aa.company_id=%s)""" % (ACCOUNT_TAG['finance'], self.env.user.company_id.id)
+                                                    aat.name='%s' AND aa.company_id=%s)""" % (
+        ACCOUNT_TAG['finance'], self.env.user.company_id.id)
 
         sql_str = """SELECT
                         aml.account_id,
@@ -490,7 +510,8 @@ class CostSheetXLSX(ReportXlsx):
                                                     JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
                                                     JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                                                 WHERE
-                                                    aat.name='%s' AND aa.company_id=%s)""" % (ACCOUNT_TAG['marketing'], self.env.user.company_id.id)
+                                                    aat.name='%s' AND aa.company_id=%s)""" % (
+        ACCOUNT_TAG['marketing'], self.env.user.company_id.id)
 
         sql_str = """SELECT
                         aml.account_id,
@@ -523,7 +544,8 @@ class CostSheetXLSX(ReportXlsx):
                                                     JOIN account_account_account_tag aaat ON aaat.account_account_id=aa.id
                                                     JOIN account_account_tag aat ON aat.id=aaat.account_account_tag_id
                                                 WHERE
-                                                    aat.name='%s' AND aa.company_id=%s)""" % (ACCOUNT_TAG['distribution'], self.env.user.company_id.id)
+                                                    aat.name='%s' AND aa.company_id=%s)""" % (
+        ACCOUNT_TAG['distribution'], self.env.user.company_id.id)
 
         sql_str = """SELECT
                         aml.account_id,
@@ -598,6 +620,26 @@ class CostSheetXLSX(ReportXlsx):
                         JOIN product_product p ON p.id=l.product_id
                         JOIN account_cost_center acc ON acc.id=aml.cost_center_id
                     """ + where_clause
+
+        return sql_str
+
+    @staticmethod
+    def _prepare_query_of_return_refund_qty(where_clause):
+        where_clause += " AND i.from_return=true"
+        sql_str = """SELECT
+                           COALESCE(SUM(CASE 
+                               WHEN COALESCE(p.ratio_in_percentage, 0)=0 
+                               THEN COALESCE(aml.quantity, 0)
+                               ELSE (p.ratio_in_percentage * COALESCE(aml.quantity, 0) / 100) 
+                           END), 0) AS quantity
+                       FROM
+                           account_move_line aml
+                           JOIN account_move mv ON mv.id=aml.move_id
+                           JOIN account_invoice i ON i.move_id=mv.id AND i.type='out_refund'
+                           JOIN account_invoice_line l ON l.invoice_id=i.id
+                           JOIN product_product p ON p.id=l.product_id
+                           JOIN account_cost_center acc ON acc.id=aml.cost_center_id
+                       """ + where_clause
 
         return sql_str
 
@@ -719,7 +761,8 @@ class CostSheetXLSX(ReportXlsx):
     @staticmethod
     def calc_rate(amount, sale_qty, production_qty, name):
         rate = 0.0
-        if name in ['revenue', 'indirect_income', 'cogs', 'administrative', 'finance', 'marketing', 'distribution', 'total_cost', 'profit_loss']:
+        if name in ['revenue', 'indirect_income', 'cogs', 'administrative', 'finance', 'marketing', 'distribution',
+                    'total_cost', 'profit_loss']:
             if sale_qty > 0:
                 rate = amount / sale_qty
         else:
@@ -773,18 +816,24 @@ class CostSheetXLSX(ReportXlsx):
         total_format = workbook.add_format({'num_format': '#,###0.00', 'bold': True, 'size': 10, 'border': 1})
 
         # table header cell format
-        th_cell_left = workbook.add_format({'align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
-        th_cell_center = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
-        th_cell_right = workbook.add_format({'align': 'right', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
+        th_cell_left = workbook.add_format(
+            {'align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
+        th_cell_center = workbook.add_format(
+            {'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
+        th_cell_right = workbook.add_format(
+            {'align': 'right', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
 
         # table body cell format
         td_cell_left = workbook.add_format({'align': 'left', 'valign': 'vcenter', 'size': 10, 'border': 1})
         td_cell_center = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10, 'border': 1})
         td_cell_right = workbook.add_format({'align': 'right', 'valign': 'vcenter', 'size': 10, 'border': 1})
 
-        td_cell_left_bold = workbook.add_format({'align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
-        td_cell_center_bold = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
-        td_cell_right_bold = workbook.add_format({'align': 'right', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
+        td_cell_left_bold = workbook.add_format(
+            {'align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
+        td_cell_center_bold = workbook.add_format(
+            {'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
+        td_cell_right_bold = workbook.add_format(
+            {'align': 'right', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
 
         # WORKSHEET
         sheet = workbook.add_worksheet('Cost Sheet')
@@ -802,7 +851,8 @@ class CostSheetXLSX(ReportXlsx):
         sheet.merge_range(0, 0, 0, 2, self.env.user.company_id.name, name_format)
         sheet.merge_range(1, 0, 1, 2, self.env.user.company_id.street, address_format)
         sheet.merge_range(2, 0, 2, 2, self.env.user.company_id.street2, address_format)
-        sheet.merge_range(3, 0, 3, 2, self.env.user.company_id.city + '-' + self.env.user.company_id.zip, address_format)
+        sheet.merge_range(3, 0, 3, 2, self.env.user.company_id.city + '-' + self.env.user.company_id.zip,
+                          address_format)
         sheet.merge_range(4, 0, 4, 2, "Cost Sheet of " + obj.cost_center_id.name, name_format)
 
         sheet.write(6, 0, "Cost Center: " + obj.cost_center_id.name, bold)
@@ -835,14 +885,15 @@ class CostSheetXLSX(ReportXlsx):
         col = 0
         for index, value in enumerate(report_data_list):
 
-            production_qty = self.get_production_qty(value['raw_material']) or self.get_production_qty(value['packing_material'])
+            production_qty = self.get_production_qty(value['raw_material']) or self.get_production_qty(
+                value['packing_material'])
             sale_qty = self.calc_sales_qty(value['revenue'])
             group_total_dict = self.calc_group_total(value)
 
             # SALES AND PRODUCTION QUANTITY ROW
             if index == 0:
-                sheet.write(row-3, col, '', th_cell_center)
-                sheet.write(row-2, col, '', th_cell_center)
+                sheet.write(row - 3, col, '', th_cell_center)
+                sheet.write(row - 2, col, '', th_cell_center)
 
             sheet.write(row - 3, col + 1, 'Sales Quantity (MT)', th_cell_right)
             sheet.write(row - 3, col + 2, float_round(sale_qty, precision_digits=2), total_format)

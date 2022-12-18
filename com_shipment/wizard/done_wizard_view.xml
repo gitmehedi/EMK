@@ -19,6 +19,7 @@
                         <group>
                             <field name="payment_charge" attrs="{'required': ['|',('region_type', '=', 'local'), ('region_type', '=', 'foreign')]}"/>
                             <field name="discrepancy_amount" attrs="{'required': ['|',('region_type', '=', 'local'), ('region_type', '=', 'foreign')]}"/>
+                            <field name="exp_number"/>
                         </group>
                     </group>
                     <group string="Comments">

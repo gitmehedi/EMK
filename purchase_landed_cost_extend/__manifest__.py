@@ -39,6 +39,10 @@
         'wizard/update_rate_wizard.xml',
         'views/update_product_cost_transient.xml',
         'wizard/success_wizard.xml',
+        'report/landed_cost_report_xlsx_view.xml',
+        'wizard/landed_cost_report_wizard.xml',
+        'views/inherited_product_template_view.xml',
+
     ],
     'installable': True,
     'application': False

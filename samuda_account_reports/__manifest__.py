@@ -8,7 +8,8 @@
         'account_reports',
         'analytic',
         'report_xlsx',
-        'report'
+        'report',
+        'gbs_account'
     ],
     'summary': "This module generate custom account reports",
     'description': """Different type of account reports""",

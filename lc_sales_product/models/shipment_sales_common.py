@@ -20,6 +20,7 @@ class ShipmentCommon(models.Model):
     freight = fields.Char('Freight')
     goods_condition = fields.Text('Goods Condition')
     doc_preparation_date = fields.Date('Doc. Preparation Date', track_visibility='onchange')
+    exp_number = fields.Char('Exp. Number')
 
     # Existing state override
     state = fields.Selection(
