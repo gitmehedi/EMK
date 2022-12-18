@@ -39,10 +39,6 @@ class ResPartner(models.Model):
         required=True)
     active = fields.Boolean(default=True, track_visibility='onchange')
 
-    # custmer type will be used to calculate commission and refund
-    customer_type = fields.Selection(string='Customer Type', selection=[('coorporate', 'Coorporate'), ('dealer', 'Dealer')], default="coorporate")
-
-
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         res = super(ResPartner, self).fields_view_get(view_id=view_id, view_type=view_type,

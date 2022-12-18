@@ -5,7 +5,5 @@
             <field name="context">{'default_is_service_order': False,'search_default_todo':1, 'show_purchase': True,'search_default_active':1}</field>
             <field name="domain">[('is_service_order', '!=', True),('state','not in',('draft','sent','bid', 'confirmed'))]</field>
         </record>
-
-
     </data>
 </odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit Form View to Modify it -->
+        <record id="res_partner_commission_refund_payable_acc_view_form" model="ir.ui.view">
+            <field name="name">res.partner.commission.refund.account.payable.view.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='property_account_payable_id']" position="after">
+                    <field name="commission_refund_account_payable_id"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>
