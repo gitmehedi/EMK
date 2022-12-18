@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="account_cancel.invoice_supplier_cancel_form_inherit"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_invoice_cancel']" position="replace">
-                    <button name="open_wizard_cancel" type="object" states="draft,proforma2" string="Cancel Bill"
+                    <button name="open_wizard_cancel" type="object" states="draft,proforma2,open" string="Cancel Bill"
                             groups="account.group_account_manager"/>
                 </xpath>
             </field>
