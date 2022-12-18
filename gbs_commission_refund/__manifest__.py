@@ -14,8 +14,7 @@
         'gbs_sale_order_approval',
         'account',
         'hr',
-        'customer_business_type',
-        'gbs_samuda_com_claim'
+        'customer_business_type'
     ],
     'data': [
         # data

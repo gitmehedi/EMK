@@ -8,13 +8,7 @@
     'sequence': 14,
     'depends': [
         'base',
-        'product_sales_pricelist',
-        'sale',
-        'gbs_sales_commission_so',
-        'gbs_sale_order_approval',
-        'account',
-        'hr',
-        'customer_business_type'
+        'gbs_commission_refund'
     ],
     'data': [
         # data

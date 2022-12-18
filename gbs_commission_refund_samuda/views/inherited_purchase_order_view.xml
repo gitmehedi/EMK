@@ -217,7 +217,7 @@
                 id="claim_customer_commission_menu"
                 parent="menu_commission_refund_claim"
                 sequence="4"
-                action="gbs_commission_refund.claim_customer_commission_tree_view_action"
+                action="gbs_commission_refund_samuda.claim_customer_commission_tree_view_action"
                 groups="sales_team.group_sale_salesman"
         />
 
@@ -225,7 +225,7 @@
                 id="claim_customer_refund_menu"
                 parent="menu_commission_refund_claim"
                 sequence="4"
-                action="gbs_commission_refund.claim_customer_refund_tree_view_action"
+                action="gbs_commission_refund_samuda.claim_customer_refund_tree_view_action"
                 groups="sales_team.group_sale_salesman"
         />
 
@@ -233,7 +233,7 @@
                 id="pending_commission_claim_hos_menu"
                 parent="gbs_samuda_sales_approval_menu.menu_hos_approval"
                 sequence="4"
-                action="gbs_commission_refund.pending_commission_claim_hos_approval_tree_view_action"
+                action="gbs_commission_refund_samuda.pending_commission_claim_hos_approval_tree_view_action"
                 groups="sales_team.group_sale_salesman"
         />
 
@@ -241,7 +241,7 @@
                 id="pending_commission_claim_hoa_menu"
                 parent="gbs_samuda_sales_approval_menu.menu_hoa_approval"
                 sequence="4"
-                action="gbs_commission_refund.pending_commission_claim_hoa_approval_tree_view_action"
+                action="gbs_commission_refund_samuda.pending_commission_claim_hoa_approval_tree_view_action"
                 groups="sales_team.group_sale_salesman"
         />
 
