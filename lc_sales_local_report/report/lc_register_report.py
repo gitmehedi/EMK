@@ -132,7 +132,7 @@ class LcRegisterXLSX(ReportXlsx):
                 so_name = data['so_name'] if 'so_name' in data else ''
                 delivery_details_date_of_trans = self.get_delivery_detail(lc_id, shipment_id, so_name)
                 # lc_qty = self.get_lc_qty(lc_id)
-                lc_qty = data['product_qty'] if 'product_qty' in data else '0'
+                lc_qty = data['product_qty'] if 'product_qty' in data else 0
                 region_type = data['region_type'] if 'region_type' in data else ''
 
                 if lc_qty:
@@ -432,7 +432,7 @@ class LcRegisterXLSX(ReportXlsx):
 
         # footer
         row += 1
-        for n in range(0, 44):
+        for n in range(0, 45):
             if n in (0, 8, 9, 11, 13, 14, 15, 16, 26, 27, 30, 33, 34, 36, 37, 38):
                 if n == 0:
                     sheet.write(row, n, 'Total ', name_border_format_colored_bold)
@@ -666,7 +666,7 @@ class LcRegisterXLSX(ReportXlsx):
              'text_wrap': True})
         sub_header_format_left.set_font_name('Times New Roman')
 
-        lc_static_issue_date = '01/01/2022'
+        shipment_write_date = '01/10/2022'
         where = ''
         filter_by_text = ''
         if filter_by == 'goods_delivered_doc_not_prepared':
@@ -683,7 +683,8 @@ class LcRegisterXLSX(ReportXlsx):
             where += "where ps.payment_rec_date is null and ps.to_maturity_date is not null "
         elif filter_by == 'percentage_of_first_acceptance_collection':
             filter_by_text = 'Percentage of First Acceptance Collection'
-            where += "where ps.to_first_acceptance_date >= '" + obj.date_from + "' and ps.to_first_acceptance_date <= '" + obj.date_to + "' and ps.to_first_acceptance_date is not null and ps.to_buyer_date is not null "
+            where += "where to_first_acceptance_date BETWEEN '" + obj.date_from + "' AND '" + obj.date_to + "' and ps.to_buyer_date is not null "
+            # where += "where ps.to_first_acceptance_date >= '" + obj.date_from + "' and ps.to_first_acceptance_date <= '" + obj.date_to + "' and ps.to_buyer_date is not null "
         elif filter_by == 'lc_history':
             filter_by_text = 'LC Shipment History'
             where += "where ps.shipment_done_date >= '" + obj.date_from + "' and ps.shipment_done_date <= '" + obj.date_to + "' "
@@ -707,7 +708,7 @@ class LcRegisterXLSX(ReportXlsx):
             filter_by_text = 'LC Number: ' + obj.lc_number.name
             where += " where lc.id ='" + str(obj.lc_number.id) + "'"
         else:
-            where += " and lc.issue_date >='" + lc_static_issue_date + "' "
+            where += " and ps.write_date >='" + shipment_write_date + "' "
 
         if filter_by == 'goods_delivered_but_lc_not_received':
             filter_by_text = 'Goods Delivered but LC not received'
@@ -732,48 +733,25 @@ class LcRegisterXLSX(ReportXlsx):
         elif filter_by == 'shipment_date_expired_but_goods_undelivered':
             filter_by_text = 'Shipment date expired but goods undelivered'
             query = '''
-                SELECT distinct ps.id, MAX(rp.name) as party_name,MAX(rp2.name) as executive_name,MAX(lpl.name) as product_name, MAX(lc.name) as lc_number, 
-                MAX(ps.name) as shipment_no, SUM(coalesce(spl.product_qty,0)) as shipment_qty, SUM(coalesce(ps.invoice_value,0)) as shipment_amount, MAX(lc.tenure) as tenure,
-                MAX(ps.bl_date) as doc_dispatch_to_party_date_foreign,MAX(coalesce((CURRENT_DATE-ps.bl_date),0)) as aging_first_acceptance_days_foreign,
-                MAX(date(ps.to_first_acceptance_date + INTERVAL '7 day')) as to_buyer_bank_date_foreign,
-                MAX(ps.to_buyer_bank_date) as to_buyer_bank_date,MAX(ps.to_seller_bank_date) as to_seller_bank_date,
-                MAX(coalesce((CURRENT_DATE-ps.to_seller_bank_date),0)) as aging_2nd_acceptance_days, 
-                MAX(rc.name) as currency, 
-                MAX(lc.id) as lc_id, MAX(lc.shipment_date) as shipment_date, MAX(lc.expiry_date) as expiry_date, MAX(ps.doc_preparation_date) as doc_preparation_date,
-                MAX(lc.issue_date) as lc_date,MAX(coalesce(lc.lc_value,0)) as lc_amount,MAX(lc.region_type) as region_type,
-                MAX(ps.to_buyer_date) as doc_dispatch_to_party_date, MAX(ps.to_first_acceptance_date) as first_acceptance_doc_submission_date,
-                MAX(coalesce((CURRENT_DATE-ps.to_buyer_date),0)) as aging_first_acceptance_days,MAX(ps.to_maturity_date) as maturity_date, 
-                MAX(ps.shipment_done_date) as shipment_done_date, 
-                MAX(coalesce(ps.discrepancy_amount,0)) as discrepancy_amount, MAX(coalesce(ps.ait_amount,0)) as ait_amount, MAX(ps.payment_rec_date) as payment_rec_date, MAX(coalesce(ps.payment_rec_amount,0)) as payment_rec_amount, MAX(coalesce(ps.payment_charge,0)) as payment_charge, 
-                MAX(ps.comment) as comment, MAX(lc.second_party_bank) as second_party_bank, MAX(rb.bic) as samuda_bank_name,
-                MAX(pu.name) as packing_type, MAX(ps.bill_id) as bill_id_no, 
-                SUM(coalesce(lpl.product_received_qty,0)) as document_qty,
-                SUM(coalesce(lpl.product_qty,0)) as product_qty,
-                MAX(coalesce((ps.to_first_acceptance_date-ps.to_buyer_date),0)) as percentage_of_first_acceptance,
-                (select SUM(sol.qty_delivered) as qty_delivered 
-                 from sale_order as so LEFT JOIN sale_order_line as sol ON so.id = sol.order_id 
-                     where so.pi_id=bit_and(plr.pi_id)) as pp1, SUM(spl.product_qty) as pp2,
-                (SUM(spl.product_qty) - (select SUM(sol.qty_delivered) as qty_delivered 
-                 from sale_order as so LEFT JOIN sale_order_line as sol ON so.id = sol.order_id 
-                     where so.pi_id=bit_and(plr.pi_id))) as pp
-                FROM purchase_shipment AS ps 
-                LEFT JOIN letter_credit AS lc ON ps.lc_id = lc.id
-                LEFT JOIN res_partner AS rp ON rp.id = lc.second_party_applicant
-                LEFT JOIN res_users AS ru ON ru.id = rp.user_id
-                LEFT JOIN res_partner AS rp2 ON rp2.id = ru.partner_id
-                LEFT JOIN lc_product_line AS lpl ON lpl.lc_id = ps.lc_id
-                LEFT JOIN res_currency as rc ON rc.id = lc.currency_id
-                LEFT JOIN shipment_product_line AS spl ON ps.id = spl.shipment_id
-                LEFT JOIN res_partner_bank AS rpb ON rpb.id = lc.first_party_bank_acc
-                LEFT JOIN res_bank AS rb ON rb.id = rpb.bank_id
-                LEFT JOIN product_uom AS pu ON pu.id = ps.count_uom 
-                LEFT JOIN pi_lc_rel as plr ON plr.lc_id = lc.id
-                LEFT JOIN sale_order as so ON so.pi_id = plr.pi_id
-                LEFT JOIN sale_order_line as sol ON sol.order_id = so.id
-                where lc.shipment_date < CURRENT_DATE  
-                and spl.product_qty-(select SUM(sol.qty_delivered) as qty_delivered 
-                 from sale_order as so LEFT JOIN sale_order_line as sol ON so.id = sol.order_id 
-                     where so.lc_id=lc.id) > 0 and ps.state != 'cancel' %s group by ps.id
+                select so.id,rp.name as party_name, rp2.name as executive_name, sol.name as product_name, 
+                so.region_type as region_type, so.name as so_name, lc.name as lc_number,
+                pi.name as pi_name,rc.name as currency,SUM(sol.product_uom_qty) as product_qty, SUM(sol.qty_delivered) as qty_delivery,
+                SUM(sol.product_uom_qty)-SUM(sol.qty_delivered) as undelivered_qty,lc.shipment_date as shipment_date, lc.expiry_date as expiry_date, 
+                lc.issue_date as lc_date,coalesce(lc.lc_value,0) as lc_amount,lc.region_type as region_type
+                from sale_order as so
+                LEFT JOIN letter_credit as lc ON lc.id = so.lc_id
+                LEFT JOIN sale_order_type as sot on so.type_id = sot.id 
+                LEFT JOIN sale_order_line as sol on so.id = sol.order_id
+                LEFT JOIN res_partner as rp on rp.id = so.partner_id
+                LEFT JOIN res_users as ru on ru.id = rp.user_id
+                LEFT JOIN proforma_invoice as pi on pi.id = so.pi_id
+                LEFT JOIN res_partner as rp2 on rp2.id = ru.partner_id
+                LEFT JOIN product_pricelist as ppl on ppl.id = so.pricelist_id
+                LEFT JOIN res_currency as rc on rc.id = ppl.currency_id
+                where lc.shipment_date < CURRENT_DATE and sol.product_uom_qty-sol.qty_delivered > 0
+                and sot.sale_order_type='lc_sales' %s 
+                group by so.id,party_name,executive_name,product_name,so.region_type, so.name,pi.name,rc.name,lc.name,lc.shipment_date,lc.expiry_date,lc.issue_date,
+                lc.lc_value,lc.region_type
                             ''' % where_so
         else:
             query = '''
@@ -793,7 +771,7 @@ class LcRegisterXLSX(ReportXlsx):
                     MAX(ps.comment) as comment, MAX(lc.second_party_bank) as second_party_bank, MAX(rb.bic) as samuda_bank_name,
                     MAX(pu.name) as packing_type, MAX(ps.bill_id) as bill_id_no, MAX(coalesce(lpl.product_received_qty,0)) as document_qty,
                     SUM(coalesce(lpl.product_qty,0)) as product_qty,
-                    MAX(coalesce((ps.to_first_acceptance_date-ps.to_buyer_date),0)) as percentage_of_first_acceptance
+                    MAX(coalesce((CURRENT_DATE-ps.to_buyer_date),0)) as percentage_of_first_acceptance
                     FROM purchase_shipment AS ps 
                     LEFT JOIN letter_credit AS lc ON ps.lc_id = lc.id
                     LEFT JOIN res_partner AS rp ON rp.id = lc.second_party_applicant

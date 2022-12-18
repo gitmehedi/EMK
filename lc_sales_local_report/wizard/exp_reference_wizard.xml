@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="exp_reference_report_wizard" model="ir.ui.view">
+        <field name="name">exp.reference.report.wizard</field>
+        <field name="model">exp.reference.report</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="EXP Reference Report">
+                <group>
+
+                    <group>
+                        <field name="date_from"/>
+                    </group>
+                    <group>
+                        <field name="date_to"/>
+                    </group>
+                </group>
+                <group>
+                    <group><field name="type"/></group>
+                </group>
+                <footer>
+                    <button name="report_print" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- LC Register Global -->
+    <record id="action_wizard_exp_reference_report" model="ir.actions.act_window">
+        <field name="name">EXP Reference Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">exp.reference.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <menuitem action="action_wizard_exp_reference_report"
+              id="menu_wizard_exp_reference_report"
+              parent="letter_of_credit.lc_report_menu_root"
+              groups="gbs_application_group.group_export_foreign_lc"
+              sequence="13"/>
+</odoo>

@@ -1,3 +1,4 @@
 import inherited_res_company
+import inherited_account_invoice
 import res_config
 import account

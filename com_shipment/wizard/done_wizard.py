@@ -12,6 +12,7 @@ class DoneWizard(models.TransientModel):
     payment_charge = fields.Float(string='Payment Charge')
     discrepancy_amount = fields.Float(string='Discrepancy Amount')
     region_type = fields.Selection([('local', "Local"),('foreign', "Foreign")], readonly=True,)
+    exp_number = fields.Char('Exp. Number', help="Would you like to save Exp. Number?")
 
     @api.multi
     def save_done(self):
@@ -24,9 +25,15 @@ class DoneWizard(models.TransientModel):
         if self.discrepancy_amount < 0:
             raise UserError("Discrepancy amount is wrong")
 
+
         form_id = self.env.context.get('active_id')
         shipment_pool = self.env['purchase.shipment']
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
+        if not self.exp_number and shipment_obj.lc_id.is_required_exp and shipment_obj.lc_id.region_type == 'local' and shipment_obj.lc_id.type == 'export':
+            raise UserError("Exp. Number is required")
+        elif not self.exp_number and shipment_obj.lc_id.region_type == 'foreign' and shipment_obj.lc_id.type == 'export':
+            raise UserError("Exp. Number is required")
+
         shipment_obj.write(
             {
                 'comment': self.comments,
@@ -36,6 +43,7 @@ class DoneWizard(models.TransientModel):
                 'payment_rec_amount': self.payment_rec_amount - (self.ait_amount + self.payment_charge + self.discrepancy_amount),
                 'payment_charge': self.payment_charge,
                 'discrepancy_amount': self.discrepancy_amount,
+                'exp_number': self.exp_number,
                 'state': 'done'
             })
         return {'type': 'ir.actions.act_window_close'}
