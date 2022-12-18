@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="commission_refund_acc_config_form_view" model="ir.ui.view">
+            <field name="name">commission.refund.acc.config.view.form</field>
+            <field name="model">commission.refund.acc.config</field>
+            <field name="priority">1003</field>
+            <field name="arch" type="xml">
+                <form string="Commission and Refund Settings" version="7.0" create="false">
+                    <sheet>
+                        <group>
+                            <group srting="Default Commission Account" name="default_commission_acc_settings">
+                                <separator colspan="2" string="Commission"/>
+                                <field name="commission_account_id" required="1"/>
+                                <field name="commission_control_account_id" required="1"/>
+                            </group>
+                            <group srting="Default Refund Account" name="default_refund_acc_settings">
+                                <separator colspan="2" string="Refund"/>
+                                <field name="refund_account_id" required="1"/>
+                                <field name="refund_control_account_id" required="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="company_id" required="1"/>
+                                <field name="department_id" required="1"/>
+                            </group>
+                            <group>
+                                <!-- <field name="operating_unit_id" required="1"/>-->
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page name="commission_account_page" string="Commission Accounts">
+                                <field name="commission_account_ids">
+                                    <tree editable="bottom">
+                                        <field name="cost_center_id" required="1"/>
+                                        <field name="zone_type" required="1"/>
+                                        <field name="account_id" required="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="refund_account_ids" string="Refund Accounts">
+                                <field name="refund_account_ids">
+                                    <tree editable="bottom">
+                                        <field name="cost_center_id" required="1"/>
+                                        <field name="zone_type" required="1"/>
+                                        <field name="account_id" required="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="commission_refund_acc_config_tree_view" model="ir.ui.view">
+            <field name="name">commission.refund.acc.config.view.tree</field>
+            <field name="model">commission.refund.acc.config</field>
+            <field name="priority">1001</field>
+            <field name="arch" type="xml">
+                <tree string="Commission and Refund Settings">
+                    <field name="company_id"/>
+                    <field name="department_id"/>
+                    <field name="commission_account_id"/>
+                    <field name="commission_control_account_id"/>
+                    <field name="refund_account_id"/>
+                    <field name="refund_control_account_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="commission_refund_acc_config_action_window" model="ir.actions.act_window">
+            <field name="name">Commission and Refund Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">commission.refund.acc.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                    (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('commission_refund_acc_config_tree_view')}),
+                    (0, 0, {'sequence': 1002, 'view_mode': 'form', 'view_id': ref('commission_refund_acc_config_form_view')}),
+                ]"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Commission and Refund Settings
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="commission_refund_acc_config_menu"
+                  name="Commission and Refund GL Settings"
+                  parent="account.menu_finance_configuration"
+                  action="commission_refund_acc_config_action_window"
+                  sequence="1"
+        />
+
+    </data>
+</odoo>

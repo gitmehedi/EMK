@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import res_currency
+from . import res_currency

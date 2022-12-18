@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="commission_claim_account_journal" model="account.journal">
+            <field name="name">Commission</field>
+            <field name="type">sale</field>
+            <field name="code">COMJNL</field>
+            <field name="sequence">11</field>
+        </record>
+
+        <record id="refund_claim_account_journal" model="account.journal">
+            <field name="name">Refund</field>
+            <field name="type">sale</field>
+            <field name="code">REFJNL</field>
+            <field name="sequence">12</field>
+        </record>
+    </data>
+</odoo>

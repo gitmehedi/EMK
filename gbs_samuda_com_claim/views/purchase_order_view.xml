@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase.purchase_form_action" model="ir.actions.act_window">
+            <field name="view_ids" eval="[
+                    (5, 0, 0),
+                    (0, 0, {'sequence': 16, 'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_tree')}),
+                    (0, 0, {'sequence': 16, 'view_mode': 'form', 'view_id': ref('purchase.purchase_order_form')}),
+                ]"/>
+        </record>
+
+    </data>
+</odoo>

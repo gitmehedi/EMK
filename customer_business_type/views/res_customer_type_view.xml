@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_customer_type_view_form" model="ir.ui.view">
+            <field name="name">res.customer.type.view.form</field>
+            <field name="model">res.customer.type</field>
+            <field name="arch" type="xml">
+                <form string="Customer Type">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="is_retail" attrs="{'invisible': [('is_corporate', '=', True)]}"/>
+                                <field name="is_corporate" attrs="{'invisible': [('is_retail', '=', True)]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="res_customer_type_view_tree" model="ir.ui.view">
+            <field name="name">res.customer.type.view.tree</field>
+            <field name="model">res.customer.type</field>
+            <field name="arch" type="xml">
+                <tree string="Customer Types">
+                    <field name="name"/>
+                    <field name="is_retail"/>
+                    <field name="is_corporate"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--View action for branch form view and tree view-->
+        <record id="action_res_customer_type" model="ir.actions.act_window">
+            <field name="name">Customer Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.customer.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create Customer Type
+                </p>
+            </field>
+        </record>
+
+        <!-- This Menu Item Must have a parent -->
+        <menuitem id="customer_type_menu" name="Customer Types" parent="base.menu_users"
+                  action="action_res_customer_type"/>
+
+    </data>
+</odoo>

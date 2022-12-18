@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--service_order_form-->
+        <record id="claim_customer_commission_view_form" model="ir.ui.view">
+            <field name="name">claim.customer.commission.purchase.order.view.form</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <form string="Service Order">
+                    <header>
+                        <button name="button_confirm" type="object" states="draft" string="Confirm Order"
+                                id="draft_confirm" groups="gbs_samuda_service_order.group_service_order_manager_unit,gbs_samuda_service_order.group_service_order_manager_ho"/>
+                        <button name="button_confirm" type="object" states="sent" string="Confirm Order"
+                                class="oe_highlight" groups="gbs_samuda_service_order.group_service_order_manager_unit,gbs_samuda_service_order.group_service_order_manager_ho" id="bid_confirm"/>
+                        <button name="button_approve" type="object" states='to approve' string="Approve Order"
+                                class="oe_highlight"/>
+                        <button name="action_rfq_send" groups="base.group_system" states="purchase" string="Send PO by Email" type="object"
+                                context="{'send_rfq':False}"/>
+                        <button name="button_draft" states="cancel" string="Set to Draft" type="object"/>
+                        <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel"
+                                type="object"/>
+                        <button name="button_done" type="object" string="Lock" groups="gbs_samuda_service_order.group_service_order_manager_ho,gbs_samuda_service_order.group_service_order_manager_unit"
+                                states="purchase"/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" name="action_view_invoice"
+                                    class="oe_stat_button"
+                                    icon="fa-pencil-square-o"
+                                    attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('invoice_ids','=',[])]}"
+                            >
+                                <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
+                                <field name='invoice_ids' invisible="1"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <!--attrs="{'invisible': [('state','not in',('draft','sent'))]}" <label string="Commission Claim" class="oe_edit_only"/>-->
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id" string="Customer" options="{'no_create': True,'no_edit': True}" domain="[('customer','=',True), ('parent_id','=',False),('is_deprecated','=',False)]"/>
+                                <!--<field name="partner_ref" string="Customer Reference"/>-->
+                                <field name="date_order" string="Date" readonly="1" force_save="1"/>
+                                <field name="region_type" string="Region Type" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="currency_id" groups="base.group_multi_currency" invisible="1"/>
+                                <field name="is_shipped" invisible="1"/>
+                                <field name="is_service_order" invisible="1"/>
+                                <field name="is_commission_claim" invisible="1"/>
+                                <field name="is_refund_claim" invisible="1"/>
+                                <field name="purchase_from" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
+                                <field name="sale_order_ids" widget="many2many_tags"/>
+                                <field name="picking_type_id" options="{'no_create': True}"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Customers" name="customer_order_lines">
+                                <field name="order_line">
+                                    <tree editable="bottom" create="false" edit="false">
+                                        <field name="invoice_id" readonly="1" force_save="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="state" invisible="1"/>
+                                        <field name="sequence" widget="handle" invisible="1"/>
+                                        <field name="product_id"
+                                               string="Product"
+                                               domain="[('type','=','service'),('purchase_ok','=',True)]"
+                                               context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom}"
+                                               invisible="1"
+                                        />
+                                        <field name="name" invisible="1"/>
+                                        <field name="date_planned" invisible="1"/>
+                                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" invisible="1"/>
+                                        <field name="account_analytic_id" invisible="1" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting"/>
+                                        <field name="analytic_tag_ids" invisible="1" groups="purchase.group_analytic_accounting" widget="many2many_tags"/>
+                                        <field name="product_qty" invisible="1"/>
+                                        <field name="product_uom" invisible="1" groups="product.group_uom" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
+                                        <field name="price_unit" invisible="1"/>
+                                        <!-- <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>-->
+                                        <field name="price_subtotal" widget="monetary"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page name="other_info" string="Other Information's">
+                                <group>
+                                    <group>
+                                        <field name="create_uid" string="Requested By" readonly="1"/>
+                                        <field name="commission_claim_approve_uid" string="Approver" readonly="1"/>
+                                        <field name="date_approve" string="Approve Date" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="invoice_status" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="claim_customer_commission_view_tree" model="ir.ui.view">
+            <field name="name">claim.customer.commission.purchase.order.view.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <!--decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" -->
+                <tree string="Service Order">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="name" string="Reference"/>
+                    <field name="date_order"/>
+                    <field name="is_commission_claim" invisible="1"/>
+                    <field name="is_refund_claim" invisible="1"/>
+                    <!--<field name="service_order_creator"/>-->
+                    <field name="partner_id" string="Customer"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="date_planned" invisible="context.get('quotation_only', False)"/>
+                    <field name="origin" invisible="1"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="state"/>
+                    <field name="invoice_status" invisible="not context.get('show_purchase', False)"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="claim_customer_commission_tree_view_action" model="ir.actions.act_window">
+            <field name="name">Commission Claim</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[
+                    (5, 0, 0),
+                    (0, 0, {'sequence': 4, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
+                    (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
+                ]"/>
+            <field name="domain">[('is_service_order', '=', True),('is_commission_claim', '=', True)]</field>
+            <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a commission order for customer.
+                </p>
+            </field>
+        </record>
+
+        <record id="claim_customer_refund_tree_view_action" model="ir.actions.act_window">
+            <field name="name">Refund Claim</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[
+                    (5, 0, 0),
+                    (0, 0, {'sequence': 4, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
+                    (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
+                ]"/>
+            <field name="domain">[('is_service_order', '=', True),('is_refund_claim', '=', True)]</field>
+            <field name="context">{'default_is_service_order': True, 'default_is_refund_claim': True}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a refund order for customer.
+                </p>
+            </field>
+        </record>
+
+        <record id="pending_commission_claim_hos_approval_tree_view_action" model="ir.actions.act_window">
+            <field name="name">Pending Commission Claim</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[
+                    (5, 0, 0),
+                    (0, 0, {'sequence': 4, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
+                    (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
+                ]"/>
+            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','sent')]</field>
+            <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a commission order for customer.
+                </p>
+            </field>
+        </record>
+
+        <record id="pending_commission_claim_hoa_approval_tree_view_action" model="ir.actions.act_window">
+            <field name="name">Pending Commission Claim</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[
+                    (5, 0, 0),
+                    (0, 0, {'sequence': 4, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
+                    (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
+                ]"/>
+            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','purchase')]</field>
+            <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a commission order for customer.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_commission_refund_claim" name="Claiming" parent="sales_team.menu_base_partner" sequence="6"/>
+        <menuitem
+                id="claim_customer_commission_menu"
+                parent="menu_commission_refund_claim"
+                sequence="4"
+                action="gbs_commission_refund.claim_customer_commission_tree_view_action"
+                groups="sales_team.group_sale_salesman"
+        />
+
+        <menuitem
+                id="claim_customer_refund_menu"
+                parent="menu_commission_refund_claim"
+                sequence="4"
+                action="gbs_commission_refund.claim_customer_refund_tree_view_action"
+                groups="sales_team.group_sale_salesman"
+        />
+
+        <menuitem
+                id="pending_commission_claim_hos_menu"
+                parent="gbs_samuda_sales_approval_menu.menu_hos_approval"
+                sequence="4"
+                action="gbs_commission_refund.pending_commission_claim_hos_approval_tree_view_action"
+                groups="sales_team.group_sale_salesman"
+        />
+
+        <menuitem
+                id="pending_commission_claim_hoa_menu"
+                parent="gbs_samuda_sales_approval_menu.menu_hoa_approval"
+                sequence="4"
+                action="gbs_commission_refund.pending_commission_claim_hoa_approval_tree_view_action"
+                groups="sales_team.group_sale_salesman"
+        />
+
+    </data>
+</odoo>

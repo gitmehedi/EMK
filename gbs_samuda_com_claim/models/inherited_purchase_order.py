@@ -6,7 +6,6 @@ from odoo.exceptions import ValidationError, UserError
 
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
-    _name = "purchase.order.line"
 
     invoice_id = fields.Many2one('account.invoice', string="SO Invoice", help="Invoices based on selected sale orders in customer claim!")
 
@@ -21,14 +20,39 @@ class InheritedPurchaseOrder(models.Model):
         'cancel': [('readonly', True)],
     }
 
-    is_claim = fields.Boolean(string='C/R Claimed', help="Commission or Refund Claim Flag.", default=lambda self: self.env.context.get('is_claim') or False)
+    is_commission_claim = fields.Boolean(string='Commission Claimed', help="Commission Claim Flag.", default=lambda self: self.env.context.get('is_commission_claim') or False)
+    is_refund_claim = fields.Boolean(string='Refund Claimed', help="Refund Claim Flag.", default=lambda self: self.env.context.get('is_refund_claim') or False)
+
+    def _sale_order_domain(self):
+        return [('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)]
+
+    @api.onchange('partner_id', 'operating_unit_id')
+    def _onchange_sale_order_domain(self):
+        # clear existing records
+        self.sale_order_ids = [(5, 0, 0)]
+        self.order_line = [(5, 0, 0)]
+
+        if self.partner_id and self.operating_unit_id:
+            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)])
+            available_ids = []
+            for sale_order in sale_order_ids:
+                if self.is_commission_claim:
+                    if sale_order.commission_available:
+                        available_ids.append(sale_order.id)
+                else:
+                    if sale_order.refund_available:
+                        available_ids.append(sale_order.id)
+
+            return {'domain': {'sale_order_ids': [('id', 'in', available_ids)]}}
+
     sale_order_ids = fields.Many2many(
         comodel_name='sale.order',
         relation="purchase_order_commission_sale_order_rel",
         column1="purchase_order_commission_claim_id",
         column2="sale_order_id",
         string='Sale Order',
-        states=READONLY_STATES
+        states=READONLY_STATES,
+        domain=_sale_order_domain,
     )
 
     commission_claim_approve_uid = fields.Many2one('res.users', 'Approved By')
@@ -49,15 +73,26 @@ class InheritedPurchaseOrder(models.Model):
     def _onchange_sale_order_ids(self):
         for rec in self:
             purchase_lines = [(5, 0, 0)]
-            commission_control_acc = self.env['commission.refund.journal.config'].sudo().search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+
             # making purchase order line based on selected SO
             for so in rec.sale_order_ids:
                 for inv in so.invoice_ids:
+                    # if (rec.is_commission_claim and inv.is_commission_claimed) or (rec.is_refund_claim and inv.is_refund_claimed):
+                    #     continue
+
                     for inv_line in inv.invoice_line_ids:
-                        if inv_line.product_id:
-                            commission_amount = inv_line.sale_line_ids.filtered(lambda r: r.product_id.id == inv_line.product_id.id).corporate_commission_per_unit
+                        if inv_line.product_id and inv_line.quantity > 0:
+                            if self.is_commission_claim:
+                                commission_amount = inv_line.sale_line_ids.filtered(lambda r: r.product_id.id == inv_line.product_id.id).corporate_commission_per_unit
+                            else:
+                                commission_amount = inv_line.sale_line_ids.filtered(lambda r: r.product_id.id == inv_line.product_id.id).corporate_refund_per_unit
+
+                            if commission_amount <= 0:
+                                # skip invoice if commission/refund balance is zero or less.
+                                continue
+
                             vals = {
-                                "name": "Claim/" + self.name,
+                                "name": inv_line.product_id.name,
                                 "date_planned": datetime.now().date(),
                                 "currency_id": self.partner_id.property_purchase_currency_id.id,
                                 "invoice_id": inv.id,
@@ -75,51 +110,21 @@ class InheritedPurchaseOrder(models.Model):
     @api.model
     def create(self, vals):
         res = super(InheritedPurchaseOrder, self).create(vals)
-        if res.id and vals.get('is_claim'):
+        if res.id and (vals.get('is_commission_claim') or vals.get('is_refund_claim')):
             operating_unit_id = self.env['operating.unit'].browse(vals['operating_unit_id'])
-            rec_name = self.env['ir.sequence'].next_by_code_new(
-                'commission.claim', datetime.today(), operating_unit_id
-            ) or '/'
+            seq = 'commission.claim' if vals.get('is_commission_claim') else 'refund.claim'
+            rec_name = self.env['ir.sequence'].next_by_code_new(seq, datetime.today(), operating_unit_id) or '/'
             res.name = rec_name
-           # res._onchange_sale_order_ids()
+
+            # need to recall to create relational records with order line.
+            res._onchange_sale_order_ids()
 
         return res
-
-    # @api.multi
-    # def button_draft_commission_claim(self):
-    #     self.state = "draft"
-    #     self.date_approve = False
-    #     self.commission_claim_approve_uid = False
-    #
-    # @api.multi
-    # def button_confirm_commission_claim(self):
-    #     self.state = 'sent'
-    #
-    # @api.multi
-    # def button_cancel_commission_claim(self):
-    #     self.state = 'cancel'
-    #
-    # @api.multi
-    # def button_approve_commission_claim(self):
-    #     self.state = "purchase"
-    #     self.commission_claim_approve_uid = self.env.user.id
-    #     self.date_approve = datetime.today()
-    #
-    # @api.multi
-    # def button_account_approve_commission_claim(self):
-    #     self.state = "done"
-    #     self.commission_claim_approve_uid = self.env.user.id
-    #     self.date_approve = datetime.today()
-
-    @api.multi
-    def print_service_order(self):
-        data = {'active_id': self.id}
-        return self.env['report'].get_action(self, 'gbs_samuda_service_order.report_service_order', data)
 
     @api.multi
     @api.constrains('order_line')
     def _check_exist_product_in_line(self):
-        if not self.is_claim:
+        if not (self.is_commission_claim or self.is_refund_claim):
             for purchase in self:
                 exist_product_list = []
                 for line in purchase.order_line:
@@ -130,6 +135,6 @@ class InheritedPurchaseOrder(models.Model):
     @api.multi
     def action_view_invoice(self):
         result = super(InheritedPurchaseOrder, self).action_view_invoice()
-        if self.is_claim:
+        if self.is_commission_claim or self.is_refund_claim:
             result['context']['default_account_id'] = self.partner_id.commission_refund_account_payable_id.id
         return result
