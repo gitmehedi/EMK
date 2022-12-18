@@ -28,5 +28,7 @@
         'report/lc_first_acceptance_report_xlsx_view.xml',
         'report/lc_second_acceptance_report_xlsx_view.xml',
         'report/lc_local_maturity_report_xlsx_view.xml',
+        'wizard/exp_reference_wizard.xml',
+        'report/exp_reference_report.xml',
     ]
 }

@@ -87,12 +87,26 @@ class InheritedPurchaseOrder(models.Model):
     @api.multi
     @api.constrains('order_line')
     def _check_exist_product_in_line(self):
-        for purchase in self:
-            exist_product_list = []
-            for line in purchase.order_line:
-                if line.product_id.id in exist_product_list:
-                    raise ValidationError(_('Product should be one per line.'))
-                exist_product_list.append(line.product_id.id)
+        if not self.is_service_order:
+            for purchase in self:
+                exist_product_list = []
+                for line in purchase.order_line:
+                    if line.product_id.id in exist_product_list:
+                        raise ValidationError(_('Product should be one per line.'))
+                    exist_product_list.append(line.product_id.id)
+
+
+    @api.multi
+    def action_cancel_service_order(self):
+        vendor_advance = self.env['vendor.advance'].search([('partner_id', '=', self.partner_id.id), ('purchase_order_id', '=', self.id)])
+        query = """select id from account_invoice_line as ail LEFT JOIN purchase_order_line as pol ON 
+        ail.purchase_line_id = pol.id where pol.order_id=%s""" % self.id
+        self.env.cr.execute(query)
+        account_invoice = self.env.cr.dictfetchall()
+        if not vendor_advance and not account_invoice:
+            self.write({'state': 'draft'})
+        else:
+            raise UserError('Service order has been already bills/advance \n You can\'t cancel')
 
 
 class InheritedPurchaseOrderLine(models.Model):

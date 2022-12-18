@@ -52,7 +52,7 @@ class ReturnPicking(models.TransientModel):
                     "Return Date must be lesser than current date")
 
     return_date = fields.Date(string='Return Date', default=datetime.today())
-    return_reason = fields.Char(string='Return Reason', size=50)
+    return_reason = fields.Char(string='Return Reason', size=16)
 
     @api.constrains('product_return_moves')
     def _check_quantity(self):
@@ -213,6 +213,7 @@ class ReturnPicking(models.TransientModel):
             move_of_reverse_cogs = move.copy(default={'ref': ref, 'date': self.return_date})
             for aml in move_of_reverse_cogs.line_ids:
                 aml.date = self.return_date
+                aml.date_maturity = self.return_date
                 if aml.debit > 0:
                     aml.name = name
                     aml.debit = 0
@@ -252,7 +253,8 @@ class ReturnPicking(models.TransientModel):
             'lc_id': main_invoice.lc_id.id or False,
             'payment_term_id': main_invoice.payment_term_id.id or False,
             'origin': main_invoice.number,
-            'refund_invoice_id': main_invoice.id
+            'refund_invoice_id': main_invoice.id,
+            'from_return': True
         }
         invoice_obj = self.env['account.invoice'].create(refund_obj)
 
@@ -263,6 +265,7 @@ class ReturnPicking(models.TransientModel):
                     qty = rtns.quantity
 
             main_invoice_price_unit = self.get_main_invoice_price_unit(main_invoice.id, move.product_id.id)
+            self.update_main_invoice_product_qty(main_invoice.id, move.product_id.id, qty)
             invoice_line = {
                 'product_id': move.product_id.id,
                 'name': move.product_id.name,
@@ -290,6 +293,15 @@ class ReturnPicking(models.TransientModel):
         invoice_line = self.env['account.invoice.line'].sudo().search(
             [('invoice_id', '=', main_invoice_id), ('product_id', '=', pro_id)], limit=1)
         return invoice_line.price_unit
+
+    def update_main_invoice_product_qty(self, main_invoice_id, pro_id, return_qty):
+        invoice_line = self.env['account.invoice.line'].sudo().search(
+            [('invoice_id', '=', main_invoice_id), ('product_id', '=', pro_id)], limit=1)
+        total_refund_qty = 0.0
+        if invoice_line.auto_refunded_qty:
+            total_refund_qty = total_refund_qty + invoice_line.auto_refunded_qty
+        invoice_line.write(
+            {'quantity': invoice_line.quantity + return_qty, 'auto_refunded_qty': total_refund_qty + return_qty})
 
     def _get_outstanding_info(self, invoice_obj, main_invoice_move):
 
@@ -361,17 +373,18 @@ class ReturnPicking(models.TransientModel):
             if not picking.invoice_ids:
                 raise UserError(_("Invoice not found for this DC!"))
             else:
-                for inv in picking.invoice_ids:
-                    if inv.state == 'draft':
+                invoice_obj = self.env['account.invoice'].sudo().search([('picking_ids', 'in', picking.id)])
+                if invoice_obj.state != 'open':
+                    if invoice_obj.state == 'draft':
                         raise UserError(_("You need to validate the invoice. Invoice needs to be in open state!"))
-                    elif inv.state == 'paid':
+                    elif invoice_obj.state == 'paid':
                         raise UserError(_("Invoice is already paid\n You need to unreconcile the invoice first!"))
-                    elif inv.state == 'open':
-                        return_operation = self.do_operation(rec, picking, return_moves, self.product_return_moves, inv)
-                        if return_operation:
-                            return_success = return_success + 1
                     else:
                         raise UserError(_("Invoice needs to be in open state!"))
+                return_operation = self.do_operation(rec, picking, return_moves, self.product_return_moves, invoice_obj)
+                if return_operation:
+                    return_success = return_success + 1
+
         if return_success > 0:
             message_id = self.env['return.success.wizard'].create({'message': _(
                 "Return Operation Successful!\nReverse COGS Entry Created Successfully.")

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_exp_reference" model="ir.actions.report.xml">
+            <field name="name">EXP Reference Report</field>
+            <field name="model">exp.reference.report</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="report_name">lc_sales_local_report.exp_reference_report</field>
+            <field name="report_type">xlsx</field>
+            <field name="auto" eval="False"/>
+        </record>
+    </data>
+</odoo>

@@ -145,6 +145,11 @@
                             attrs="{'invisible':['|',('state','!=','draft'),('name','=','/')]}"
                             type="object"
                             class="oe_highlight"/>
+                    <button name="action_excel_report"
+                            string="Excel Report"
+                            attrs="{'invisible':[('state','!=','done')]}"
+                            type="object"
+                            class="oe_highlight"/>
                 </xpath>
 
                 <xpath expr="//button[@name='%(purchase_landed_cost.action_import_invoice_line_wizard)d']"

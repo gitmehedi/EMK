@@ -40,7 +40,6 @@ class GBSAccountInvoiceReport(models.Model):
     # weight = fields.Float(string='Gross Weight', readonly=True)
     # volume = fields.Float(string='Volume', readonly=True)
 
-
     # type = fields.Selection([
     #     ('out_invoice', 'Customer Invoice'),
     #     ('in_invoice', 'Vendor Bill'),
@@ -119,7 +118,12 @@ class GBSAccountInvoiceReport(models.Model):
                     ai.company_id,
                     ai.type,
                     ai.state,
-                    SUM (ail.quantity / u.factor * u2.factor) AS product_qty,
+                  --  SUM (ail.quantity / u.factor * u2.factor) AS product_qty,
+                    CASE
+					    WHEN (ai.type = 'out_invoice') THEN SUM (ail.quantity / u.factor * u2.factor) 
+					    WHEN (ai.type = 'out_refund') AND (ai.from_return = true) THEN (-1)*(SUM (ail.quantity / u.factor * u2.factor)) 
+					    ELSE 0.0
+					END AS product_qty,
                     SUM(ail.price_subtotal_signed) AS price_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
                             WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
@@ -136,7 +140,7 @@ class GBSAccountInvoiceReport(models.Model):
         from_str = """
                 FROM 
                     account_invoice_line ail
-                    JOIN account_invoice ai ON ai.id = ail.invoice_id AND ai.type = 'out_invoice'
+                    JOIN account_invoice ai ON ai.id = ail.invoice_id AND ai.type IN ('out_invoice','out_refund')
                     JOIN res_partner partner ON ai.commercial_partner_id = partner.id
                     LEFT JOIN product_product pr ON pr.id = ail.product_id AND pr.invisible_on_sales_analysis=false
                     LEFT JOIN product_template pt ON pt.id = pr.product_tmpl_id
