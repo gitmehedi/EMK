@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_sales_pricelist_commission_refund_view_form" model="ir.ui.view">
+            <field name="name">product.sales.pricelist.form.inherit</field>
+            <field name="model">product.sales.pricelist</field>
+            <field name="inherit_id" ref="product_sales_pricelist.sale_price_change_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="before">
+                    <group>
+                        <field name="company_id" invisible="1"/>
+                        <field name="is_corporate" invisible="1"/>
+                        <field name="is_retailer" invisible="1"/>
+
+                        <!--corporate-->
+                        <group attrs="{'invisible': [('is_corporate','=',False)]}">
+                            <h2>Corporate</h2>
+                            <separator colspan="2" string="Commission" class="mt5"/>
+                            <field name="corporate_commission_per_unit"/>
+                            <field name="corporate_commission_tolerable"/>
+
+                            <separator colspan="2" string="Refund" class="mt5"/>
+                            <field name="corporate_refund_per_unit"/>
+                            <field name="corporate_refund_tolerable"/>
+                        </group>
+
+                        <!--dealer-->
+                        <group attrs="{'invisible': [('is_retailer','=',False)]}">
+                            <h2>Dealer</h2>
+                            <separator colspan="2" string="Commission &amp; Refund" class="mt5"/>
+                            <field name="dealer_commission_applicable"/>
+                            <field name="dealer_refund_applicable"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_sales_pricelist_commission_refund_view_tree" model="ir.ui.view">
+            <field name="name">product.sales.pricelist.tree.inherit</field>
+            <field name="model">product.sales.pricelist</field>
+            <field name="inherit_id" ref="product_sales_pricelist.sale_price_change_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='new_price']" position="after">
+
+                    <field name="company_id" invisible="1"/>
+                    <field name="is_corporate" invisible="1"/>
+                    <field name="is_retailer" invisible="1"/>
+
+                    <field name="corporate_commission_per_unit" string="Commission (Unit)" attrs="{'invisible': [('is_corporate','=',False)]}"/>
+                    <field name="corporate_commission_tolerable" string="Commission Tolerable" attrs="{'invisible': [('is_corporate','=',False)]}"/>
+                    <field name="corporate_refund_per_unit" string="Refund (Unit)" attrs="{'invisible': [('is_corporate','=',False)]}"/>
+                    <field name="corporate_refund_tolerable" string="Refund Tolerable" attrs="{'invisible': [('is_corporate','=',False)]}"/>
+
+                    <field name="dealer_commission_applicable" string="Commission Applicable" attrs="{'invisible': [('is_retailer','=',False)]}"/>
+                    <field name="dealer_refund_applicable" string="Refund Applicable" attrs="{'invisible': [('is_retailer','=',False)]}"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

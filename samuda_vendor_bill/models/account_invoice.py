@@ -47,6 +47,11 @@ class AccountInvoice(models.Model):
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):
         move_lines = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
+
+        # for line_tuple in move_lines:
+        #     if self.company_id:
+        #         line_tuple[2]['company_id'] = self.company_id.id
+
         # check the type of invoice
         purchase_order = self.env['purchase.order'].search([('name', '=', self.origin)])
         if self.type == 'in_invoice' and not purchase_order.is_service_order:

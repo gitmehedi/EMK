@@ -32,7 +32,6 @@
                 <attribute name="groups">gbs_application_group.group_sales_vendor_manager,gbs_application_group.group_sales_customer_manager</attribute>
             </xpath>
 
-
         </field>
     </record>
 
@@ -57,14 +56,14 @@
         <field name="context">{'default_customer':0, 'default_supplier':1, 'no_create_edit_button': True, }</field>
         <field name="filter" eval="True"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a contact in your address book.
-          </p><p>
-            Odoo helps you easily track all activities related to
-            a supplier: discussions, history of purchases,
-            documents, etc.
-          </p>
+            <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+            </p>
+            <p>
+                Odoo helps you easily track all activities related to
+                a supplier: discussions, history of purchases,
+                documents, etc.
+            </p>
         </field>
     </record>
-
 </odoo>
