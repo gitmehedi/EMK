@@ -242,10 +242,25 @@ class Shipment(models.Model):
 
     @api.multi
     def action_draft(self):
+        for product_line in self.shipment_product_lines:
+            purchase_order_id = product_line.purchase_order_id
+            if purchase_order_id:
+                lc_product_line = self.env['lc.product.line'].search([('product_id', '=', product_line.product_id.id),('purchase_order_id', '=', purchase_order_id.id), ('lc_id', '=', product_line.shipment_id.lc_id.id)])
+                if lc_product_line:
+                    for lp_line in lc_product_line:
+                        received_qty = lp_line.product_received_qty - product_line.product_qty
+                        lp_line.write({'product_received_qty': received_qty})
+            else:
+                lc_product_line = self.env['lc.product.line'].search([('product_id', '=', product_line.product_id.id), ('lc_id', '=', product_line.shipment_id.lc_id.id)])
+                if lc_product_line:
+                    for lp_line in lc_product_line:
+                        received_qty = lp_line.product_received_qty - product_line.product_qty
+                        lp_line.write({'product_received_qty': received_qty})
+            product_line.unlink()
+
         self.write({'state': 'draft'})
 
 class LetterOfCredit(models.Model):
-
     _inherit = 'letter.credit'
 
     shipment_ids = fields.One2many('purchase.shipment', 'lc_id', string='Shipments')

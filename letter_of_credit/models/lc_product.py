@@ -19,6 +19,7 @@ class LCProduct(models.Model):
 
     lc_id = fields.Many2one('letter.credit', string='LC')
     sale_order_id = fields.Many2one('sale.order', string='Sale Order')
+    purchase_order_id = fields.Many2one('purchase.order', string='Purchase Order')
     # Check test for foreign sales
 
     # Another test for foreign sales
