@@ -3,7 +3,8 @@ from datetime import datetime
 from odoo import models, fields, api
 from odoo.addons import decimal_precision as dp
 from odoo.tools import frozendict
-
+from lxml import etree
+import json
 
 class Picking(models.Model):
     _inherit = "stock.picking"
@@ -22,6 +23,23 @@ class Picking(models.Model):
     mrr_no = fields.Char('MRR No',track_visibility="onchange")
     mrr_date = fields.Date('MRR date',track_visibility="onchange")
     approval_comment = fields.Char('Status', track_visibility='onchange')
+
+
+    def fields_view_get(self, view_id=None, view_type='tree', toolbar=False, submenu=False):
+        result = super(Picking, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        # if not self.env.context.get('show_the_column', False) and view_type == 'tree':
+        if view_type == 'tree':
+            doc = etree.fromstring(result['arch'])
+            for field in doc.xpath('//field[@name="mrr_status"]'):
+                check_mrr = self.env.context.get('check_mrr', False)
+                if not check_mrr:
+                    # field.set('invisible', '1')
+                    modifiers = json.loads(field.get('modifiers', '{}'))
+                    modifiers['tree_invisible'] = True
+                    modifiers['column_invisible'] = True
+                    field.set('modifiers', json.dumps(modifiers))
+            result['arch'] = etree.tostring(doc)
+        return result
 
     @api.multi
     @api.depends('receive_type','location_dest_id','check_mrr_button','state')
@@ -85,4 +103,4 @@ class PackOperation(models.Model):
     _inherit = "stock.pack.operation"
 
     mrr_quantity = fields.Float('MRR Quantity', related = 'qty_done', digits=dp.get_precision('Product Unit of Measure'))
-    check_mrr_button = fields.Boolean(defaulte=False,related = 'picking_id.check_mrr_button', string='MRR Button Check')
+    check_mrr_button = fields.Boolean(default=False,related = 'picking_id.check_mrr_button', string='MRR Button Check')
