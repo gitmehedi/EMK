@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="commission_configuration_form_view" model="ir.ui.view">
+            <field name="name">commission.configuration.form</field>
+            <field name="model">commission.configuration</field>
+            <field name="arch" type="xml">
+                <form string="Commission/Refund Configuration">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Configuration Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="customer_type"/>
+                                <field name="process"/>
+                                <field name="auto_load_commission_refund_in_so_line"
+                                       attrs="{'invisible': [('process','=','checkbox')]}"
+                                />
+                                <field name="commission_provision" required="1"/>
+                                <field name="cpc_type" attrs="{'invisible': [('commission_provision','!=','customer_collection')], 'required': [('commission_provision','=','customer_collection')]}"/>
+                            </group>
+                            <group>
+                                <field name="functional_unit"/>
+                                <field name="show_packing_mode"/>
+                                <field name="show_discount"/>
+                                <field name="show_tax"/>
+                                <field name="so_readonly_field"/>
+                            </group>
+                        </group>
+
+                        <separator colspan="2" string="Documentation Title" class="mt-5"/>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A assumenda autem consectetur corporis numquam ut velit voluptas! Architecto blanditiis, dignissimos ea esse, fugiat molestias nihil
+                            placeat ullam veritatis voluptas voluptatum!
+                        </p>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="commission_configuration_tree_view" model="ir.ui.view">
+            <field name="name">commission.configuration.tree</field>
+            <field name="model">commission.configuration</field>
+            <field name="arch" type="xml">
+                <tree string="Commission/Refund Configurations">
+                    <field name="name"/>
+                    <field name="customer_type"/>
+                    <field name="functional_unit"/>
+                    <field name="process"/>
+                    <field name="show_packing_mode"/>
+                    <field name="auto_load_commission_refund_in_so_line"/>
+                    <field name="commission_provision"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="commission_configuration_act_window" model="ir.actions.act_window">
+            <field name="name">Commission/Refund Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">commission.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Commission/Refund Configuration
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Commission/Refund Configuration" id="commission_configuration_menu"
+                  parent="sales_team.menu_sale_config"
+                  action="commission_configuration_act_window"/>
+
+    </data>
+</odoo>

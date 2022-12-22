@@ -10,11 +10,11 @@
         'base',
         'product_sales_pricelist',
         'sale',
-        'gbs_sales_commission_so',
         'gbs_sale_order_approval',
         'account',
         'hr',
-        'customer_business_type'
+        'customer_business_type',
+        'gbs_commission_config'
     ],
     'data': [
         # data

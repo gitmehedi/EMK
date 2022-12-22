@@ -36,7 +36,7 @@ class ProductSalePriceHistiryLine(models.Model):
 
     @api.model
     def pull_automation(self):
-        current_date = time.strftime("%m/%d/%Y")
+        current_date = time.strftime("%d/%m/%Y")
         vals = {}
 
         price_list_pool = self.env['product.sales.pricelist'].search(

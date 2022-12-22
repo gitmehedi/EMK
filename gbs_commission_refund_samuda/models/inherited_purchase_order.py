@@ -14,36 +14,23 @@ class InheritedPurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
     READONLY_STATES = {
-        "sent": [('readonly', True)],
-        'purchase': [('readonly', True)],
+        "claim_hos_approve": [('readonly', True)],
+        'claim_hoa_approve': [('readonly', True)],
         'done': [('readonly', True)],
         'cancel': [('readonly', True)],
     }
 
     is_commission_claim = fields.Boolean(string='Commission Claimed', help="Commission Claim Flag.", default=lambda self: self.env.context.get('is_commission_claim') or False)
     is_refund_claim = fields.Boolean(string='Refund Claimed', help="Refund Claim Flag.", default=lambda self: self.env.context.get('is_refund_claim') or False)
+    state = fields.Selection(selection_add=[
+        ('claim_draft', 'New'),
+        ('claim_hos_approve', 'Sales Approval'),
+        ('claim_hoa_approve', 'Accounts Approval'),
+        ('done', 'Locked')
+    ])
 
     def _sale_order_domain(self):
         return [('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)]
-
-    @api.onchange('partner_id', 'operating_unit_id')
-    def _onchange_sale_order_domain(self):
-        # clear existing records
-        self.sale_order_ids = [(5, 0, 0)]
-        self.order_line = [(5, 0, 0)]
-
-        if self.partner_id and self.operating_unit_id:
-            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)])
-            available_ids = []
-            for sale_order in sale_order_ids:
-                if self.is_commission_claim:
-                    if sale_order.commission_available:
-                        available_ids.append(sale_order.id)
-                else:
-                    if sale_order.refund_available:
-                        available_ids.append(sale_order.id)
-
-            return {'domain': {'sale_order_ids': [('id', 'in', available_ids)]}}
 
     sale_order_ids = fields.Many2many(
         comodel_name='sale.order',
@@ -69,6 +56,25 @@ class InheritedPurchaseOrder(models.Model):
         domain=_get_operating_unit
     )
 
+    @api.onchange('partner_id', 'operating_unit_id')
+    def _onchange_sale_order_domain(self):
+        # clear existing records
+        self.sale_order_ids = [(5, 0, 0)]
+        self.order_line = [(5, 0, 0)]
+
+        if self.partner_id and self.operating_unit_id:
+            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)])
+            available_ids = []
+            for sale_order in sale_order_ids:
+                if self.is_commission_claim:
+                    if sale_order.commission_available:
+                        available_ids.append(sale_order.id)
+                else:
+                    if sale_order.refund_available:
+                        available_ids.append(sale_order.id)
+
+            return {'domain': {'sale_order_ids': [('id', 'in', available_ids)]}}
+
     @api.onchange('sale_order_ids')
     def _onchange_sale_order_ids(self):
         for rec in self:
@@ -77,9 +83,6 @@ class InheritedPurchaseOrder(models.Model):
             # making purchase order line based on selected SO
             for so in rec.sale_order_ids:
                 for inv in so.invoice_ids:
-                    # if (rec.is_commission_claim and inv.is_commission_claimed) or (rec.is_refund_claim and inv.is_refund_claimed):
-                    #     continue
-
                     for inv_line in inv.invoice_line_ids:
                         if inv_line.product_id and inv_line.quantity > 0:
                             if self.is_commission_claim:
@@ -115,6 +118,7 @@ class InheritedPurchaseOrder(models.Model):
             seq = 'commission.claim' if vals.get('is_commission_claim') else 'refund.claim'
             rec_name = self.env['ir.sequence'].next_by_code_new(seq, datetime.today(), operating_unit_id) or '/'
             res.name = rec_name
+            res.state = 'claim_draft'
 
             # need to recall to create relational records with order line.
             res._onchange_sale_order_ids()
@@ -138,3 +142,21 @@ class InheritedPurchaseOrder(models.Model):
         if self.is_commission_claim or self.is_refund_claim:
             result['context']['default_account_id'] = self.partner_id.commission_refund_account_payable_id.id
         return result
+
+    @api.multi
+    def button_claim_confirm(self):
+        self.state = 'claim_hos_approve'
+
+    @api.multi
+    def button_claim_validate(self):
+        self.state = 'claim_hoa_approve'
+
+    @api.multi
+    def button_claim_approve(self):
+        self.state = 'done'
+
+    @api.multi
+    def button_draft(self):
+        super(InheritedPurchaseOrder, self).button_draft()
+        if self.is_commission_claim or self.is_refund_claim:
+            self.state = "claim_draft"
