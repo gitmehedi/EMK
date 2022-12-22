@@ -45,6 +45,7 @@ class DocReceiveWizard(models.TransientModel):
                                     'date_planned': obj.date_planned,
                                     'product_uom': obj.product_uom,
                                     'price_unit': obj.price_unit,
+                                    'purchase_order_id': obj.purchase_order_id,
                                     }))
         self.product_lines = vals
 
@@ -69,6 +70,7 @@ class DocReceiveWizard(models.TransientModel):
                             'date_planned': pro_line.date_planned,
                             'product_uom':pro_line.product_uom,
                             'price_unit':pro_line.price_unit,
+                            'purchase_order_id': pro_line.purchase_order_id
                             }))
             pro_lc_line_pool = self.env['lc.product.line'].search([('id', '=', pro_line.lc_pro_line_id)])
             res_received_qty = pro_lc_line_pool.product_received_qty+pro_line.product_qty
@@ -99,6 +101,7 @@ class ShipmentProductLineWizard(models.TransientModel):
     price_unit = fields.Float(string='Unit Price')
     lc_pro_line_id = fields.Integer(string='LC Line ID')
     shipment_pro_line_id = fields.Integer(string='Shipment Line ID')
+    purchase_order_id = fields.Many2one('purchase.order', string='Purchase Order')
 
 
 
