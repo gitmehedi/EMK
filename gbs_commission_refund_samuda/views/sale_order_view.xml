@@ -10,23 +10,25 @@
                 <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
                     <field name="so_readonly_field" invisible="1"/>
 
-                    <field name="corporate_commission_per_unit" string="Commission (Unit)" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
-                    <field name="commission_actual" invisible="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
-                    <field name="commission_tolerable" invisible="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
+                    <field name="corporate_commission_per_unit" string="Commission (Unit)" force_save="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
+                    <field name="commission_actual" invisible="1" force_save="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
+                    <field name="commission_tolerable" invisible="1" force_save="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
 
-                    <field name="corporate_refund_per_unit" string="Refund (Unit)" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
-                    <field name="refund_actual" invisible="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
-                    <field name="refund_tolerable" invisible="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
+                    <field name="corporate_refund_per_unit" string="Refund (Unit)" force_save="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
+                    <field name="refund_actual" invisible="1" force_save="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
+                    <field name="refund_tolerable" invisible="1" force_save="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
 
-                    <field name="dealer_commission_applicable" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
-                    <field name="dealer_refund_applicable" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
+                    <field name="dealer_commission_applicable" force_save="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
+                    <field name="dealer_refund_applicable" force_save="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='order_line']/tree/field[@name='tax_id']" position="attributes">
                     <attribute name="attrs">{'readonly':[('so_readonly_field','=',True)]}</attribute>
+                    <attribute name="force_save">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="attributes">
                     <attribute name="attrs">{'readonly':[('so_readonly_field','=',True)]}</attribute>
+                    <attribute name="force_save">1</attribute>
                 </xpath>
             </field>
         </record>
