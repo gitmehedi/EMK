@@ -39,7 +39,18 @@ class AccountInvoice(models.Model):
         self.refund_move_id = [(5, 0, 0)]
 
     @staticmethod
-    def get_move_line_vals(name, journal_date, journal_id, account_id, operating_unit_id, department_id, cost_center_id, debit, credit, company_id):
+    def get_move_line_vals(
+            name,
+            journal_date,
+            journal_id,
+            account_id,
+            operating_unit_id,
+            department_id,
+            cost_center_id,
+            debit,
+            credit,
+            company_id
+    ):
         return {
             'name': name,
             'date': journal_date,
@@ -137,9 +148,13 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_invoice_open(self):
         if self.type == 'out_invoice':
-            config = self.env['commission.configuration'].sudo().search([
-                ('customer_type', 'in', self.company_id.customer_types.ids), ('functional_unit', '=', self.partner_id.branch_id.id)
-            ], limit=1)
+            config = self.env['commission.configuration'].sudo().search(
+                [
+                    ('customer_type', 'in', self.company_id.customer_types.ids),
+                    ('functional_unit', '=', self.partner_id.branch_id.id)
+                ],
+                limit=1
+            )
 
             if not config:
                 if not self.company_id.customer_types:
@@ -148,7 +163,7 @@ class AccountInvoice(models.Model):
                 if not self.partner_id.branch_id:
                     raise UserError(_("Functional Unit not found to the customer."))
 
-            if config.commission_provision == 'invoice_validation':
+            if config.process != 'not_applicable' and config.commission_provision == 'invoice_validation':
                 # commission and refund journal config
                 cr_journal_config = self.env['commission.refund.acc.config'].sudo().search([['company_id', '=', self.company_id.id]], limit=1)
 

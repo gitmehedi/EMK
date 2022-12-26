@@ -7,7 +7,11 @@ from odoo.exceptions import ValidationError, UserError
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
 
-    invoice_id = fields.Many2one('account.invoice', string="SO Invoice", help="Invoices based on selected sale orders in customer claim!")
+    invoice_id = fields.Many2one(
+        'account.invoice',
+        string="SO Invoice",
+        help="Invoices based on selected sale orders in customer claim!"
+    )
 
 
 class InheritedPurchaseOrder(models.Model):
@@ -20,18 +24,29 @@ class InheritedPurchaseOrder(models.Model):
         'cancel': [('readonly', True)],
     }
 
-    is_commission_claim = fields.Boolean(string='Commission Claimed', help="Commission Claim Flag.", default=lambda self: self.env.context.get('is_commission_claim') or False)
-    is_refund_claim = fields.Boolean(string='Refund Claimed', help="Refund Claim Flag.", default=lambda self: self.env.context.get('is_refund_claim') or False)
+    def _sale_order_domain(self):
+        return [('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)]
+
+    def _get_operating_unit(self):
+        domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
+        return domain
+
+    is_commission_claim = fields.Boolean(
+        string='Commission Claimed',
+        help="Commission Claim Flag.",
+        default=lambda self: self.env.context.get('is_commission_claim') or False
+    )
+    is_refund_claim = fields.Boolean(
+        string='Refund Claimed',
+        help="Refund Claim Flag.",
+        default=lambda self: self.env.context.get('is_refund_claim') or False
+    )
     state = fields.Selection(selection_add=[
         ('claim_draft', 'New'),
         ('claim_hos_approve', 'Sales Approval'),
         ('claim_hoa_approve', 'Accounts Approval'),
         ('done', 'Locked')
-    ])
-
-    def _sale_order_domain(self):
-        return [('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)]
-
+    ])  # add new states to existing state selection field.
     sale_order_ids = fields.Many2many(
         comodel_name='sale.order',
         relation="purchase_order_commission_sale_order_rel",
@@ -41,13 +56,7 @@ class InheritedPurchaseOrder(models.Model):
         states=READONLY_STATES,
         domain=_sale_order_domain,
     )
-
     commission_claim_approve_uid = fields.Many2one('res.users', 'Approved By')
-
-    def _get_operating_unit(self):
-        domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
-        return domain
-
     operating_unit_id = fields.Many2one(
         comodel_name='operating.unit',
         string='Operating Unit',
@@ -85,14 +94,10 @@ class InheritedPurchaseOrder(models.Model):
                 for inv in so.invoice_ids:
                     for inv_line in inv.invoice_line_ids:
                         if inv_line.product_id and inv_line.quantity > 0:
-                            if self.is_commission_claim:
-                                commission_amount = inv_line.sale_line_ids.filtered(lambda r: r.product_id.id == inv_line.product_id.id).corporate_commission_per_unit
-                            else:
-                                commission_amount = inv_line.sale_line_ids.filtered(lambda r: r.product_id.id == inv_line.product_id.id).corporate_refund_per_unit
-
+                            temp_product_id = inv_line.sale_line_ids.filtered(lambda r: r.product_id.id == inv_line.product_id.id)
+                            commission_amount = temp_product_id.corporate_commission_per_unit if self.is_commission_claim else temp_product_id.corporate_refund_per_unit
                             if commission_amount <= 0:
-                                # skip invoice if commission/refund balance is zero or less.
-                                continue
+                                continue  # skip invoice if commission/refund balance is zero or less.
 
                             vals = {
                                 "name": inv_line.product_id.name,

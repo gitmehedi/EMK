@@ -11,13 +11,13 @@
                         <div class="oe_title">
                             <label for="name"/>
                             <h1>
-                                <field name="name" placeholder="Configuration Name"/>
+                                <field name="name" required="1" placeholder="Configuration Name"/>
                             </h1>
                         </div>
                         <group>
                             <group>
-                                <field name="customer_type"/>
-                                <field name="process"/>
+                                <field name="customer_type" required="1"/>
+                                <field name="process" required="1"/>
                                 <field name="auto_load_commission_refund_in_so_line"
                                        attrs="{'invisible': [('process','=','checkbox')]}"
                                 />
@@ -25,7 +25,7 @@
                                 <field name="cpc_type" attrs="{'invisible': [('commission_provision','!=','customer_collection')], 'required': [('commission_provision','=','customer_collection')]}"/>
                             </group>
                             <group>
-                                <field name="functional_unit"/>
+                                <field name="functional_unit" required="1"/>
                                 <field name="show_packing_mode"/>
                                 <field name="show_discount"/>
                                 <field name="show_tax"/>
@@ -61,7 +61,6 @@
                 </tree>
             </field>
         </record>
-
 
         <record id="commission_configuration_act_window" model="ir.actions.act_window">
             <field name="name">Commission/Refund Configuration</field>

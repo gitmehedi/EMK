@@ -44,25 +44,19 @@ class SaleOrder(models.Model):
     def check_second_approval(self, line, price_change_pool, causes):
         self.ensure_one()
         is_double_validation = False
-        # product_id = line.product_id.id
-        # uom_id = line.product_uom.id
-        # product_package_mode = line.order_id.pack_type.id
-
-        # pricelist_id = self.env['product.sales.pricelist'].sudo().search(
-        #     [('product_id', '=', line.product_id.id), ('uom_id', '=', uom_id), ('product_package_mode', '=', product_package_mode)],
-        #     limit=1
-        # )
 
         if line.corporate_commission_per_unit > (line.commission_actual + line.commission_tolerable):
-            causes.append("No commission found for `{}` but requested commission is = {}".format(line.product_id.name, line.corporate_commission_per_unit))
+            temp_msg = "No commission found" if (line.commission_actual + line.commission_tolerable) <= 0 else "Current commission = {} and tolerable= {}".format(line.commission_actual, line.commission_tolerable)
+            causes.append("{} for `{}` but requested commission is = {}".format(temp_msg, line.product_id.name, line.corporate_commission_per_unit))
             is_double_validation = True
 
         if line.corporate_refund_per_unit > (line.refund_actual + line.refund_tolerable):
-            causes.append("No refund found for `{}` but requested commission is = {}".format(line.product_id.name, line.corporate_commission_per_unit))
+            temp_msg = "No refund found" if (line.refund_actual + line.refund_tolerable) <= 0 else "Current refund = {} and tolerable= {}".format(line.refund_actual, line.refund_tolerable)
+            causes.append("{} for `{}` but requested commission is = {}".format(temp_msg, line.product_id.name, line.corporate_commission_per_unit))
             is_double_validation = True
 
         res = super(SaleOrder, self).check_second_approval(line, price_change_pool, causes)
-        return res or is_double_validation
+        return res or is_double_validation  # if any is true then double validation is required.
 
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         result = super(SaleOrder, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
@@ -70,8 +64,9 @@ class SaleOrder(models.Model):
             company = self.env.user.company_id
             config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
 
-            # hide tax column when show tax is False.
             order_line_tree = etree.XML(result['fields']['order_line']['views']['tree']['arch'])
+
+            # hide tax column when show tax is False.
             if not config.show_tax:
                 for field in order_line_tree.xpath("//field[@name='tax_id']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
@@ -138,7 +133,10 @@ class SaleOrderLine(models.Model):
 
         company_id = self.env.user.company_id
 
-        domain = [('customer_type', 'in', company_id.customer_types.ids or []), ('functional_unit', 'in', company_id.branch_ids.ids or [])]
+        domain = [
+            ('customer_type', 'in', company_id.customer_types.ids or []),
+            ('functional_unit', 'in', company_id.branch_ids.ids or [])
+        ]
         config = self.env['commission.configuration'].sudo().search(domain, limit=1)
 
         if config and config.auto_load_commission_refund_in_so_line:
@@ -158,7 +156,11 @@ class SaleOrderLine(models.Model):
                     product_package_mode = rec.order_id.pack_type.id
                     uom_id = rec.product_uom.id or rec.product_id.uom_id.id
                     pricelist_id = self.env['product.sales.pricelist'].sudo().search(
-                        [('product_id', '=', rec.product_id.id), ('uom_id', '=', uom_id), ('product_package_mode', '=', product_package_mode)],
+                        [
+                            ('product_id', '=', rec.product_id.id),
+                            ('uom_id', '=', uom_id),
+                            ('product_package_mode', '=', product_package_mode)
+                        ],
                         limit=1
                     )
 

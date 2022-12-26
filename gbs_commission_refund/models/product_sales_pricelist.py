@@ -11,8 +11,14 @@ from lxml import etree
 class SaleOrderPricelist(models.Model):
     _inherit = 'product.sales.pricelist'
 
-    is_corporate = fields.Boolean(string='Is Corporate', compute="_compute_company_id_is_retail_or_corporate")
-    is_retailer = fields.Boolean(string='Is Retailer', compute="_compute_company_id_is_retail_or_corporate")
+    is_corporate = fields.Boolean(
+        string='Is Corporate',
+        compute="_compute_company_id_is_retail_or_corporate"
+    )
+    is_retailer = fields.Boolean(
+        string='Is Retailer',
+        compute="_compute_company_id_is_retail_or_corporate"
+    )
 
     @api.multi
     @api.depends('company_id')
@@ -37,8 +43,8 @@ class SaleOrderPricelist(models.Model):
     corporate_refund_tolerable = fields.Float(string='Tolerable (+/-)')
 
     # dealer customer
-    dealer_commission_applicable = fields.Boolean(string='Commission Applicable', required=False)
-    dealer_refund_applicable = fields.Boolean(string='Refund Applicable', required=False)
+    dealer_commission_applicable = fields.Boolean(string='Commission Applicable')
+    dealer_refund_applicable = fields.Boolean(string='Refund Applicable')
 
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         result = super(SaleOrderPricelist, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
