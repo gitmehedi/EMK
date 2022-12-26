@@ -46,8 +46,8 @@ class SaleOrderPricelist(models.Model):
             company = self.env.user.company_id
             config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
 
-            if not config.show_packing_mode:
-                doc = etree.XML(result['arch'])
+            doc = etree.XML(result['arch'])
+            if not config.show_packing_mode and view_type == 'form':
                 for field in doc.xpath("//field[@name='product_package_mode']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
                     modifiers['invisible'] = True
@@ -55,6 +55,49 @@ class SaleOrderPricelist(models.Model):
                     modifiers['column_invisible'] = True
                     field.set('modifiers', json.dumps(modifiers))
 
-                result['arch'] = etree.tostring(doc)
+            if config.process != 'textbox':
+                for field in doc.xpath("//group[@name='corporate_commission_refund_group']"):
+                    modifiers = json.loads(field.get('modifiers', '{}'))
+                    modifiers['invisible'] = True
+                    modifiers['tree_invisible'] = True
+                    modifiers['column_invisible'] = True
+                    field.set('modifiers', json.dumps(modifiers))
+
+            if config.process != 'checkbox':
+                for field in doc.xpath("//group[@name='dealer_commission_refund_group']"):
+                    modifiers = json.loads(field.get('modifiers', '{}'))
+                    modifiers['invisible'] = True
+                    modifiers['tree_invisible'] = True
+                    modifiers['column_invisible'] = True
+                    field.set('modifiers', json.dumps(modifiers))
+
+            result['arch'] = etree.tostring(doc)
+
+        elif view_type == 'tree':
+            company = self.env.user.company_id
+            config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
+
+            doc = etree.XML(result['arch'])
+            if config.process != 'textbox':
+                fields_to_be_hidden = ['corporate_commission_per_unit', 'corporate_commission_tolerable', 'corporate_refund_per_unit', 'corporate_refund_tolerable']
+                for f in fields_to_be_hidden:
+                    for field in doc.xpath("//field[@name='%s']" % f):
+                        modifiers = json.loads(field.get('modifiers', '{}'))
+                        modifiers['invisible'] = True
+                        modifiers['tree_invisible'] = True
+                        modifiers['column_invisible'] = True
+                        field.set('modifiers', json.dumps(modifiers))
+
+            if config.process != 'checkbox':
+                fields_to_be_hidden = ['dealer_commission_applicable', 'dealer_refund_applicable']
+                for f in fields_to_be_hidden:
+                    for field in doc.xpath("//field[@name='%s']" % f):
+                        modifiers = json.loads(field.get('modifiers', '{}'))
+                        modifiers['invisible'] = True
+                        modifiers['tree_invisible'] = True
+                        modifiers['column_invisible'] = True
+                        field.set('modifiers', json.dumps(modifiers))
+
+            result['arch'] = etree.tostring(doc)
 
         return result

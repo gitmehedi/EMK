@@ -71,9 +71,8 @@ class SaleOrder(models.Model):
             config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
 
             # hide tax column when show tax is False.
+            order_line_tree = etree.XML(result['fields']['order_line']['views']['tree']['arch'])
             if not config.show_tax:
-                order_line_tree = etree.XML(result['fields']['order_line']['views']['tree']['arch'])
-
                 for field in order_line_tree.xpath("//field[@name='tax_id']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
                     modifiers['invisible'] = True
@@ -81,7 +80,27 @@ class SaleOrder(models.Model):
                     modifiers['column_invisible'] = True
                     field.set('modifiers', json.dumps(modifiers))
 
-                result['fields']['order_line']['views']['tree']['arch'] = etree.tostring(order_line_tree)
+            if config.process != 'textbox':
+                fields_to_be_hidden = ['corporate_commission_per_unit', 'corporate_refund_per_unit']
+                for f in fields_to_be_hidden:
+                    for field in order_line_tree.xpath("//field[@name='%s']" % f):
+                        modifiers = json.loads(field.get('modifiers', '{}'))
+                        modifiers['invisible'] = True
+                        modifiers['tree_invisible'] = True
+                        modifiers['column_invisible'] = True
+                        field.set('modifiers', json.dumps(modifiers))
+
+            if config.process != 'checkbox':
+                fields_to_be_hidden = ['dealer_commission_applicable', 'dealer_refund_applicable']
+                for f in fields_to_be_hidden:
+                    for field in order_line_tree.xpath("//field[@name='%s']" % f):
+                        modifiers = json.loads(field.get('modifiers', '{}'))
+                        modifiers['invisible'] = True
+                        modifiers['tree_invisible'] = True
+                        modifiers['column_invisible'] = True
+                        field.set('modifiers', json.dumps(modifiers))
+
+            result['fields']['order_line']['views']['tree']['arch'] = etree.tostring(order_line_tree)
 
             if not config.show_packing_mode:
                 so_form = etree.XML(result['arch'])

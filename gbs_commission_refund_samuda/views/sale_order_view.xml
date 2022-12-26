@@ -17,6 +17,9 @@
                     <field name="corporate_refund_per_unit" string="Refund (Unit)" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
                     <field name="refund_actual" invisible="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
                     <field name="refund_tolerable" invisible="1" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
+
+                    <field name="dealer_commission_applicable" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
+                    <field name="dealer_refund_applicable" attrs="{'readonly':[('so_readonly_field','=',True)]}"/>
                 </xpath>
 
                 <xpath expr="//field[@name='order_line']/tree/field[@name='tax_id']" position="attributes">

@@ -16,11 +16,22 @@ class CommissionConfiguration(models.Model):
         ('checkbox', 'Checkbox on Product Commission/Refund Approval')
     ], string='Process', required=True,
         help='''If textbox selected commission or refund will be calculated based on product commission/refund amount approval.\n If checkbox selected commission or refund will be calculated monthly/yearly based on 
-        slab wise configuration.''', track_visibility="onchange")
-    show_packing_mode = fields.Boolean(string='Show Packing Mode', default=False,
-                                       required=True, track_visibility="onchange", help='Show packing mode in product commission/refund/pricelist approval')
-    auto_load_commission_refund_in_so_line = fields.Boolean(string='Auto Load', default=False, track_visibility="onchange", required=True,
-                                                            help='''Auto load commission/refund value in sale order line''')
+        slab wise configuration.''',
+        track_visibility="onchange")
+    show_packing_mode = fields.Boolean(
+        string='Show Packing Mode',
+        default=False,
+        required=True,
+        track_visibility="onchange",
+        help='Show packing mode in product commission/refund/pricelist approval'
+    )
+    auto_load_commission_refund_in_so_line = fields.Boolean(
+        string='Auto Load',
+        default=False,
+        track_visibility="onchange",
+        required=True,
+        help='''Auto load commission/refund value in sale order line'''
+    )
     commission_provision = fields.Selection([
         ('invoice_validation', 'At Invoice Validation'),
         ('customer_collection', 'At Customer Payment Collection')
