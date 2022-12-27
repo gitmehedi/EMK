@@ -104,7 +104,7 @@ class InheritedPurchaseOrder(models.Model):
         self.env.cr.execute(query)
         account_invoice = self.env.cr.dictfetchall()
         if not vendor_advance and not account_invoice:
-            self.write({'state': 'draft'})
+            self.write({'state': 'cancel'})
         else:
             raise UserError('You can\'t Cancel because of Service Order has been already bills/advance.')
 
