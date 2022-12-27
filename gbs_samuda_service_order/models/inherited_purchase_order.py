@@ -99,7 +99,7 @@ class InheritedPurchaseOrder(models.Model):
     @api.multi
     def action_cancel_service_order(self):
         vendor_advance = self.env['vendor.advance'].search([('partner_id', '=', self.partner_id.id), ('purchase_order_id', '=', self.id)])
-        query = """select id from account_invoice_line as ail LEFT JOIN purchase_order_line as pol ON 
+        query = """select ail.id from account_invoice_line as ail LEFT JOIN purchase_order_line as pol ON 
         ail.purchase_line_id = pol.id where pol.order_id=%s""" % self.id
         self.env.cr.execute(query)
         account_invoice = self.env.cr.dictfetchall()
