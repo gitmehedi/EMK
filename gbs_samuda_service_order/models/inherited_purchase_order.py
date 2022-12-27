@@ -106,7 +106,7 @@ class InheritedPurchaseOrder(models.Model):
         if not vendor_advance and not account_invoice:
             self.write({'state': 'draft'})
         else:
-            raise UserError('Service order has been already bills/advance \n You can\'t cancel')
+            raise UserError('You can\'t Cancel because of Service Order has been already bills/advance.')
 
 
 class InheritedPurchaseOrderLine(models.Model):
