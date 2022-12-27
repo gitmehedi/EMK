@@ -8,7 +8,8 @@
     'sequence': 14,
     'depends': [
         'base',
-        'gbs_commission_refund'
+        'gbs_commission_refund',
+        'gbs_commission_config'
     ],
     'data': [
         # data

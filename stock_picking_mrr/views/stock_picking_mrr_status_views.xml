@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- inherited tree view -->
+    <record id="inherit_view_stock_picking_tree2" model="ir.ui.view">
+        <field name="name">inherit.view.picking.tree2</field>
+        <field name="model">stock.picking</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="stock_picking_extend.view_stock_picking_tree2"/>
+        <field name="arch" type="xml">
+            <xpath expr="/tree/field[@name='state']" position="after">
+                <field name="check_mrr_button" invisible="1"/>
+                <field name="mrr_status"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

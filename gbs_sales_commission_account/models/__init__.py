@@ -1,2 +1,0 @@
-import inherit_product_template
-import inherit_sales_commission_generate

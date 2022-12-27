@@ -9,8 +9,14 @@ from datetime import datetime, date, time, timedelta
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
-    is_commission_claimed = fields.Boolean(string="Commission Claimed", compute="_compute_is_commission_claimed")
-    is_refund_claimed = fields.Boolean(string="Refund Claimed", compute="_compute_is_refund_claimed")
+    is_commission_claimed = fields.Boolean(
+        string="Commission Claimed",
+        compute="_compute_is_commission_claimed"
+    )
+    is_refund_claimed = fields.Boolean(
+        string="Refund Claimed",
+        compute="_compute_is_refund_claimed"
+    )
 
     @api.depends('is_commission_claimed')
     def _compute_is_commission_claimed(self):
@@ -40,11 +46,5 @@ class AccountInvoice(models.Model):
             if self.purchase_id.is_service_order and (self.purchase_id.is_commission_claim or self.purchase_id.is_refund_claim):
                 invoice_line['account_id'] = commission_control_acc.commission_control_account_id.id
                 invoice_line['quantity'] = line.product_qty
-
-                # pro_qty = 0
-                # for line1 in self.purchase_id.order_line:
-                #     pro_qty += line1.product_qty
-                #
-                # invoice_line['quantity'] = pro_qty
 
         return invoice_line

@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//field[@name='property_account_payable_id']" position="after">
-                    <field name="commission_refund_account_payable_id"/>
+                    <field name="commission_refund_account_payable_id" domain="[('internal_type','=','payable')]"/>
                 </xpath>
 
             </field>

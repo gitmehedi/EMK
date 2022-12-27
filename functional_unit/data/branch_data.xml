@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="branch_adhesive" model="res.branch">
+            <field name="name">Adhesive</field>
+        </record>
+
+        <record id="branch_auxiliary" model="res.branch">
+            <field name="name">Auxiliary</field>
+        </record>
+    </data>
+</odoo>

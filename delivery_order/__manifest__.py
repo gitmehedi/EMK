@@ -13,7 +13,6 @@
         'sale_order_type',
         'gbs_pi_creation',
         'letter_of_credit',
-        'gbs_sales_commission_so',
         'amount_to_word_bd',
         'report_layout',
         'delivery_challan_report',

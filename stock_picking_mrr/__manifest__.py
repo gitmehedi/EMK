@@ -32,6 +32,8 @@
         'data/sequence.xml',
         'report/template_mrr.xml',
         'views/stock_picking_views.xml',
+        'views/stock_picking_mrr_status_views.xml',
+
     ],
 
 }
