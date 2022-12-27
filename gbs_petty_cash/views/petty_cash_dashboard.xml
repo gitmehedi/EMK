@@ -44,9 +44,9 @@
                                     <field name="type"/>
                                 </div>
                             </div>
-<!--                            <div class="o_kanban_manage_button_section">-->
-<!--                                <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>-->
-<!--                            </div>-->
+                            <!--                            <div class="o_kanban_manage_button_section">-->
+                            <!--                                <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>-->
+                            <!--                            </div>-->
                         </div>
                     </t>
 
@@ -134,14 +134,17 @@
                         </div>
                         <!-- On the right, show other common informations/actions -->
                         <div class="col-xs-6 o_kanban_primary_right">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <span title="Balance in Odoo">Balance in GL</span>
+                            <t t-if="dashboard.found_opening_balance_entry">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <span title="Balance in Odoo">Balance in GL</span>
+                                    </div>
+                                    <div class="col-xs-6 text-right">
+                                        <span><t t-esc="dashboard.account_balance"/></span>
+                                    </div>
                                 </div>
-                                <div class="col-xs-6 text-right">
-                                    <span><t t-esc="dashboard.account_balance"/></span>
-                                </div>
-                            </div>
+                            </t>
+
                             <t t-if="dashboard.last_balance != dashboard.account_balance">
                                 <div class="row" name="latest_statement">
                                     <div class="col-xs-6">
@@ -152,23 +155,25 @@
                                     </div>
                                 </div>
                             </t>
-                             <a type="object" name="create_cash_statement_cash_in" style="color:#3E83CD;font-weight:bold;">
+                            <a type="object" name="create_cash_statement_cash_in"
+                               style="color:#3E83CD;font-weight:bold;">
                                 <t t-if="journal_type == 'cash'">New Cash In</t>
                             </a>
-                            <a type="object" name="create_cash_statement_cash_out" style="color:#3E83CD;font-weight:bold;">
+                            <a type="object" name="create_cash_statement_cash_out"
+                               style="color:#3E83CD;font-weight:bold;">
                                 <t t-if="journal_type == 'cash'">New Cash Out</t>
                             </a>
 
                             <!--Reconcile item hidden-->
 
-<!--                            <div class="o_kanban_card_manage_title">-->
-<!--                            </div>-->
-<!--                            <t t-if="dashboard.number_to_reconcile > 0">-->
-<!--                                <button type="object" name="action_open_reconcile_custom"-->
-<!--                                        class="btn btn-primary btn-sm">-->
-<!--                                    Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items-->
-<!--                                </button>-->
-<!--                            </t>-->
+                            <!--                            <div class="o_kanban_card_manage_title">-->
+                            <!--                            </div>-->
+                            <!--                            <t t-if="dashboard.number_to_reconcile > 0">-->
+                            <!--                                <button type="object" name="action_open_reconcile_custom"-->
+                            <!--                                        class="btn btn-primary btn-sm">-->
+                            <!--                                    Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items-->
+                            <!--                                </button>-->
+                            <!--                            </t>-->
 
 
                         </div>
@@ -210,7 +215,7 @@
     </record>
 
     <!--dashboard menus-->
-     <menuitem id="petty_cash_dashboard" name="Petty Cash Dashboard"
+    <menuitem id="petty_cash_dashboard" name="Petty Cash Dashboard"
               action="open_petty_cash_dashboard_kanban" parent="account.menu_finance" sequence="2"
               groups="gbs_petty_cash.group_petty_cash_user"/>
 
