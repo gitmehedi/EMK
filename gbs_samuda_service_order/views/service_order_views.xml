@@ -38,14 +38,14 @@
 <!--                        <button name="action_view_picking" string="Receive Products" class="oe_highlight" type="object"-->
 <!--                                attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>-->
                         <button name="button_draft" states="cancel" string="Set to Draft" type="object"/>
-                        <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" groups="gbs_samuda_service_order.group_service_order_manager_unit,gbs_samuda_service_order.group_service_order_manager_ho" type="object"/>
+<!--                        <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" groups="gbs_samuda_service_order.group_service_order_manager_unit,gbs_samuda_service_order.group_service_order_manager_ho" type="object"/>-->
                         <button name="button_done" type="object" string="Lock" groups="gbs_samuda_service_order.group_service_order_manager_ho,gbs_samuda_service_order.group_service_order_manager_unit" states="purchase"/>
 <!--                        <button name="button_unlock" type="object" string="Unlock" groups="gbs_samuda_service_order.group_service_order_manager_ho,gbs_samuda_service_order.group_service_order_manager_unit" states="done"/>-->
 
                         <button name="print_service_order" style="background-color: #39B05F;color:white;" type="object" attrs="{'invisible':[('partner_id','=',False)]}" string="Print"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,done" readonly="1"/>
-                        <button string="Cancel" name="action_cancel_service_order" class="btn-primary btn-danger mr24 pull-right oe_read_only" type="object" states="done" confirm="Are you sure you want to continue?"/>
+                        <button string="Cancel" name="action_cancel_service_order" class="btn-primary btn-danger mr24 pull-right oe_read_only" type="object" states="draft,to approve,sent,purchase,done" confirm="Are you sure you want to continue?" groups="gbs_samuda_service_order.group_service_order_manager_unit,gbs_samuda_service_order.group_service_order_manager_ho"/>
 
 
                     </header>
