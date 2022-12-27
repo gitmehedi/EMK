@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="corporate_customer_type" model="res.customer.type">
+            <field name="name">Corporate</field>
+            <field name="customer_type">corporate</field>
+            <field name="is_retail">False</field>
+            <field name="is_corporate">True</field>
+        </record>
+
+        <record id="retail_customer_type" model="res.customer.type">
+            <field name="name">Corporate</field>
+            <field name="customer_type">retail</field>
+            <field name="is_retail">True</field>
+            <field name="is_corporate">False</field>
+        </record>
+    </data>
+</odoo>

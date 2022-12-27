@@ -8,28 +8,40 @@
             <field name="arch" type="xml">
                 <form string="Service Order">
                     <header>
-                        <button name="button_confirm" type="object" states="draft" string="Confirm Order"
-                                id="draft_confirm" groups="gbs_samuda_service_order.group_service_order_manager_unit,gbs_samuda_service_order.group_service_order_manager_ho"/>
-                        <button name="button_confirm" type="object" states="sent" string="Confirm Order"
-                                class="oe_highlight" groups="gbs_samuda_service_order.group_service_order_manager_unit,gbs_samuda_service_order.group_service_order_manager_ho" id="bid_confirm"/>
-                        <button name="button_approve" type="object" states='to approve' string="Approve Order"
-                                class="oe_highlight"/>
-                        <button name="action_rfq_send" groups="base.group_system" states="purchase" string="Send PO by Email" type="object"
-                                context="{'send_rfq':False}"/>
-                        <button name="button_draft" states="cancel" string="Set to Draft" type="object"/>
-                        <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel"
-                                type="object"/>
-                        <button name="button_done" type="object" string="Lock" groups="gbs_samuda_service_order.group_service_order_manager_ho,gbs_samuda_service_order.group_service_order_manager_unit"
-                                states="purchase"/>
+                        <!-- <menuitem id="menu_hos_approval" name="Head Of Sales Approval" groups="gbs_sales_access.group_head_sale"
+                   parent="sales_team.menu_base_partner" sequence="4"/>
+         <menuitem id="menu_hoa_approval" name="Head Of Accounts Approval"
+                   groups="gbs_accounting_group.group_head_account,account.group_account_user"
+                   parent="sales_team.menu_base_partner" sequence="3"/>-->
+                        <button name="button_claim_confirm"
+                                type="object"
+                                states="claim_draft"
+                                groups="sales_team.group_sale_salesman"
+                                string="Confirm"/>
 
-                        <field name="state" widget="statusbar" statusbar_visible="draft,done" readonly="1"/>
+                        <button name="button_claim_validate"
+                                type="object"
+                                states="claim_hos_approve"
+                                groups="gbs_application_group.group_head_sale"
+                                string="Validate"/>
+
+                        <button name="button_claim_approve"
+                                type="object"
+                                states="claim_hoa_approve"
+                                groups="gbs_application_group.group_head_account"
+                                string="Approve"/>
+
+                        <button name="button_draft" states="cancel" string="Set to Draft" type="object" groups="gbs_application_group.group_head_sale"/>
+                        <button name="button_cancel" states="claim_draft,claim_hos_approve,claim_hoa_approve" string="Cancel" type="object"/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="claim_draft,claim_hos_approve,claim_hoa_approve,done" readonly="1"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="action_view_invoice"
                                     class="oe_stat_button"
                                     icon="fa-pencil-square-o"
-                                    attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('invoice_ids','=',[])]}"
+                                    attrs="{'invisible':[('state', 'not in', ('done')),('invoice_ids','=',[])]}"
                             >
                                 <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
                                 <field name='invoice_ids' invisible="1"/>
@@ -62,7 +74,7 @@
                         </group>
 
                         <notebook>
-                            <page string="Customers" name="customer_order_lines">
+                            <page string="Order Line" name="customer_order_lines">
                                 <field name="order_line">
                                     <tree editable="bottom" create="false" edit="false">
                                         <field name="invoice_id" readonly="1" force_save="1"/>

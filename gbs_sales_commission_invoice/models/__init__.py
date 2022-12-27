@@ -1,1 +1,0 @@
-import inherited_account_invoice_line

@@ -7,16 +7,23 @@
             <field name="arch" type="xml">
                 <form string="Customer Type">
                     <sheet>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Name"/>
+                            <h1>
+                                <field name="name" placeholder="Name"/>
+                            </h1>
+                        </div>
                         <group>
                             <group>
-                                <field name="name"/>
-                            </group>
-                            <group>
-                                <field name="is_retail" attrs="{'invisible': [('is_corporate', '=', True)]}"/>
-                                <field name="is_corporate" attrs="{'invisible': [('is_retail', '=', True)]}"/>
+                                <field name="customer_type" widget="radio"/>
                             </group>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+
                 </form>
             </field>
         </record>
@@ -27,8 +34,7 @@
             <field name="arch" type="xml">
                 <tree string="Customer Types">
                     <field name="name"/>
-                    <field name="is_retail"/>
-                    <field name="is_corporate"/>
+                    <field name="customer_type"/>
                 </tree>
             </field>
         </record>

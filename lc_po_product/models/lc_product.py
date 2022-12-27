@@ -1,5 +1,6 @@
-from odoo import api, fields, models,_
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+
 
 class LCPO(models.Model):
     _inherit = "letter.credit"
@@ -29,7 +30,8 @@ class LCPO(models.Model):
                                     'price_unit': obj.price_unit,
                                     'currency_id': obj.currency_id,
                                     'date_planned': obj.date_planned,
-                                    'product_uom':obj.product_uom
+                                    'product_uom': obj.product_uom,
+                                    'purchase_order_id': obj.order_id
                                     }))
         self.product_lines = vals
 
@@ -40,7 +42,7 @@ class LCPO(models.Model):
             if self.operating_unit_id.id != po.operating_unit_id.id:
                 raise ValidationError(_("Operating unit of %s is not same with operating unit of letter of credit.\n"
                                         "Your purchase order's operating unit and letter of credit's operating unit must be same.") % (
-                                      po.name))
+                                          po.name))
 
     @api.multi
     @api.constrains('po_ids')

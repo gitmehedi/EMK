@@ -10,8 +10,6 @@
         'sale',
         'product',
         'sales_team',
-        'gbs_sales_commission',
-        'gbs_sales_commission_so',
         'delivery_order',
         'samuda_so_type',
         'operating_unit',

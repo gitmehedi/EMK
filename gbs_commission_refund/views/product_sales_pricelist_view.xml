@@ -13,23 +13,23 @@
                         <field name="is_retailer" invisible="1"/>
 
                         <!--corporate-->
-                        <group attrs="{'invisible': [('is_corporate','=',False)]}">
+                        <group name="corporate_commission_refund_group" attrs="{'invisible': [('is_corporate','=',False)]}">
                             <h2>Corporate</h2>
                             <separator colspan="2" string="Commission" class="mt5"/>
-                            <field name="corporate_commission_per_unit"/>
-                            <field name="corporate_commission_tolerable"/>
+                            <field name="corporate_commission_per_unit" attrs="{'required':[('is_corporate','=',True)], 'readonly':[('state','!=','draft')]}"/>
+                            <field name="corporate_commission_tolerable" attrs="{'readonly':[('state','!=','draft')]}"/>
 
                             <separator colspan="2" string="Refund" class="mt5"/>
-                            <field name="corporate_refund_per_unit"/>
-                            <field name="corporate_refund_tolerable"/>
+                            <field name="corporate_refund_per_unit" attrs="{'required':[('is_corporate','=',True)], 'readonly':[('state','!=','draft')]}"/>
+                            <field name="corporate_refund_tolerable" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
 
                         <!--dealer-->
-                        <group attrs="{'invisible': [('is_retailer','=',False)]}">
+                        <group name="dealer_commission_refund_group" attrs="{'invisible': [('is_retailer','=',False)]}">
                             <h2>Dealer</h2>
                             <separator colspan="2" string="Commission &amp; Refund" class="mt5"/>
-                            <field name="dealer_commission_applicable"/>
-                            <field name="dealer_refund_applicable"/>
+                            <field name="dealer_commission_applicable" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="dealer_refund_applicable" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
                     </group>
                 </xpath>

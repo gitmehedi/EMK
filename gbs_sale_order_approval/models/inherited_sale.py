@@ -191,9 +191,7 @@ class SaleOrder(models.Model):
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
         res = super(SaleOrder, self).action_invoice_create()
-        for rec in self.invoice_ids:
-            rec.write({'is_commission_generated': False})
-        #self.invoice_ids.write({'is_commission_generated': False})
+
         return res
 
     @api.depends('order_line.da_qty')
@@ -245,12 +243,10 @@ class SaleOrder(models.Model):
     @api.multi
     def action_to_submit(self):
         for orders in self:
-
-            if orders.region_type == False:
+            if not orders.region_type:
                 raise UserError('You Cannot Submit this SO due to Region Type is missing.')
 
             if orders.credit_sales_or_lc == 'credit_sales':
-
                 partner_pool = orders.partner_id
                 returned_list = self.get_customer_credit_limit(partner_pool, orders)
 
@@ -259,11 +255,10 @@ class SaleOrder(models.Model):
                         self._is_double_validation_applicable()
                     else:
                         return self.action_limit_cross_message(returned_list)
+
             # Check seq needs to re-generate or not
             if orders.operating_unit_id.name not in orders.name:
-                new_seq = orders.env['ir.sequence'].next_by_code_new('sale.order', self.create_date,
-                                                                     orders.operating_unit_id) or '/'
-
+                new_seq = orders.env['ir.sequence'].next_by_code_new('sale.order', self.create_date, orders.operating_unit_id) or '/'
                 if new_seq:
                     orders.name = new_seq
 
@@ -302,60 +297,43 @@ class SaleOrder(models.Model):
     def _is_double_validation_applicable(self):
         for orders in self:
             for lines in orders.order_line:
-                cust_commission_pool = orders.env['customer.commission'].search(
-                    [('customer_id', '=', orders.partner_id.id), ('product_id', '=', lines.product_id.ids)])
-
-                price_change_pool = self.env['product.sale.history.line'].search(
-                    [('product_id', '=', lines.product_id.id),
-                     ('currency_id', '=', lines.currency_id.id),
-                     ('product_package_mode', '=', orders.pack_type.id),
-                     ('uom_id', '=', lines.product_uom.id)])
+                price_change_pool = self.env['product.sale.history.line'].search([
+                    ('product_id', '=', lines.product_id.id),
+                    ('currency_id', '=', lines.currency_id.id),
+                    ('product_package_mode', '=', orders.pack_type.id),
+                    ('uom_id', '=', lines.product_uom.id)
+                ])
 
                 discounted_product_price = price_change_pool.new_price - price_change_pool.discount
 
                 if orders.credit_sales_or_lc == 'lc_sales' or orders.credit_sales_or_lc == 'tt_sales' or orders.credit_sales_or_lc == 'contract_sales':
-
-                    if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
+                    if price_change_pool.new_price >= lines.price_unit >= discounted_product_price:
                         return False  # Single Validation
 
                     # If LC and PI ref is present, go to the Final Approval, Else go to Second level approval
-                    if orders.lc_id and orders.pi_id:
-                        for coms in cust_commission_pool:
-                            if lines.commission_rate != coms.commission_rate or \
-                                    lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price:
-                                return True  # Go to two level approval process
-                                break;
-
-                            return False  # One level approval process
-                    elif orders.pi_id and not orders.lc_id:
+                    if orders.pi_id and not orders.lc_id:
                         return True  # Go to two level approval process
                     else:
                         return False  # Go to two level approval process
 
                 elif orders.credit_sales_or_lc == 'credit_sales':
-
                     partner_pool = orders.partner_id
                     returned_list = self.get_customer_credit_limit(partner_pool, orders)
 
-                    if price_change_pool.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
+                    if price_change_pool.new_price >= lines.price_unit >= discounted_product_price:
                         return False  # Single Validation
 
-                    for coms in cust_commission_pool:
-                        if (abs(returned_list[0]) > returned_list[1]
-                                or lines.commission_rate != coms.commission_rate
-                                or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price):
+                    if abs(returned_list[0]) > returned_list[1] or lines.price_unit < discounted_product_price or lines.price_unit > discounted_product_price:
+                        return True
+                    else:
+                        return False
 
-                            return True
-                            break;
-                        else:
-                            return False
-
-        for lines in orders.order_line:
-            product_pool = orders.env['product.product'].search([('id', '=', lines.product_id.ids)])
-            if lines.price_unit != product_pool.list_price:
-                return True  # Go to two level approval process
-            else:
-                return False  # One level approval process
+            for lines in orders.order_line:
+                product_pool = orders.env['product.product'].search([('id', '=', lines.product_id.ids)])
+                if lines.price_unit != product_pool.list_price:
+                    return True  # Go to two level approval process
+                else:
+                    return False  # One level approval process
 
     double_validation = fields.Boolean('Apply Double Validation', compute="_is_double_validation_applicable")
 
@@ -366,9 +344,9 @@ class SaleOrder(models.Model):
         for stock in self:
             # picking_type_id.code "outgoing" means: Customer
             stock_pick_pool = stock.env['stock.picking'].suspend_security().search([('picking_type_id.code', '=', 'outgoing'),
-                                                                 ('picking_type_id.name', '=', 'Delivery Orders'),
-                                                                 ('partner_id', '=', stock.partner_id.id),
-                                                                 ('state', 'not in', ['cancel','done'])])
+                                                                                    ('picking_type_id.name', '=', 'Delivery Orders'),
+                                                                                    ('partner_id', '=', stock.partner_id.id),
+                                                                                    ('state', 'not in', ['cancel', 'done'])])
 
             stock_amt_list = []
             for stock_picking in stock_pick_pool:
@@ -401,44 +379,34 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_submit(self):
-
         is_double_validation = False
         causes = []
 
         for order in self:
             partner_pool = order.partner_id
             for lines in order.order_line:
-
-                cust_commission_pool = order.env['customer.commission'].search(
-                    [('currency_id', '=', order.currency_id.id), ('customer_id', '=', order.partner_id.id),
-                     ('product_id', '=', lines.product_id.ids)], limit=1)
-
-                commission_rate = cust_commission_pool.commission_rate if cust_commission_pool else 0
-
                 price_change_pool = order.env['product.sale.history.line'].search(
                     [('product_id', '=', lines.product_id.id),
                      ('currency_id', '=', lines.currency_id.id),
                      ('product_package_mode', '=', order.pack_type.id),
                      ('uom_id', '=', lines.product_uom.id)], limit=1)
 
-                is_double_validation = order.check_second_approval(commission_rate, lines, price_change_pool, causes)
+                is_double_validation = order.check_second_approval(lines, price_change_pool, causes)
 
                 if order.credit_sales_or_lc == 'credit_sales':
-
                     returned_list = self.get_customer_credit_limit(partner_pool, order)
                     if abs(returned_list[0]) > returned_list[1]:
-                        causes.append("Customer crossed his Credit Limit. Current Credit Limit is " + str(
-                            abs(returned_list[1])))
+                        causes.append("Customer crossed his Credit Limit. Current Credit Limit is " + str(abs(returned_list[1])))
                         is_double_validation = True
 
-        if is_double_validation:
-            comment_str = "Acceptance needs for " + str(len(causes)) + " cause(s) which are: "
-            comment_str += " & ".join(causes)
-            order.write({'state': 'validate', 'comment': comment_str})  # Go to two level approval process
+            if is_double_validation:
+                comment_str = "Acceptance needs for " + str(len(causes)) + " cause(s) which are: "
+                comment_str += " & ".join(causes)
+                order.write({'state': 'validate', 'comment': comment_str})  # Go to two level approval process
 
-        else:
-            self._automatic_delivery_authorization_creation()
-            order.write({'state': 'done'})  # One level approval process
+            else:
+                self._automatic_delivery_authorization_creation()
+                order.write({'state': 'done'})  # One level approval process
 
     @api.multi
     def action_confirm(self):
@@ -477,7 +445,6 @@ class SaleOrder(models.Model):
                     'pack_type': self.pack_type.id,
                     'uom_id': record.product_uom.id,
                     'price_unit': record.price_unit,
-                    'commission_rate': record.commission_rate,
                     'price_subtotal': record.price_total,
                     'tax_id': record.tax_id.id,
                     'delivery_qty': record.product_uom_qty,
@@ -499,63 +466,22 @@ class SaleOrder(models.Model):
 
         return action
 
-    def check_second_approval(self, commission_rate, lines, price_change_pool, causes):
-
+    @api.multi
+    def check_second_approval(self, lines, price_change_pool, causes):
         is_double_validation = False
 
-        if commission_rate == 0 and lines.commission_rate:
-            causes.append("There are no existing commission for this product, but requested commission is " + str(
-                lines.commission_rate))
-            is_double_validation = True
-
-        if commission_rate > 0 and lines.commission_rate != commission_rate:
-            causes.append(
-                "Existing Commission rate is " + str(commission_rate) + ", but requested Commission rate is " + str(
-                    lines.commission_rate))
-            is_double_validation = True
-
         if len(price_change_pool) == 0 and lines.price_unit:
-            causes.append(
-                "There are no existing price for this product, but requested price is " + str(lines.price_unit))
+            causes.append("There are no existing price for this product, but requested price is " + str(lines.price_unit))
             is_double_validation = True
 
         for price_history in price_change_pool:
             discounted_product_price = price_history.new_price - price_history.discount
 
             if lines.price_unit not in range(int(discounted_product_price), int(price_history.new_price + 1)):
-                causes.append(
-                    "Existing Approve Price is " + str(price_history.new_price) + ", but requested Price is " + str(
-                        lines.price_unit) + ". Which may not cover with discounted price.")
+                causes.append("Existing Approve Price is " + str(price_history.new_price) + ", but requested Price is " + str(lines.price_unit) + ". Which may not cover with discounted price.")
                 is_double_validation = True
 
         return is_double_validation
-
-    # def second_approval_business_logics(self, cust_commission_pool, lines, price_change_pool):
-    #
-    #     if len(price_change_pool) == 0 and lines.price_unit:
-    #         return True  # second approval
-    #
-    #     if len(cust_commission_pool) == 0 and lines.commission_rate:
-    #         return True  # second approval
-    #
-    #     for coms in cust_commission_pool:
-    #         if price_change_pool.currency_id.id == lines.currency_id.id:
-    #             for price_history in price_change_pool:
-    #                 discounted_product_price = price_history.new_price - price_history.discount
-    #
-    #                 if lines.commission_rate != coms.commission_rate:
-    #                     return True
-    #
-    #                 if price_history.new_price >= lines.price_unit and lines.price_unit >= discounted_product_price:
-    #                     return False  # Single Validation
-    #
-    #                 if lines.commission_rate != coms.commission_rate or \
-    #                         (lines.price_unit < discounted_product_price
-    #                          or lines.price_unit > discounted_product_price):
-    #                     return True
-    #                     break;
-    #                 else:
-    #                     return False
 
     @api.multi
     def action_limit_cross_message(self, returned_list):
@@ -564,7 +490,7 @@ class SaleOrder(models.Model):
         if returned_list[1] != 0:
             message_id = self.env['sale.order.credit.limit.cross.wizard'].create(
                 {'zero_credit_limit': False, 'customer_credit_limit': customer_credit_limit,
-                 'limit_crossed_amount_1': limit_crossed_amount,'limit_crossed_amount_2': limit_crossed_amount})
+                 'limit_crossed_amount_1': limit_crossed_amount, 'limit_crossed_amount_2': limit_crossed_amount})
 
             return {
                 'name': _('Customer Crossed His Credit Limit'),
@@ -578,7 +504,7 @@ class SaleOrder(models.Model):
         else:
             message_id = self.env['sale.order.credit.limit.cross.wizard'].create(
                 {'zero_credit_limit': True, 'customer_credit_limit': customer_credit_limit,
-                 'limit_crossed_amount_1': limit_crossed_amount,'limit_crossed_amount_2': limit_crossed_amount})
+                 'limit_crossed_amount_1': limit_crossed_amount, 'limit_crossed_amount_2': limit_crossed_amount})
             return {
                 'name': _('Customer Crossed His Credit Limit'),
                 'type': 'ir.actions.act_window',
@@ -614,7 +540,7 @@ class SaleOrder(models.Model):
         view = self.env.ref('delivery_order.delivery_order_form')
 
         return {
-            'name': ('Delivery Authorization'),
+            'name': _('Delivery Authorization'),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'delivery.authorization',
@@ -652,26 +578,14 @@ class SaleOrder(models.Model):
             self.payment_term_id = pi_pool.account_payment_term_id
 
             for record in pi_pool.line_ids:
-                commission = self.env['customer.commission'].search(
-                    [('customer_id', '=', self.partner_id.id), ('product_id', '=', record.product_id.id),
-                     ('status', '=', True)])
-
-                if commission:
-                    for coms in commission:
-                        self.commission_rate = coms.commission_rate
-                else:
-                    self.commission_rate = 0
-
                 val.append((0, 0, {'product_id': record.product_id.id,
                                    'name': record.product_id.name,
                                    'product_uom_qty': record.quantity,
                                    'product_uom': record.uom_id.id,
                                    'price_unit': record.price_unit,
-                                   'commission_rate': self.commission_rate,
                                    'price_subtotal': record.price_subtotal,
                                    # 'tax_id': record.tax.id,
                                    'da_qty': record.quantity,  # this value is set to show hide DA Create Button on SO
-
                                    }))
 
             self.order_line = val
@@ -734,8 +648,8 @@ class SaleOrder(models.Model):
                                             'must match with that of the '
                                             'Quotation/Sales Order'))
 
-            if (rec.team_id and rec.team_id.operating_unit_id != rec.operating_unit_id):
-                continue;
+            if rec.team_id and rec.team_id.operating_unit_id != rec.operating_unit_id:
+                continue
 
     @api.model
     def _needaction_domain_get(self):
@@ -790,15 +704,11 @@ class InheritedSaleOrderLine(models.Model):
     da_qty = fields.Float(string='DA Qty.', default=0)
 
     @api.one
-    @api.constrains('product_uom_qty', 'commission_rate')
+    @api.constrains('product_uom_qty')
     def _check_order_line_inputs(self):
-        if self.product_uom_qty or self.commission_rate or self.price_unit:
-            if self.product_uom_qty < 0 or self.commission_rate < 0 or self.price_unit < 0:
-                raise ValidationError('Price Unit, Ordered Qty & Commission Rate can not be Negative value')
-
-            if self.order_id.product_id.commission_type == 'percentage':
-                if self.commission_rate > 100:
-                    raise ValidationError('Commission Rate can not be greater than 100')
+        if self.product_uom_qty or self.price_unit:
+            if self.product_uom_qty < 0 or self.price_unit < 0:
+                raise ValidationError('Price Unit, Ordered Qty can not be Negative value')
 
     def _get_product_sales_price(self, product):
 

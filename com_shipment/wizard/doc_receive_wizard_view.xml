@@ -29,6 +29,7 @@
                             <field name="product_uom" readonly='1'/>
                             <field name="price_unit" invisible='1'/>
                             <field name="lc_pro_line_id" invisible='1'/>
+                            <field name="purchase_order_id" invisible="1"/>
                         </tree>
                     </field>
                     <footer>

@@ -21,6 +21,7 @@
                                      <field name="product_received_qty" readonly='1'/>
                                     <field name="price_unit" readonly='1'/>
                                     <field name="price_unit" readonly='1'/>
+                                    <field name="purchase_order_id" invisible='1'/>
 
                                 </tree>
 
