@@ -89,7 +89,8 @@ class ProformaInvoice(models.Model):
 
     state = fields.Selection([
         ('draft', "Draft"),
-        ('confirm', "Confirmed")
+        ('confirm', "Confirmed"),
+        ('cancel', "Cancel"),
     ], default='draft', track_visibility='onchange')
 
     sequence_id = fields.Char('Sequence', readonly=True)
@@ -258,6 +259,12 @@ class ProformaInvoice(models.Model):
             'context': vals,
             'target': 'new'
         }
+
+    def action_cancel_pi(self):
+        so_created = self.env['sale.order'].search([('pi_id', '=', self.id)])
+        if so_created:
+            raise UserError('You cannot cancel whose sale order was already created.')
+        self.write({'state': 'cancel'})
 
 
 # ---------------------------------------------------------------------------------------------------------------------------------
