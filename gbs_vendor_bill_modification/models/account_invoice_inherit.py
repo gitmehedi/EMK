@@ -9,69 +9,70 @@ class AccountInvoiceInherit(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals['is_after_automation']:
-            total_po = 0
-            if 'invoice_line_ids' in vals:
-                for line in vals['invoice_line_ids']:
-                    if 'purchase_id' in line[2]:
-                        order_obj = self.env['purchase.order'].browse(line[2]['purchase_id'])
-                        if not order_obj.cnf_quotation and not order_obj.is_service_order:
-                            total_po = total_po + 1
-                invoice_len = len(vals['invoice_line_ids'])
-                if total_po < invoice_len and total_po != 0:
-                    raise UserError(
-                        _('You cannot do this operation! \nYou cannot do Purchase Order, Service Order or Cnf Quotation bill together!'))
-            # else:
-            #     raise UserError(
-            #         _('Invoice lines cannot be empty!'))
+        if 'is_after_automation' in vals:
+            if vals['is_after_automation']:
+                total_po = 0
+                if 'invoice_line_ids' in vals:
+                    for line in vals['invoice_line_ids']:
+                        if 'purchase_id' in line[2]:
+                            order_obj = self.env['purchase.order'].browse(line[2]['purchase_id'])
+                            if not order_obj.cnf_quotation and not order_obj.is_service_order:
+                                total_po = total_po + 1
+                    invoice_len = len(vals['invoice_line_ids'])
+                    if total_po < invoice_len and total_po != 0:
+                        raise UserError(
+                            _('You cannot do this operation! \nYou cannot do Purchase Order, Service Order or Cnf Quotation bill together!'))
+                # else:
+                #     raise UserError(
+                #         _('Invoice lines cannot be empty!'))
 
-            order_id = self.env.context.get('purchase_order')
-            type = self.env.context.get('invoice_type')
-            default_direct_vendor_bill = self.env.context.get('default_direct_vendor_bill')
-            default_type = self.env.context.get('default_type')
-            purchase_order_obj = self.env['purchase.order'].browse(order_id)
-            vals_type = ""
-            if 'type' in vals:
-                vals_type = vals['type']
-            if type == 'in_invoice' or default_type == 'in_invoice':
-                if vals_type != 'in_refund' and vals_type != 'out_refund':
-                    if not purchase_order_obj.cnf_quotation and not purchase_order_obj.is_service_order:
-                        if total_po == len(vals['invoice_line_ids']) and total_po != 0:
-                            # update selected pickings available quantity
-                            pickings_len = 0
-                            if 'pickings' in vals:
-                                pickings_len = len(vals['pickings'][0][2])
-                                selected_pickings = vals['pickings'][0][2]
-                                for picking_id in selected_pickings:
-                                    stock_move = self.env['stock.move'].search([('picking_id', '=', picking_id)])
-                                    for move in stock_move:
-                                        move.sudo().write({'available_qty': 0.0})
-                                    picking_obj = self.env['stock.picking'].browse(picking_id)
-                                    picking_obj.sudo().write({'mrr_status': 'full_billed'})
+                order_id = self.env.context.get('purchase_order')
+                type = self.env.context.get('invoice_type')
+                default_direct_vendor_bill = self.env.context.get('default_direct_vendor_bill')
+                default_type = self.env.context.get('default_type')
+                purchase_order_obj = self.env['purchase.order'].browse(order_id)
+                vals_type = ""
+                if 'type' in vals:
+                    vals_type = vals['type']
+                if type == 'in_invoice' or default_type == 'in_invoice':
+                    if vals_type != 'in_refund' and vals_type != 'out_refund':
+                        if not purchase_order_obj.cnf_quotation and not purchase_order_obj.is_service_order:
+                            if total_po == len(vals['invoice_line_ids']) and total_po != 0:
+                                # update selected pickings available quantity
+                                pickings_len = 0
+                                if 'pickings' in vals:
+                                    pickings_len = len(vals['pickings'][0][2])
+                                    selected_pickings = vals['pickings'][0][2]
+                                    for picking_id in selected_pickings:
+                                        stock_move = self.env['stock.move'].search([('picking_id', '=', picking_id)])
+                                        for move in stock_move:
+                                            move.sudo().write({'available_qty': 0.0})
+                                        picking_obj = self.env['stock.picking'].browse(picking_id)
+                                        picking_obj.sudo().write({'mrr_status': 'full_billed'})
 
-                            # if line quantity change update available quantity
-                            for line in vals['invoice_line_ids']:
-                                if line[2]['duplc_qty'] != line[2]['quantity']:
-                                    if pickings_len != 1:
-                                        raise UserError(
-                                            _('You have to select only one MRR when editing the quantity!'))
+                                # if line quantity change update available quantity
+                                for line in vals['invoice_line_ids']:
+                                    if line[2]['duplc_qty'] != line[2]['quantity']:
+                                        if pickings_len != 1:
+                                            raise UserError(
+                                                _('You have to select only one MRR when editing the quantity!'))
 
-                                    qty_diff = line[2]['duplc_qty'] - line[2]['quantity']
-                                    if qty_diff < 0:
-                                        raise UserError(
-                                            _('You cannot edit to increase quantity of a product!'))
-                                    # this qty_diff should be available for selected picking
-                                    if 'pickings' in vals:
-                                        selected_pickings = vals['pickings'][0][2]
-                                        for picking_id in selected_pickings:
-                                            stock_move = self.env['stock.move'].search(
-                                                [('picking_id', '=', picking_id),
-                                                 ('product_id', '=', line[2]['product_id'])])
-                                            updated_qty = float("{:.4f}".format(qty_diff))
-                                            for move in stock_move:
-                                                move.sudo().write({'available_qty': updated_qty})
-                                            picking_obj = self.env['stock.picking'].browse(picking_id)
-                                            picking_obj.sudo().write({'mrr_status': 'partial_billed'})
+                                        qty_diff = line[2]['duplc_qty'] - line[2]['quantity']
+                                        if qty_diff < 0:
+                                            raise UserError(
+                                                _('You cannot edit to increase quantity of a product!'))
+                                        # this qty_diff should be available for selected picking
+                                        if 'pickings' in vals:
+                                            selected_pickings = vals['pickings'][0][2]
+                                            for picking_id in selected_pickings:
+                                                stock_move = self.env['stock.move'].search(
+                                                    [('picking_id', '=', picking_id),
+                                                     ('product_id', '=', line[2]['product_id'])])
+                                                updated_qty = float("{:.4f}".format(qty_diff))
+                                                for move in stock_move:
+                                                    move.sudo().write({'available_qty': updated_qty})
+                                                picking_obj = self.env['stock.picking'].browse(picking_id)
+                                                picking_obj.sudo().write({'mrr_status': 'partial_billed'})
 
         return super(AccountInvoiceInherit, self).create(vals)
 
