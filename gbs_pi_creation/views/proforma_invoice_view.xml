@@ -12,8 +12,9 @@
                         <button name="action_confirm" type="object" states="draft"
                                 string="Confirm" class="oe_highlight"/>
                         <button string="Reset To Draft" name="action_draft"
-                                states="confirm" type="object"/>
+                                states="confirm,cancel" type="object"/>
                         <field name="state" widget="statusbar"/>
+                        <button string="Cancel" name="action_cancel_pi" class="btn-primary btn-danger mr24 pull-right oe_read_only" type="object" states="draft,confirm" groups="gbs_samuda_sales_access.group_proforma_invoice_manager" confirm="Are you sure you want to continue?"/>
                         <button string="Update PI Number" name="action_update_pi_number" class="btn-primary btn-info mr24 pull-right oe_read_only" type="object" groups="gbs_samuda_sales_access.group_proforma_invoice_manager" states="confirm"/>
                     </header>
 

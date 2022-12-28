@@ -52,6 +52,7 @@ class ExpReferenceXLSX(ReportXlsx):
             sheet.write(row, 4, rec['currency'], th_cell_center)
             sheet.write(row, 5, "{:.2f}".format(rec['amount_inv']), th_cell_numeric)
             sheet.write(row, 6, rec['realized_date'], th_cell_center)
+            a = rec['amount_realized']
             sheet.write(row, 7, "{:.2f}".format(rec['amount_realized']), th_cell_numeric)
             sheet.write(row, 8, rec['ship_date'], th_cell_center)
             sheet.write(row, 9, rec['lc_contact'], th_cell_center)
@@ -75,8 +76,8 @@ class ExpReferenceXLSX(ReportXlsx):
         where_clauses = self._get_query_where_clause(obj)
         if obj.type == 'local':
             sql_str = """select string_agg(hs_code.display_name, ',') as hscode, bank_name, exp_no, currency,amount_inv,realized_date,amount_realized,ship_date,lc_contact,importer,quantity,invoice_no,invoice_date,incoterm,carrier,dest_port,trans_doc_no,trans_doc_date  from (
-                            select split_part(ip.value_reference::TEXT, ',', 2)::INTEGER as hs_code_id,rb.name as bank_name, ps.exp_number as exp_no, rc.name as currency, ps.invoice_value as amount_inv,
-                            ps.payment_rec_date as realized_date, ps.payment_rec_amount as amount_realized, lc.shipment_date as ship_date,
+                            select split_part(ip.value_reference::TEXT, ',', 2)::INTEGER as hs_code_id,rb.name as bank_name, ps.exp_number as exp_no, rc.name as currency, COALESCE(ps.invoice_value,0) as amount_inv,
+                            ps.payment_rec_date as realized_date, COALESCE(ps.payment_rec_amount,0) as amount_realized, lc.shipment_date as ship_date,
                             lc.name as lc_contact, rp.name as importer, SUM(spl.product_qty) as quantity, string_agg(ai.move_name, ', ') as invoice_no, MAX(ai.date_invoice) as invoice_date,
                             si.name as incoterm, ps.transport_by as carrier, lc.discharge_port as dest_port,
                             '' as trans_doc_no, lc.shipment_date as trans_doc_date
@@ -104,7 +105,7 @@ class ExpReferenceXLSX(ReportXlsx):
             sql_str = """
             select string_agg(hs_code.display_name, ',') as hscode, bank_name, exp_no, currency,amount_inv,realized_date,amount_realized,ship_date,lc_contact,importer,quantity,invoice_no,invoice_date,incoterm,carrier,dest_port,trans_doc_no,trans_doc_date  from (
                     select split_part(ip.value_reference::TEXT, ',', 2)::INTEGER as hs_code_id,rb.name as bank_name, ps.exp_number as exp_no, '' as hscode, rc.name as currency, ps.invoice_value as amount_inv,
-                    ps.payment_rec_date as realized_date, ps.payment_rec_amount as amount_realized, lc.shipment_date as ship_date,
+                    ps.payment_rec_date as realized_date, COALESCE(ps.payment_rec_amount,0) as amount_realized, lc.shipment_date as ship_date,
                     lc.name as lc_contact, rp.name as importer, SUM(lpl.product_qty) as quantity, ps.invoice_number_dummy as invoice_no, ps.invoice_date_dummy as invoice_date,
                     si.name as incoterm, ps.transport_by as carrier, lc.discharge_port as dest_port,
                     ps.truck_receipt_no as trans_doc_no, ps.bl_date as trans_doc_date
