@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import api, models, _
 from odoo.exceptions import ValidationError
 
 class InheritResPartner(models.Model):
@@ -33,6 +33,34 @@ class InheritResPartner(models.Model):
         acc = acc_pool.suspend_security().create(vals)
         return acc
 
+    def check_account_receivable_id(self, rec_id):
+        partners = self.env['res.partner'].search([('customer', '=', True)])
+        for partner in partners:
+            if partner.property_account_receivable_id.id == rec_id:
+                raise ValidationError('GL Account mismatch! This GL already mapped or used in different Customer.')
+        acc_move_line = self.env['account.move.line'].search(
+            [('account_id', '=', rec_id)])
+        if len(acc_move_line) > 0:
+            raise ValidationError(_('''You cannot change account, because this customer account has journal entries!'''))
+
+
+
+    def check_account_payable_id(self, rec_id, supplier_type, is_cnf=False):
+        if supplier_type == 'local':
+            partners = self.env['res.partner'].search(['|', ('supplier', '=', True), ('is_cnf', '=', True)])
+            for partner in partners:
+                if partner.property_account_payable_id.id == rec_id:
+                    raise ValidationError('GL Account mismatch! This GL already mapped or used in different vendor or C&F.')
+            acc_move_line = self.env['account.move.line'].search(
+                [('account_id', '=', rec_id)])
+            if len(acc_move_line) > 0:
+                raise ValidationError(
+                    _('''You cannot change account, because this vendor or C&F account has journal entries!'''))
+        elif supplier_type == 'foreign' and not is_cnf:
+            foreign_ap_account = self.env['ir.values'].get_default('account.config.settings', 'foreign_ap_account')
+            if foreign_ap_account != rec_id:
+                raise ValidationError('GL Account mismatch! On Account Payable GL only allowed configurable GL For Foreign Vendor')
+
     @api.model
     def create(self, vals):
         if 'parent_id' in vals and not vals['parent_id']:
@@ -62,6 +90,8 @@ class InheritResPartner(models.Model):
                 partners = self._check_res_partner_duplicate(name, "supplier")
                 if len(partners) > 0:
                     raise ValidationError("Supplier name already in use")
+                if 'property_account_payable_id' in vals:
+                    self.check_account_payable_id(vals['property_account_payable_id'], vals['supplier_type'])
 
             elif vals['is_cnf']:
                 partners = self._check_res_partner_duplicate(name, "is_cnf")
@@ -101,6 +131,14 @@ class InheritResPartner(models.Model):
                 if len(partners) > 0:
                     raise ValidationError("CNF Agent name already in use")
             vals['name'] = name
+
+        if self.customer and 'property_account_receivable_id' in vals:
+            acc_rec_id = vals['property_account_receivable_id']
+            self.check_account_receivable_id(acc_rec_id)
+        if (self.supplier or self.is_cnf) and 'property_account_payable_id' in vals:
+            acc_rec_id = vals['property_account_payable_id']
+            supplier_type = self.supplier_type
+            self.check_account_payable_id(acc_rec_id, supplier_type, self.is_cnf)
 
         if 'child_ids' in vals:
             child_ids = vals['child_ids']

@@ -29,9 +29,10 @@ class SaleOrderCancelConfirmation(models.TransientModel):
         for do_obj in do_objs:
             do_obj.write({'state': 'refused'})
 
-        stock_move_objs = self.env['stock.move'].search([('picking_id', '=', dc_objs.id)])
-        for sm_obj in stock_move_objs:
-            sm_obj.write({'state': 'cancel'})
+        if dc_objs:
+            stock_move_objs = self.env['stock.move'].search([('picking_id', '=', dc_objs.id)])
+            for sm_obj in stock_move_objs:
+                sm_obj.write({'state': 'cancel'})
 
         return sale_order_obj.write({'state': 'cancel'})
 

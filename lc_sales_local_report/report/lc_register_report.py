@@ -60,8 +60,8 @@ class LcRegisterXLSX(ReportXlsx):
         sheet.write(7, 23, "Aging (Days) Document Prepared", header_format_left)
         sheet.write(7, 24, "Doc. submit to Party Date/1st Acceptance", header_format_left)
         sheet.write(7, 25, "First Acceptance Doc. Collection  Date", header_format_left)
-        sheet.write(7, 26, "Aging (Days) First Acceptance", header_format_left)
-        sheet.write(7, 27, "Percentage of 1st Acceptance in a period or month", header_format_left)
+        sheet.write(7, 26, "Aging Due Days of First Acceptance", header_format_left)
+        sheet.write(7, 27, "Aging (Days) First Acceptance", header_format_left)
         sheet.write(7, 28, "Seller Bank Receive", header_format_left)
         sheet.write(7, 29, "To Buyer Bank", header_format_left)
         sheet.write(7, 30, "Aging (Days) 2nd Acceptance", header_format_left)
@@ -226,7 +226,14 @@ class LcRegisterXLSX(ReportXlsx):
                         aging_days = 0
                     sheet.write(row, 26, aging_days, name_border_format_colored_text_right)
 
-                percentage_of_first_acceptance_days = data['percentage_of_first_acceptance'] if 'percentage_of_first_acceptance' in data else '0'
+                if region_type == 'local':
+                    dispatch_to_party_date = ReportUtility.get_date_from_string(data['doc_dispatch_to_party_date'] if 'doc_dispatch_to_party_date' in data else '')
+                elif region_type == 'foreign':
+                    dispatch_to_party_date = ReportUtility.get_date_from_string(data['doc_dispatch_to_party_date_foreign'] if 'doc_dispatch_to_party_date_foreign' in data else '')
+                first_acceptance_doc_submission_date = ReportUtility.get_date_from_string(data['first_acceptance_doc_submission_date'] if 'first_acceptance_doc_submission_date' in data else '')
+                percentage_of_first_acceptance_days = 0
+                if dispatch_to_party_date and first_acceptance_doc_submission_date:
+                    percentage_of_first_acceptance_days = date_subtract_date_to_days(first_acceptance_doc_submission_date, dispatch_to_party_date)
                 sheet.write(row, 27, percentage_of_first_acceptance_days, name_border_format_colored_text_right)
                 if percentage_of_first_acceptance_days > 0:
                     percent_number_of_row += 1
