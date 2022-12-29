@@ -9,6 +9,9 @@
                 <xpath expr="//field[@name='move_id']" position="after">
                     <field name="commission_move_id" attrs="{'invisible':[('commission_move_id','=',False)]}"/>
                     <field name="refund_move_id" attrs="{'invisible':[('refund_move_id','=',False)]}"/>
+
+                    <field name="reverse_commission_move_id" attrs="{'invisible':[('reverse_commission_move_id','=',False)]}"/>
+                    <field name="reverse_refund_move_id" attrs="{'invisible':[('reverse_refund_move_id','=',False)]}"/>
                 </xpath>
             </field>
         </record>

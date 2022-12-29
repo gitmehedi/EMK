@@ -10,7 +10,7 @@
         </record>
 
         <record id="retail_customer_type" model="res.customer.type">
-            <field name="name">Corporate</field>
+            <field name="name">Retail</field>
             <field name="customer_type">retail</field>
             <field name="is_retail">True</field>
             <field name="is_corporate">False</field>

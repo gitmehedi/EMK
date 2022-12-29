@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_stock_return_picking_commission_refund_form" model="ir.ui.view">
+            <field name="name">Return lines</field>
+            <field name="model">stock.return.picking</field>
+            <field name="inherit_id" ref="gbs_samuda_sales_return.view_stock_return_picking_form_duplicate"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='location_id']" position="before">
+                    <field name="deduct_commission" string="Deduct commission amount"/>
+                    <field name="deduct_refund" string="Deduct refund amount"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

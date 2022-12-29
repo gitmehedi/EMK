@@ -14,6 +14,15 @@ class SaleOrder(models.Model):
     commission_available = fields.Boolean(compute="_all_invoice_commission_available")
     refund_available = fields.Boolean(compute="_all_invoice_refund_available")
 
+    deduct_commission = fields.Boolean(
+        string='Deduct Commission on Return',
+        help='We will deduct the amount of returned quantity from actual invoiced quantity'
+    )
+    deduct_refund = fields.Boolean(
+        string='Deduct Refund on Return',
+        help='We will deduct the amount of returned quantity from actual invoiced quantity'
+    )
+
     @api.depends("commission_available")
     def _all_invoice_commission_available(self):
         for rec in self:
@@ -52,7 +61,7 @@ class SaleOrder(models.Model):
 
         if line.corporate_refund_per_unit > (line.refund_actual + line.refund_tolerable):
             temp_msg = "No refund found" if (line.refund_actual + line.refund_tolerable) <= 0 else "Current refund = {} and tolerable= {}".format(line.refund_actual, line.refund_tolerable)
-            causes.append("{} for `{}` but requested commission is = {}".format(temp_msg, line.product_id.name, line.corporate_commission_per_unit))
+            causes.append("{} for `{}` but requested refund is = {}".format(temp_msg, line.product_id.name, line.corporate_refund_per_unit))
             is_double_validation = True
 
         res = super(SaleOrder, self).check_second_approval(line, price_change_pool, causes)
@@ -114,23 +123,31 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    price_unit_copy = fields.Float(string='Price_unit_copy')
+
     corporate_commission_per_unit = fields.Float(string="Commission Per Unit")
+    commission_per_unit_copy = fields.Float(string="Commission Per Unit Copy")
+
     commission_actual = fields.Float(string="Commission Actual")
     commission_tolerable = fields.Float(string="Commission Tolerable")
 
     corporate_refund_per_unit = fields.Float(digits=(16, 2), string="Refund Per Unit")
+    refund_per_unit_copy = fields.Float(digits=(16, 2), string="Refund Per Unit Copy")
+
     refund_actual = fields.Float(string="Refund Actual")
     refund_tolerable = fields.Float(string="Refund Tolerable")
 
     dealer_commission_applicable = fields.Boolean(string='Commission Applicable')
+    commission_applicable_copy = fields.Boolean(string='Commission Applicable Copy')
+
     dealer_refund_applicable = fields.Boolean(string='Refund Applicable')
+    refund_applicable_copy = fields.Boolean(string='Refund Applicable Copy')
 
     so_readonly_field = fields.Boolean(compute="_compute_so_readonly_field")
 
     @api.onchange('product_id', 'product_uom')
     def _onchange_commission_refund_product_id(self):
         self._compute_so_readonly_field()
-
         company_id = self.env.user.company_id
 
         domain = [
@@ -139,45 +156,52 @@ class SaleOrderLine(models.Model):
         ]
         config = self.env['commission.configuration'].sudo().search(domain, limit=1)
 
-        if config and config.auto_load_commission_refund_in_so_line:
-            for rec in self:
-                rec.corporate_commission_per_unit = 0.0
-                rec.commission_actual = 0.0
-                rec.commission_tolerable = 0.0
+        for rec in self:
+            rec.corporate_commission_per_unit = 0.0
+            rec.commission_actual = 0.0
+            rec.commission_tolerable = 0.0
 
-                rec.corporate_refund_per_unit = 0.0
-                rec.refund_actual = 0.0
-                rec.refund_tolerable = 0.0
+            rec.corporate_refund_per_unit = 0.0
+            rec.refund_actual = 0.0
+            rec.refund_tolerable = 0.0
 
-                rec.dealer_commission_applicable = False
-                rec.dealer_refund_applicable = False
+            rec.dealer_commission_applicable = False
+            rec.dealer_refund_applicable = False
 
-                if rec.product_id:
-                    product_package_mode = rec.order_id.pack_type.id
-                    uom_id = rec.product_uom.id or rec.product_id.uom_id.id
-                    pricelist_id = self.env['product.sales.pricelist'].sudo().search(
-                        [
-                            ('product_id', '=', rec.product_id.id),
-                            ('uom_id', '=', uom_id),
-                            ('product_package_mode', '=', product_package_mode)
-                        ],
-                        limit=1
-                    )
+            if rec.product_id:
+                product_package_mode = rec.order_id.pack_type.id
+                uom_id = rec.product_uom.id or rec.product_id.uom_id.id
+                pricelist_id = self.env['product.sales.pricelist'].sudo().search(
+                    [
+                        ('product_id', '=', rec.product_id.id),
+                        ('uom_id', '=', uom_id),
+                        ('product_package_mode', '=', product_package_mode)
+                    ],
+                    limit=1
+                )
 
-                    if pricelist_id:
-                        # commission
+                if pricelist_id:
+                    if config and config.auto_load_commission_refund_in_so_line:
                         rec.corporate_commission_per_unit = pricelist_id.corporate_commission_per_unit
-                        rec.commission_actual = pricelist_id.corporate_commission_per_unit
-                        rec.commission_tolerable = pricelist_id.corporate_commission_tolerable
-
-                        # refund
                         rec.corporate_refund_per_unit = pricelist_id.corporate_refund_per_unit
-                        rec.refund_actual = pricelist_id.corporate_refund_per_unit
-                        rec.refund_tolerable = pricelist_id.corporate_refund_tolerable
 
                         # commission & refund applicable or not for dealar only.
                         rec.dealer_commission_applicable = pricelist_id.dealer_commission_applicable
                         rec.dealer_refund_applicable = pricelist_id.dealer_refund_applicable
+
+                        rec.price_unit_copy = rec.price_unit
+                        rec.commission_per_unit_copy = pricelist_id.corporate_commission_per_unit
+                        rec.refund_per_unit_copy = pricelist_id.corporate_refund_per_unit
+                        rec.commission_applicable_copy = pricelist_id.dealer_commission_applicable
+                        rec.refund_applicable_copy = pricelist_id.dealer_refund_applicable
+
+                    # commission
+                    rec.commission_actual = pricelist_id.corporate_commission_per_unit
+                    rec.commission_tolerable = pricelist_id.corporate_commission_tolerable
+
+                    # refund
+                    rec.refund_actual = pricelist_id.corporate_refund_per_unit
+                    rec.refund_tolerable = pricelist_id.corporate_refund_tolerable
 
     @api.depends("so_readonly_field")
     def _compute_so_readonly_field(self):
@@ -189,3 +213,54 @@ class SaleOrderLine(models.Model):
 
         for rec in self:
             rec.so_readonly_field = is_readonly
+
+    @api.onchange('price_unit')
+    def _onchange_price_unit(self):
+        self.price_unit_copy = self.price_unit
+
+    @api.model
+    def create(self, values):
+        res = super(SaleOrderLine, self).create(values)
+        company_id = self.env.user.company_id
+
+        domain = [
+            ('customer_type', 'in', company_id.customer_types.ids or []),
+            ('functional_unit', 'in', company_id.branch_ids.ids or [])
+        ]
+        config = self.env['commission.configuration'].sudo().search(domain, limit=1)
+        if config.so_readonly_field:
+            if 'price_unit_copy' in values:
+                res.price_unit = res.price_unit_copy
+            if 'commission_per_unit_copy' in values:
+                res.corporate_commission_per_unit = res.commission_per_unit_copy
+            if 'refund_per_unit_copy' in values:
+                res.corporate_refund_per_unit = res.refund_per_unit_copy
+            if 'commission_applicable_copy' in values:
+                res.dealer_commission_applicable = res.commission_per_unit_copy
+            if 'refund_applicable_copy' in values:
+                res.dealer_refund_applicable = res.refund_per_unit_copy
+
+        return res
+
+    @api.multi
+    def write(self, values):
+        company_id = self.env.user.company_id
+
+        domain = [
+            ('customer_type', 'in', company_id.customer_types.ids or []),
+            ('functional_unit', 'in', company_id.branch_ids.ids or [])
+        ]
+        config = self.env['commission.configuration'].sudo().search(domain, limit=1)
+        if config.so_readonly_field:
+            if 'price_unit_copy' in values:
+                values['price_unit'] = values['price_unit_copy']
+            if 'commission_per_unit_copy' in values:
+                values['corporate_commission_per_unit'] = values['commission_per_unit_copy']
+            if 'refund_per_unit_copy' in values:
+                values['corporate_refund_per_unit'] = values['refund_per_unit_copy']
+            if 'commission_applicable_copy' in values:
+                values['dealer_commission_applicable'] = values['commission_applicable_copy']
+            if 'refund_applicable_copy' in values:
+                values['dealer_refund_applicable'] = values['refund_applicable_copy']
+
+        return super(SaleOrderLine, self).write(values)

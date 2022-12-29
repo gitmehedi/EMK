@@ -18,8 +18,12 @@
                             <group>
                                 <field name="customer_type" required="1"/>
                                 <field name="process" required="1"/>
-                                <field name="auto_load_commission_refund_in_so_line"
-                                       attrs="{'invisible': [('process','=','checkbox')]}"
+                                <field name="auto_load_copy" invisible="1"/>
+                                <field name="auto_load_commission_refund_in_so_line" force_save="1"
+                                       attrs="{
+                                           'invisible': [('process','=','checkbox')],
+                                           'readonly':[('so_readonly_field','=',True)]
+                                       }"
                                 />
                                 <field name="commission_provision" required="1"/>
                                 <field name="cpc_type" attrs="{'invisible': [('commission_provision','!=','customer_collection')], 'required': [('commission_provision','=','customer_collection')]}"/>

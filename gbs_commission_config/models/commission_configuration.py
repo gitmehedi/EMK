@@ -42,8 +42,10 @@ class CommissionConfiguration(models.Model):
         string='Auto Load',
         default=False,
         track_visibility="onchange",
+        force_save=True,
         help='''Auto load commission/refund value in sale order line'''
     )
+    auto_load_copy = fields.Boolean(string='Auto Load Copy')
     commission_provision = fields.Selection(
         [
             ('invoice_validation', 'At Invoice Validation'),
@@ -77,3 +79,24 @@ class CommissionConfiguration(models.Model):
          'A configuration already exist with the given Customer Type and Functional Unit.'
          )
     ]
+
+    @api.onchange('so_readonly_field')
+    def _onchange_so_readonly_field(self):
+        if self.so_readonly_field:
+            self.auto_load_commission_refund_in_so_line = True
+            self.auto_load_copy = True
+
+    @api.model
+    def create(self, values):
+        res = super(CommissionConfiguration, self).create(values)
+        if 'auto_load_copy' in values:
+            res.auto_load_commission_refund_in_so_line = res.auto_load_copy
+
+        return res
+
+    @api.multi
+    def write(self, values):
+        if 'auto_load_copy' in values:
+            values['auto_load_commission_refund_in_so_line'] = values['auto_load_copy']
+
+        return super(CommissionConfiguration, self).write(values)
