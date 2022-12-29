@@ -8,8 +8,12 @@
             <field name="inherit_id" ref="gbs_samuda_sales_return.view_stock_return_picking_form_duplicate"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='location_id']" position="before">
-                    <field name="deduct_commission" string="Deduct commission amount"/>
-                    <field name="deduct_refund" string="Deduct refund amount"/>
+                    <group>
+                        <field name="deduct_commission" string="Deduct commission amount"/>
+                    </group>
+                    <group>
+                        <field name="deduct_refund" string="Deduct refund amount"/>
+                    </group>
                 </xpath>
             </field>
         </record>
