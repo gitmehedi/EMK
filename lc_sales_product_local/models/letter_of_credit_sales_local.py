@@ -9,7 +9,7 @@ class LetterOfCreditCommon(models.Model):
     lc_document_line = fields.One2many('lc.document.line', 'lc_id', string='LC Documents')
     bank_code = fields.Char(string='Bank')
     bank_branch = fields.Char(string='Bank Branch')
-    is_required_exp = fields.Boolean(string='Is Required Exp.', default=False, track_visibility='onchange',
+    is_required_exp = fields.Boolean(string='Is Required Exp Number', default=False, track_visibility='onchange',
                                help="If checked Exp. number will be required.")
 
     @api.multi
