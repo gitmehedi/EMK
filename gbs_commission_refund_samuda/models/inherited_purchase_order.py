@@ -105,14 +105,13 @@ class InheritedPurchaseOrder(models.Model):
 
                             qty = inv_line.quantity
 
-                            if self.is_commission_claim and so.deduct_commission:
+                            if (self.is_commission_claim and so.deduct_commission) or (self.is_refund_claim and so.deduct_refund):
                                 # get all the invoice that is used the reference of current inv number
-                                invoice_lines_1 = self.env['account.invoice'].sudo().search([('from_return', '=', True), ('refund_invoice_id', '=', inv.id), ('type', '=', 'out_refund')]).invoice_line_ids
-                                qty -= sum([inv_1.quantity for inv_1 in invoice_lines_1])
-                            elif self.is_refund_claim and so.deduct_refund:
-                                # get all the invoice that is used the reference of current inv number
-                                invoice_lines_1 = self.env['account.invoice'].sudo().search([('from_return', '=', True), ('refund_invoice_id', '=', inv.id), ('type', '=', 'out_refund')]).invoice_line_ids
-                                qty -= sum([inv_1.quantity for inv_1 in invoice_lines_1])
+                                invoice_lines_1 = self.env['account.invoice'].sudo().search([
+                                    ('from_return', '=', True), ('refund_invoice_id', '=', inv.id), ('type', '=', 'out_refund')]
+                                )
+                                for inv_line_1 in invoice_lines_1.invoice_line_ids:
+                                    qty -= sum([inv_1.quantity for inv_1 in inv_line_1])
 
                             vals = {
                                 "name": inv_line.product_id.name,
