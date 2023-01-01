@@ -11,6 +11,7 @@ class AccountInvoiceInherit(models.Model):
     def create(self, vals):
         if 'is_after_automation' in vals:
             if vals['is_after_automation']:
+
                 total_po = 0
                 if 'invoice_line_ids' in vals:
                     for line in vals['invoice_line_ids']:
@@ -92,6 +93,7 @@ class AccountInvoiceInherit(models.Model):
                             if removed_pickings:
                                 raise UserError(
                                     _('You cannot remove or add mrr in edit mode!\n Special note : You need to cancel this bill, then create a fresh bill by selecting MRRs'))
+
                         if 'invoice_line_ids' in values:
                             for line in values['invoice_line_ids']:
                                 invoice_line_obj = self.env['account.invoice.line'].browse(line[1])
@@ -120,6 +122,7 @@ class AccountInvoiceInherit(models.Model):
                                             stock_move.sudo().write(
                                                 {'available_qty': stock_move.available_qty + qty})
                                             stock_move.picking_id.sudo().write({'mrr_status': 'partial_billed'})
+
         res = super(AccountInvoiceInherit, self).write(values)
         return res
 

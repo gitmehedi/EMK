@@ -91,13 +91,27 @@ class InheritedPurchaseOrder(models.Model):
 
             # making purchase order line based on selected SO
             for so in rec.sale_order_ids:
+                self.region_type = so.region_type
                 for inv in so.invoice_ids:
+                    if inv.type != 'out_invoice':
+                        continue  # skip if not out invoice.
+
                     for inv_line in inv.invoice_line_ids:
                         if inv_line.product_id and inv_line.quantity > 0:
                             temp_product_id = inv_line.sale_line_ids.filtered(lambda r: r.product_id.id == inv_line.product_id.id)
                             commission_amount = temp_product_id.corporate_commission_per_unit if self.is_commission_claim else temp_product_id.corporate_refund_per_unit
                             if commission_amount <= 0:
                                 continue  # skip invoice if commission/refund balance is zero or less.
+
+                            qty = inv_line.quantity
+
+                            if (self.is_commission_claim and so.deduct_commission) or (self.is_refund_claim and so.deduct_refund):
+                                # get all the invoice that is used the reference of current inv number
+                                invoice_lines_1 = self.env['account.invoice'].sudo().search([
+                                    ('from_return', '=', True), ('refund_invoice_id', '=', inv.id), ('type', '=', 'out_refund')]
+                                )
+                                for inv_line_1 in invoice_lines_1.invoice_line_ids:
+                                    qty -= sum([inv_1.quantity for inv_1 in inv_line_1])
 
                             vals = {
                                 "name": inv_line.product_id.name,
@@ -107,7 +121,7 @@ class InheritedPurchaseOrder(models.Model):
                                 'company_id': so.company_id.id,
                                 "product_id": inv_line.product_id.id,
                                 "product_uom": inv_line.product_id.uom_id.id,
-                                "product_qty": inv_line.quantity,
+                                "product_qty": qty,
                                 "price_unit": commission_amount,
                                 "state": 'draft',
                             }

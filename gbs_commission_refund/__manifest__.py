@@ -14,7 +14,8 @@
         'account',
         'hr',
         'customer_business_type',
-        'gbs_commission_config'
+        'gbs_commission_config',
+        'gbs_samuda_sales_return'
     ],
     'data': [
         # data
@@ -28,6 +29,10 @@
         'views/commission_refund_acc_config_view.xml',
         'views/product_sales_pricelist_view.xml',
         'views/res_partner_view.xml',
+
+        # wizards
+        'wizards/inherited_stock_return_picking.xml',
+
     ],
     'summary': 'Override base module logic.',
     'description': """

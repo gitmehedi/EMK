@@ -14,6 +14,9 @@ class AccountInvoice(models.Model):
     commission_move_id = fields.Many2one('account.move', 'Commission Journal Entry')
     refund_move_id = fields.Many2one('account.move', 'Refund Journal Entry')
 
+    reverse_commission_move_id = fields.Many2one('account.move', 'Reverse Commission Journal Entry')
+    reverse_refund_move_id = fields.Many2one('account.move', 'Reverse Refund Journal Entry')
+
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         result = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
