@@ -132,13 +132,17 @@ class InheritResPartner(models.Model):
                     raise ValidationError("CNF Agent name already in use")
             vals['name'] = name
 
-        if self.customer and 'property_account_receivable_id' in vals:
-            acc_rec_id = vals['property_account_receivable_id']
-            self.check_account_receivable_id(acc_rec_id)
-        if (self.supplier or self.is_cnf) and 'property_account_payable_id' in vals:
-            acc_rec_id = vals['property_account_payable_id']
-            supplier_type = self.supplier_type
-            self.check_account_payable_id(acc_rec_id, supplier_type, self.is_cnf)
+        if 'property_account_receivable_id' in vals:
+            for res in self:
+                if res.customer:
+                    acc_rec_id = vals['property_account_receivable_id']
+                    self.check_account_receivable_id(acc_rec_id)
+        if 'property_account_payable_id' in vals:
+            for res in self:
+                if res.supplier or res.is_cnf:
+                    acc_rec_id = vals['property_account_payable_id']
+                    supplier_type = res.supplier_type
+                    res.check_account_payable_id(acc_rec_id, supplier_type, res.is_cnf)
 
         if 'child_ids' in vals:
             child_ids = vals['child_ids']
