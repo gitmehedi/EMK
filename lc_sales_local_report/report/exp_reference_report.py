@@ -75,8 +75,8 @@ class ExpReferenceXLSX(ReportXlsx):
     def _get_sql(self, obj):
         where_clauses = self._get_query_where_clause(obj)
         if obj.type == 'local':
-            sql_str = """select string_agg(hs_code.display_name, ',') as hscode, bank_name, exp_no, currency,amount_inv,realized_date,amount_realized,ship_date,lc_contact,importer,quantity,invoice_no,invoice_date,incoterm,carrier,dest_port,trans_doc_no,trans_doc_date  from (
-                            select split_part(ip.value_reference::TEXT, ',', 2)::INTEGER as hs_code_id,rb.name as bank_name, ps.exp_number as exp_no, rc.name as currency, COALESCE(ps.invoice_value,0) as amount_inv,
+            sql_str = """select string_agg(hs_code.display_name, ',') as hscode, shipment_id, bank_name, exp_no, currency,amount_inv,realized_date,amount_realized,ship_date,lc_contact,importer,quantity,invoice_no,invoice_date,incoterm,carrier,dest_port,trans_doc_no,trans_doc_date  from (
+                            select MAX(split_part(ip.value_reference::TEXT, ',', 2)) as hs_code_id,rb.name as bank_name,ps.id as shipment_id, ps.exp_number as exp_no, rc.name as currency, COALESCE(ps.invoice_value,0) as amount_inv,
                             ps.payment_rec_date as realized_date, COALESCE(ps.payment_rec_amount,0) as amount_realized, lc.shipment_date as ship_date,
                             lc.name as lc_contact, rp.name as importer, SUM(spl.product_qty) as quantity, string_agg(ai.move_name, ', ') as invoice_no, MAX(ai.date_invoice) as invoice_date,
                             si.name as incoterm, ps.transport_by as carrier, lc.discharge_port as dest_port,
@@ -95,16 +95,15 @@ class ExpReferenceXLSX(ReportXlsx):
                             LEFT JOIN account_invoice as ai ON ai.id = lsir.invoice_id 
                             LEFT JOIN ir_property as ip ON (ip.res_id = concat('product.template,', pt.id::text) and ip.name = 'hs_code_id')
                             """ + where_clauses + """
-                            group by ps.name, ip.value_reference,rb.name, ps.exp_number, rc.name, ps.invoice_value, ps.payment_rec_date, ps.payment_rec_amount,
-                            lc.shipment_date, lc.name, rp.name, si.name, ps.transport_by, lc.discharge_port, lc.shipment_date
-                    ) as sub LEFT JOIN hs_code ON sub.hs_code_id = hs_code.id 
-                    group by bank_name,exp_no,currency,amount_inv,realized_date,amount_realized,ship_date,lc_contact,
+                            group by ps.id, rb.name, rc.name, lc.shipment_date, lc.name,rp.name,si.name,lc.discharge_port
+                    ) as sub LEFT JOIN hs_code ON sub.hs_code_id = hs_code.id::text
+                    group by shipment_id, bank_name,exp_no,currency,amount_inv,realized_date,amount_realized,ship_date,lc_contact,
                     importer,quantity,invoice_no,invoice_date,incoterm,carrier,dest_port,trans_doc_no,trans_doc_date
                         """
         elif obj.type == 'foreign':
             sql_str = """
             select string_agg(hs_code.display_name, ',') as hscode, bank_name, exp_no, currency,amount_inv,realized_date,amount_realized,ship_date,lc_contact,importer,quantity,invoice_no,invoice_date,incoterm,carrier,dest_port,trans_doc_no,trans_doc_date  from (
-                    select split_part(ip.value_reference::TEXT, ',', 2)::INTEGER as hs_code_id,rb.name as bank_name, ps.exp_number as exp_no, '' as hscode, rc.name as currency, ps.invoice_value as amount_inv,
+                    select MAX(split_part(ip.value_reference::TEXT, ',', 2)) as hs_code_id,rb.name as bank_name, ps.exp_number as exp_no, '' as hscode, rc.name as currency, ps.invoice_value as amount_inv,
                     ps.payment_rec_date as realized_date, COALESCE(ps.payment_rec_amount,0) as amount_realized, lc.shipment_date as ship_date,
                     lc.name as lc_contact, rp.name as importer, SUM(lpl.product_qty) as quantity, ps.invoice_number_dummy as invoice_no, ps.invoice_date_dummy as invoice_date,
                     si.name as incoterm, ps.transport_by as carrier, lc.discharge_port as dest_port,
@@ -121,10 +120,9 @@ class ExpReferenceXLSX(ReportXlsx):
                     LEFT JOIN shipment_product_line as spl ON spl.shipment_id = ps.id
                     LEFT JOIN lc_shipment_invoice_rel as lsir ON lsir.shipment_id = ps.id
                     LEFT JOIN ir_property as ip ON (ip.res_id = concat('product.template,', pt.id::text) and ip.name = 'hs_code_id')
-                    where lc.name='SC-SCCL-CTG-2022-004221'
-                    group by ps.name, rb.name, ps.exp_number, rc.name, ps.invoice_value, ps.payment_rec_date, ps.payment_rec_amount,
-                    lc.shipment_date, lc.name, rp.name, si.name, ps.transport_by, lc.discharge_port, ps.bl_date, ps.invoice_number_dummy, ps.invoice_date_dummy,ps.truck_receipt_no,ip.value_reference
-            ) as sub LEFT JOIN hs_code ON sub.hs_code_id = hs_code.id 
+                    """ + where_clauses + """
+                    group by ps.id, rb.name, rc.name, lc.shipment_date, lc.name,rp.name,si.name,lc.discharge_port
+            ) as sub LEFT JOIN hs_code ON sub.hs_code_id = hs_code.id::text
             group by bank_name,exp_no,currency,amount_inv,realized_date,amount_realized,ship_date,lc_contact,
             importer,quantity,invoice_no,invoice_date,incoterm,carrier,dest_port,trans_doc_no,trans_doc_date
             """

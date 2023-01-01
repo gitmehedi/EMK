@@ -6,8 +6,8 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="EXP Reference Report">
+                <p><i class="fa fa-info-circle" style="color: #46b8da;" aria-hidden="true"></i> Exp Reference Reports between date compare with Shipment's Payment Receive Date</p>
                 <group>
-
                     <group>
                         <field name="date_from"/>
                     </group>
