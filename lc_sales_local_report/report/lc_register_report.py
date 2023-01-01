@@ -762,7 +762,7 @@ class LcRegisterXLSX(ReportXlsx):
                             ''' % where_so
         else:
             query = '''
-                    SELECT distinct ps.id, MAX(rp.name) as party_name,MAX(rp2.name) as executive_name,MAX(lpl.name) as product_name, MAX(lc.name) as lc_number, 
+                    SELECT distinct ps.id as shipment_id, MAX(rp.name) as party_name,MAX(rp2.name) as executive_name,MAX(lpl.name) as product_name, MAX(lc.name) as lc_number, 
                     MAX(ps.name) as shipment_no, SUM(coalesce(spl.product_qty,0)) as shipment_qty, SUM(coalesce(ps.invoice_value,0)) as shipment_amount, MAX(lc.tenure) as tenure,
                     MAX(ps.bl_date) as doc_dispatch_to_party_date_foreign,MAX(coalesce((CURRENT_DATE-ps.bl_date),0)) as aging_first_acceptance_days_foreign,
                     MAX(date(ps.to_first_acceptance_date + INTERVAL '7 day')) as to_buyer_bank_date_foreign,
