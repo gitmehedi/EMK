@@ -34,6 +34,7 @@ class SaleOrder(models.Model):
                 for inv_line in inv.invoice_line_ids:
                     total_commission += sum([line.corporate_commission_per_unit for line in inv_line.sale_line_ids])
 
+            # comment_str += " \n ".join(["\xe2 %s" % cause for cause in causes])
             rec.commission_available = total_commission > 0 and available
 
     @api.depends("refund_available")
@@ -54,14 +55,36 @@ class SaleOrder(models.Model):
         self.ensure_one()
         is_double_validation = False
 
-        if line.corporate_commission_per_unit > (line.commission_actual + line.commission_tolerable):
-            temp_msg = "No commission found" if (line.commission_actual + line.commission_tolerable) <= 0 else "Current commission = {} and tolerable= {}".format(line.commission_actual, line.commission_tolerable)
-            causes.append("{} for `{}` but requested commission is = {}".format(temp_msg, line.product_id.name, line.corporate_commission_per_unit))
+        commission_tolerable_min = (line.commission_actual - line.commission_tolerable)
+        commission_tolerable_max = (line.commission_actual + line.commission_tolerable)
+
+        if line.corporate_commission_per_unit < commission_tolerable_min or line.corporate_commission_per_unit > commission_tolerable_max:
+            actual_commission_msg = "no approved commission available."
+
+            if commission_tolerable_max > 0:
+                commission_range = "{}".format(line.commission_actual)
+                if line.commission_tolerable > 0:
+                    commission_range = "between {} to {}".format(commission_tolerable_min, commission_tolerable_max)
+                actual_commission_msg = "approved commission is {}".format(commission_range)
+
+            temp_msg = "Requested Commission rate is {} but {}".format(line.corporate_commission_per_unit, actual_commission_msg)
+            causes.append(temp_msg)
             is_double_validation = True
 
-        if line.corporate_refund_per_unit > (line.refund_actual + line.refund_tolerable):
-            temp_msg = "No refund found" if (line.refund_actual + line.refund_tolerable) <= 0 else "Current refund = {} and tolerable= {}".format(line.refund_actual, line.refund_tolerable)
-            causes.append("{} for `{}` but requested refund is = {}".format(temp_msg, line.product_id.name, line.corporate_refund_per_unit))
+        refund_tolerable_min = (line.refund_actual - line.refund_tolerable)
+        refund_tolerable_max = (line.refund_actual + line.refund_tolerable)
+
+        if line.corporate_refund_per_unit < refund_tolerable_min or line.corporate_refund_per_unit > refund_tolerable_max:
+            actual_refund_msg = "no approved refund available."
+
+            if refund_tolerable_max > 0:
+                refund_range = "{}".format(line.refund_actual)
+                if line.refund_tolerable > 0:
+                    refund_range = "between {} to {}".format(refund_tolerable_min, refund_tolerable_max)
+                actual_refund_msg = "approved refund is {}".format(refund_range)
+
+            temp_msg = "Requested Refund rate is {} but {}".format(line.corporate_refund_per_unit, actual_refund_msg)
+            causes.append(temp_msg)
             is_double_validation = True
 
         res = super(SaleOrder, self).check_second_approval(line, price_change_pool, causes)
@@ -118,6 +141,36 @@ class SaleOrder(models.Model):
                 result['arch'] = etree.tostring(so_form)
 
         return result
+
+    @api.multi
+    def action_to_submit(self):
+        is_double_validation = False
+        causes = []
+
+        for order in self:
+            partner_pool = order.partner_id
+            for lines in order.order_line:
+                price_change_pool = order.env['product.sale.history.line'].search(
+                    [('product_id', '=', lines.product_id.id),
+                     ('currency_id', '=', lines.currency_id.id),
+                     ('product_package_mode', '=', order.pack_type.id),
+                     ('uom_id', '=', lines.product_uom.id)], limit=1)
+
+                is_double_validation = order.check_second_approval(lines, price_change_pool, causes)
+
+            if order.credit_sales_or_lc == 'credit_sales':
+                returned_list = self.get_customer_credit_limit(partner_pool, order)
+
+                if abs(returned_list[0]) > returned_list[1]:
+                    causes.append("Customer crossed his Credit Limit. Current Credit Limit is " + str(abs(returned_list[1])))
+                    is_double_validation = True
+
+            if is_double_validation:
+                comment_str = "Acceptance needs for " + str(len(causes)) + " cause(s) which are: <br/>"
+                comment_str += "<br/>".join(causes)
+                order.write({'comment': comment_str})  # Go to two level approval process
+
+        super(SaleOrder, self).action_to_submit()
 
 
 class SaleOrderLine(models.Model):

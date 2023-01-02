@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account.action_invoice_tree2" model="ir.actions.act_window">
+            <field name="context">
+                {
+                "default_type":"in_invoice",
+                "type":"in_invoice",
+                "journal_type":"purchase",
+                "search_default_draft":1,
+                "default_direct_vendor_bill":True,
+                "default_is_claimed":False,
+                }
+            </field>
+
+            <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_claimed', '=', False)]</field>
+        </record>
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="inherit_customer_commission_refund_claim_supplier_form" model="ir.ui.view">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="is_claimed" invisible="1"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="action_commission_refund_invoice" model="ir.actions.act_window">
+            <field name="name">Customer Claims</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                    (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('account.invoice_supplier_tree')}),
+                    (0, 0, {'sequence': 1002, 'view_mode': 'form', 'view_id': ref('account.invoice_supplier_form')}),
+                ]"/>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="domain">[('is_claimed','=',True)]</field>
+            <field name="context">{'is_claimed':True}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a customer claim invoice.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_commission_refund_invoice"
+                  id="menu_action_commission_refund_invoice"
+                  parent="account.menu_finance_receivables"
+                  sequence="3"
+                  groups="gbs_application_group.group_account_income"
+        />
+
+    </data>
+</odoo>

@@ -82,7 +82,7 @@ class AccountInvoice(models.Model):
                 commission_amount = line.sale_line_ids.filtered(lambda r: r.product_id.id == line.product_id.id).corporate_commission_per_unit
                 total_amount += (line.quantity * commission_amount)
 
-                label = "{}: {}".format(line.product_id.name, total_amount)
+                label = "{}: ({} x {})".format(line.product_id.name, line.quantity, commission_amount)
 
             name_seq = self.env['ir.sequence'].next_by_code('commission.account.move.seq')
             journal_id = self.env['account.journal'].sudo().search([('code', '=', 'COMJNL')], limit=1)
@@ -99,7 +99,7 @@ class AccountInvoice(models.Model):
             for line in self.invoice_line_ids:
                 refund_amount = line.sale_line_ids.filtered(lambda r: r.product_id.id == line.product_id.id).corporate_refund_per_unit
                 total_amount += (line.quantity * refund_amount)
-                label = "{}: {}".format(line.product_id.name, total_amount)
+                label = "{}: ({} x {})".format(line.product_id.name, line.quantity, refund_amount)
 
             name_seq = self.env['ir.sequence'].next_by_code('refund.account.move.seq')
             journal_id = self.env['account.journal'].sudo().search([('code', '=', 'REFJNL')], limit=1)
@@ -111,9 +111,12 @@ class AccountInvoice(models.Model):
             account_id = temp_acc.account_id if temp_acc else cr_journal_config.refund_account_id
             control_account_id = cr_journal_config.refund_control_account_id
 
+        if total_amount <= 0:
+            return
+
         commission_debit_vals = self.get_move_line_vals(
             label,
-            datetime.now().date(),
+            self.date_invoice,
             journal_id.id,
             account_id.id,
             operating_unit_id.id,
@@ -126,7 +129,7 @@ class AccountInvoice(models.Model):
 
         commission_credit_vals = self.get_move_line_vals(
             label,
-            datetime.now().date(),
+            self.date_invoice,
             journal_id.id,
             control_account_id.id,
             operating_unit_id.id,
@@ -141,7 +144,7 @@ class AccountInvoice(models.Model):
             'name': name_seq,
             'journal_id': journal_id.id,
             'operating_unit_id': operating_unit_id.id,
-            'date': datetime.now().date(),
+            'date': self.date_invoice,
             'company_id': company_id.id,
             'partner_id': self.partner_id.id,
             'state': 'draft',
@@ -175,14 +178,14 @@ class AccountInvoice(models.Model):
 
                 # commission
                 commission_move_vals = self.get_move_vals('commission', cr_journal_config)
-                commission_move = self.env['account.move'].sudo().create(commission_move_vals)
+                commission_move = self.env['account.move'].sudo().create(commission_move_vals) if commission_move_vals else None
                 if commission_move:
                     self.commission_move_id = commission_move.id
                     commission_move.post()
 
                 # refund
                 refund_move_vals = self.get_move_vals('refund', cr_journal_config)
-                refund_move = self.env['account.move'].sudo().create(refund_move_vals)
+                refund_move = self.env['account.move'].sudo().create(refund_move_vals) if refund_move_vals else None
                 if refund_move:
                     self.refund_move_id = refund_move.id
                     refund_move.post()

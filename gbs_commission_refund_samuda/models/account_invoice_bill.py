@@ -11,20 +11,19 @@ class AccountInvoice(models.Model):
 
     is_commission_claimed = fields.Boolean(
         string="Commission Claimed",
-        compute="_compute_is_commission_claimed"
+        compute="_compute_is_commission_claimed",
     )
     is_refund_claimed = fields.Boolean(
         string="Refund Claimed",
-        compute="_compute_is_refund_claimed"
+        compute="_compute_is_refund_claimed",
     )
+
+    is_claimed = fields.Boolean(default=lambda self: self.env.context.get('default_is_claimed') or False, string="Commission/Refund Claimed")
 
     @api.depends('is_commission_claimed')
     def _compute_is_commission_claimed(self):
         for rec in self:
-            line = self.env['purchase.order.line'].sudo().search([
-                ('invoice_id', '=', rec.id), ('order_id.is_commission_claim', '=', True)
-            ])
-            # filtered_line_ids = list(filter(lambda temp: temp.order_id.is_commission_claim, line))
+            line = self.env['purchase.order.line'].sudo().search([('invoice_id', '=', rec.id), ('order_id.is_commission_claim', '=', True)])
             rec.is_commission_claimed = True if line else False
 
     @api.depends('is_refund_claimed')
@@ -36,8 +35,11 @@ class AccountInvoice(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         result = super(AccountInvoice, self)._onchange_partner_id()
-        if self._context.get('default_account_id', False):
+
+        self.is_claimed = self._context.get('default_is_claimed', False)
+        if self._context.get('default_account_id', False) and self._context.get('default_is_claimed', False):
             self.account_id = self._context.get('default_account_id')
+
         return result
 
     def _prepare_invoice_line_from_po_line(self, line):

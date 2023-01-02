@@ -72,6 +72,10 @@ class CommissionConfiguration(models.Model):
         string='Enable Readonly (Unit Price, Commission, Refund, Tax)',
         track_visibility="onchange"
     )
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Company'
+    )
 
     _sql_constraints = [
         ('customer_type_functional_unit_uniq',

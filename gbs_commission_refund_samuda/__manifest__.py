@@ -8,6 +8,7 @@
     'sequence': 14,
     'depends': [
         'base',
+        'account',
         'gbs_commission_refund',
         'gbs_commission_config'
     ],
@@ -17,10 +18,10 @@
         'data/service_data.xml',
 
         # views
-        'views/purchase_order_view.xml',
+        # 'views/purchase_order_view.xml',
+        'views/account_invoice_view.xml',
         'views/inherited_purchase_order_view.xml',
         'views/sale_order_view.xml',
-
 
     ],
     'summary': 'Override base module logic.',
