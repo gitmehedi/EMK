@@ -1,4 +1,5 @@
-from odoo import fields, models, api
+from odoo import fields, models, api, _
+from odoo.exceptions import UserError
 
 
 class ReturnPicking(models.TransientModel):
@@ -15,8 +16,19 @@ class ReturnPicking(models.TransientModel):
     def create_return_obj(self):
         picking = self.env['stock.picking'].browse(self.env.context['active_id'])
         invoice_ids = self.env['account.invoice'].sudo().search([('picking_ids', 'in', picking.id)])
+
+        # purchase_order_line_ids = self.env['purchase.order.line'].sudo().search([('invoice_id', 'in', invoice_ids.ids)])
         # so_ids = self.env['sale.order'].sudo().search([('name', 'in', [invoice.origin for invoice in invoice_ids])])
+
         so_ids = self.env['sale.order'].search([('name', '=', picking.origin)])[0]
+
+        purchase_order_ids = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', so_ids.ids)])
+        for po in purchase_order_ids:
+            if po.invoice_ids:
+                bill_available = any([bill.state != 'cancel' for bill in po.invoice_ids])
+                if bill_available:
+                    raise UserError(_("One or more bills already created for commission or refund."))
+
         for so in so_ids:
             so.deduct_commission = self.deduct_commission
             so.deduct_refund = self.deduct_refund

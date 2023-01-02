@@ -32,21 +32,26 @@ class InheritedPurchaseOrder(models.Model):
         return domain
 
     is_commission_claim = fields.Boolean(
-        string='Commission Claimed',
+        string='Commission',
         help="Commission Claim Flag.",
         default=lambda self: self.env.context.get('is_commission_claim') or False
     )
     is_refund_claim = fields.Boolean(
-        string='Refund Claimed',
+        string='Refund',
         help="Refund Claim Flag.",
         default=lambda self: self.env.context.get('is_refund_claim') or False
     )
-    state = fields.Selection(selection_add=[
+    state = fields.Selection([
+        ('draft', 'RFQ'),
+        ('sent', 'RFQ Sent'),
+        ('to approve', 'To Approve'),
+        ('purchase', 'Purchase Order'),
         ('claim_draft', 'New'),
         ('claim_hos_approve', 'Sales Approval'),
         ('claim_hoa_approve', 'Accounts Approval'),
-        ('done', 'Locked')
-    ])  # add new states to existing state selection field.
+        ('done', 'Locked'),
+        ('cancel', 'Cancelled')
+    ], string='Status', readonly=True, index=True, copy=False, default='draft', track_visibility='onchange')
     sale_order_ids = fields.Many2many(
         comodel_name='sale.order',
         relation="purchase_order_commission_sale_order_rel",
@@ -67,6 +72,9 @@ class InheritedPurchaseOrder(models.Model):
 
     @api.onchange('partner_id', 'operating_unit_id')
     def _onchange_sale_order_domain(self):
+        if self.partner_id:
+            self.region_type = self.partner_id.supplier_type
+
         # clear existing records
         self.sale_order_ids = [(5, 0, 0)]
         self.order_line = [(5, 0, 0)]
@@ -91,7 +99,6 @@ class InheritedPurchaseOrder(models.Model):
 
             # making purchase order line based on selected SO
             for so in rec.sale_order_ids:
-                self.region_type = so.region_type
                 for inv in so.invoice_ids:
                     if inv.type != 'out_invoice':
                         continue  # skip if not out invoice.
@@ -131,6 +138,10 @@ class InheritedPurchaseOrder(models.Model):
 
     @api.model
     def create(self, vals):
+        # if (vals.get('is_commission_claim') or vals.get('is_refund_claim')):
+        #     if not vals.get('order_line', False):
+        #         raise UserError(_("Invoice line can not be empty"))
+
         res = super(InheritedPurchaseOrder, self).create(vals)
         if res.id and (vals.get('is_commission_claim') or vals.get('is_refund_claim')):
             operating_unit_id = self.env['operating.unit'].browse(vals['operating_unit_id'])
@@ -143,6 +154,19 @@ class InheritedPurchaseOrder(models.Model):
             res._onchange_sale_order_ids()
 
         return res
+
+    # @api.multi
+    # def write(self, values):
+    #     # Add code here
+    #     if self.is_commission_claim or self.is_refund_claim:
+    #         if values:
+    #             if not values.get('order_line', False):
+    #                 raise UserError(_("Invoice line can not be empty"))
+    #         else:
+    #             if not self.order_line:
+    #                 raise UserError(_("Invoice line can not be empty"))
+    #
+    #     return super(InheritedPurchaseOrder, self).write(values)
 
     @api.multi
     @api.constrains('order_line')
@@ -160,6 +184,7 @@ class InheritedPurchaseOrder(models.Model):
         result = super(InheritedPurchaseOrder, self).action_view_invoice()
         if self.is_commission_claim or self.is_refund_claim:
             result['context']['default_account_id'] = self.partner_id.commission_refund_account_payable_id.id
+            result['context']['default_is_claimed'] = True
         return result
 
     @api.multi
