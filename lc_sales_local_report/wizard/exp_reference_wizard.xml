@@ -16,7 +16,12 @@
                     </group>
                 </group>
                 <group>
-                    <group><field name="type" readonly="1"/></group>
+                    <group>
+                        <field name="type" attrs="{'readonly': [('is_readonly_type','=',True)]}"/>
+                        <field name="is_readonly_type" invisible="1"/>
+
+                    </group>
+
                 </group>
                 <footer>
                     <button name="report_print" string="Print" type="object" class="oe_highlight"/>
@@ -51,7 +56,7 @@
         <field name="name">EXP Reference Report(Local)</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">exp.reference.report</field>
-        <field name="context">{'default_type': 'local'}</field>
+        <field name="context">{'default_type': 'local', 'default_is_readonly_type': True}</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -68,7 +73,7 @@
         <field name="name">EXP Reference Report(Foreign)</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">exp.reference.report</field>
-        <field name="context">{'default_type': 'foreign'}</field>
+        <field name="context">{'default_type': 'foreign', 'default_is_readonly_type': True}</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

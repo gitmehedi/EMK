@@ -9,7 +9,7 @@ class ExpReference(models.TransientModel):
     date_from = fields.Date(string='From', required=True)
     date_to = fields.Date(string='To', required=True)
     type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')], required=True)
-
+    is_readonly_type = fields.Boolean('Is Readonly Type?', default=False)
 
     @api.multi
     def report_print(self):
