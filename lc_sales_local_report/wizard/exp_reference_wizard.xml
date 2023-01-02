@@ -16,7 +16,7 @@
                     </group>
                 </group>
                 <group>
-                    <group><field name="type"/></group>
+                    <group><field name="type" readonly="1"/></group>
                 </group>
                 <footer>
                     <button name="report_print" string="Print" type="object" class="oe_highlight"/>
@@ -28,7 +28,7 @@
     </record>
 
 
-    <!-- LC Register Global -->
+    <!-- EXP Reference Global -->
     <record id="action_wizard_exp_reference_report" model="ir.actions.act_window">
         <field name="name">EXP Reference Report</field>
         <field name="type">ir.actions.act_window</field>
@@ -41,6 +41,42 @@
 
     <menuitem action="action_wizard_exp_reference_report"
               id="menu_wizard_exp_reference_report"
+              parent="letter_of_credit.lc_report_menu_root"
+              groups="gbs_application_group.group_export_foreign_lc"
+              sequence="13"/>
+
+
+    <!-- EXP Reference Local -->
+    <record id="action_wizard_exp_reference_report_local" model="ir.actions.act_window">
+        <field name="name">EXP Reference Report(Local)</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">exp.reference.report</field>
+        <field name="context">{'default_type': 'local'}</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem action="action_wizard_exp_reference_report_local"
+              id="menu_wizard_exp_reference_report_local"
+              parent="letter_of_credit.lc_report_menu_root"
+              groups="gbs_application_group.group_export_local_lc"
+              sequence="13"/>
+
+    <!-- EXP Reference Foreign -->
+    <record id="action_wizard_exp_reference_report_foreign" model="ir.actions.act_window">
+        <field name="name">EXP Reference Report(Foreign)</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">exp.reference.report</field>
+        <field name="context">{'default_type': 'foreign'}</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <menuitem action="action_wizard_exp_reference_report_foreign"
+              id="menu_wizard_exp_reference_report_foreign"
               parent="letter_of_credit.lc_report_menu_root"
               groups="gbs_application_group.group_export_foreign_lc"
               sequence="13"/>
