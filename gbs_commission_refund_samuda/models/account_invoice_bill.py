@@ -39,6 +39,8 @@ class AccountInvoice(models.Model):
         self.is_claimed = self._context.get('default_is_claimed', False)
         if self._context.get('default_account_id', False) and self._context.get('default_is_claimed', False):
             self.account_id = self._context.get('default_account_id')
+        elif self.partner_id:
+            self.account_id = self.partner_id.property_account_payable_id.id
 
         return result
 
