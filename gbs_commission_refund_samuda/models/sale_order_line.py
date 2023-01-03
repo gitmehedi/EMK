@@ -26,29 +26,36 @@ class SaleOrder(models.Model):
     @api.depends("commission_available")
     def _all_invoice_commission_available(self):
         for rec in self:
-            # any(list) returns True if any item in an iterable are true, otherwise it returns False
-            available = any([(not inv.is_commission_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in rec.invoice_ids])
+            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1, order="id desc")
+            if is_claim_cancelled.state == 'cancel':
+                rec.commission_available = True
+            else:
+                # any(list) returns True if any item in an iterable are true, otherwise it returns False
+                available = any([(not inv.is_commission_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in rec.invoice_ids])
 
-            total_commission = 0
-            for inv in rec.invoice_ids:
-                for inv_line in inv.invoice_line_ids:
-                    total_commission += sum([line.corporate_commission_per_unit for line in inv_line.sale_line_ids])
+                total_commission = 0
+                for inv in rec.invoice_ids:
+                    for inv_line in inv.invoice_line_ids:
+                        total_commission += sum([line.corporate_commission_per_unit for line in inv_line.sale_line_ids])
 
-            # comment_str += " \n ".join(["\xe2 %s" % cause for cause in causes])
-            rec.commission_available = total_commission > 0 and available
+                rec.commission_available = total_commission > 0 and available
 
     @api.depends("refund_available")
     def _all_invoice_refund_available(self):
         for rec in self:
-            # any(list) returns True if any item in an iterable are true, otherwise it returns False
-            available = any([(not inv.is_refund_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in rec.invoice_ids])
+            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1, order="id desc")
+            if is_claim_cancelled.state == 'cancel':
+                rec.refund_available = True
+            else:
+                # any(list) returns True if any item in an iterable are true, otherwise it returns False
+                available = any([(not inv.is_refund_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in rec.invoice_ids])
 
-            total_commission = 0
-            for inv in rec.invoice_ids:
-                for inv_line in inv.invoice_line_ids:
-                    total_commission += sum([line.corporate_refund_per_unit for line in inv_line.sale_line_ids])
+                total_commission = 0
+                for inv in rec.invoice_ids:
+                    for inv_line in inv.invoice_line_ids:
+                        total_commission += sum([line.corporate_refund_per_unit for line in inv_line.sale_line_ids])
 
-            rec.refund_available = total_commission > 0 and available
+                rec.refund_available = total_commission > 0 and available
 
     @api.multi
     def check_second_approval(self, line, price_change_pool, causes):
