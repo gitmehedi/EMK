@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="report_customer_invoice_document">
+        <t t-call="report.html_container">
+            <t t-call="account_reports_extend.report_customer_invoice">
+                <div class="page" style="page-break-inside: auto">
+                    <style>
+                        .signed-by { display: inline-block; border-top: 1px solid #333; padding: 5px; margin-top: 60px; }
+                    </style>
+                    <div class="clearfix">
+                        <br/>
+                        <h3 class="text-center mt-0">INVOICE</h3>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p t-if="data['number']" class="mb-5"><b>Invoice No: </b><t t-esc="data['number']"/></p>
+                                <p t-if="data['origin']" class="mb-5"><b>SO: </b><t t-esc="data['origin']"/></p>
+                                <p t-if="data['date_due']" class="mb-5"><b>Due Date: </b><t t-esc="data['date_due']"/></p>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <p t-if="data['current_date']" class="mb-5"><b>Date: </b><t t-esc="data['current_date']"/></p>
+                                <p t-if="data['challan_no']"><b>Challan No:</b> <t t-esc="data['challan_no']"/></p>
+                                <p t-if="data['date_done']"><b>Delivery Date:</b> <t t-esc="data['date_done']"/></p>
+                            </div>
+                        </div>
+
+                        <hr class="hr-xs mt-0"/>
+
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p t-if="data['partner_name']"><b>Bill To:</b></p>
+                                <p><t t-esc="data['partner_name']"/></p>
+                                <p t-if="data['partner_address']">
+                                    <t t-esc="data['partner_address']"/>
+                                </p>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <p t-if="data['bin_number']"><b>BIN Number : </b> <t t-esc="data['bin_number']"/></p>
+                                <p t-if="data['contact_person']"><b>Contact Person : </b> <t t-esc="data['contact_person']"/></p>
+                                <p t-if="data['contact_number']"><b>Contact Number : </b> <t t-esc="data['contact_number']"/></p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <table class="table table-report table-bordered table-striped" style="margin-bottom:0px;">
+                            <thead>
+                                <tr class="odo-bg-gray">
+                                    <th class="text-center">SL</th>
+                                    <th class="text-center">Description of Goods</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Unit</th>
+                                    <th class="text-center">Unit Price</th>
+                                    <th class="text-center">Currency</th>
+                                    <th class="text-center">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="invoice_line_ids" t-as="l">
+                                    <tr style="page-break-inside: avoid">
+                                        <td><span t-esc="l_index+1"/></td>
+                                        <td><t t-esc="l['product_name']"/></td>
+                                        <td class="text-right"><span t-esc="l['product_qty']"/></td>
+                                        <td class="text-right"><span t-esc="l['product_uom']"/></td>
+                                        <td class="text-right"><span t-esc="l['price_unit']"/></td>
+                                        <td class="text-right"><span t-esc="l['currency']"/></td>
+                                        <td class="text-right"><span t-esc="l['price_subtotal']"/></td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td colspan="6" class="text-center"><b>Total Value</b></td>
+                                    <td class="text-right"><t t-esc="total_payable_amount"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p style="padding:10px 0px ;">Amount in Word: <t t-esc="in_word_amount"/> only</p>
+                        </div>
+                        <div class="col-xs-12">
+                            <span t-raw="data['comment']" widget="html" options="{'style-inline': false}"/>
+                        </div>
+                    </div>
+
+                    <div style="padding-top:20px;">
+                        <p class="text-center">This is computer generated invoice and does not require any signature</p>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_customer_invoice" inherit_id="report_layout.gbs_internal_layout" primary="True">
+        <xpath expr="//t[@t-call='report_layout.gbs_internal_layout_header']" position="attributes">
+            <attribute name="t-call">account_reports_extend.external_layout_header_vendor_bill</attribute>
+        </xpath>
+    </template>
+
+    <template id="external_layout_header_vendor_bill" inherit_id="report_layout.gbs_internal_layout_header" primary="True">
+        <xpath expr="//div[@class='company-info']" position="after">
+            <div class="w100 text-center" style="position:absolute; bottom:2px; " name="company_address">
+                <span t-raw="data['address']"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

@@ -12,15 +12,14 @@
         />
 
     <report
-            id="account.account_invoices"
+            id="action_report_account_invoices"
             model="account.invoice"
             string="Invoices"
             report_type="qweb-pdf"
-            name="account.report_invoice"
-            file="account.report_invoice"
-            attachment_use="True"
-            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            name="account_reports_extend.report_customer_invoice_document"
+            file="account_reports_extend.report_customer_invoice_document"
             menu="False"
+            paperformat="report_layout.paperformat_backend_portrait"
         />
 
     <report
@@ -54,7 +53,7 @@
         <field name="inherit_id" ref="account.invoice_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_invoice_open']" position="before">
-                <button name="%(account.account_invoices)d" style="background-color: #39B05F;color:white;" type="action" string="Print"/>
+                <button name="print_account_invoice_customer_invoice" style="background-color: #39B05F;color:white;" type="object" string="Print"/>
             </xpath>
         </field>
     </record>
