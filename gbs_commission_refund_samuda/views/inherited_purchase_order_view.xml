@@ -204,7 +204,7 @@
                     (0, 0, {'sequence': 4, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
                     (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
                 ]"/>
-            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','sent')]</field>
+            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hos_approve')]</field>
             <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
@@ -223,7 +223,7 @@
                     (0, 0, {'sequence': 4, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
                     (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
                 ]"/>
-            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','purchase')]</field>
+            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hoa_approve')]</field>
             <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">

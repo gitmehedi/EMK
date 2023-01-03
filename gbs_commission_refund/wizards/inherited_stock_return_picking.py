@@ -25,6 +25,7 @@ class ReturnPicking(models.TransientModel):
         purchase_order_ids = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', so_ids.ids)])
         for po in purchase_order_ids:
             if po.invoice_ids:
+                # if one or more bill state is not cancel.
                 bill_available = any([bill.state != 'cancel' for bill in po.invoice_ids])
                 if bill_available:
                     raise UserError(_("One or more bills already created for commission or refund."))
