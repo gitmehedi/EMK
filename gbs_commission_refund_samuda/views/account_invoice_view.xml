@@ -30,7 +30,7 @@
         </record>
 
         <record id="action_commission_refund_invoice" model="ir.actions.act_window">
-            <field name="name">Customer Claims</field>
+            <field name="name">Claim Bills</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_ids"
