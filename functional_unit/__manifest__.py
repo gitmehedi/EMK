@@ -14,6 +14,7 @@
         'security/ir.model.access.csv',
         'data/branch_data.xml',
         'views/res_branch_view.xml',
+        'views/inherited_res_company.xml',
         'views/inherited_stock_picking.xml',
         'views/inherited_stock_move.xml',
         'views/inherited_product.xml',

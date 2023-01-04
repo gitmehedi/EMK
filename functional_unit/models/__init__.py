@@ -1,4 +1,5 @@
 from . import branch
+from . import inherited_res_company
 from . import inherited_stock_move
 from . import inherited_stock_picking
 from . import inherited_customer
