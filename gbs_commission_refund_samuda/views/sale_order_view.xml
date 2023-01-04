@@ -22,6 +22,7 @@
                 <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
                     <field name="so_readonly_field" invisible="1"/>
                     <field name="price_unit_copy" invisible="1"/>
+                    <field name="price_unit_actual" invisible="1"/>
 
                     <field name="commission_per_unit_copy" invisible="1"/>
                     <field name="refund_per_unit_copy" invisible="1"/>

@@ -184,6 +184,7 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     price_unit_copy = fields.Float(string='Price_unit_copy')
+    price_unit_actual = fields.Float(string='Price Unit Actual')
 
     corporate_commission_per_unit = fields.Float(string="Commission Per Unit")
     commission_per_unit_copy = fields.Float(string="Commission Per Unit Copy")
@@ -241,6 +242,8 @@ class SaleOrderLine(models.Model):
                 )
 
                 if pricelist_id:
+                    self.price_unit_actual = pricelist_id.new_price
+
                     if config and config.auto_load_commission_refund_in_so_line:
                         rec.corporate_commission_per_unit = pricelist_id.corporate_commission_per_unit
                         rec.corporate_refund_per_unit = pricelist_id.corporate_refund_per_unit
@@ -304,14 +307,14 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
-        company_id = self.env.user.company_id
-
-        domain = [
-            ('customer_type', 'in', company_id.customer_types.ids or []),
-            ('functional_unit', 'in', company_id.branch_ids.ids or [])
-        ]
-        config = self.env['commission.configuration'].sudo().search(domain, limit=1)
-        if config.so_readonly_field:
+        # company_id = self.env.user.company_id
+        #
+        # domain = [
+        #     ('customer_type', 'in', company_id.customer_types.ids or []),
+        #     ('functional_unit', 'in', company_id.branch_ids.ids or [])
+        # ]
+        # config = self.env['commission.configuration'].sudo().search(domain, limit=1)
+        if self.so_readonly_field:
             if 'price_unit_copy' in values:
                 values['price_unit'] = values['price_unit_copy']
             if 'commission_per_unit_copy' in values:
