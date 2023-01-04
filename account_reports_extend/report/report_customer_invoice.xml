@@ -42,6 +42,9 @@
                             </div>
                         </div>
                     </div>
+
+                    <br/>
+
                     <div class="clearfix">
                         <table class="table table-report table-bordered table-striped" style="margin-bottom:0px;">
                             <thead>
@@ -68,17 +71,19 @@
                                     </tr>
                                 </t>
                                 <tr>
-                                    <td colspan="6" class="text-center"><b>Total Value</b></td>
-                                    <td class="text-right"><t t-esc="total_payable_amount"/></td>
+                                    <td colspan="6" class="text-right"><b>Total Value</b></td>
+                                    <td class="text-right"><b><t t-esc="total_payable_amount"/></b></td>
                                 </tr>
                             </tbody>
                         </table>
 
                     </div>
+                    <br/>
                     <div class="row">
                         <div class="col-xs-12">
-                            <p style="padding:10px 0px ;">Amount in Word: <t t-esc="in_word_amount"/> only</p>
+                            <p style="padding:10px 0px ;">Amount in Word: <b><t t-esc="in_word_amount"/> only</b></p>
                         </div>
+                        <br/><br/>
                         <div class="col-xs-12">
                             <span t-raw="data['comment']" widget="html" options="{'style-inline': false}"/>
                         </div>

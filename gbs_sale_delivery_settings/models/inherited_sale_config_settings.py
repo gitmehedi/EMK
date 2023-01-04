@@ -19,6 +19,7 @@ class SaleConfigSettings(models.TransientModel):
                                              default=lambda self: self._get_default_delivery_report_factory())
     undelivered_report_factory = fields.Boolean(string="The Price Unit, Currency, Amount columns will not be showed on this report",
                                                 default=lambda self: self._get_default_undelivered_report_factory())
+    sale_terms_condition = fields.Text(string="Sales/Invoice Terms and Conditions *")
 
     @api.multi
     def set_delivery_report_factory(self):
@@ -38,9 +39,19 @@ class SaleConfigSettings(models.TransientModel):
             'sale.config.settings', 'undelivered_report_factory', self.undelivered_report_factory
         )
 
+    @api.multi
+    def set_sale_terms_condition(self):
+        if self.sale_terms_condition != self.company_id.sale_terms_condition:
+            self.company_id.write({'sale_terms_condition': self.sale_terms_condition})
+
+        return self.env['ir.values'].sudo().set_default(
+            'sale.config.settings', 'sale_terms_condition', self.sale_terms_condition
+        )
+
 
 class ResCompany(models.Model):
     _inherit = "res.company"
 
     delivery_report_factory = fields.Boolean(string="Delivery Report For Factory")
     undelivered_report_factory = fields.Boolean(string="Undelivered Report For Factory")
+    sale_terms_condition = fields.Text(string="Sales/Invoice Terms and Conditions *")

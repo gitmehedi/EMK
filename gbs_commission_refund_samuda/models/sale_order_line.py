@@ -57,6 +57,12 @@ class SaleOrder(models.Model):
 
                 rec.refund_available = total_commission > 0 and available
 
+    @api.onchange('pack_type')
+    def _onchange_pack_type(self):
+        for rec in self:
+            for so in rec.sale_order_ids:
+                so._onchange_commission_refund_product_id()
+
     @api.multi
     def check_second_approval(self, line, price_change_pool, causes):
         self.ensure_one()
@@ -184,6 +190,7 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     price_unit_copy = fields.Float(string='Price_unit_copy')
+    price_unit_actual = fields.Float(string='Price Unit Actual')
 
     corporate_commission_per_unit = fields.Float(string="Commission Per Unit")
     commission_per_unit_copy = fields.Float(string="Commission Per Unit Copy")
@@ -235,12 +242,16 @@ class SaleOrderLine(models.Model):
                     [
                         ('product_id', '=', rec.product_id.id),
                         ('uom_id', '=', uom_id),
-                        ('product_package_mode', '=', product_package_mode)
+                        ('product_package_mode', '=', product_package_mode),
+                        ('state', '=', 'validate')
                     ],
-                    limit=1
+                    limit=1, order='effective_date desc'
                 )
+                print("pricelist_id:", pricelist_id)
 
                 if pricelist_id:
+                    self.price_unit_actual = pricelist_id.new_price
+
                     if config and config.auto_load_commission_refund_in_so_line:
                         rec.corporate_commission_per_unit = pricelist_id.corporate_commission_per_unit
                         rec.corporate_refund_per_unit = pricelist_id.corporate_refund_per_unit
@@ -304,14 +315,14 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
-        company_id = self.env.user.company_id
-
-        domain = [
-            ('customer_type', 'in', company_id.customer_types.ids or []),
-            ('functional_unit', 'in', company_id.branch_ids.ids or [])
-        ]
-        config = self.env['commission.configuration'].sudo().search(domain, limit=1)
-        if config.so_readonly_field:
+        # company_id = self.env.user.company_id
+        #
+        # domain = [
+        #     ('customer_type', 'in', company_id.customer_types.ids or []),
+        #     ('functional_unit', 'in', company_id.branch_ids.ids or [])
+        # ]
+        # config = self.env['commission.configuration'].sudo().search(domain, limit=1)
+        if self.so_readonly_field:
             if 'price_unit_copy' in values:
                 values['price_unit'] = values['price_unit_copy']
             if 'commission_per_unit_copy' in values:

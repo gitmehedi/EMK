@@ -24,4 +24,15 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_sales_config_sale_terms_condition" model="ir.ui.view">
+        <field name="name">sale settings sale terms</field>
+        <field name="model">sale.config.settings</field>
+        <field name="inherit_id" ref="sale.view_sales_config"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='sale']/field[@name='sale_note']" position="after">
+                <field name="sale_terms_condition" widget="html"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
