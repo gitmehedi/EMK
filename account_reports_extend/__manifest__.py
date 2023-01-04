@@ -14,6 +14,7 @@ Accounting Reports
     'data': [
         'data/inherit_account_financial_report_data.xml',
         'report/report_account_invoice_vendor_bill.xml',
+        'report/report_customer_invoice.xml',
         'views/account_financial_report_view.xml',
         'views/account_invoice_report_view.xml',
     ],
