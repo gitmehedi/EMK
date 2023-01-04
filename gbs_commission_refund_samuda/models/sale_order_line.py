@@ -236,10 +236,12 @@ class SaleOrderLine(models.Model):
                     [
                         ('product_id', '=', rec.product_id.id),
                         ('uom_id', '=', uom_id),
-                        ('product_package_mode', '=', product_package_mode)
+                        ('product_package_mode', '=', product_package_mode),
+                        ('state', '=', 'validate')
                     ],
-                    limit=1
+                    limit=1, order='effective_date desc'
                 )
+                print("pricelist_id:", pricelist_id)
 
                 if pricelist_id:
                     self.price_unit_actual = pricelist_id.new_price
