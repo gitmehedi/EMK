@@ -37,10 +37,7 @@ class AccountInvoice(models.Model):
         result = super(AccountInvoice, self)._onchange_partner_id()
 
         self.is_claimed = self._context.get('default_is_claimed', False)
-        if self._context.get('default_account_id', False) and self._context.get('default_is_claimed', False):
-            self.account_id = self._context.get('default_account_id')
-        elif self.partner_id:
-            self.account_id = self.partner_id.property_account_payable_id.id
+        self.account_id = self._context.get('default_account_id')
 
         return result
 
@@ -53,5 +50,6 @@ class AccountInvoice(models.Model):
             if self.purchase_id.is_service_order and (self.purchase_id.is_commission_claim or self.purchase_id.is_refund_claim):
                 invoice_line['account_id'] = commission_control_acc.commission_control_account_id.id
                 invoice_line['quantity'] = line.product_qty
+
 
         return invoice_line
