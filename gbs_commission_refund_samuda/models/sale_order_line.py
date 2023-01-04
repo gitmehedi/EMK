@@ -26,12 +26,15 @@ class SaleOrder(models.Model):
     @api.depends("commission_available")
     def _all_invoice_commission_available(self):
         for rec in self:
-            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1, order="id desc")
+            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1,
+                                                                          order="id desc")
             if is_claim_cancelled.state == 'cancel':
                 rec.commission_available = True
             else:
                 # any(list) returns True if any item in an iterable are true, otherwise it returns False
-                available = any([(not inv.is_commission_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in rec.invoice_ids])
+                available = any(
+                    [(not inv.is_commission_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in
+                     rec.invoice_ids])
 
                 total_commission = 0
                 for inv in rec.invoice_ids:
@@ -43,12 +46,15 @@ class SaleOrder(models.Model):
     @api.depends("refund_available")
     def _all_invoice_refund_available(self):
         for rec in self:
-            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1, order="id desc")
+            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1,
+                                                                          order="id desc")
             if is_claim_cancelled.state == 'cancel':
                 rec.refund_available = True
             else:
                 # any(list) returns True if any item in an iterable are true, otherwise it returns False
-                available = any([(not inv.is_refund_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in rec.invoice_ids])
+                available = any(
+                    [(not inv.is_refund_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in
+                     rec.invoice_ids])
 
                 total_commission = 0
                 for inv in rec.invoice_ids:
@@ -60,7 +66,7 @@ class SaleOrder(models.Model):
     @api.onchange('pack_type')
     def _onchange_pack_type(self):
         for rec in self:
-            for so in rec.sale_order_ids:
+            for so in rec.order_line:
                 so._onchange_commission_refund_product_id()
 
     @api.multi
@@ -80,7 +86,8 @@ class SaleOrder(models.Model):
                     commission_range = "between {} to {}".format(commission_tolerable_min, commission_tolerable_max)
                 actual_commission_msg = "approved commission is {}".format(commission_range)
 
-            temp_msg = "Requested Commission rate is {} but {}".format(line.corporate_commission_per_unit, actual_commission_msg)
+            temp_msg = "Requested Commission rate is {} but {}".format(line.corporate_commission_per_unit,
+                                                                       actual_commission_msg)
             causes.append(temp_msg)
             is_double_validation = True
 
@@ -104,10 +111,13 @@ class SaleOrder(models.Model):
         return res or is_double_validation  # if any is true then double validation is required.
 
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        result = super(SaleOrder, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = super(SaleOrder, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,
+                                                        submenu=submenu)
         if view_type == 'form':
             company = self.env.user.company_id
-            config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
+            config = self.env['commission.configuration'].search(
+                [('customer_type', 'in', company.customer_types.ids or []),
+                 ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
 
             order_line_tree = etree.XML(result['fields']['order_line']['views']['tree']['arch'])
 
@@ -175,7 +185,8 @@ class SaleOrder(models.Model):
                 returned_list = self.get_customer_credit_limit(partner_pool, order)
 
                 if abs(returned_list[0]) > returned_list[1]:
-                    causes.append("Customer crossed his Credit Limit. Current Credit Limit is " + str(abs(returned_list[1])))
+                    causes.append(
+                        "Customer crossed his Credit Limit. Current Credit Limit is " + str(abs(returned_list[1])))
                     is_double_validation = True
 
             if is_double_validation:
@@ -224,6 +235,8 @@ class SaleOrderLine(models.Model):
         config = self.env['commission.configuration'].sudo().search(domain, limit=1)
 
         for rec in self:
+            self.price_unit_actual = 0
+
             rec.corporate_commission_per_unit = 0.0
             rec.commission_actual = 0.0
             rec.commission_tolerable = 0.0
