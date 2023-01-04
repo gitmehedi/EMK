@@ -57,6 +57,12 @@ class SaleOrder(models.Model):
 
                 rec.refund_available = total_commission > 0 and available
 
+    @api.onchange('pack_type')
+    def _onchange_pack_type(self):
+        for rec in self:
+            for so in rec.sale_order_ids:
+                so._onchange_commission_refund_product_id()
+
     @api.multi
     def check_second_approval(self, line, price_change_pool, causes):
         self.ensure_one()
