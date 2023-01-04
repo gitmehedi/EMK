@@ -2,13 +2,13 @@
 <odoo>
     <data>
         <!-- Inherit Form View to Modify it -->
-        <record id="res_partner_commission_refund_payable_acc_view_form_" model="ir.ui.view">
-            <field name="name">res.partner.commission.refund.account.payable.view.form.1</field>
+        <record id="res_partner_commission_refund_payable_acc_view_form2" model="ir.ui.view">
+            <field name="name">res.partner.commission.refund.account.payable.view.form.2</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//field[@name='property_account_payable_id']" position="after">
+                <xpath expr="//group[@name='accounting_entries']" position="inside">
                     <field name="commission_refund_account_payable_id" domain="[('internal_type','=','payable')]"/>
                 </xpath>
 

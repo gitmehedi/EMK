@@ -185,6 +185,8 @@ class InheritedPurchaseOrder(models.Model):
         if self.is_commission_claim or self.is_refund_claim:
             result['context']['default_account_id'] = self.partner_id.commission_refund_account_payable_id.id
             result['context']['default_is_claimed'] = True
+        else:
+            result['context']['default_account_id'] = self.partner_id.property_account_payable_id.id
         return result
 
     @api.multi
