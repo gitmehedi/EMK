@@ -68,7 +68,7 @@ class CustomerInvoice(models.AbstractModel):
         data['partner_address'] = report_utility_pool.getCoustomerAddress(docs.partner_id)
         data['address'] = report_utility_pool.getBranchAddress(docs.company_id)
 
-        data['comment'] = docs.comment
+        data['comment'] = docs.company_id.sale_terms_condition
 
 
         docargs = {
