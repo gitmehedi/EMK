@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_sale_under_over_approved_price_report_xlsx" model="ir.actions.report.xml">
+            <field name="name">Products Sold under/over Approved Price</field>
+            <field name="model">sale.under.over.approved.price.report.wizard</field>
+            <field name="type">ir.actions.report.xml</field>
+            <field name="report_name">samuda_sales_report.sale_under_over_approved_price_xlsx</field>
+            <field name="report_type">xlsx</field>
+            <field name="auto" eval="False"/>
+        </record>
+    </data>
+</odoo>

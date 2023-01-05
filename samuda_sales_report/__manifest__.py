@@ -37,6 +37,8 @@
         'reports/customer_aging_statement.xml',
         'reports/inherited_views.xml',
         'view/menu_items.xml',
+        'wizard/sale_under_over_approved_price_wizard.xml',
+        'reports/sale_under_over_approved_price_view.xml',
     ],
 
     'summary': 'Samuda Sales Reports Information',
