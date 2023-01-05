@@ -16,21 +16,7 @@ class InheritedPurchaseOrder(models.Model):
             raise UserError(_('No MRR completed for this order!'))
 
         result['context']['purchase_order'] = self.id
+        result['context']['default_purchase_id'] = self.id
         result['context']['invoice_type'] = 'in_invoice'
-        # result['context']['default_pickings'] = pickings.ids
-        # is_after_automation = False
-        # if self.env.user.company_id.mrr_bill_automation_date < self.date_order:
-        #     pickings_ids = []
-        #     for picking in pickings:
-        #         moves = self.env['stock.move'].search(
-        #             [('picking_id', 'in', picking.ids), ('state', '=', 'done')])
-        #         for move in moves:
-        #             if float("{:.4f}".format(move.available_qty)) != 0:
-        #                 if picking.id not in pickings_ids:
-        #                     pickings_ids.append(picking.id)
-        #     result['context']['default_pickings'] = pickings_ids
-        #
-        #     is_after_automation = True
-        # result['context']['default_is_after_automation'] = is_after_automation
 
         return result

@@ -35,8 +35,12 @@ class AccountInvoice(models.Model):
                                     'Origin of the related picking not found!\n Picking origin is where PO number or PO LC number saved!'
                                 ))
                             lc = self.env['letter.credit'].search([('name', '=', picking.origin)])
-                            po_obj = self.env['purchase.order'].search(
-                                ['|', ('name', '=', picking.origin), ('po_lc_id', '=', lc.id)])
+
+                            if lc and lc.po_ids:
+                                po_obj = lc.po_ids[0]
+                            else:
+                                po_obj = self.env['purchase.order'].search([('name', '=', picking.origin)])
+
                             order_line = self.env['purchase.order.line'].search(
                                 [('order_id', '=', po_obj.id), ('product_id', '=', move.product_id.id)],
                                 limit=1)
@@ -64,6 +68,7 @@ class AccountInvoice(models.Model):
                                                     'name': move.product_id.name,
                                                     'uom_id': move.product_uom.id,
                                                     'purchase_line_id': order_line.id,
+                                                    'purchase_id': order_line.order_id.id,
                                                     'analytic_account_id': analytic_account_id,
                                                     'account_id': move.product_id.property_account_expense_id.id or move.product_id.categ_id.property_account_expense_categ_id.id,
                                                     'move_ref': move_ref
