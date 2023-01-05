@@ -235,7 +235,7 @@ class SaleOrderLine(models.Model):
         config = self.env['commission.configuration'].sudo().search(domain, limit=1)
 
         for rec in self:
-            self.price_unit_actual = 0
+            rec.price_unit_actual = 0
 
             rec.corporate_commission_per_unit = 0.0
             rec.commission_actual = 0.0
@@ -263,7 +263,7 @@ class SaleOrderLine(models.Model):
                 print("pricelist_id:", pricelist_id)
 
                 if pricelist_id:
-                    self.price_unit_actual = pricelist_id.new_price
+                    rec.price_unit_actual = pricelist_id.new_price
 
                     if config and config.auto_load_commission_refund_in_so_line:
                         rec.corporate_commission_per_unit = pricelist_id.corporate_commission_per_unit
