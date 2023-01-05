@@ -70,7 +70,7 @@ class ProformaInvoice(models.Model):
         action_code = action.get_action_code('pi_confirm')
         user_action_pool = self.env['users.action'].search([('code', '=', action_code)])
         if user_action_pool:
-            action.create_action_log(self, user_action_pool)
+            action.create_action_log_proforma(self, user_action_pool)
         return res
 
 
@@ -84,7 +84,7 @@ class DeliveryAuthorization(models.Model):
         action_code = action.get_action_code('da_confirm')
         user_action_pool = self.env['users.action'].search([('code', '=', action_code)])
         if user_action_pool:
-            action.create_action_log(self, user_action_pool)
+            action.create_action_log_delivery_auth(self, user_action_pool)
         return res
 
     def action_close(self):
@@ -121,8 +121,8 @@ class StockDateOfTransfer(models.TransientModel):
         action_code = action.get_action_code('ds_confirm')
         user_action_pool = self.env['users.action'].search([('code', '=', action_code)])
         if user_action_pool:
-            self = self.pick_id.sale_id
-            action.create_action_log(self, user_action_pool)
+            self = self.pick_id
+            action.create_action_log_stock_picking(self, user_action_pool)
         return res
 
 
@@ -137,6 +137,36 @@ class ActionLogCommon:
             'order_id': self.id
         }
         self.env['sale.order.action.log'].create(vals)
+
+    def create_action_log_proforma(self, action, user_action):
+        self = action
+        vals = {
+            'action_id': user_action.id,
+            'performer_id': self.env.user.id,
+            'perform_date': fields.Datetime.now(),
+            'pi_id': self.id
+        }
+        self.env['proforma.invoice.action.log'].create(vals)
+
+    def create_action_log_delivery_auth(self, action, user_action):
+        self = action
+        vals = {
+            'action_id': user_action.id,
+            'performer_id': self.env.user.id,
+            'perform_date': fields.Datetime.now(),
+            'delivery_id': self.id
+        }
+        self.env['delivery.authorization.action.log'].create(vals)
+
+    def create_action_log_stock_picking(self, action, user_action):
+        self = action
+        vals = {
+            'action_id': user_action.id,
+            'performer_id': self.env.user.id,
+            'perform_date': fields.Datetime.now(),
+            'picking_id': self.id
+        }
+        self.env['stock.picking.action.log'].create(vals)
 
     @api.multi
     def get_action_code(self, action_name):
