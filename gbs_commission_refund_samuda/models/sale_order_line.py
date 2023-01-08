@@ -74,6 +74,8 @@ class SaleOrder(models.Model):
         self.ensure_one()
         is_double_validation = False
 
+        res = super(SaleOrder, self).check_second_approval(line, price_change_pool, causes)
+
         commission_tolerable_min = (line.commission_actual - line.commission_tolerable)
         commission_tolerable_max = (line.commission_actual + line.commission_tolerable)
 
@@ -107,7 +109,6 @@ class SaleOrder(models.Model):
             causes.append(temp_msg)
             is_double_validation = True
 
-        res = super(SaleOrder, self).check_second_approval(line, price_change_pool, causes)
         return res or is_double_validation  # if any is true then double validation is required.
 
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -166,6 +167,11 @@ class SaleOrder(models.Model):
         return result
 
     @api.multi
+    def action_reset(self):
+        self.comment = False
+        super(SaleOrder, self).action_reset()
+
+    @api.multi
     def action_to_submit(self):
         is_double_validation = False
         causes = []
@@ -185,8 +191,7 @@ class SaleOrder(models.Model):
                 returned_list = self.get_customer_credit_limit(partner_pool, order)
 
                 if abs(returned_list[0]) > returned_list[1]:
-                    causes.append(
-                        "Customer crossed his Credit Limit. Current Credit Limit is " + str(abs(returned_list[1])))
+                    causes.append("Customer crossed his Credit Limit. Current Credit Limit is " + str(abs(returned_list[1])))
                     is_double_validation = True
 
             if is_double_validation:
