@@ -168,15 +168,15 @@ class ActionLogCommon:
         }
         self.env['stock.picking.action.log'].create(vals)
 
-        def create_action_log_delivery_schedules(self, action, user_action):
-            self = action
-            vals = {
-                'action_id': user_action.id,
-                'performer_id': self.env.user.id,
-                'perform_date': fields.Datetime.now(),
-                'picking_id': self.id
-            }
-            self.env['delivery.schedules.action.log'].create(vals)
+    def create_action_log_delivery_schedules(self, action, user_action):
+        self = action
+        vals = {
+            'action_id': user_action.id,
+            'performer_id': self.env.user.id,
+            'perform_date': fields.Datetime.now(),
+            'picking_id': self.id
+        }
+        self.env['delivery.schedules.action.log'].create(vals)
 
     @api.multi
     def get_action_code(self, action_name):
