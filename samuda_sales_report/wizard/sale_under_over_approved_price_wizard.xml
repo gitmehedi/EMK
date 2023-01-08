@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="sale_under_over_approved_price_report_wizard_view" model="ir.ui.view">
+			<field name="name">sale.under.over.approved.price.report.wizard</field>
+			<field name="model">sale.under.over.approved.price.report.wizard</field>
+			<field name="arch" type="xml">
+			    <form>
+                    <group>
+						<group>
+							<field name="partner_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+							<field name="operating_unit_id" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+							<field name="date_from"/>
+						</group>
+						<group>
+							<field name="product_tmpl_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+							<field name="product_id" placeholder="All" options="{'no_create': True,'no_create_edit': True,'no_open': True}"
+								   domain="[('product_tmpl_id', 'child_of', product_tmpl_id.id)]"/>
+							<field name="date_to"/>
+						</group>
+                    </group>
+                    <footer>
+                        <button name ="button_export_xlsx" string="Export" type="object" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+			</field>
+		</record>
+
+		<record id="action_sale_under_over_approved_price_report_wizard" model="ir.actions.act_window">
+            <field name="name">Products Sold under/over Approved Price</field>
+            <field name="res_model">sale.under.over.approved.price.report.wizard</field>
+            <field name="view_type">form</field>
+			<field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+		<menuitem id="menu_sale_under_over_approved_price_report_submenu"
+				  name="Sales (Under/over approved price wise)"
+				  parent="sales_team.menu_sale_report"
+				  groups="sales_team.group_sale_manager"
+				  action="action_sale_under_over_approved_price_report_wizard" sequence="11"/>
+
+    </data>
+</odoo>

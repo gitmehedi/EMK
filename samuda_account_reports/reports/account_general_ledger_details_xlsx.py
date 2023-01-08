@@ -172,7 +172,7 @@ class AccountGeneralLedgerDetailsXLSX(ReportXlsx):
                     ,l.debit
                     ,l.credit
                 ORDER BY 
-                    m.id, m.date, sorting_col''')
+                    m.date, m.id, sorting_col''')
 
         params = (accounts.id, accounts.id) + tuple(where_params)
         cr.execute(sql, params)
