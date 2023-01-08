@@ -1,6 +1,7 @@
-from odoo import api, exceptions, fields, models
-from odoo.tools.misc import formatLang
 from datetime import date, datetime
+
+from odoo import api, models
+from odoo.tools.misc import formatLang
 
 
 class CustomerInvoice(models.AbstractModel):
@@ -58,8 +59,8 @@ class CustomerInvoice(models.AbstractModel):
         data['number'] = docs.number
         data['origin'] = docs.origin
         data['current_date'] = report_utility_pool.get_date_from_string(str(date.today()))
-        data['date_due'] = report_utility_pool.get_date_from_string(docs.date_due)
-        data['date_done'] = report_utility_pool.get_date_from_string(str(date_done))
+        data['date_due'] = report_utility_pool.get_date_from_string(docs.date_due) if docs.date_due else ''
+        data['date_done'] = report_utility_pool.get_date_from_string(str(date_done)) if date_done else ''
         data['challan_no'] = challan_no
         data['bin_number'] = docs.partner_id.bin
         data['contact_person'] = contact_person
@@ -69,7 +70,6 @@ class CustomerInvoice(models.AbstractModel):
         data['address'] = report_utility_pool.getBranchAddress(docs.company_id)
 
         data['comment'] = docs.company_id.sale_terms_condition
-
 
         docargs = {
             'invoice_line_ids': invoice_line_ids,
