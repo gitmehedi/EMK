@@ -26,12 +26,15 @@ class SaleOrder(models.Model):
     @api.depends("commission_available")
     def _all_invoice_commission_available(self):
         for rec in self:
-            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1, order="id desc")
+            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1,
+                                                                          order="id desc")
             if is_claim_cancelled.state == 'cancel':
                 rec.commission_available = True
             else:
                 # any(list) returns True if any item in an iterable are true, otherwise it returns False
-                available = any([(not inv.is_commission_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in rec.invoice_ids])
+                available = any(
+                    [(not inv.is_commission_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in
+                     rec.invoice_ids])
 
                 total_commission = 0
                 for inv in rec.invoice_ids:
@@ -43,12 +46,15 @@ class SaleOrder(models.Model):
     @api.depends("refund_available")
     def _all_invoice_refund_available(self):
         for rec in self:
-            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1, order="id desc")
+            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1,
+                                                                          order="id desc")
             if is_claim_cancelled.state == 'cancel':
                 rec.refund_available = True
             else:
                 # any(list) returns True if any item in an iterable are true, otherwise it returns False
-                available = any([(not inv.is_refund_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in rec.invoice_ids])
+                available = any(
+                    [(not inv.is_refund_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in
+                     rec.invoice_ids])
 
                 total_commission = 0
                 for inv in rec.invoice_ids:
@@ -60,13 +66,15 @@ class SaleOrder(models.Model):
     @api.onchange('pack_type')
     def _onchange_pack_type(self):
         for rec in self:
-            for so in rec.sale_order_ids:
+            for so in rec.order_line:
                 so._onchange_commission_refund_product_id()
 
     @api.multi
     def check_second_approval(self, line, price_change_pool, causes):
         self.ensure_one()
         is_double_validation = False
+
+        res = super(SaleOrder, self).check_second_approval(line, price_change_pool, causes)
 
         commission_tolerable_min = (line.commission_actual - line.commission_tolerable)
         commission_tolerable_max = (line.commission_actual + line.commission_tolerable)
@@ -80,7 +88,8 @@ class SaleOrder(models.Model):
                     commission_range = "between {} to {}".format(commission_tolerable_min, commission_tolerable_max)
                 actual_commission_msg = "approved commission is {}".format(commission_range)
 
-            temp_msg = "Requested Commission rate is {} but {}".format(line.corporate_commission_per_unit, actual_commission_msg)
+            temp_msg = "Requested Commission rate is {} but {}".format(line.corporate_commission_per_unit,
+                                                                       actual_commission_msg)
             causes.append(temp_msg)
             is_double_validation = True
 
@@ -100,14 +109,16 @@ class SaleOrder(models.Model):
             causes.append(temp_msg)
             is_double_validation = True
 
-        res = super(SaleOrder, self).check_second_approval(line, price_change_pool, causes)
         return res or is_double_validation  # if any is true then double validation is required.
 
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        result = super(SaleOrder, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = super(SaleOrder, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,
+                                                        submenu=submenu)
         if view_type == 'form':
             company = self.env.user.company_id
-            config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
+            config = self.env['commission.configuration'].search(
+                [('customer_type', 'in', company.customer_types.ids or []),
+                 ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
 
             order_line_tree = etree.XML(result['fields']['order_line']['views']['tree']['arch'])
 
@@ -156,6 +167,11 @@ class SaleOrder(models.Model):
         return result
 
     @api.multi
+    def action_reset(self):
+        self.comment = False
+        super(SaleOrder, self).action_reset()
+
+    @api.multi
     def action_to_submit(self):
         is_double_validation = False
         causes = []
@@ -181,9 +197,9 @@ class SaleOrder(models.Model):
             if is_double_validation:
                 comment_str = "Acceptance needs for " + str(len(causes)) + " cause(s) which are: <br/>"
                 comment_str += "<br/>".join(causes)
-                order.write({'comment': comment_str})  # Go to two level approval process
+                order.sudo().write({'comment': comment_str})  # Go to two level approval process
 
-        super(SaleOrder, self).action_to_submit()
+        return super(SaleOrder, self).action_to_submit()
 
 
 class SaleOrderLine(models.Model):
@@ -224,6 +240,8 @@ class SaleOrderLine(models.Model):
         config = self.env['commission.configuration'].sudo().search(domain, limit=1)
 
         for rec in self:
+            rec.price_unit_actual = 0
+
             rec.corporate_commission_per_unit = 0.0
             rec.commission_actual = 0.0
             rec.commission_tolerable = 0.0
@@ -250,7 +268,7 @@ class SaleOrderLine(models.Model):
                 print("pricelist_id:", pricelist_id)
 
                 if pricelist_id:
-                    self.price_unit_actual = pricelist_id.new_price
+                    rec.price_unit_actual = pricelist_id.new_price
 
                     if config and config.auto_load_commission_refund_in_so_line:
                         rec.corporate_commission_per_unit = pricelist_id.corporate_commission_per_unit

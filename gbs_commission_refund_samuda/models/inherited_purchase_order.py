@@ -100,8 +100,13 @@ class InheritedPurchaseOrder(models.Model):
             # making purchase order line based on selected SO
             for so in rec.sale_order_ids:
                 for inv in so.invoice_ids:
-                    if inv.type != 'out_invoice':
+                    if inv.type != 'out_invoice' or inv.state != 'paid':
                         continue  # skip if not out invoice.
+
+                    if self.is_commission_claim and inv.is_commission_claimed:
+                        continue
+                    elif self.is_refund_claim and inv.is_refund_claimed:
+                        continue
 
                     for inv_line in inv.invoice_line_ids:
                         if inv_line.product_id and inv_line.quantity > 0:
@@ -200,6 +205,8 @@ class InheritedPurchaseOrder(models.Model):
     @api.multi
     def button_claim_approve(self):
         self.state = 'done'
+        self.commission_claim_approve_uid = self.env.user.id
+        self.date_approve = fields.Date.today()
 
     @api.multi
     def button_draft(self):

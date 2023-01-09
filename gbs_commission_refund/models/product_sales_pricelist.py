@@ -46,6 +46,42 @@ class SaleOrderPricelist(models.Model):
     dealer_commission_applicable = fields.Boolean(string='Commission Applicable')
     dealer_refund_applicable = fields.Boolean(string='Refund Applicable')
 
+    @api.onchange('corporate_commission_per_unit', 'corporate_commission_tolerable')
+    def _difference_commission_amount(self):
+        for rec in self:
+            if rec.corporate_commission_per_unit < 0:
+                rec.corporate_commission_per_unit *= -1
+            if rec.corporate_commission_tolerable < 0:
+                rec.corporate_commission_tolerable *= -1
+
+    @api.onchange('corporate_refund_per_unit', 'corporate_refund_tolerable')
+    def _difference_refund_amount(self):
+        for rec in self:
+            if rec.corporate_refund_per_unit < 0:
+                rec.corporate_refund_per_unit *= -1
+            if rec.corporate_refund_tolerable < 0:
+                rec.corporate_refund_tolerable *= -1
+
+    @api.model
+    def create(self, values):
+        if values.get('corporate_commission_tolerable', 0) > values.get('corporate_commission_per_unit', 0):
+            raise UserError(_("Commission tolerable can't be larger than actual."))
+
+        if values.get('corporate_refund_tolerable', 0) > values.get('corporate_refund_per_unit', 0):
+            raise UserError(_("Refund tolerable can't be larger than actual."))
+
+        return super(SaleOrderPricelist, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        if values.get('corporate_commission_tolerable', self.corporate_commission_tolerable) > values.get('corporate_commission_per_unit', self.corporate_commission_per_unit):
+            raise UserError(_("Commission tolerable can't be larger than actual."))
+
+        if values.get('corporate_refund_tolerable', self.corporate_refund_tolerable) > values.get('corporate_refund_per_unit', self.corporate_refund_per_unit):
+            raise UserError(_("Refund tolerable can't be larger than actual."))
+
+        return super(SaleOrderPricelist, self).write(values)
+
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         result = super(SaleOrderPricelist, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':

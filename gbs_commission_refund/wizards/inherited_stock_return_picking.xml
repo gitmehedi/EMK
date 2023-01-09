@@ -7,7 +7,7 @@
             <field name="model">stock.return.picking</field>
             <field name="inherit_id" ref="gbs_samuda_sales_return.view_stock_return_picking_form_duplicate"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='location_id']" position="before">
+                <xpath expr="//field[@name='product_return_moves']" position="after">
                     <group>
                         <field name="deduct_commission" string="Deduct commission amount"/>
                     </group>
