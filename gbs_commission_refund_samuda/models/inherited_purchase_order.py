@@ -205,6 +205,8 @@ class InheritedPurchaseOrder(models.Model):
     @api.multi
     def button_claim_approve(self):
         self.state = 'done'
+        self.commission_claim_approve_uid = self.env.user.id
+        self.date_approve = fields.Date.today()
 
     @api.multi
     def button_draft(self):
