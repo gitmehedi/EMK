@@ -41,6 +41,11 @@ class AccountInvoice(models.Model):
         self.commission_move_id = [(5, 0, 0)]
         self.refund_move_id = [(5, 0, 0)]
 
+    def action_invoice_cancel(self):
+        super(AccountInvoice, self).action_invoice_cancel()
+        self.commission_move_id = [(5, 0, 0)]
+        self.refund_move_id = [(5, 0, 0)]
+
     @staticmethod
     def get_move_line_vals(
             name,

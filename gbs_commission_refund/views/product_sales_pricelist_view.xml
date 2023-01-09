@@ -59,5 +59,56 @@
 
             </field>
         </record>
+
+        <record id="product_sales_price_history_line_commission_refund_view_form" model="ir.ui.view">
+            <field name="name">product.sale.history.line.form.inherit</field>
+            <field name="model">product.sale.history.line</field>
+            <field name="inherit_id" ref="product_sales_pricelist.sale_price_change_history_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group>
+                        <!--corporate-->
+                        <group name="corporate_commission_refund_group">
+                            <h2>Corporate</h2>
+                            <separator colspan="2" string="Commission" class="mt5"/>
+                            <field name="corporate_commission_per_unit" readonly="1"/>
+                            <field name="corporate_commission_tolerable" readonly="1"/>
+
+                            <separator colspan="2" string="Refund" class="mt5"/>
+                            <field name="corporate_refund_per_unit" readonly="1"/>
+                            <field name="corporate_refund_tolerable" readonly="1"/>
+                        </group>
+
+                        <!--dealer-->
+                        <group name="dealer_commission_refund_group">
+                            <h2>Dealer</h2>
+                            <separator colspan="2" string="Commission &amp; Refund" class="mt5"/>
+                            <field name="dealer_commission_applicable" readonly="1"/>
+                            <field name="dealer_refund_applicable" readonly="1"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_sales_price_history_line_commission_refund_view_tree" model="ir.ui.view">
+            <field name="name">product.sale.history.line.tree.inherit</field>
+            <field name="model">product.sale.history.line</field>
+            <field name="inherit_id" ref="product_sales_pricelist.product_sale_price_history_variant_wise_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='new_price']" position="after">
+                    <field name="corporate_commission_per_unit" string="Commission (Unit)"/>
+                    <field name="corporate_commission_tolerable" string="Commission Tolerable"/>
+                    <field name="corporate_refund_per_unit" string="Refund (Unit)"/>
+                    <field name="corporate_refund_tolerable" string="Refund Tolerable"/>
+
+                    <field name="dealer_commission_applicable" string="Commission Applicable"/>
+                    <field name="dealer_refund_applicable" string="Refund Applicable"/>
+                </xpath>
+
+            </field>
+        </record>
+
     </data>
 </odoo>

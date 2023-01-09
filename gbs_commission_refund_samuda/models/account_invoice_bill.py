@@ -23,13 +23,21 @@ class AccountInvoice(models.Model):
     @api.depends('is_commission_claimed')
     def _compute_is_commission_claimed(self):
         for rec in self:
-            line = self.env['purchase.order.line'].sudo().search([('invoice_id', '=', rec.id), ('order_id.is_commission_claim', '=', True)])
+            line = self.env['purchase.order.line'].sudo().search([
+                ('invoice_id', '=', rec.id),
+                ('order_id.is_commission_claim', '=', True),
+                ('order_id.state', '!=', 'cancel')
+            ])
             rec.is_commission_claimed = True if line else False
 
     @api.depends('is_refund_claimed')
     def _compute_is_refund_claimed(self):
         for rec in self:
-            line = self.env['purchase.order.line'].sudo().search([('invoice_id', '=', rec.id), ('order_id.is_refund_claim', '=', True)])
+            line = self.env['purchase.order.line'].sudo().search([
+                ('invoice_id', '=', rec.id),
+                ('order_id.is_refund_claim', '=', True),
+                ('order_id.state', '!=', 'cancel')
+            ])
             rec.is_refund_claimed = True if line else False
 
     @api.onchange('partner_id')

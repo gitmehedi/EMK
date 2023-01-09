@@ -19,7 +19,8 @@ class ResPartner(models.Model):
     commission_refund_account_payable_id = fields.Many2one(
         comodel_name='account.account',
         string='Account Payable for Commission and Refund',
-        domain=_commission_refund_account_payable_domain
+        domain=_commission_refund_account_payable_domain,
+        track_visibility='onchange',
     )
 
     def _check_acc_constraint(self, values):
@@ -33,10 +34,37 @@ class ResPartner(models.Model):
             if customer_id:
                 raise UserError(_('Selected Account Payable for Commission and Refund already used for another customer.'))
 
+    def _create_account_id(self):
+        config_ap_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_refund_default_ap_parent_id')
+        if not config_ap_id:
+            raise UserError(_("Commission/Refund default AP not set on Sales/Configuration/Settings"))
+
+        parent_acc_id = self.env['account.account'].browse(int(config_ap_id)).parent_id
+        account_id = self.env['account.account'].search([('parent_id', '=', parent_acc_id.id)], limit=1, order="id desc")
+        code = int(account_id.code) + 1
+
+        vals = {
+            "code": '%s' % code,
+            "name": "{} - Commission/Refund AP".format(self.name),
+            "company_id": self.company_id.id,
+            "parent_id": parent_acc_id.id,
+            "type_third_parties": "no",
+            "user_type_id": account_id.user_type_id.id,
+            "reconcile": True,
+        }
+        return self.env['account.account'].create(vals)
+
     @api.model
     def create(self, values):
         self._check_acc_constraint(values)
-        return super(ResPartner, self).create(values)
+        res = super(ResPartner, self).create(values)
+
+        if res.customer and not res.commission_refund_account_payable_id:
+            account_id = res._create_account_id()
+            if account_id:
+                res.commission_refund_account_payable_id = account_id.id
+
+        return res
 
     @api.multi
     def write(self, values):
