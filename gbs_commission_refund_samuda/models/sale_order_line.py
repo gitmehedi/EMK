@@ -256,16 +256,12 @@ class SaleOrderLine(models.Model):
             if rec.product_id:
                 product_package_mode = rec.order_id.pack_type.id
                 uom_id = rec.product_uom.id or rec.product_id.uom_id.id
-                pricelist_id = self.env['product.sales.pricelist'].sudo().search(
-                    [
-                        ('product_id', '=', rec.product_id.id),
-                        ('uom_id', '=', uom_id),
-                        ('product_package_mode', '=', product_package_mode),
-                        ('state', '=', 'validate')
-                    ],
-                    limit=1, order='effective_date desc'
-                )
-                print("pricelist_id:", pricelist_id)
+                pricelist_id = self.env['product.sale.history.line'].search([
+                    ('product_id', '=', rec.product_id.id),
+                    ('currency_id', '=', rec.currency_id.id),
+                    ('product_package_mode', '=', product_package_mode),
+                    ('uom_id', '=', uom_id)
+                ], limit=1)
 
                 if pricelist_id:
                     rec.price_unit_actual = pricelist_id.new_price
