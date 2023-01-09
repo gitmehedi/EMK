@@ -197,9 +197,9 @@ class SaleOrder(models.Model):
             if is_double_validation:
                 comment_str = "Acceptance needs for " + str(len(causes)) + " cause(s) which are: <br/>"
                 comment_str += "<br/>".join(causes)
-                order.write({'comment': comment_str})  # Go to two level approval process
+                order.sudo().write({'comment': comment_str})  # Go to two level approval process
 
-        super(SaleOrder, self).action_to_submit()
+        return super(SaleOrder, self).action_to_submit()
 
 
 class SaleOrderLine(models.Model):
