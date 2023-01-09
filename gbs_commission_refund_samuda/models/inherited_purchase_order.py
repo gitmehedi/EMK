@@ -156,7 +156,7 @@ class InheritedPurchaseOrder(models.Model):
             res.state = 'claim_draft'
 
             # need to recall to create relational records with order line.
-            res._onchange_sale_order_ids()
+            # res._onchange_sale_order_ids()
 
         return res
 
