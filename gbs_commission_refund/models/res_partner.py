@@ -37,7 +37,7 @@ class ResPartner(models.Model):
     def _create_account_id(self):
         config_ap_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_refund_default_ap_parent_id')
         if not config_ap_id:
-            return False
+            raise UserError(_("Commission/Refund default AP not set on Sales/Configuration/Settings"))
 
         parent_acc_id = self.env['account.account'].browse(int(config_ap_id)).parent_id
         account_id = self.env['account.account'].search([('parent_id', '=', parent_acc_id.id)], limit=1, order="id desc")

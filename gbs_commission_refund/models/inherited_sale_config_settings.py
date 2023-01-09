@@ -19,5 +19,5 @@ class SaleConfigSettings(models.TransientModel):
         return self.env['ir.values'].sudo().set_default(
             'sale.config.settings',
             'commission_refund_default_ap_parent_id',
-            self.commission_refund_default_ap_parent_id.id
+            self.commission_refund_default_ap_parent_id.id if self.commission_refund_default_ap_parent_id else False
         )
