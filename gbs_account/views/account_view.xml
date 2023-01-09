@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='deprecated']" position="before">
                     <field name="open_journal_entry"/>
+                    <field name="is_control_account"/>
                 </xpath>
             </field>
         </record>
