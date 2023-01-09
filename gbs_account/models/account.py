@@ -6,6 +6,8 @@ from odoo.exceptions import UserError, ValidationError
 class AccountAccount(models.Model):
     _inherit = "account.account"
 
+    is_control_account = fields.Boolean(string='Is Control Account', default=False)
+
     open_journal_entry = fields.Boolean(string='Allow Open Journal Entry', default=True)
 
     @api.multi
