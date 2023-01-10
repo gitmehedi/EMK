@@ -13,8 +13,22 @@ class CancelWizard(models.TransientModel):
         shipment_pool = self.env['purchase.shipment']
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
         for product_line in shipment_obj.shipment_product_lines:
-            lc_product_line_obj = self.env['lc.product.line'].search([('lc_id', '=', product_line.shipment_id.lc_id.id), ('sale_order_id', '=', product_line.sale_order_id.id)])
-            lc_product_line_obj.write({'product_received_qty': lc_product_line_obj.product_received_qty-product_line.product_qty})
+            if product_line.sale_order_id:
+                for so_id in product_line.sale_order_id:
+                    lc_product_line_obj = self.env['lc.product.line'].search([('lc_id', '=', product_line.shipment_id.lc_id.id), ('sale_order_id', '=', so_id.id)])
+                    product_received_qty = lc_product_line_obj.product_received_qty-product_line.product_qty
+                    if product_received_qty < 0:
+                        product_received_qty = 0
+                    lc_product_line_obj.write({'product_received_qty': product_received_qty})
+                    product_line.unlink()
+            else:
+                lc_product_line_obj = self.env['lc.product.line'].search([('lc_id', '=', product_line.shipment_id.lc_id.id), ('product_id', '=', product_line.product_id.id)])
+                for lc_prod_line in lc_product_line_obj:
+                    product_received_qty = lc_prod_line.product_received_qty - product_line.product_qty
+                    if product_received_qty < 0:
+                        product_received_qty = 0
+                    lc_prod_line.write({'product_received_qty': product_received_qty})
+                    product_line.unlink()
         shipment_obj.write(
             {'comment': self.comments, 'state': 'cancel'})
         return {'type': 'ir.actions.act_window_close'}

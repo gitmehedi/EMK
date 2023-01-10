@@ -34,7 +34,7 @@ class ResPartner(models.Model):
             if customer_id:
                 raise UserError(_('Selected Account Payable for Commission and Refund already used for another customer.'))
 
-    def _create_account_id(self):
+    def create_commission_refund_ap_account_id(self):
         config_ap_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_refund_default_ap_parent_id')
         if not config_ap_id:
             raise UserError(_("Commission/Refund default AP not set on Sales/Configuration/Settings"))
@@ -52,7 +52,11 @@ class ResPartner(models.Model):
             "user_type_id": account_id.user_type_id.id,
             "reconcile": True,
         }
-        return self.env['account.account'].create(vals)
+        account_id = self.env['account.account'].create(vals)
+        if account_id:
+            self.commission_refund_account_payable_id = account_id.id
+
+        return account_id
 
     @api.model
     def create(self, values):
@@ -60,9 +64,7 @@ class ResPartner(models.Model):
         res = super(ResPartner, self).create(values)
 
         if res.customer and not res.commission_refund_account_payable_id:
-            account_id = res._create_account_id()
-            if account_id:
-                res.commission_refund_account_payable_id = account_id.id
+            res.create_commission_refund_ap_account_id()
 
         return res
 
