@@ -16,31 +16,29 @@
             <field name="arch" type="xml">
                 <form string="Service Order">
                     <header>
-                        <!-- <menuitem id="menu_hos_approval" name="Head Of Sales Approval" groups="gbs_sales_access.group_head_sale"
-                   parent="sales_team.menu_base_partner" sequence="4"/>
-         <menuitem id="menu_hoa_approval" name="Head Of Accounts Approval"
-                   groups="gbs_accounting_group.group_head_account,account.group_account_user"
-                   parent="sales_team.menu_base_partner" sequence="3"/>-->
                         <button name="button_claim_confirm"
                                 type="object"
+                                class="btn-primary"
                                 states="claim_draft"
                                 groups="sales_team.group_sale_salesman"
                                 string="Confirm"/>
 
                         <button name="button_claim_validate"
                                 type="object"
+                                class="btn-primary"
                                 states="claim_hos_approve"
                                 groups="gbs_application_group.group_head_sale,sales_team.group_sale_salesman_all_leads"
                                 string="Validate"/>
 
                         <button name="button_claim_approve"
                                 type="object"
+                                class="btn-primary"
                                 states="claim_hoa_approve"
                                 groups="gbs_application_group.group_head_account,sales_team.group_sale_salesman_all_leads"
                                 string="Approve"/>
 
                         <button name="button_draft" states="cancel" string="Set to Draft" type="object" groups="gbs_application_group.group_head_sale"/>
-                        <button name="button_cancel" states="claim_draft,claim_hos_approve,claim_hoa_approve" string="Cancel" type="object"/>
+                        <button name="button_cancel" class="btn-danger" states="claim_draft,claim_hos_approve,claim_hoa_approve" string="Cancel" type="object"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="claim_draft,claim_hos_approve,claim_hoa_approve,done" readonly="1"/>
                     </header>
@@ -206,7 +204,7 @@
                     (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
                 ]"/>
             <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hos_approve')]</field>
-            <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True}</field>
+            <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True, 'no_create_edit_button':True}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a commission order for customer.
@@ -225,7 +223,7 @@
                     (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
                 ]"/>
             <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hoa_approve')]</field>
-            <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True}</field>
+            <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True, 'no_create_edit_button':True}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a commission order for customer.
