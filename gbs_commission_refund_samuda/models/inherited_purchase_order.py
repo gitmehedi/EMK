@@ -178,12 +178,7 @@ class InheritedPurchaseOrder(models.Model):
     @api.constrains('order_line')
     def _check_exist_product_in_line(self):
         if not (self.is_commission_claim or self.is_refund_claim):
-            for purchase in self:
-                exist_product_list = []
-                for line in purchase.order_line:
-                    if line.product_id.id in exist_product_list:
-                        raise ValidationError(_('Product should be one per line.'))
-                    exist_product_list.append(line.product_id.id)
+            super(InheritedPurchaseOrder,self)._check_exist_product_in_line()
 
     @api.multi
     def action_view_invoice(self):
