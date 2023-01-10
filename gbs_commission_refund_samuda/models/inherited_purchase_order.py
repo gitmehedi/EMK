@@ -2,6 +2,7 @@
 from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
+from lxml import etree
 
 
 class PurchaseOrderLine(models.Model):
@@ -177,12 +178,7 @@ class InheritedPurchaseOrder(models.Model):
     @api.constrains('order_line')
     def _check_exist_product_in_line(self):
         if not (self.is_commission_claim or self.is_refund_claim):
-            for purchase in self:
-                exist_product_list = []
-                for line in purchase.order_line:
-                    if line.product_id.id in exist_product_list:
-                        raise ValidationError(_('Product should be one per line.'))
-                    exist_product_list.append(line.product_id.id)
+            super(InheritedPurchaseOrder,self)._check_exist_product_in_line()
 
     @api.multi
     def action_view_invoice(self):
@@ -190,6 +186,7 @@ class InheritedPurchaseOrder(models.Model):
         if self.is_commission_claim or self.is_refund_claim:
             result['context']['default_account_id'] = self.partner_id.commission_refund_account_payable_id.id
             result['context']['default_is_claimed'] = True
+            result['context']['no_create_edit_button'] = True
         else:
             result['context']['default_account_id'] = self.partner_id.property_account_payable_id.id
         return result
@@ -213,3 +210,23 @@ class InheritedPurchaseOrder(models.Model):
         super(InheritedPurchaseOrder, self).button_draft()
         if self.is_commission_claim or self.is_refund_claim:
             self.state = "claim_draft"
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(InheritedPurchaseOrder, self).fields_view_get(view_id=view_id, view_type=view_type,
+                                                                  toolbar=toolbar,
+                                                                  submenu=submenu)
+
+        doc = etree.XML(res['arch'])
+        no_create_edit_button = self.env.context.get('no_create_edit_button')
+        if no_create_edit_button:
+            if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
+                for node_form in doc.xpath("//kanban"):
+                    node_form.set("create", 'false')
+                for node_form in doc.xpath("//tree"):
+                    node_form.set("create", 'false')
+                for node_form in doc.xpath("//form"):
+                    node_form.set("create", 'false')
+
+        res['arch'] = etree.tostring(doc)
+        return res

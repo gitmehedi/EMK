@@ -4,6 +4,7 @@ from collections import defaultdict
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from datetime import datetime, date, time, timedelta
+from lxml import etree
 
 
 class AccountInvoice(models.Model):
@@ -60,6 +61,32 @@ class AccountInvoice(models.Model):
             # set default account and quantity for refund and commission invoice.
             if self.purchase_id.is_service_order and (self.purchase_id.is_commission_claim or self.purchase_id.is_refund_claim):
                 invoice_line['account_id'] = commission_control_acc.commission_control_account_id.id
-                invoice_line['quantity'] = line.product_qty
+
+                qty = 0
+                for inv_line in line.invoice_lines:
+                    if inv_line.invoice_id.state not in ['cancel']:
+                        if inv_line.invoice_id.type == 'in_invoice':
+                            qty += inv_line.quantity
+                invoice_line['quantity'] = line.product_qty - qty
 
         return invoice_line
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type,
+                                                          toolbar=toolbar,
+                                                          submenu=submenu)
+
+        doc = etree.XML(res['arch'])
+        no_create_edit_button = self.env.context.get('no_create_edit_button')
+        if no_create_edit_button:
+            if view_type == 'form' or view_type == 'kanban' or view_type == 'tree':
+                for node_form in doc.xpath("//kanban"):
+                    node_form.set("create", 'false')
+                for node_form in doc.xpath("//tree"):
+                    node_form.set("create", 'false')
+                for node_form in doc.xpath("//form"):
+                    node_form.set("create", 'false')
+
+        res['arch'] = etree.tostring(doc)
+        return res
