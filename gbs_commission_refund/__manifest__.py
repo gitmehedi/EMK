@@ -15,7 +15,8 @@
         'hr',
         'customer_business_type',
         'gbs_commission_config',
-        'gbs_samuda_sales_return'
+        'gbs_samuda_sales_return',
+        'date_range'
     ],
     'data': [
         # data
@@ -27,8 +28,11 @@
         # views
         'views/account_invoice_view.xml',
         'views/commission_refund_acc_config_view.xml',
+        'views/comm_refund_prcntg_config_views.xml',
+        'views/ir_cron.xml',
         'views/product_sales_pricelist_view.xml',
         'views/res_partner_view.xml',
+        'views/inherited_sale_do_view.xml',
 
         # wizards
         'wizards/inherited_stock_return_picking.xml',

@@ -27,8 +27,13 @@ class AnalyticAccountWizard(models.TransientModel):
         used_context['journal_ids'] = journal_ids.ids or False
         used_context['state'] = 'all'
         used_context['strict_range'] = True
-        used_context['date_from'] = datetime.now().date().replace(month=1, day=1)
-        used_context['date_to'] = datetime.now().date().replace(month=12, day=31)
+
+        # used_context['date_from'] = datetime.now().date().replace(month=1, day=1)
+        # used_context['date_to'] = datetime.now().date().replace(month=12, day=31)
+        purchase_cost_distribution_obj = self.env['purchase.cost.distribution'].browse(self.env.context['active_id'])
+        distribution_date = datetime.strptime(purchase_cost_distribution_obj.date, '%Y-%m-%d')
+        used_context['date_from'] = distribution_date.date().replace(month=1, day=1)
+        used_context['date_to'] = distribution_date.date().replace(month=12, day=31)
         used_context['analytic_account_ids'] = self.analytic_account
         #  accounts_result = self._get_account_move_entry(used_context)
         accounts_result = self.env['accounting.report.utility']._get_account_move_entry(False, used_context)

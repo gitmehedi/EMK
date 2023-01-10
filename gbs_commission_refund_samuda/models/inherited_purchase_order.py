@@ -156,7 +156,7 @@ class InheritedPurchaseOrder(models.Model):
             res.state = 'claim_draft'
 
             # need to recall to create relational records with order line.
-            res._onchange_sale_order_ids()
+            # res._onchange_sale_order_ids()
 
         return res
 
@@ -205,6 +205,8 @@ class InheritedPurchaseOrder(models.Model):
     @api.multi
     def button_claim_approve(self):
         self.state = 'done'
+        self.commission_claim_approve_uid = self.env.user.id
+        self.date_approve = fields.Date.today()
 
     @api.multi
     def button_draft(self):

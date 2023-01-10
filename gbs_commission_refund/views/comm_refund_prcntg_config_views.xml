@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="comm_refund_prcntg_config_form_view" model="ir.ui.view">
+            <field name="name">commission.refund.prcntg.config.form</field>
+            <field name="model">commission.refund.prcntg.config</field>
+            <field name="arch" type="xml">
+                <form string="Commission/Refund Percentage Configuration">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type"/>
+                            </group>
+                            <group>
+                                <field name="fiscal_month" string="Fiscal Month/Year"/>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+
+                        <group string="Commission">
+                            <field name="commission_line_ids" nolabel="1">
+                                <tree string="List" editable="bottom">
+                                    <field name="from_range" placeholder="Enter Numeric Number"/>
+                                    <field name="to_range" placeholder="Enter Numeric Number"/>
+                                    <field name="rate"/>
+                                </tree>
+                            </field>
+                        </group>
+
+                        <group string="Refund">
+                            <field name="refund_line_ids" nolabel="1">
+                                <tree string="List" editable="bottom">
+                                    <field name="from_range" placeholder="Enter Numeric Number"/>
+                                    <field name="to_range" placeholder="Enter Numeric Number"/>
+                                    <field name="rate"/>
+                                </tree>
+                            </field>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+         <record id="comm_refund_prcntg_config_tree_view" model="ir.ui.view">
+            <field name="name">commission.refund.prcntg.config.tree</field>
+            <field name="model">commission.refund.prcntg.config</field>
+            <field name="arch" type="xml">
+                <tree string="Commission/Refund Percentage Configuration">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="company_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record id="comm_refund_prcntg_config_act_window" model="ir.actions.act_window">
+            <field name="name">Commission/Refund Percentage Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">commission.refund.prcntg.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Percentage Configuration" id="comm_refund_prcntg_config_menu"
+                  parent="sales_team.menu_sale_config"
+                  action="comm_refund_prcntg_config_act_window"/>
+
+    </data>
+</odoo>
