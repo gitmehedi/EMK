@@ -30,13 +30,13 @@
                         <button name="button_claim_validate"
                                 type="object"
                                 states="claim_hos_approve"
-                                groups="gbs_application_group.group_head_sale"
+                                groups="gbs_application_group.group_head_sale,sales_team.group_sale_salesman_all_leads"
                                 string="Validate"/>
 
                         <button name="button_claim_approve"
                                 type="object"
                                 states="claim_hoa_approve"
-                                groups="gbs_application_group.group_head_account"
+                                groups="gbs_application_group.group_head_account,sales_team.group_sale_salesman_all_leads"
                                 string="Approve"/>
 
                         <button name="button_draft" states="cancel" string="Set to Draft" type="object" groups="gbs_application_group.group_head_sale"/>
@@ -97,6 +97,7 @@
                                         />
                                         <field name="name" invisible="1"/>
                                         <field name="date_planned" invisible="1"/>
+                                        <field name="qty_invoiced"/>
                                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" invisible="1"/>
                                         <field name="account_analytic_id" invisible="1" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting"/>
                                         <field name="analytic_tag_ids" invisible="1" groups="purchase.group_analytic_accounting" widget="many2many_tags"/>

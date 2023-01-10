@@ -60,6 +60,12 @@ class AccountInvoice(models.Model):
             # set default account and quantity for refund and commission invoice.
             if self.purchase_id.is_service_order and (self.purchase_id.is_commission_claim or self.purchase_id.is_refund_claim):
                 invoice_line['account_id'] = commission_control_acc.commission_control_account_id.id
-                invoice_line['quantity'] = line.product_qty
+
+                qty= 0
+                for inv_line in line.invoice_lines:
+                    if inv_line.invoice_id.state not in ['cancel']:
+                        if inv_line.invoice_id.type == 'in_invoice':
+                            qty += inv_line.quantity
+                invoice_line['quantity'] = line.product_qty - qty
 
         return invoice_line

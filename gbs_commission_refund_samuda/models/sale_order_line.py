@@ -88,8 +88,10 @@ class SaleOrder(models.Model):
                     commission_range = "between {} to {}".format(commission_tolerable_min, commission_tolerable_max)
                 actual_commission_msg = "approved commission is {}".format(commission_range)
 
-            temp_msg = "Requested Commission rate is {} but {}".format(line.corporate_commission_per_unit,
-                                                                       actual_commission_msg)
+            temp_msg = "Requested Commission rate is {} but {}".format(
+                line.corporate_commission_per_unit,
+                actual_commission_msg
+            )
             causes.append(temp_msg)
             is_double_validation = True
 
@@ -329,13 +331,6 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
-        # company_id = self.env.user.company_id
-        #
-        # domain = [
-        #     ('customer_type', 'in', company_id.customer_types.ids or []),
-        #     ('functional_unit', 'in', company_id.branch_ids.ids or [])
-        # ]
-        # config = self.env['commission.configuration'].sudo().search(domain, limit=1)
         if self.so_readonly_field:
             if 'price_unit_copy' in values:
                 values['price_unit'] = values['price_unit_copy']
@@ -349,3 +344,11 @@ class SaleOrderLine(models.Model):
                 values['dealer_refund_applicable'] = values['refund_applicable_copy']
 
         return super(SaleOrderLine, self).write(values)
+
+    @api.one
+    @api.constrains('product_uom_qty', 'corporate_refund_per_unit', 'corporate_commission_per_unit')
+    def _check_order_line_inputs(self):
+        super(SaleOrderLine, self)._check_order_line_inputs()
+        if self.corporate_refund_per_unit or self.corporate_commission_per_unit:
+            if self.corporate_refund_per_unit < 0 or self.corporate_commission_per_unit < 0:
+                raise ValidationError('Commission, Refund amount can not be Negative value')
