@@ -37,7 +37,7 @@
 
 
 		<menuitem id="menu_sale_under_over_approved_price_report_submenu"
-				  name="Sales (Under/over approved price wise)"
+				  name="Sales Volume Report"
 				  parent="sales_team.menu_sale_report"
 				  groups="sales_team.group_sale_manager"
 				  action="action_sale_under_over_approved_price_report_wizard" sequence="11"/>
