@@ -6,23 +6,15 @@ class CommissionRefundPercentageConfig(models.Model):
     _name = 'commission.refund.prcntg.config'
     _description = 'Commission Refund Percentage Configuration'
 
-    name = fields.Char(default='/', readonly=True)
-    type = fields.Selection([('monthly', 'Monthly'), ('yearly', 'Yearly')],
-                            string='Type', required=True, default='monthly')
+    name = fields.Char(readonly=True)
+    type = fields.Selection([('Monthly', 'Monthly'), ('Yearly', 'Yearly')],
+                            string='Type', required=True, default='Monthly')
 
-    @api.onchange('type')
-    @api.model
-    def get_domain_id(self):
-        if self.type == 'monthly':
-            return [('type_id.fiscal_month', '=', 'True')]
-        elif self.type == 'yearly':
-            return [('type_id.fiscal_year', '=', 'True')]
-
-    fiscal_month = fields.Many2one('date.range', string='Fiscal Month/Year', required=True, domain=get_domain_id)
+    fiscal_month = fields.Many2one('date.range', string='Fiscal Month/Year', required=True)
 
     @api.model
     def create(self, vals):
-        if vals.get('name', '/') == '/' and vals['fiscal_month'] and vals['type']:
+        if vals['fiscal_month'] and vals['type']:
             date_range = self.env['date.range'].sudo().browse(vals['fiscal_month'])
             vals['name'] = vals['type'] + ': ' + date_range.name
         return super(CommissionRefundPercentageConfig, self).create(vals)
@@ -34,8 +26,8 @@ class CommissionRefundPercentageConfig(models.Model):
                 rec.start_date = rec.fiscal_month.date_start
                 rec.end_date = rec.fiscal_month.date_end
 
-    start_date = fields.Date(compute='compute_date',store=True)
-    end_date = fields.Date(compute='compute_date',store=True)
+    start_date = fields.Date(compute='compute_date', store=True)
+    end_date = fields.Date(compute='compute_date', store=True)
 
     company_id = fields.Many2one('res.company', string='Company')
 
@@ -52,7 +44,10 @@ class CommissionRefundPercentageConfig(models.Model):
     @api.model
     def pull_automation_monthly(self):
         current_date = time.strftime("%d/%m/%Y")
-        print('pull_automation_monthly')
+
+        print('pull_automation_monthly', type(current_date))
+        # check current date - 1 with end date of any percentage configuration record
+        # if found get percentage configuration record
 
     @api.model
     def pull_automation_yearly(self):
