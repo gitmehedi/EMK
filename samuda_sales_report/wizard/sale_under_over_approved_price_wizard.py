@@ -1,6 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
-
+from datetime import datetime
 
 class DeliveryReportWizard(models.TransientModel):
     _name = 'sale.under.over.approved.price.report.wizard'
@@ -18,6 +18,13 @@ class DeliveryReportWizard(models.TransientModel):
         if self.date_from > self.date_to:
             raise ValidationError(_("From date must be less then To date."))
 
+    @api.constrains('date_from', 'date_to')
+    def _check_date_validation(self):
+        if self.date_from > self.date_to:
+            raise ValidationError(_("From date must be less then To date."))
+        elif (datetime.strptime(self.date_to, '%Y-%m-%d') - datetime.strptime(self.date_from, '%Y-%m-%d')).days > 365:
+            raise ValidationError(_("Maximum date range is one year."))
+
     @api.onchange('product_tmpl_id')
     def _onchange_product_tmpl_id(self):
         if self.product_tmpl_id:
@@ -28,4 +35,5 @@ class DeliveryReportWizard(models.TransientModel):
     @api.multi
     def button_export_xlsx(self):
         self.ensure_one()
+
         return self.env['report'].get_action(self, report_name='samuda_sales_report.sale_under_over_approved_price_xlsx')
