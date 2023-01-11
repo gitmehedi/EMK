@@ -57,12 +57,6 @@ class CommissionConfiguration(models.Model):
         store=True,
         track_visibility="onchange"
     )
-    cpc_type = fields.Selection(
-        string='Payment Collection Type',
-        selection=[('batch', 'Batch'), ('per_collection', 'Per Collection'), ],
-        help="Customer payment collection type",
-        track_visibility="onchange",
-    )
     show_discount = fields.Boolean(
         string='Show Discount',
         track_visibility="onchange"

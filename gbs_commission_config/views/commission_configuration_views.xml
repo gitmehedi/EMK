@@ -27,7 +27,6 @@
                                        }"
                                 />
                                 <field name="commission_provision" readonly="1"/>
-                                <field name="cpc_type" attrs="{'invisible': [('commission_provision','!=','customer_collection')], 'required': [('commission_provision','=','customer_collection')]}"/>
                             </group>
                             <group>
                                 <field name="functional_unit" required="1"/>
