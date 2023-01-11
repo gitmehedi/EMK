@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="fiscal_year_log_tree" model="ir.ui.view">
+        <field name="name">fiscal.year.lock.date.log.tree</field>
+        <field name="model">fiscal.year.lock.date.log</field>
+        <field name="arch" type="xml">
+            <tree string="Fiscal Year Logs" create="0" delete="0">
+                <field name="modified_date"/>
+                <field name="period_lock_date"/>
+                <field name="fiscal_year_lock_date"/>
+                <field name="modified_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="fiscal_year_log_form" model="ir.ui.view">
+        <field name="name">fiscal.year.lock.date.log.form</field>
+        <field name="model">fiscal.year.lock.date.log</field>
+        <field name="arch" type="xml">
+            <form string="LC Register" create="0" delete="0" edit="0">
+                <group>
+                    <field name="modified_date"/>
+                    <field name="period_lock_date"/>
+                    <field name="fiscal_year_lock_date"/>
+                    <field name="modified_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="fiscal_year_action" model="ir.actions.act_window">
+        <field name="name">Fiscal year logs</field>
+        <field name="res_model">fiscal.year.lock.date.log</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="fiscal_year_log_tree"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Change fiscal year from setting log will be posted
+            </p><p>
+            Create fiscal year log to better manage and classify your
+            change log.
+        </p>
+        </field>
+    </record>
+
+    <menuitem action="fiscal_year_action" name="Fiscal year logs"
+              id="menu_fiscal_year_log" parent="auditlog.menu_audit" groups="base.group_system"/>
+</odoo>

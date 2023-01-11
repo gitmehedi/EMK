@@ -12,7 +12,8 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'data/users_action_data.xml'
+        'data/users_action_data.xml',
+        'views/fiscal_year_log.xml'
     ],
 
     'summary': 'Users Action Log',
