@@ -333,7 +333,8 @@ class AttendanceProcessor(models.Model):
 
         ############## Save Summary Lines ######################
         salaryDays = noOfDays - len(attSummaryLine.absent_days)
-        calOtHours = attSummaryLine.schedule_ot_hrs + get_extra_ot
+        # calOtHours = attSummaryLine.schedule_ot_hrs + get_extra_ot
+        calOtHours = attSummaryLine.schedule_ot_hrs
 
         if attSummaryLine.schedule_ot_hrs > attSummaryLine.late_hrs:
             calOtHours = attSummaryLine.schedule_ot_hrs - attSummaryLine.late_hrs

@@ -5,7 +5,6 @@
     'category': 'accounts',
     'version': '10.1.1.1',
     'depends': [
-        'account',
         'gbs_res_partner'
     ],
 

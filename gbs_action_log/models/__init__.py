@@ -8,3 +8,4 @@ import purchase_requisition_action_log
 import purchase_order_action_log
 import stock_picking_action_log
 import sale_order_action_log
+import fiscal_year_lock_date_log
