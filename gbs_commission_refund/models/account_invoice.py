@@ -90,8 +90,11 @@ class AccountInvoice(models.Model):
                 label = "{}: ({} x {})".format(line.product_id.name, line.quantity, commission_amount)
 
             name_seq = self.env['ir.sequence'].next_by_code('commission.account.move.seq')
-            journal_id = self.env['account.journal'].sudo().search([('code', '=', 'COMJNL')], limit=1)
+            #journal_id = self.env['account.journal'].sudo().search([('code', '=', 'COMJNL')], limit=1)
 
+            journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_journal_id')
+            if not journal_id:
+                raise UserError(_("Commission journal not set in sales configuration"))
             # if we don't have extra account configurations we will take default account else the configured account matched with cost center and zone type.
             if len(cr_journal_config.commission_account_ids) > 0:
                 temp_acc = cr_journal_config.commission_account_ids.filtered(lambda a: a.cost_center_id == cost_center_id and a.zone_type == self.partner_id.supplier_type)
@@ -107,7 +110,10 @@ class AccountInvoice(models.Model):
                 label = "{}: ({} x {})".format(line.product_id.name, line.quantity, refund_amount)
 
             name_seq = self.env['ir.sequence'].next_by_code('refund.account.move.seq')
-            journal_id = self.env['account.journal'].sudo().search([('code', '=', 'REFJNL')], limit=1)
+            #journal_id = self.env['account.journal'].sudo().search([('code', '=', 'REFJNL')], limit=1)
+            journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'refund_journal_id')
+            if not journal_id:
+                raise UserError(_("Refund journal not set in sales configuration"))
 
             # if we don't have extra account configurations we will take default account else the configured account matched with cost center and zone type.
             if len(cr_journal_config.refund_account_ids) > 0:
@@ -122,7 +128,7 @@ class AccountInvoice(models.Model):
         commission_debit_vals = self.get_move_line_vals(
             label,
             self.date_invoice,
-            journal_id.id,
+            journal_id,
             account_id.id,
             operating_unit_id.id,
             department_id.id,
@@ -135,7 +141,7 @@ class AccountInvoice(models.Model):
         commission_credit_vals = self.get_move_line_vals(
             label,
             self.date_invoice,
-            journal_id.id,
+            journal_id,
             control_account_id.id,
             operating_unit_id.id,
             department_id.id,
@@ -147,7 +153,7 @@ class AccountInvoice(models.Model):
 
         return {
             'name': name_seq,
-            'journal_id': journal_id.id,
+            'journal_id': journal_id,
             'operating_unit_id': operating_unit_id.id,
             'date': self.date_invoice,
             'company_id': company_id.id,

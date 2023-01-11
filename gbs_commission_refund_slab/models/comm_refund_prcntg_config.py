@@ -220,7 +220,17 @@ class CommissionRefundPercentageConfig(models.Model):
 
         so_process_config = self.env['commission.configuration'].search([('process', '=', 'checkbox')], limit=1)
         customers = self.env['res.partner'].search([('business_type', '=', so_process_config.customer_type.id)])
-        journal_ids = self.env['account.journal'].search([('type', '!=', 'situation'), ('code', 'not in', ['COMJNL', 'REFJNL', 'COMJNLTP', 'REFJNLTP'])])
+        com_journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_journal_id')
+        if not com_journal_id:
+            raise UserError(_("Commission journal not set in sales configuration"))
+        refund_journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'refund_journal_id')
+        if not refund_journal_id:
+            raise UserError(_("Refund journal not set in sales configuration"))
+
+        journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_slab_account_journal')
+        if not journal_id:
+            raise UserError(_("Commision/Refund Top Up journal not set in sales configuration"))
+        journal_ids = self.env['account.journal'].search([('type', '!=', 'situation'), ('id', 'not in', [com_journal_id, refund_journal_id, journal_id])])
 
         start_date, end_date = _date_range()
         percentage_config = self.env['commission.refund.prcntg.config'].search([
@@ -238,7 +248,8 @@ class CommissionRefundPercentageConfig(models.Model):
             print("The job was already executed for the range (%s to %s)" % (start_date, end_date))
             return
 
-        journal_id = self.env['account.journal'].sudo().search([('code', '=', 'COMJNLTP')], limit=1)
+        #journal_id = self.env['account.journal'].sudo().search([('code', '=', 'COMJNLTP')], limit=1)
+
 
         move_line_array = []
         total_debit = 0
@@ -261,7 +272,7 @@ class CommissionRefundPercentageConfig(models.Model):
                     credit_move_line_vals = {
                         'name': label,
                         'date': datetime.now().date(),
-                        'journal_id': journal_id.id,
+                        'journal_id': journal_id,
                         'account_id': customer.property_account_receivable_id.id,
                         'operating_unit_id': False,
                         'department_id': False,
@@ -280,7 +291,7 @@ class CommissionRefundPercentageConfig(models.Model):
                     credit_move_line_vals = {
                         'name': label,
                         'date': datetime.now().date(),
-                        'journal_id': journal_id.id,
+                        'journal_id': journal_id,
                         'account_id': customer.property_account_receivable_id.id,
                         'operating_unit_id': False,
                         'department_id': False,
@@ -302,7 +313,7 @@ class CommissionRefundPercentageConfig(models.Model):
         debit_move_line = {
             'name': "Slab Commission/Refund",
             'date': datetime.now().date(),
-            'journal_id': journal_id.id,
+            'journal_id': journal_id,
             'account_id': acc_id,
             'operating_unit_id': False,
             'department_id': False,
@@ -316,7 +327,7 @@ class CommissionRefundPercentageConfig(models.Model):
         name_seq = self.env['ir.sequence'].next_by_code('commission.refund.account.move.slab.seq')
         vals = {
             'name': name_seq,
-            'journal_id': journal_id.id,
+            'journal_id': journal_id,
             'operating_unit_id': False,
             'date': datetime.now().date(),
             'company_id': percentage_config.company_id.id,
