@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="commission_slab_account_journal" model="account.journal">
+            <field name="name">Commission Top Up</field>
+            <field name="type">sale</field>
+            <field name="code">COMJNLTP</field>
+            <field name="sequence">11</field>
+        </record>
+
+        <record id="refund_slab_account_journal" model="account.journal">
+            <field name="name">Refund Top Up</field>
+            <field name="type">sale</field>
+            <field name="code">REFJNLTP</field>
+            <field name="sequence">12</field>
+        </record>
+    </data>
+</odoo>

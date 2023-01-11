@@ -18,7 +18,7 @@
                             <group>
                                 <field name="company_id" required="1"/>
                                 <field name="customer_type" required="1"/>
-                                <field name="process" required="1"/>
+                                <field name="process" readonly="1" force_save="1"/>
                                 <field name="auto_load_copy" invisible="1"/>
                                 <field name="auto_load_commission_refund_in_so_line" force_save="1"
                                        attrs="{
@@ -26,7 +26,7 @@
                                            'readonly':[('so_readonly_field','=',True)]
                                        }"
                                 />
-                                <field name="commission_provision" required="1"/>
+                                <field name="commission_provision" readonly="1"/>
                                 <field name="cpc_type" attrs="{'invisible': [('commission_provision','!=','customer_collection')], 'required': [('commission_provision','=','customer_collection')]}"/>
                             </group>
                             <group>
@@ -38,10 +38,78 @@
                             </group>
                         </group>
 
-                        <separator colspan="2" string="Documentation Title" class="mt-5"/>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A assumenda autem consectetur corporis numquam ut velit voluptas! Architecto blanditiis, dignissimos ea esse, fugiat molestias nihil
-                            placeat ullam veritatis voluptas voluptatum!
-                        </p>
+                        <separator colspan="2" string="User Manual" class="mt-5"/>
+                        <div>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Process</td>
+                                        <td>
+                                            <ul>
+                                                <li>
+                                                    <h3>Textbox on Product Commission/Refund Approval</h3>
+                                                    <p>
+                                                        When sale order create, you will be able to set the amount for commission/refund for each sale order line.
+                                                    </p>
+                                                </li>
+                                                <li>
+                                                    <h3>Checkbox on Product Commission/Refund Approval</h3>
+                                                    <p>
+                                                        In this selection customer will get their commission/refund monthly and yearly based
+                                                        on slab configuration.
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Customer Provision</td>
+                                        <td>
+                                            <ul>
+                                                <li>
+                                                    <h3>At Invoice Validation</h3>
+                                                    <p>
+                                                        Customer commission/refund journal will be generated when you validate an invoice.
+                                                    </p>
+                                                </li>
+                                                <li>
+                                                    <h3>At Customer Payment Collection</h3>
+                                                    <p>
+                                                        Customer will get commission/refund by monthly and yearly.
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Show Packing Mode</td>
+                                        <td>
+                                            Based on this configuration, packing mode will be visible or invisible on
+                                            <ul>
+                                                <li>
+                                                    1. Sale Order
+                                                </li>
+                                                <li>
+                                                    2. Product Sales Pricelist
+                                                </li>
+                                                <li>
+                                                    3. Proforma Invoice
+                                                </li>
+                                                <li>
+                                                    4. Account Invoice
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

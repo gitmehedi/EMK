@@ -28,7 +28,6 @@
         # views
         'views/account_invoice_view.xml',
         'views/commission_refund_acc_config_view.xml',
-        'views/comm_refund_prcntg_config_views.xml',
         'views/ir_cron.xml',
         'views/product_sales_pricelist_view.xml',
         'views/res_partner_view.xml',
