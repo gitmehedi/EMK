@@ -144,10 +144,6 @@ class InheritedPurchaseOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        # if (vals.get('is_commission_claim') or vals.get('is_refund_claim')):
-        #     if not vals.get('order_line', False):
-        #         raise UserError(_("Invoice line can not be empty"))
-
         res = super(InheritedPurchaseOrder, self).create(vals)
         if res.id and (vals.get('is_commission_claim') or vals.get('is_refund_claim')):
             operating_unit_id = self.env['operating.unit'].browse(vals['operating_unit_id'])
@@ -156,23 +152,7 @@ class InheritedPurchaseOrder(models.Model):
             res.name = rec_name
             res.state = 'claim_draft'
 
-            # need to recall to create relational records with order line.
-            # res._onchange_sale_order_ids()
-
         return res
-
-    # @api.multi
-    # def write(self, values):
-    #     # Add code here
-    #     if self.is_commission_claim or self.is_refund_claim:
-    #         if values:
-    #             if not values.get('order_line', False):
-    #                 raise UserError(_("Invoice line can not be empty"))
-    #         else:
-    #             if not self.order_line:
-    #                 raise UserError(_("Invoice line can not be empty"))
-    #
-    #     return super(InheritedPurchaseOrder, self).write(values)
 
     @api.multi
     @api.constrains('order_line')

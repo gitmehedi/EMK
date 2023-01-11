@@ -15,13 +15,14 @@
                         </div>
                         <group>
                             <group>
-                                <field name="type"/>
+                                <field name="type" attrs="{'readonly':[('cron_executed','!=',False)]}" force_save="1"/>
+                                <field name="company_id" required="1" attrs="{'readonly':[('cron_executed','!=',False)]}" force_save="1"/>
+                                <field name="cron_executed" invisible="1"/>
                             </group>
                             <group>
-                                <field name="fiscal_month" string="Fiscal Month/Year"/>
+                                <field name="fiscal_month" string="Fiscal Month/Year" attrs="{'readonly':[('cron_executed','!=',False)]}" force_save="1"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
-                                <field name="company_id"/>
                             </group>
                         </group>
 
@@ -50,7 +51,7 @@
             </field>
         </record>
 
-         <record id="comm_refund_prcntg_config_tree_view" model="ir.ui.view">
+        <record id="comm_refund_prcntg_config_tree_view" model="ir.ui.view">
             <field name="name">commission.refund.prcntg.config.tree</field>
             <field name="model">commission.refund.prcntg.config</field>
             <field name="arch" type="xml">
@@ -63,7 +64,6 @@
                 </tree>
             </field>
         </record>
-
 
 
         <record id="comm_refund_prcntg_config_act_window" model="ir.actions.act_window">
