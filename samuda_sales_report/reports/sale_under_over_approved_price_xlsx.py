@@ -7,7 +7,7 @@ from odoo.addons.report_xlsx.report.report_xlsx import ReportXlsx
 class SaleUnderOverApprovedPriceReportXLSX(ReportXlsx):
 
     def _get_query_where_clause(self, obj):
-        where_str = """where so.state='done' and so.operating_unit_id=%s and so.date_order between '%s' and '%s'""" % (obj.operating_unit_id.id, obj.date_from, obj.date_to)
+        where_str = """where so.state='done' and so.operating_unit_id=%s and DATE(so.date_order) between '%s' and '%s'""" % (obj.operating_unit_id.id, obj.date_from, obj.date_to)
         #and so.partner_id=7030  and pp.product_tmpl_id=4 and sol.product_id=26'
         if obj.product_tmpl_id and not obj.product_id:
             product_ids = self.env['product.product'].search([('product_tmpl_id', '=', obj.product_tmpl_id.id), '|', ('active', '=', True), ('active', '=', False)]).ids
@@ -33,7 +33,7 @@ class SaleUnderOverApprovedPriceReportXLSX(ReportXlsx):
                     LEFT JOIN product_product as pp ON pp.id = sol.product_id
                     """+where_clause+"""
                     group by sol.product_id, sol.name, so.date_order, rp.name, so.name, sol.product_uom_qty, sol.price_unit_actual, sol.price_unit, rc.name
-                    order by so.date_order asc
+                    order by so.date_order DESC
         """
 
         sale_over_under_dict = {}
