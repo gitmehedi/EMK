@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="inherited_view_sales_config" model="ir.ui.view">
+    <record id="inherited_view_sales_config_" model="ir.ui.view">
         <field name="name">inherited.sale settings</field>
         <field name="model">sale.config.settings</field>
-        <field name="inherit_id" ref="sales_team.view_sale_config_settings"/>
+        <field name="inherit_id" ref="gbs_commission_refund.view_sales_config"/>
         <field name="arch" type="xml">
-            <xpath expr="//form/div[@id='main']" position="after">
-                <group string="Commission/Refund Top Up">
+            <xpath expr="//form/div[@id='commission_refund_div']/group" position="inside">
+                <group>
                     <field name="commission_refund_top_up_account" class="oe_inline"/>
+                    <field name="commission_slab_account_journal" class="oe_inline"/>
                 </group>
+
             </xpath>
         </field>
     </record>
