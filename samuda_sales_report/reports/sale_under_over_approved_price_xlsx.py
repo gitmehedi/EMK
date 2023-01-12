@@ -38,8 +38,6 @@ class SaleUnderOverApprovedPriceReportXLSX(ReportXlsx):
 
         sale_over_under_dict = {}
         self.env.cr.execute(sql_str)
-        under_approve = 0
-        over_approve = 0
         for row in self.env.cr.dictfetchall():
 
             if row['product_id'] in sale_over_under_dict:
