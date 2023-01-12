@@ -5,6 +5,8 @@ from datetime import timedelta
 
 class FiscalYearLockDateLog(models.Model):
     _name = 'fiscal.year.lock.date.log'
+    _order = 'modified_date DESC'
+
 
     period_lock_date = fields.Date(string="Non-Advisers Lock Date", required=True)
     fiscal_year_lock_date = fields.Date(string="Advisor Lock Date", required=True)

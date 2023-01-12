@@ -45,7 +45,7 @@
                         <button name="print_service_order" style="background-color: #39B05F;color:white;" type="object" attrs="{'invisible':[('partner_id','=',False)]}" string="Print"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,done" readonly="1"/>
-                        <button string="Cancel" name="action_cancel_service_order" class="btn-primary btn-danger mr24 pull-right oe_read_only" type="object" states="draft,to approve,sent,purchase,done" confirm="Are you sure you want to continue?" groups="gbs_samuda_service_order.group_service_order_manager_unit,gbs_samuda_service_order.group_service_order_manager_ho"/>
+                        <button string="Cancel" name="action_cancel_service_order" class="btn-primary btn-danger mr24 pull-right oe_read_only" type="object" states="draft,to approve,sent,purchase,done" confirm="Are you sure to cancel this service order?" groups="gbs_samuda_service_order.group_service_order_manager_unit,gbs_samuda_service_order.group_service_order_manager_ho"/>
 
 
                     </header>
@@ -64,7 +64,7 @@
                             <button type="object" name="action_view_invoice"
                                     class="oe_stat_button"
                                     icon="fa-pencil-square-o"
-                                    attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('invoice_ids','=',[])]}">
+                                    attrs="{'invisible':[('state', 'in', ('draft','sent','to approve', 'cancel')),('invoice_ids','=',[])]}">
                                 <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
                                 <field name='invoice_ids' invisible="1"/>
                             </button>

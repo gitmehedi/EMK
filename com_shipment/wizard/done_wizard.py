@@ -12,7 +12,7 @@ class DoneWizard(models.TransientModel):
     payment_charge = fields.Float(string='Payment Charge')
     discrepancy_amount = fields.Float(string='Discrepancy Amount')
     region_type = fields.Selection([('local', "Local"),('foreign', "Foreign")], readonly=True,)
-    exp_number = fields.Char('Exp. Number', help="Would you like to save Exp. Number?")
+    exp_number = fields.Char('Exp. Number', help="Would you like to save Exp. Number?", size=50)
 
     @api.multi
     def save_done(self):

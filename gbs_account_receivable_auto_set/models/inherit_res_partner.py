@@ -39,7 +39,7 @@ class InheritResPartner(models.Model):
             if partner.property_account_receivable_id.id == rec_id:
                 raise ValidationError('GL Account mismatch! This GL already mapped or used in different Customer.')
         acc_move_line = self.env['account.move.line'].search(
-            [('account_id', '=', rec_id)])
+            [('account_id', '=', rec_id), ('partner_id', '!=', self.id)])
         if len(acc_move_line) > 0:
             raise ValidationError(_('''You cannot change account, because this customer account has journal entries!'''))
 
@@ -52,7 +52,7 @@ class InheritResPartner(models.Model):
                 if partner.property_account_payable_id.id == rec_id:
                     raise ValidationError('GL Account mismatch! This GL already mapped or used in different vendor or C&F.')
             acc_move_line = self.env['account.move.line'].search(
-                [('account_id', '=', rec_id)])
+                [('account_id', '=', rec_id), ('partner_id', '!=', self.id)])
             if len(acc_move_line) > 0:
                 raise ValidationError(
                     _('''You cannot change account, because this vendor or C&F account has journal entries!'''))
