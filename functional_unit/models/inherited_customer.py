@@ -16,4 +16,5 @@ class ResPartnerIn(models.Model):
             })
         return res
 
-    branch_id = fields.Many2one('res.branch', string="Functional Unit")
+    branch_id = fields.Many2one('res.branch', string="Functional Unit",
+                                default=lambda self: self.env['res.branch'].search([], limit=1))
