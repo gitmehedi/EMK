@@ -42,7 +42,7 @@
             <field name="inherit_id" ref="product_sales_pricelist.sale_price_change_tree"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//field[@name='new_price']" position="after">
+                <xpath expr="//field[@name='discount']" position="after">
 
                     <field name="company_id" invisible="1"/>
                     <field name="is_corporate" invisible="1"/>
@@ -97,7 +97,7 @@
             <field name="inherit_id" ref="product_sales_pricelist.product_sale_price_history_variant_wise_tree"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//field[@name='new_price']" position="after">
+                <xpath expr="//field[@name='discount']" position="after">
                     <field name="corporate_commission_per_unit" string="Commission (Unit)"/>
                     <field name="corporate_commission_tolerable" string="Commission Tolerable"/>
                     <field name="corporate_refund_per_unit" string="Refund (Unit)"/>
