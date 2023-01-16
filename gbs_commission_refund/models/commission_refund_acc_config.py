@@ -87,7 +87,7 @@ class CommissionAccount(models.Model):
     )
     account_id = fields.Many2one(
         'account.account',
-        string='Default Commission Account'
+        string='Commission Account'
     )
     commission_config_id = fields.Many2one(
         'commission.refund.acc.config',

@@ -41,7 +41,7 @@ class SaleOrderApprovePricelist(models.Model):
 
         if view_type == 'form':
             doc = etree.XML(result['arch'])
-            if (not textbox_config.show_packing_mode or not checkbox_config.show_packing_mode) and view_type == 'form':
+            if (not textbox_config.show_packing_mode and not checkbox_config.show_packing_mode) and view_type == 'form':
                 for field in doc.xpath("//field[@name='product_package_mode']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
                     modifiers['invisible'] = True
@@ -241,7 +241,7 @@ class SaleOrderPricelist(models.Model):
 
         if view_type == 'form':
             doc = etree.XML(result['arch'])
-            if (not textbox_config.show_packing_mode or not checkbox_config.show_packing_mode) and view_type == 'form':
+            if (not textbox_config.show_packing_mode and not checkbox_config.show_packing_mode) and view_type == 'form':
                 for field in doc.xpath("//field[@name='product_package_mode']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
                     modifiers['invisible'] = True
