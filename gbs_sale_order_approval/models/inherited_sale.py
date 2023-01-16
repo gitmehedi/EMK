@@ -216,8 +216,12 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_reset(self):
-        if self.state == 'done':
-            raise ValidationError(_('Sale order has been already approved, you can\'t reset to draft'))
+        # if self.env.user.has_group('gbs_samuda_sales_access.group_sales_local'):
+        #     if self.state != 'draft':
+        #         raise ValidationError(_('Sale order is already process for approval, you can\'t reset to draft.'))
+
+        if self.state != 'draft':
+            raise ValidationError(_('Sale order has been already approved, you can\'t reset to draft.'))
         self.state = 'to_submit'
 
     @api.multi
