@@ -128,7 +128,7 @@ class AccountInvoice(models.Model):
         commission_debit_vals = self.get_move_line_vals(
             label,
             self.date_invoice,
-            journal_id,
+            int(journal_id),
             account_id.id,
             operating_unit_id.id,
             department_id.id,
@@ -141,7 +141,7 @@ class AccountInvoice(models.Model):
         commission_credit_vals = self.get_move_line_vals(
             label,
             self.date_invoice,
-            journal_id,
+            int(journal_id),
             control_account_id.id,
             operating_unit_id.id,
             department_id.id,

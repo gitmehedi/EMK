@@ -26,12 +26,22 @@ class SaleOrderApprovePricelist(models.Model):
 
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         result = super(SaleOrderApprovePricelist, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            company = self.env.user.company_id
-            config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
+        company = self.env.user.company_id
+        textbox_config = self.env['commission.configuration'].search([
+            ('process', '=', 'textbox'),
+            ('customer_type', 'in', company.customer_types.ids or []),
+            ('functional_unit', 'in', company.branch_ids.ids or [])
+        ], limit=1)
 
+        checkbox_config = self.env['commission.configuration'].search([
+            ('process', '=', 'checkbox'),
+            ('customer_type', 'in', company.customer_types.ids or []),
+            ('functional_unit', 'in', company.branch_ids.ids or [])
+        ], limit=1)
+
+        if view_type == 'form':
             doc = etree.XML(result['arch'])
-            if not config.show_packing_mode and view_type == 'form':
+            if (not textbox_config.show_packing_mode or not checkbox_config.show_packing_mode) and view_type == 'form':
                 for field in doc.xpath("//field[@name='product_package_mode']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
                     modifiers['invisible'] = True
@@ -39,7 +49,7 @@ class SaleOrderApprovePricelist(models.Model):
                     modifiers['column_invisible'] = True
                     field.set('modifiers', json.dumps(modifiers))
 
-            if config.process != 'textbox':
+            if not textbox_config:
                 for field in doc.xpath("//group[@name='corporate_commission_refund_group']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
                     modifiers['invisible'] = True
@@ -47,7 +57,7 @@ class SaleOrderApprovePricelist(models.Model):
                     modifiers['column_invisible'] = True
                     field.set('modifiers', json.dumps(modifiers))
 
-            if config.process != 'checkbox':
+            if not checkbox_config:
                 for field in doc.xpath("//group[@name='dealer_commission_refund_group']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
                     modifiers['invisible'] = True
@@ -58,11 +68,8 @@ class SaleOrderApprovePricelist(models.Model):
             result['arch'] = etree.tostring(doc)
 
         elif view_type == 'tree':
-            company = self.env.user.company_id
-            config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
-
             doc = etree.XML(result['arch'])
-            if config.process != 'textbox':
+            if not textbox_config:
                 fields_to_be_hidden = ['corporate_commission_per_unit', 'corporate_commission_tolerable', 'corporate_refund_per_unit', 'corporate_refund_tolerable']
                 for f in fields_to_be_hidden:
                     for field in doc.xpath("//field[@name='%s']" % f):
@@ -72,7 +79,7 @@ class SaleOrderApprovePricelist(models.Model):
                         modifiers['column_invisible'] = True
                         field.set('modifiers', json.dumps(modifiers))
 
-            if config.process != 'checkbox':
+            if not checkbox_config:
                 fields_to_be_hidden = ['dealer_commission_applicable', 'dealer_refund_applicable']
                 for f in fields_to_be_hidden:
                     for field in doc.xpath("//field[@name='%s']" % f):
@@ -219,12 +226,22 @@ class SaleOrderPricelist(models.Model):
 
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         result = super(SaleOrderPricelist, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            company = self.env.user.company_id
-            config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
+        company = self.env.user.company_id
+        textbox_config = self.env['commission.configuration'].search([
+            ('process', '=', 'textbox'),
+            ('customer_type', 'in', company.customer_types.ids or []),
+            ('functional_unit', 'in', company.branch_ids.ids or [])
+        ], limit=1)
 
+        checkbox_config = self.env['commission.configuration'].search([
+            ('process', '=', 'checkbox'),
+            ('customer_type', 'in', company.customer_types.ids or []),
+            ('functional_unit', 'in', company.branch_ids.ids or [])
+        ], limit=1)
+
+        if view_type == 'form':
             doc = etree.XML(result['arch'])
-            if not config.show_packing_mode and view_type == 'form':
+            if (not textbox_config.show_packing_mode or not checkbox_config.show_packing_mode) and view_type == 'form':
                 for field in doc.xpath("//field[@name='product_package_mode']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
                     modifiers['invisible'] = True
@@ -232,7 +249,7 @@ class SaleOrderPricelist(models.Model):
                     modifiers['column_invisible'] = True
                     field.set('modifiers', json.dumps(modifiers))
 
-            if config.process != 'textbox':
+            if not textbox_config:
                 for field in doc.xpath("//group[@name='corporate_commission_refund_group']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
                     modifiers['invisible'] = True
@@ -240,7 +257,7 @@ class SaleOrderPricelist(models.Model):
                     modifiers['column_invisible'] = True
                     field.set('modifiers', json.dumps(modifiers))
 
-            if config.process != 'checkbox':
+            if not checkbox_config:
                 for field in doc.xpath("//group[@name='dealer_commission_refund_group']"):
                     modifiers = json.loads(field.get('modifiers', '{}'))
                     modifiers['invisible'] = True
@@ -251,11 +268,8 @@ class SaleOrderPricelist(models.Model):
             result['arch'] = etree.tostring(doc)
 
         elif view_type == 'tree':
-            company = self.env.user.company_id
-            config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
-
             doc = etree.XML(result['arch'])
-            if config.process != 'textbox':
+            if not textbox_config:
                 fields_to_be_hidden = ['corporate_commission_per_unit', 'corporate_commission_tolerable', 'corporate_refund_per_unit', 'corporate_refund_tolerable']
                 for f in fields_to_be_hidden:
                     for field in doc.xpath("//field[@name='%s']" % f):
@@ -265,7 +279,7 @@ class SaleOrderPricelist(models.Model):
                         modifiers['column_invisible'] = True
                         field.set('modifiers', json.dumps(modifiers))
 
-            if config.process != 'checkbox':
+            if not checkbox_config:
                 fields_to_be_hidden = ['dealer_commission_applicable', 'dealer_refund_applicable']
                 for f in fields_to_be_hidden:
                     for field in doc.xpath("//field[@name='%s']" % f):

@@ -220,17 +220,20 @@ class CommissionRefundPercentageConfig(models.Model):
 
         so_process_config = self.env['commission.configuration'].search([('process', '=', 'checkbox')], limit=1)
         customers = self.env['res.partner'].search([('business_type', '=', so_process_config.customer_type.id)])
+
         com_journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_journal_id')
         if not com_journal_id:
             raise UserError(_("Commission journal not set in sales configuration"))
+
         refund_journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'refund_journal_id')
         if not refund_journal_id:
             raise UserError(_("Refund journal not set in sales configuration"))
 
         journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_slab_account_journal')
         if not journal_id:
-            raise UserError(_("Commision/Refund Top Up journal not set in sales configuration"))
-        journal_ids = self.env['account.journal'].search([('type', '!=', 'situation'), ('id', 'not in', [com_journal_id, refund_journal_id, journal_id])])
+            raise UserError(_("Commission/Refund Top Up journal not set in sales configuration"))
+
+        journal_ids = self.env['account.journal'].search([('type', '!=', 'situation'), ('id', 'not in', [int(com_journal_id), int(refund_journal_id), int(journal_id)])])
 
         start_date, end_date = _date_range()
         percentage_config = self.env['commission.refund.prcntg.config'].search([
@@ -248,13 +251,20 @@ class CommissionRefundPercentageConfig(models.Model):
             print("The job was already executed for the range (%s to %s)" % (start_date, end_date))
             return
 
-        #journal_id = self.env['account.journal'].sudo().search([('code', '=', 'COMJNLTP')], limit=1)
-
-
         move_line_array = []
         total_debit = 0
         for customer in customers:
-            used_context = {'partner_id': customer.id, 'journal_ids': journal_ids.ids or False, 'state': 'all', 'date_from': start_date, 'date_to': end_date, 'display_account': 'all', 'operating_unit_ids': False, 'strict_range': True if self.start_date else False, 'lang': self.env.context.get('lang') or 'en_US'}
+            used_context = {
+                'partner_id': customer.id,
+                'journal_ids': journal_ids.ids or False,
+                'state': 'all',
+                'date_from': start_date,
+                'date_to': end_date,
+                'display_account': 'all',
+                'operating_unit_ids': False,
+                'strict_range': True if self.start_date else False,
+                'lang': self.env.context.get('lang') or 'en_US'
+            }
             accounts_result = self._get_account_move_entry(customer.property_account_receivable_id, True, 'all', used_context)
 
             for account in accounts_result:

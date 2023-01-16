@@ -32,6 +32,7 @@
         'views/product_sales_pricelist_view.xml',
         'views/res_partner_view.xml',
         'views/inherited_sale_do_view.xml',
+        'views/sale_order_view.xml',
 
         # wizards
         'wizards/inherited_stock_return_picking.xml',

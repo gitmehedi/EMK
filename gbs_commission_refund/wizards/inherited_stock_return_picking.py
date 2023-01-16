@@ -15,11 +15,7 @@ class ReturnPicking(models.TransientModel):
     @api.multi
     def create_return_obj(self):
         picking = self.env['stock.picking'].browse(self.env.context['active_id'])
-        invoice_ids = self.env['account.invoice'].sudo().search([('picking_ids', 'in', picking.id)])
-
-        # purchase_order_line_ids = self.env['purchase.order.line'].sudo().search([('invoice_id', 'in', invoice_ids.ids)])
-        # so_ids = self.env['sale.order'].sudo().search([('name', 'in', [invoice.origin for invoice in invoice_ids])])
-
+        invoice_ids = self.env['account.invoice'].sudo().search([('picking_ids', '=', picking.id)])
         so_ids = self.env['sale.order'].search([('name', '=', picking.origin)])[0]
 
         purchase_order_ids = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', so_ids.ids)])
@@ -71,7 +67,7 @@ class ReturnPicking(models.TransientModel):
                                     returned_qty_)
                                 aml.credit = 0
                                 aml.debit = reverse_credit
-                    reverse_comm_move = move_of_reverse_.post()
+                    move_of_reverse_.post()
                     inv.sudo().write({'reverse_commission_move_id': move_of_reverse_.id})
 
                 refund_move = inv.refund_move_id
@@ -87,7 +83,6 @@ class ReturnPicking(models.TransientModel):
                         if inv.invoice_line_ids[0].quantity > 0:
                             if aml.debit > 0:
                                 reverse_debit = (aml.debit / inv.invoice_line_ids[0].quantity) * returned_qty_
-                                # aml.name = "(" + str(aml.debit) + "/" + str(inv.invoice_line_ids[0].quantity) + ")" + "*" + str(returned_qty_)
                                 aml.name = "(debit= " + str(aml.debit) + "/ invoice quantity= " + str(
                                     inv.invoice_line_ids[0].quantity) + ")" + "* returned quantity= " + str(
                                     returned_qty_)
@@ -95,13 +90,12 @@ class ReturnPicking(models.TransientModel):
                                 aml.credit = reverse_debit
                             else:
                                 reverse_credit = (aml.credit / inv.invoice_line_ids[0].quantity) * returned_qty_
-                                # aml.name = "(" + str(aml.credit) + "/" + str(inv.invoice_line_ids[0].quantity) + ")" + "*" + str(returned_qty_)
                                 aml.name = "(credit= " + str(aml.credit) + "/ invoice quantity= " + str(
                                     inv.invoice_line_ids[0].quantity) + ")" + "* returned quantity= " + str(
                                     returned_qty_)
                                 aml.credit = 0
                                 aml.debit = reverse_credit
-                    reverse_rfnd_move = refund_move_of_reverse_.post()
+                    refund_move_of_reverse_.post()
                     inv.sudo().write({'reverse_refund_move_id': refund_move_of_reverse_.id})
 
         return super(ReturnPicking, self).create_return_obj()

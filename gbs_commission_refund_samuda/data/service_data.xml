@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <!-- Sequences for service.order -->
         <record id="commission_claim_sequence_SCCL_HO" model="ir.sequence">
             <field name="name">COMM SCCL HO</field>

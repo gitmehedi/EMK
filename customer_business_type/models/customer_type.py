@@ -10,7 +10,7 @@ class ResCustomerType(models.Model):
     name = fields.Char(required=True, track_visibility="onchange")
     customer_type = fields.Selection(
         string='Customer Type',
-        selection=[('retail', 'Retal'), ('corporate', 'Corporate'), ], track_visibility="onchange"
+        selection=[('retail', 'Retail'), ('corporate', 'Corporate'), ], track_visibility="onchange"
     )
 
     is_retail = fields.Boolean('Is Retail Customer?', track_visibility="onchange")
