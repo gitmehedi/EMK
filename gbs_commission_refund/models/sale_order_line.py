@@ -11,9 +11,6 @@ from lxml import etree
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    commission_available = fields.Boolean(compute="_all_invoice_commission_available")
-    refund_available = fields.Boolean(compute="_all_invoice_refund_available")
-
     deduct_commission = fields.Boolean(
         string='Deduct Commission on Return',
         help='We will deduct the amount of returned quantity from actual invoiced quantity'
@@ -22,46 +19,6 @@ class SaleOrder(models.Model):
         string='Deduct Refund on Return',
         help='We will deduct the amount of returned quantity from actual invoiced quantity'
     )
-
-    @api.depends("commission_available")
-    def _all_invoice_commission_available(self):
-        for rec in self:
-            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1,
-                                                                          order="id desc")
-            if is_claim_cancelled.state == 'cancel':
-                rec.commission_available = True
-            else:
-                # any(list) returns True if any item in an iterable are true, otherwise it returns False
-                available = any(
-                    [(not inv.is_commission_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in
-                     rec.invoice_ids])
-
-                total_commission = 0
-                for inv in rec.invoice_ids:
-                    for inv_line in inv.invoice_line_ids:
-                        total_commission += sum([line.corporate_commission_per_unit for line in inv_line.sale_line_ids])
-
-                rec.commission_available = total_commission > 0 and available
-
-    @api.depends("refund_available")
-    def _all_invoice_refund_available(self):
-        for rec in self:
-            is_claim_cancelled = self.env['purchase.order'].sudo().search([('sale_order_ids', 'in', [rec.id])], limit=1,
-                                                                          order="id desc")
-            if is_claim_cancelled.state == 'cancel':
-                rec.refund_available = True
-            else:
-                # any(list) returns True if any item in an iterable are true, otherwise it returns False
-                available = any(
-                    [(not inv.is_refund_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in
-                     rec.invoice_ids])
-
-                total_commission = 0
-                for inv in rec.invoice_ids:
-                    for inv_line in inv.invoice_line_ids:
-                        total_commission += sum([line.corporate_refund_per_unit for line in inv_line.sale_line_ids])
-
-                rec.refund_available = total_commission > 0 and available
 
     @api.onchange('pack_type')
     def _onchange_pack_type(self):
@@ -118,9 +75,11 @@ class SaleOrder(models.Model):
                                                         submenu=submenu)
         if view_type == 'form':
             company = self.env.user.company_id
-            config = self.env['commission.configuration'].search(
-                [('customer_type', 'in', company.customer_types.ids or []),
-                 ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
+            config = self.env['commission.configuration'].search([
+                ('process', '=', 'textbox'),
+                ('customer_type', 'in', company.customer_types.ids or []),
+                ('functional_unit', 'in', company.branch_ids.ids or [])
+            ], limit=1)
 
             order_line_tree = etree.XML(result['fields']['order_line']['views']['tree']['arch'])
 
@@ -209,6 +168,7 @@ class SaleOrderLine(models.Model):
 
     price_unit_copy = fields.Float(string='Price_unit_copy')
     price_unit_actual = fields.Float(string='Price Unit Actual')
+    price_unit_max_discount = fields.Float(string="Max Discount Amount")
 
     corporate_commission_per_unit = fields.Float(string="Commission Per Unit")
     commission_per_unit_copy = fields.Float(string="Commission Per Unit Copy")
@@ -243,6 +203,7 @@ class SaleOrderLine(models.Model):
 
         for rec in self:
             rec.price_unit_actual = 0
+            rec.price_unit_max_discount = 0
 
             rec.corporate_commission_per_unit = 0.0
             rec.commission_actual = 0.0
@@ -267,6 +228,7 @@ class SaleOrderLine(models.Model):
 
                 if pricelist_id:
                     rec.price_unit_actual = pricelist_id.new_price
+                    rec.price_unit_max_discount = pricelist_id.discount
 
                     if config and config.auto_load_commission_refund_in_so_line:
                         rec.corporate_commission_per_unit = pricelist_id.corporate_commission_per_unit
@@ -348,7 +310,7 @@ class SaleOrderLine(models.Model):
     @api.one
     @api.constrains('product_uom_qty', 'corporate_refund_per_unit', 'corporate_commission_per_unit')
     def _check_order_line_inputs(self):
-        super(SaleOrderLine, self)._check_order_line_inputs()
+        # super(SaleOrderLine, self)._check_order_line_inputs()
         if self.corporate_refund_per_unit or self.corporate_commission_per_unit:
             if self.corporate_refund_per_unit < 0 or self.corporate_commission_per_unit < 0:
                 raise ValidationError('Commission, Refund amount can not be Negative value')

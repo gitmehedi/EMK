@@ -7,18 +7,6 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="priority" eval="30"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="before">
-                    <style>
-                        .alert { padding: 5px 30px 5px 5px; position: relative; font-size: 13px; font-weight: normal; line-height:1.2}
-                        .alert .glyphicon { position: absolute; top: 5px; right: 5px; font-size: 24px;}
-                        .alert p:last-child { margin:0; }
-                        .oe_title { width: 100% !important; }
-
-                    </style>
-
-                    <field name="comment" widget="html" class="alert alert-danger" nolabel="1" readonly="1" attrs="{'invisible':[('state', 'in', ['to_submit', 'done', 'cancel'])]}"/>
-
-                </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
                     <field name="so_readonly_field" invisible="1"/>
                     <field name="price_unit_copy" invisible="1"/>
