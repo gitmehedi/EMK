@@ -293,8 +293,11 @@
                     </xpath>
 
                     <!--Set to quotation-->
-                    <xpath expr="//button[@name='action_draft']" position="replace">
-                        <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
+<!--                    <xpath expr="//button[@name='action_draft']" position="replace">-->
+<!--                        <button name="action_draft" states="cancel" type="object" string="Set to Quotation" group="base.group_system"/>-->
+<!--                    </xpath>-->
+                    <xpath expr="//button[@name='action_draft']" position="attributes">
+                        <attribute name="groups">base.group_system</attribute>
                     </xpath>
 
                     <!--Lock-->
