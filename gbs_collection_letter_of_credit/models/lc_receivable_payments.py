@@ -359,7 +359,7 @@ class LCReceivablePayment(models.Model):
             'debit': False,
             'name': name,
             'operating_unit_id': self.operating_unit_id.id,
-            'partner_id': self.invoice_ids[0].partner_id.id,
+            'partner_id': self.lc_id.second_party_applicant.id,
             'move_id': move_id,
             'currency_id': currency_id
         }
