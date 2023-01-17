@@ -13,7 +13,8 @@ class ResPartner(models.Model):
             ('commission_refund_account_payable_id', '!=', False)
         ])
 
-        domain = [("id", "!=", [c.commission_refund_account_payable_id.id for c in customer_ids]), ('internal_type', '=', 'payable')]
+        domain = [("id", "!=", [c.commission_refund_account_payable_id.id for c in customer_ids]),
+                  ('internal_type', '=', 'payable')]
         return domain
 
     commission_refund_account_payable_id = fields.Many2one(
@@ -24,23 +25,42 @@ class ResPartner(models.Model):
     )
 
     def _check_acc_constraint(self, values):
+        if not values.get('commission_refund_account_payable_id', False):
+            return
+
+        cr_ap = values.get(
+            'commission_refund_account_payable_id',
+            self.commission_refund_account_payable_id.id
+        )
+        ap = values.get(
+            'property_account_payable_id',
+            self.property_account_payable_id.id
+        )
+
+        if cr_ap == ap:
+            raise UserError(
+                _('Selected Account Payable for Commission and Refund already used in another customer Account Payable!'))
+
         if values.get('commission_refund_account_payable_id'):
-            customer_id = self.env['res.partner'].search([
+            comm_customer_id = self.env['res.partner'].search([
                 ('active', '=', True),
                 ('customer', '=', True),
-                ('commission_refund_account_payable_id', '=', values['commission_refund_account_payable_id'])
+                ('commission_refund_account_payable_id', '=', values['commission_refund_account_payable_id']),
             ])
 
-            if customer_id:
-                raise UserError(_('Selected Account Payable for Commission and Refund already used for another customer.'))
+            if comm_customer_id:
+                raise UserError(
+                    _('Selected Account Payable for Commission and Refund already used for another customer.'))
 
     def create_commission_refund_ap_account_id(self):
-        config_ap_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_refund_default_ap_parent_id')
+        config_ap_id = self.env['ir.values'].sudo().get_default('sale.config.settings',
+                                                                'commission_refund_default_ap_parent_id')
         if not config_ap_id:
             raise UserError(_("Commission/Refund default AP not set on Sales/Configuration/Settings"))
 
         parent_acc_id = self.env['account.account'].browse(int(config_ap_id)).parent_id
-        account_id = self.env['account.account'].search([('parent_id', '=', parent_acc_id.id)], limit=1, order="id desc")
+        account_id = self.env['account.account'].search([('parent_id', '=', parent_acc_id.id)], limit=1,
+                                                        order="id desc")
         code = int(account_id.code) + 1
 
         vals = {
