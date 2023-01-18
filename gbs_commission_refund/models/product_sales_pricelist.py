@@ -1,7 +1,7 @@
 from collections import defaultdict
 import json
 import time
-
+from datetime import datetime
 # imports of odoo
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -95,13 +95,11 @@ class SaleOrderApprovePricelist(models.Model):
 
     @api.model
     def pull_automation(self):
-        current_date = time.strftime("%d/%m/%Y")
+        current_date = datetime.now().date()
         vals = {}
 
         price_list_pool = self.env['product.sales.pricelist'].search(
-            [('state', '=', 'validate'), ('effective_date', '<=', current_date), ('is_process', '=', 0)],
-            order='effective_date ASC',
-        )
+            [('state', '=', 'validate'), ('effective_date', '<=', current_date), ('is_process', '=', 0)], order='effective_date ASC')
 
         for price_pool in price_list_pool:
             price_history_pool = self.env['product.sale.history.line'].search([

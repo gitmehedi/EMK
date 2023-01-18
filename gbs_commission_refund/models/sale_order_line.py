@@ -73,6 +73,10 @@ class SaleOrder(models.Model):
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         result = super(SaleOrder, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,
                                                         submenu=submenu)
+
+        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_start_date')
+        invisible_commission_fields = self.date_order < commission_start_date if commission_start_date else False
+
         if view_type == 'form':
             company = self.env.user.company_id
             config = self.env['commission.configuration'].search([
@@ -92,7 +96,7 @@ class SaleOrder(models.Model):
                     modifiers['column_invisible'] = True
                     field.set('modifiers', json.dumps(modifiers))
 
-            if config.process != 'textbox':
+            if config.process != 'textbox' or invisible_commission_fields:
                 fields_to_be_hidden = ['corporate_commission_per_unit', 'corporate_refund_per_unit']
                 for f in fields_to_be_hidden:
                     for field in order_line_tree.xpath("//field[@name='%s']" % f):
@@ -102,7 +106,7 @@ class SaleOrder(models.Model):
                         modifiers['column_invisible'] = True
                         field.set('modifiers', json.dumps(modifiers))
 
-            if config.process != 'checkbox':
+            if config.process != 'checkbox' or invisible_commission_fields:
                 fields_to_be_hidden = ['dealer_commission_applicable', 'dealer_refund_applicable']
                 for f in fields_to_be_hidden:
                     for field in order_line_tree.xpath("//field[@name='%s']" % f):
@@ -221,7 +225,7 @@ class SaleOrderLine(models.Model):
                 uom_id = rec.product_uom.id or rec.product_id.uom_id.id
                 pricelist_id = self.env['product.sale.history.line'].search([
                     ('product_id', '=', rec.product_id.id),
-                    ('currency_id', '=', rec.currency_id.id),
+                    ('currency_id', '=', rec.order_id.currency_id.id),
                     ('product_package_mode', '=', product_package_mode),
                     ('uom_id', '=', uom_id)
                 ], limit=1)
@@ -234,11 +238,11 @@ class SaleOrderLine(models.Model):
                         rec.corporate_commission_per_unit = pricelist_id.corporate_commission_per_unit
                         rec.corporate_refund_per_unit = pricelist_id.corporate_refund_per_unit
 
-                        # commission & refund applicable or not for dealar only.
+                        # commission & refund applicable or not for dealer only.
                         rec.dealer_commission_applicable = pricelist_id.dealer_commission_applicable
                         rec.dealer_refund_applicable = pricelist_id.dealer_refund_applicable
 
-                        rec.price_unit_copy = rec.price_unit
+                        rec.price_unit_copy = pricelist_id.new_price
                         rec.commission_per_unit_copy = pricelist_id.corporate_commission_per_unit
                         rec.refund_per_unit_copy = pricelist_id.corporate_refund_per_unit
                         rec.commission_applicable_copy = pricelist_id.dealer_commission_applicable
@@ -280,6 +284,8 @@ class SaleOrderLine(models.Model):
         if config.so_readonly_field:
             if 'price_unit_copy' in values:
                 res.price_unit = res.price_unit_copy
+                print("res.price_unit_copy 111", res.price_unit_copy)
+                print("res.price_unit 111", res.price_unit)
             if 'commission_per_unit_copy' in values:
                 res.corporate_commission_per_unit = res.commission_per_unit_copy
             if 'refund_per_unit_copy' in values:
