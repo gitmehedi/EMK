@@ -6,9 +6,11 @@ class ReturnPicking(models.TransientModel):
     _inherit = 'stock.return.picking'
 
     deduct_commission = fields.Boolean(
+        default=True,
         help='Deduct commission amount equivalent with returned quantity'
     )
     deduct_refund = fields.Boolean(
+        default=True,
         help='Deduct refund amount equivalent with returned quantity'
     )
 
