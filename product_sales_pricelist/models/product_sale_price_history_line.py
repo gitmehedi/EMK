@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.addons import decimal_precision as dp
-
+from datetime import datetime
 import time
 
 
@@ -36,11 +36,13 @@ class ProductSalePriceHistiryLine(models.Model):
 
     @api.model
     def pull_automation(self):
-        current_date = time.strftime("%d/%m/%Y")
+        current_date = datetime.now().date()
+	print('current_date', current_date)
         vals = {}
 
         price_list_pool = self.env['product.sales.pricelist'].search(
-            [('state', '=', 'validate'), ('effective_date', '<=', current_date), ('is_process', '=',0)], order='effective_date ASC',)
+            [('state', '=', 'validate'), ('effective_date', '<=', current_date), ('is_process', '=',0)], order='effective_date ASC')
+	print('price_list_pool',price_list_pool)
 
 
         for price_pool in price_list_pool:
