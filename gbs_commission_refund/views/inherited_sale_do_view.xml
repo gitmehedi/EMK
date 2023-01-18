@@ -12,6 +12,7 @@
                             <field name="commission_refund_default_ap_parent_id" class="oe_inline"/>
                             <field name="commission_journal_id" class="oe_inline"/>
                             <field name="refund_journal_id" class="oe_inline"/>
+                            <field name="commission_start_date" class="oe_inline"/>
                         </group>
                     </group>
 
