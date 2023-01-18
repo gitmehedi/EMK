@@ -30,7 +30,7 @@
         </record>
 
         <record id="action_commission_refund_invoice" model="ir.actions.act_window">
-            <field name="name">Claim Bills</field>
+            <field name="name">Claim Bills (Draft)</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_ids"
@@ -49,10 +49,39 @@
             </field>
         </record>
 
+        <record id="action_commission_refund_invoice_not_paid" model="ir.actions.act_window">
+            <field name="name">Claim Bills (Not Paid)</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                    (0, 0, {'sequence': 1001, 'view_mode': 'tree', 'view_id': ref('account.invoice_supplier_tree')}),
+                    (0, 0, {'sequence': 1002, 'view_mode': 'form', 'view_id': ref('account.invoice_supplier_form')}),
+                ]"/>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="domain">[('is_claimed','=',True)]</field>
+            <field name="context">{'is_claimed':True,'search_default_unpaid':1,'no_create_edit_button':True}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a customer claim invoice.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem name="Claim Bills" parent="account.menu_finance_receivables" id="menu_claim_commission_refund_bills" sequence="3" groups="gbs_application_group.group_account_income"/>
+
         <menuitem action="action_commission_refund_invoice"
                   id="menu_action_commission_refund_invoice"
-                  parent="account.menu_finance_receivables"
-                  sequence="3"
+                  parent="menu_claim_commission_refund_bills"
+                  sequence="10"
+                  groups="gbs_application_group.group_account_income"
+        />
+        <menuitem action="action_commission_refund_invoice_not_paid"
+                  id="menu_action_commission_refund_invoice_not_paid"
+                  parent="menu_claim_commission_refund_bills"
+                  sequence="11"
                   groups="gbs_application_group.group_account_income"
         />
 
