@@ -34,7 +34,7 @@
                                 groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_head_account,gbs_application_group.group_head_sale,gbs_application_group.group_cxo"
                                 states="draft" type="object" class="oe_highlight"/>
 
-                        <button string="Apparove" name="action_approve" groups="gbs_application_group.group_cxo"
+                        <button string="Approve" name="action_approve" groups="gbs_application_group.group_cxo"
                                 states="validate1" type="object" class="oe_highlight"/>
 
                         <button string="Validate" name="action_validate"
