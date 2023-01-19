@@ -16,7 +16,8 @@
         'customer_business_type',
         'gbs_commission_config',
         'gbs_samuda_sales_return',
-        'date_range'
+        'date_range',
+        'account_type_extend'
     ],
     'data': [
         # data
