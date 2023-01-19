@@ -81,8 +81,8 @@
 
                         <notebook>
                             <page string="Order Line" name="customer_order_lines">
-                                <field name="order_line" required="1">
-                                    <tree editable="bottom" create="false" delete="false" edit="false" options="{'no_create':True,'no_create_edit':True,'no_open':True}">
+                                <field name="order_line" required="1" style="pointer-events:none;">
+                                    <tree editable="bottom" create="false" delete="false" edit="false" style="pointer-events:none;" options="{'no_create':True,'no_create_edit':True,'no_open':True}">
                                         <field name="invoice_id" readonly="1" force_save="1"/>
                                         <field name="currency_id" invisible="1"/>
                                         <field name="state" invisible="1"/>

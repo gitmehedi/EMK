@@ -28,6 +28,8 @@ class ReturnPicking(models.TransientModel):
                 if bill_available:
                     raise UserError(_("Can't return.\nReason: Commission/Refund already claimed. "))
 
+        res = super(ReturnPicking, self).create_return_obj()
+
         for so in so_ids:
             so.deduct_commission = self.deduct_commission
             so.deduct_refund = self.deduct_refund
@@ -44,6 +46,8 @@ class ReturnPicking(models.TransientModel):
                     returned_qty_ = _rtn.quantity
 
             for inv in invoice_ids:
+                return_inv = self.env['account.invoice'].search([('refund_invoice_id', '=', inv.id)], order="id desc", limit=1)
+
                 commission_move = inv.commission_move_id
                 if self.deduct_commission and not commission_move:
                     raise UserError(_("Deduction not possible because commission move not found for this invoice."))
@@ -70,7 +74,8 @@ class ReturnPicking(models.TransientModel):
                                 aml.credit = 0
                                 aml.debit = reverse_credit
                     move_of_reverse_.post()
-                    inv.sudo().write({'reverse_commission_move_id': move_of_reverse_.id})
+                    return_inv.commission_move_id = move_of_reverse_.id
+                    # inv.sudo().write({'reverse_commission_move_id': move_of_reverse_.id})
 
                 refund_move = inv.refund_move_id
                 if self.deduct_refund and not refund_move:
@@ -98,6 +103,7 @@ class ReturnPicking(models.TransientModel):
                                 aml.credit = 0
                                 aml.debit = reverse_credit
                     refund_move_of_reverse_.post()
-                    inv.sudo().write({'reverse_refund_move_id': refund_move_of_reverse_.id})
+                    return_inv.refund_move_id = refund_move_of_reverse_.id
+                    # inv.sudo().write({'reverse_refund_move_id': refund_move_of_reverse_.id})
 
-        return super(ReturnPicking, self).create_return_obj()
+        return res
