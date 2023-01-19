@@ -90,7 +90,7 @@ class AccountInvoice(models.Model):
                 label = "{}: ({} x {})".format(line.product_id.name, line.quantity, commission_amount)
 
             name_seq = self.env['ir.sequence'].next_by_code('commission.account.move.seq')
-            #journal_id = self.env['account.journal'].sudo().search([('code', '=', 'COMJNL')], limit=1)
+            # journal_id = self.env['account.journal'].sudo().search([('code', '=', 'COMJNL')], limit=1)
 
             journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_journal_id')
             if not journal_id:
@@ -110,7 +110,7 @@ class AccountInvoice(models.Model):
                 label = "{}: ({} x {})".format(line.product_id.name, line.quantity, refund_amount)
 
             name_seq = self.env['ir.sequence'].next_by_code('refund.account.move.seq')
-            #journal_id = self.env['account.journal'].sudo().search([('code', '=', 'REFJNL')], limit=1)
+            # journal_id = self.env['account.journal'].sudo().search([('code', '=', 'REFJNL')], limit=1)
             journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'refund_journal_id')
             if not journal_id:
                 raise UserError(_("Refund journal not set in sales configuration"))
@@ -126,7 +126,7 @@ class AccountInvoice(models.Model):
             return
 
         commission_debit_vals = self.get_move_line_vals(
-            label,
+            str(label),
             self.date_invoice,
             int(journal_id),
             account_id.id,
@@ -139,7 +139,7 @@ class AccountInvoice(models.Model):
         )
 
         commission_credit_vals = self.get_move_line_vals(
-            label,
+            str(label),
             self.date_invoice,
             int(journal_id),
             control_account_id.id,
@@ -150,6 +150,9 @@ class AccountInvoice(models.Model):
             total_amount,
             company_id.id
         )
+
+        if not name_seq:
+            raise UserError(_("Commission/Refund sequence not found!"))
 
         return {
             'name': name_seq,

@@ -22,7 +22,7 @@ class SaleOrder(models.Model):
                 rec.commission_available = True
             else:
                 # any(list) returns True if any item in an iterable are true, otherwise it returns False
-                available = any([(not inv.is_commission_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in rec.invoice_ids])
+                available = any([(not inv.is_commission_claimed and (inv.state == 'paid' or inv.state == 'open') and inv.type == 'out_invoice') for inv in rec.invoice_ids])
 
                 total_commission = 0
                 for inv in rec.invoice_ids:
@@ -39,7 +39,7 @@ class SaleOrder(models.Model):
                 rec.refund_available = True
             else:
                 # any(list) returns True if any item in an iterable are true, otherwise it returns False
-                available = any([(not inv.is_refund_claimed and inv.state == 'paid' and inv.type == 'out_invoice') for inv in rec.invoice_ids])
+                available = any([(not inv.is_refund_claimed and (inv.state == 'paid' or inv.state == 'open') and inv.type == 'out_invoice') for inv in rec.invoice_ids])
 
                 total_commission = 0
                 for inv in rec.invoice_ids:

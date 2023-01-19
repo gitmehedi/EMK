@@ -101,7 +101,7 @@ class InheritedPurchaseOrder(models.Model):
             # making purchase order line based on selected SO
             for so in rec.sale_order_ids:
                 for inv in so.invoice_ids:
-                    if inv.type != 'out_invoice' or inv.state != 'paid':
+                    if inv.type != 'out_invoice' or not (inv.state == 'paid' or inv.state == 'open'):
                         continue  # skip if not out invoice.
 
                     if self.is_commission_claim and inv.is_commission_claimed:
@@ -123,8 +123,9 @@ class InheritedPurchaseOrder(models.Model):
                                 invoice_lines_1 = self.env['account.invoice'].sudo().search([
                                     ('from_return', '=', True), ('refund_invoice_id', '=', inv.id), ('type', '=', 'out_refund')]
                                 )
-                                for inv_line_1 in invoice_lines_1.invoice_line_ids:
-                                    qty -= sum([inv_1.quantity for inv_1 in inv_line_1])
+                                for return_inv_line in invoice_lines_1:
+                                    for inv_line_1 in return_inv_line.invoice_line_ids:
+                                        qty -= sum([inv_1.quantity for inv_1 in inv_line_1])
 
                             vals = {
                                 "name": inv_line.product_id.name,
@@ -158,7 +159,7 @@ class InheritedPurchaseOrder(models.Model):
     @api.constrains('order_line')
     def _check_exist_product_in_line(self):
         if not (self.is_commission_claim or self.is_refund_claim):
-            super(InheritedPurchaseOrder,self)._check_exist_product_in_line()
+            super(InheritedPurchaseOrder, self)._check_exist_product_in_line()
 
     @api.multi
     def action_view_invoice(self):
@@ -166,7 +167,7 @@ class InheritedPurchaseOrder(models.Model):
         if self.is_commission_claim or self.is_refund_claim:
             result['context']['default_account_id'] = self.partner_id.commission_refund_account_payable_id.id
             result['context']['default_is_claimed'] = True
-            #result['context']['no_create_edit_button'] = True
+            # result['context']['no_create_edit_button'] = True
         else:
             result['context']['default_account_id'] = self.partner_id.property_account_payable_id.id
         return result
