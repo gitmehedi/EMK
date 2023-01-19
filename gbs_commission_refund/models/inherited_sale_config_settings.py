@@ -10,9 +10,10 @@ class SaleConfigSettings(models.TransientModel):
 
     commission_refund_default_ap_parent_id = fields.Many2one(
         'account.account',
-        'Commission/Refund Default AP Parent',
-        default=lambda self: self._get_default_commission_refund_default_ap_parent_id()
-    )
+        string='Commission/Refund Default AP Parent',
+        default=lambda self: self._get_default_commission_refund_default_ap_parent_id(),
+        domain="[('user_type_id.type', '=', 'view')]")
+
 
     def _get_default_commission_start_date(self):
         return self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_start_date')

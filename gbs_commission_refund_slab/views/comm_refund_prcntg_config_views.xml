@@ -81,6 +81,7 @@
 
         <menuitem name="Percentage Configuration" id="comm_refund_prcntg_config_menu"
                   parent="sales_team.menu_sale_config"
+                  groups="base.group_system"
                   action="comm_refund_prcntg_config_act_window"/>
 
     </data>

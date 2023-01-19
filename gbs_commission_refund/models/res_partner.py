@@ -58,7 +58,7 @@ class ResPartner(models.Model):
         if not config_ap_id:
             raise UserError(_("Commission/Refund default AP not set on Sales/Configuration/Settings"))
 
-        parent_acc_id = self.env['account.account'].browse(int(config_ap_id)).parent_id
+        parent_acc_id = self.env['account.account'].browse(int(config_ap_id))
         account_id = self.env['account.account'].search([('parent_id', '=', parent_acc_id.id)], limit=1,
                                                         order="id desc")
         code = int(account_id.code) + 1
