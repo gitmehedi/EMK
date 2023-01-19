@@ -16,6 +16,7 @@
         # data
         'data/sequence.xml',
         'data/service_data.xml',
+        'security/ir.model.access.csv',
 
         # views
         # 'views/purchase_order_view.xml',

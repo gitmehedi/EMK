@@ -99,9 +99,10 @@
 
 
         <menuitem id="commission_refund_acc_config_menu"
-                  name="Commission and Refund GL Settings"
+                  name="Commission Refund GL Settings"
                   parent="account.menu_finance_configuration"
                   action="commission_refund_acc_config_action_window"
+                  groups="account.group_account_manager"
                   sequence="1"
         />
 
