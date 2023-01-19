@@ -82,12 +82,14 @@ class SaleOrder(models.Model):
             sale_order_date = self.date_order.date()
         else:
             sale_order_date = datetime.now().date()
-        commission_start_date = datetime.strptime(commission_start_date, "%Y-%m-%d").date()
+
         invisible_commission_fields = True
         if commission_start_date:
+            commission_start_date = datetime.strptime(commission_start_date, "%Y-%m-%d").date()
             if sale_order_date > commission_start_date:
                 invisible_commission_fields = False
-
+        else:
+            raise UserError('Commission/Refund feature start date not found in configuration!')
         if view_type == 'form':
             company = self.env.user.company_id
             config = self.env['commission.configuration'].search([
