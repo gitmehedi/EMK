@@ -28,7 +28,7 @@
 
                         <div class="row">
                             <div class="col-xs-6">
-                                <p t-if="data['partner_name']"><b>Bill To:</b></p>
+                                <p><b>Bill To:</b></p>
                                 <p><t t-esc="data['partner_name']"/></p>
                                 <p t-if="data['partner_address']">
                                     <t t-esc="data['partner_address']"/>

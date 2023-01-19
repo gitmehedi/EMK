@@ -11,6 +11,7 @@ class ResPartner(models.Model):
     vat = fields.Char(string='VAT Registration')
     bin = fields.Char(string='BIN Number')
     tin = fields.Char(string='TIN Number')
+    contact_person = fields.Char(sting='Contact Person', size=50)
 
     ############ for log in customer,supplier,vendor,cnf ###############
 

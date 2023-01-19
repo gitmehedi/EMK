@@ -49,12 +49,10 @@ class CustomerInvoice(models.AbstractModel):
                 datetime_str = picking_id.date_done
                 date_done = datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S').date()
 
-        contact_person = False
-        contact_number = False
-        for contact in docs.partner_id.child_ids:
-            if contact.type == 'contact':
-                contact_person = contact.name
-                contact_number = contact.phone if contact.phone else contact.mobile
+        contact_person = docs.partner_id.contact_person
+        contact_number = docs.partner_id.phone if docs.partner_id.phone else docs.partner_id.mobile
+        if docs.partner_id.phone and docs.partner_id.mobile:
+            contact_number = docs.partner_id.phone + ";" + docs.partner_id.mobile
 
         data['number'] = docs.number
         data['origin'] = docs.origin

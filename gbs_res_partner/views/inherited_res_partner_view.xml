@@ -28,6 +28,11 @@
                 <field name="tin"/>
             </xpath>
 
+            <xpath expr="//field[@name='phone']" position="before">
+                <field name="contact_person"/>
+            </xpath>
+
+
             <xpath expr="//button[@name='toggle_active']" position="attributes">
                 <attribute name="groups">gbs_application_group.group_sales_vendor_manager,gbs_application_group.group_sales_customer_manager</attribute>
             </xpath>

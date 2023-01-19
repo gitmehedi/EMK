@@ -21,7 +21,7 @@
             <field name="arch" type="xml">
                     <xpath expr="//button[@name='action_cancel']" position="before">
                         <button name="action_qc_sound_stock_cancel_reopen" states="cancel" confirm="Are you sure you want to continue?"
-                                string="Reopen" type="object" class="oe_highlight" groups="base.group_system"/>
+                                string="Reopen" type="object" class="oe_highlight" groups="base.group_system,gbs_sale_order_approval.group_so_cancellation"/>
                     </xpath>
             </field>
         </record>

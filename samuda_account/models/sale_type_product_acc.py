@@ -9,7 +9,7 @@ class SaleTypeProductAccount(models.Model):
     product_id = fields.Many2one('product.product', string='Product',required=True)
     account_id = fields.Many2one('account.account', string='Account', required=True)
     sale_order_type_id = fields.Many2one('sale.order.type', string='Sale Order Type', required=True)
-    packing_mode_id = fields.Many2one('product.packaging.mode', string='Packaging Mode')
+    packing_mode_id = fields.Many2one('product.packaging.mode', string='Packaging Mode', domain=[('is_deprecated', '=', False)])
 
 
     # _sql_constraints = [
