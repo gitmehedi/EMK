@@ -81,7 +81,8 @@ class InheritedPurchaseOrder(models.Model):
         self.order_line = [(5, 0, 0)]
 
         if self.partner_id and self.operating_unit_id:
-            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)])
+            # sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)])
+            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id)])
             available_ids = []
             for sale_order in sale_order_ids:
                 if self.is_commission_claim:
