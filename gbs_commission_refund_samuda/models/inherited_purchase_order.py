@@ -101,12 +101,16 @@ class InheritedPurchaseOrder(models.Model):
             # making purchase order line based on selected SO
             for so in rec.sale_order_ids:
                 for inv in so.invoice_ids:
-                    if inv.type != 'out_invoice' or not (inv.state == 'paid' or inv.state == 'open'):
-                        continue  # skip if not out invoice.
 
-                    if self.is_commission_claim and inv.is_commission_claimed:
+                    if inv.type != 'out_invoice' or not (inv.state == 'paid' or inv.state == 'open'):
+                        continue  # skip if not out invoice or state is not in paid or open state.
+
+                    # if there already added this invoice to purchase order line for current purchase order then keep it.
+                    temp_invoice_ids = self.env['purchase.order.line'].search([('invoice_id', '=', inv.id)])
+
+                    if self.is_commission_claim and inv.is_commission_claimed and not temp_invoice_ids:
                         continue
-                    elif self.is_refund_claim and inv.is_refund_claimed:
+                    elif self.is_refund_claim and inv.is_refund_claimed and not temp_invoice_ids:
                         continue
 
                     for inv_line in inv.invoice_line_ids:
