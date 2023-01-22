@@ -50,7 +50,8 @@ class ReturnPicking(models.TransientModel):
 
                 commission_move = inv.commission_move_id
                 if self.deduct_commission and not commission_move:
-                    raise UserError(_("Deduction not possible because commission move not found for this invoice."))
+                    continue
+                    # raise UserError(_("Deduction not possible because commission move not found for this invoice."))
 
                 if self.deduct_commission and commission_move:
                     ref = "reversal of: " + commission_move.name
@@ -79,7 +80,8 @@ class ReturnPicking(models.TransientModel):
 
                 refund_move = inv.refund_move_id
                 if self.deduct_refund and not refund_move:
-                    raise UserError(_("Deduction not possible because refund move not found for this invoice."))
+                    continue
+                    # raise UserError(_("Deduction not possible because refund move not found for this invoice."))
 
                 if self.deduct_refund and refund_move:
                     ref = "reversal of: " + refund_move.name
