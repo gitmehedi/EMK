@@ -21,8 +21,8 @@ class SaleOrder(models.Model):
         help='We will deduct the amount of returned quantity from actual invoiced quantity'
     )
 
-    @api.onchange('pack_type')
-    def _onchange_pack_type(self):
+    @api.onchange('pack_type', 'order_line')
+    def _onchange_pack_type_order_line(self):
         for rec in self:
             for so in rec.order_line:
                 so._onchange_commission_refund_product_id()
