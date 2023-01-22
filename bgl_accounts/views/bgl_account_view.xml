@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_bgl_accounts_tree" model="ir.ui.view">
+            <field name="name">bgl.accounts.tree</field>
+            <field name="model">bgl.accounts</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <tree string="BGL Accounts">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_bgl_accounts_form" model="ir.ui.view">
+            <field name="name">bgl.accounts.form</field>
+            <field name="model">bgl.accounts</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="BGL Accounts">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" placeholder="Name"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="code" placeholder="Code"/>
+                            </group>
+                        </group>
+                        <separator string="Description"/>
+                        <field name="note"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_bgl_accounts_search" model="ir.ui.view">
+            <field name="name">bgl.accounts.search</field>
+            <field name="model">bgl.accounts</field>
+            <field name="arch" type="xml">
+                <search string="BGL Accounts">
+                    <field name="name" string="Name"/>
+                    <field name="code" string="Code"/>
+                    <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="bgl_accounts_action" model="ir.actions.act_window">
+            <field name="name">BGL Accounts</field>
+            <field name="res_model">bgl.accounts</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new BGL Account.
+                </p>
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>

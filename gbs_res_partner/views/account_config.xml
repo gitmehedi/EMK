@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sundry_account_config" model="ir.ui.view">
+        <field name="name">view.sundry.account.config</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting']" position="after">
+                <group string="Sundry Account" name="grp_sundry_account">
+                    <label for="sundry_account_id" groups="account.group_account_user"/>
+                    <div name="sundry_account">
+                        <div>
+                            <field name="sundry_account_id" domain="[('level_id.name','=','Layer 5')]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                   class="oe_inline"/>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_product_product_wizard" model="ir.ui.view">
+        <field name="name">product.product.wizard</field>
+        <field name="model">product.product.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Proposed">
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="standard_price"/>
+                        <field name="account_tds_id"
+                               options="{'no_open': True,'no_create': 1,'no_create_edit':1}"/>
+                        <field name="supplier_taxes_id" widget="many2many_tags" string="VAT"
+                               options='{"no_open": True,"no_create": True, "no_create_edit":True}'/>
+                        <field name="default_code"/>
+                    </group>
+                    <group>
+                        <field name="status"/>
+                        <field name="type"/>
+                        <field name="asset_category_id"
+                               attrs="{'required': [('type','=', 'asset')],'invisible': [('type','!=', 'asset')]}"
+                               domain="[('type', '=', 'purchase'),('parent_id', '=',False)]"
+                               context="{'default_type': 'purchase'}"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="asset_type_id"
+                               domain="[('type', '=', 'purchase'),('parent_id', '!=',False)]"
+                               context="{'default_type': 'purchase'}"
+                               attrs="{'required': [('type','=', 'asset'),('asset_category_id','!=',False)],'invisible': [('type','!=', 'asset')]}"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="property_account_expense_id"
+                               domain="[('level_id.name', '=', 'Layer 5')]"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="sub_operating_unit_id"
+                               domain="[('account_id', 'in', [property_account_expense_id])]"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                               attrs="{'required': [('property_account_expense_id', '!=', False)]}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="act_change_name" string="Change Request" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_product_product_wizard" model="ir.actions.act_window">
+        <field name="name">Request for Name Change</field>
+        <field name="res_model">product.product.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_product_product_wizard"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_payment_instruction_form">
+        <field name="name">Payment Instructions</field>
+        <field name="model">payment.instruction</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form edit="0" create="0" delete="0" duplicate="0">
+                <sheet>
+                    <h1>
+                        <field name="code"/>
+                    </h1>
+                    <div class="pull-right" style="padding-top:0px;">
+                        <button name="not_sync" string="Not Sync"
+                                class="btn-danger"
+                                attrs="{'invisible': [('is_sync', '=', True)]}"/>
+                        <button name="sync" string="Synced"
+                                class="btn-success"
+                                attrs="{'invisible': [('is_sync', '=', False)]}"/>
+                        <field name="is_sync" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="invoice_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="partner_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="vendor_bank_acc"/>
+                        </group>
+                        <group>
+                            <field name="instruction_date"/>
+                            <field name="amount"/>
+                            <field name="currency_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Credit Information">
+                            <field name="default_credit_account_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="credit_operating_unit_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="credit_sub_operating_unit_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        </group>
+                        <group string="Debit Information">
+                            <field name="default_debit_account_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="debit_operating_unit_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                            <field name="debit_sub_operating_unit_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        </group>
+                    </group>
+                    <separator string="Response"/>
+                    <field name="cbs_response"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_payment_instruction_tree">
+        <field name="name">Payment Instructions</field>
+        <field name="model">payment.instruction</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="is_sync==False"
+                  decoration-muted="is_sync==True" edit="0" create="0" delete="0" duplicate="0">
+                <field name="code"/>
+                <field name="invoice_id"/>
+                <field name="partner_id"/>
+                <field name="credit_operating_unit_id"/>
+                <field name="debit_operating_unit_id"/>
+                <field name="instruction_date"/>
+                <field name="amount" sum="Total Amount"/>
+                <field name="currency_id"/>
+                <field name="state"/>
+                <button name="not_sync" string="Not Sync" type="action"
+                        icon="fa-times-circle text-danger"
+                        attrs="{'invisible': [('is_sync', '=', True)]}"/>
+                <button name="sync" string="Sync" type="action"
+                        icon="fa fa-check text-success"
+                        attrs="{'invisible': [('is_sync', '=', False)]}"/>
+                <field name="is_sync" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_payment_instruction_search">
+        <field name="name">Payment Instructions</field>
+        <field name="model">payment.instruction</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Move">
+                <field name="code" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
+                <field name="instruction_date"/>
+                <field name="is_sync"/>
+                <field name="default_debit_account_id"/>
+                <field name="default_credit_account_id"/>
+                <field name="vendor_bank_acc"/>
+                <field name="credit_operating_unit_id"/>
+                <field name="debit_operating_unit_id"/>
+                <field name="partner_id"/>
+                <field name="currency_id"/>
+                <filter string="Not Synced"  domain="[('is_sync','=',False)]"/>
+                <filter string="Synced" name="is_sync" domain="[('is_sync','=',True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="By Status" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="act_payment_instruction" model="ir.actions.act_window">
+        <field name="name">Payment Instructions</field>
+        <field name="res_model">payment.instruction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_payment_instruction_search"/>
+        <field name="context">{"search_default_is_sync": 1 }</field>
+        <field name="domain">[('state', '=', 'approved')]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Payment instruction is empty.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_view_payment_instruction_form">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_payment_instruction_form"/>
+        <field name="act_window_id" ref="act_payment_instruction"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_view_payment_instruction_tree">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_payment_instruction_tree"/>
+        <field name="act_window_id" ref="act_payment_instruction"/>
+    </record>
+
+    <menuitem name="Payment Instructions"
+              id="payment_instruction_menu"
+              parent="main_payment_instruction_interface"
+              action="act_payment_instruction"
+              sequence="10"/>
+</odoo>

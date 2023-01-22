@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_inherit_currency_rate_tree" model="ir.ui.view">
+            <field name="name">inherit.res.currency.rate.tree</field>
+            <field name="model">res.currency.rate</field>
+            <field name="inherit_id" ref="base.view_currency_rate_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='rate']" position="replace">
+                    <field name="rate" invisible="1"/>
+                    <field name="reverse_rate"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_inherit_currency_rate_form" model="ir.ui.view">
+            <field name="name">inherit.res.currency.rate.form</field>
+            <field name="model">res.currency.rate</field>
+            <field name="inherit_id" ref="base.view_currency_rate_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='rate']" position="replace">
+                    <field name="reverse_rate"/>
+                    <field name="rate" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

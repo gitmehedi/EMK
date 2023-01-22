@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem id="main_interface" name="Interface" sequence="200"
+              web_icon="account_fam,static/description/icon.png"
+              groups="grp_api_interface_manager,grp_api_group_finance,grp_api_branc_user"/>
+
+    <menuitem id="main_api_interface" name="Interface Settings" sequence="50"
+              web_icon="account_fam,static/description/icon.png" parent="main_interface"
+              groups="grp_api_interface_manager"/>
+
+    <menuitem id="main_error_api_interface" name="Interface Operations" sequence="20"
+              web_icon="account_fam,static/description/icon.png" parent="main_interface"
+              groups="grp_api_interface_manager,grp_api_group_finance,grp_api_branc_user"/>
+
+    <menuitem id="main_payment_instruction_interface" name="Payment Instruction" sequence="100"
+              web_icon="account_fam,static/description/icon.png" parent="account.menu_finance_configuration"
+              groups="grp_api_interface_manager,grp_api_group_finance"/>
+
+</odoo>

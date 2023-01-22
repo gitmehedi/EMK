@@ -1,0 +1,141 @@
+Code,Name,Location of Branch,Active,Pending,Status
+001,Head Office,Urban,True,False,Approved
+002,Principal Branch,Urban,True,False,Approved
+003,Panthapath Branch,Urban,True,False,Approved
+004,Babu Bazar Branch,Urban,True,False,Approved
+005,Agrabad Branch,Urban,True,False,Approved
+006,Sonargaon Branch,Rural,True,False,Approved
+007,Uttara Branch,Rural,True,False,Approved
+008,Progati Sarani Branch,Urban,True,False,Approved
+009,CDA Avenue Branch,Urban,True,False,Approved
+010,Sreenagar Branch,Rural,True,False,Approved
+011,Pallabi Branch,Urban,True,False,Approved
+012,Dilkusha Branch,Urban,True,False,Approved
+013,Khatungonj Branch,Urban,True,False,Approved
+014,Dhanmondi Branch,Urban,True,False,Approved
+015,Aman Bazar Branch,Rural,True,False,Approved
+016,Bashundhara City Branch,Urban,True,False,Approved
+017,Chandra Branch,Urban,True,False,Approved
+018,Jubilee Road Branch,Urban,True,False,Approved
+019,Nazirhat Branch,Rural,True,False,Approved
+020,Chakoria Branch,Rural,True,False,Approved
+021,Pabna Branch,Urban,True,False,Approved
+022,Gulshan Branch,Urban,True,False,Approved
+023,Sylhet Branch,Urban,True,False,Approved
+024,Moulvi Bazar Branch,Urban,True,False,Approved
+025,Savar Branch,Urban,True,False,Approved
+026,Fulbaria Branch,Urban,True,False,Approved
+027,Madaripur Branch,Urban,True,False,Approved
+028,Dholaikhal Branch,Urban,True,False,Approved
+029,Raipur Branch,Urban,True,False,Approved
+030,Aganagar Branch,Rural,True,False,Approved
+031,Joypurhat Branch,Urban,True,False,Approved
+032,Narayangonj Branch,Rural,True,False,Approved
+033,Rangpur Branch,Urban,True,False,Approved
+034,Banani Branch,Urban,True,False,Approved
+035,Kushtia Branch,Urban,True,False,Approved
+036,Gourandi Branch,Rural,True,False,Approved
+037,Tongi Branch,Urban,True,False,Approved
+038,Elephant Road Branch,Urban,True,False,Approved
+039,Feni Branch,Urban,True,False,Approved
+040,Dania Branch,Urban,True,False,Approved
+041,Bogra Branch,Rural,True,False,Approved
+042,Dhorkora Bazar Branch,Rural,True,False,Approved
+043,Mohammadpur Branch,Urban,True,False,Approved
+044,Rajshahi Branch,Urban,True,False,Approved
+045,Alankar mour Branch,Rural,True,False,Approved
+046,MTB Center Corporate Branch,Rural,True,False,Approved
+047,Cox’s Bazar Branch,Rural,True,False,Approved
+048,Chawk Moghaltuli Branch,Urban,True,False,Approved
+049,Jessore Branch,Rural,True,False,Approved
+050,Gazipur Branch,Urban,True,False,Approved
+051,Baridhara Branch,Urban,True,False,Approved
+052,Comilla Branch,Rural,True,False,Approved
+053,Oxygen Mor Branch,Urban,True,False,Approved
+054,Mymensingh Branch,Urban,True,False,Approved
+055,Habigonj Branch,Rural,True,False,Approved
+056,Kerani Hat Branch,Rural,True,False,Approved
+057,Tejgoan Branch,Rural,True,False,Approved
+058,Thakurgaon Branch,Urban,True,False,Approved
+059,Shahparan Gate Branch,Rural,True,False,Approved
+060,Karnaphuli EPZ Branch,Urban,True,False,Approved
+061,Bashundhara Branch,Urban,True,False,Approved
+062,Shah Mokhdum Avenue Branch,Urban,True,False,Approved
+063,Brahmanbaria Branch,Urban,True,False,Approved
+064,Kapasia Branch,Rural,True,False,Approved
+065,Meghna Branch,Rural,True,False,Approved
+066,Khilpara Branch,Rural,True,False,Approved
+067,Kamrangir Char Branch,Urban,True,False,Approved
+068,Kakrail Branch,Urban,True,False,Approved
+069,Narayangonj BSCIC Branch,Rural,True,False,Approved
+070,Naogaon Branch,Urban,True,False,Approved
+071,Gabindaganj Branch,Rural,True,False,Approved
+072,Dinajpur Branch,Urban,True,False,Approved
+073,Chittagong Medical College Branch,Rural,True,False,Approved
+074,Mirpur Branch,Urban,True,False,Approved
+075,Kadair Bazar Branch,Rural,True,False,Approved
+076,Jamirdia Masterbari Branch,Rural,True,False,Approved
+077,Kalurghat Industrial Area Branch,Urban,True,False,Approved
+078,Ashulia Branch,Rural,True,False,Approved
+079,Monipur Bazar Branch,Rural,True,False,Approved
+080,Tangail Branch,Urban,True,False,Approved
+081,Sirajgonj Branch,Rural,True,False,Approved
+082,Dumni Branch,Urban,True,False,Approved
+083,Baraipara Branch,Rural,True,False,Approved
+084,Khulna Branch,Urban,True,False,Approved
+085,Abu Torab Bazar Branch,Rural,True,False,Approved
+086,Muradpur Branch,Urban,True,False,Approved
+087,MTB Tower Branch,Urban,True,False,Approved
+088,Bormi Branch,Rural,True,False,Approved
+089,Bagher Bazar Branch,Rural,True,False,Approved
+090,Barisal Branch,Rural,True,False,Approved
+091,Laldighirpar Branch,Urban,True,False,Approved
+092,Madhabdi Branch,Urban,True,False,Approved
+093,Goalmari Bazar Branch,Rural,True,False,Approved
+094,Malibagh Chowdhurypara,Rural,True,False,Approved
+095,Faridpur Branch,Urban,True,False,Approved
+096,Ulipur Branch,Rural,True,False,Approved
+097,Hemayetpur Branch,Rural,True,False,Approved
+098,Sarkerhat Branch,Rural,True,False,Approved
+099,Card Div,Rural,True,False,Approved
+100,NRB Division,Rural,True,False,Approved
+102,Retail Finance Centre,Rural,True,False,Approved
+103,SME,Rural,True,False,Approved
+104,SWIFT,Rural,True,False,Approved
+105,Syndication & Structural Fin,Rural,True,False,Approved
+106,Treasury Div,Rural,True,False,Approved
+107,Privilege,Rural,True,False,Approved
+108,MITS Dhaka Centre,Rural,True,False,Approved
+109,MITS CTG Centre,Rural,True,False,Approved
+110,Wholesale Banking Division,Rural,True,False,Approved
+111,Cotact Centre,Rural,True,False,Approved
+112,MITS Motijheel Centre,Rural,True,False,Approved
+113,Agent Banking Department,Rural,True,False,Approved
+114,MTB Air Lounge,Rural,True,False,Approved
+115,MTB ADC,Rural,True,False,Approved
+116,OBU,Rural,True,False,Approved
+501,Haidergonj Branch,Rural,True,False,Approved
+502,Dagon Bhuiyan Branch,Rural,True,False,Approved
+503,Laksham Branch,Rural,True,False,Approved
+504,Naria Branch,Rural,True,False,Approved
+505,Kaligonj Branch,Rural,True,False,Approved
+506,Ramchandrapur Branch,Rural,True,False,Approved
+507,Gaffargaon,Rural,True,False,Approved
+508,Ishwardi Branch,Rural,True,False,Approved
+509,Belkuchi Branch,Rural,True,False,Approved
+510,Nazumeah hat Branch,Rural,True,False,Approved
+511,Dhanbari Branch,Rural,True,False,Approved
+512,Hasnabad Branch,Rural,True,False,Approved
+513,Syedpur Branch,Rural,True,False,Approved
+514,Sarulia Bazar Branch,Rural,True,False,Approved
+515,Mawna Branch,Rural,True,False,Approved
+516,Mirpur-2 Branch,Urban,True,False,Approved
+517,Rahattarpool Branch,Urban,True,False,Approved
+518,Monohardi Branch,Rural,True,False,Approved
+519,Joydebpur Branch,Rural,True,False,Approved
+601,Hazrat Shaj.Airport Booth,Rural,True,False,Approved
+701,Kalir Bazar Banking Booth,Rural,True,False,Approved
+702,Feni Hospital Mor Banking Booth,Rural,True,False,Approved
+703,Alimuddin Sarak Banking Booth  Feni,Rural,True,False,Approved
+704,Netaiganj Banking Booth,Rural,True,False,Approved
+901,CTG Divi. Regional Off.,Rural,True,False,Approved

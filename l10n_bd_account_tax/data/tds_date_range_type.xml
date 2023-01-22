@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record model="date.range.type" id="tds_date_range_year">
+        <field name="name">TDS Year</field>
+        <field name="allow_overlap" eval="False"/>
+        <field name="tds_year" eval="True"/>
+    </record>
+    
+</odoo>

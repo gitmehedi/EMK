@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.cron" id="rent_agreement_expire_scheduler">
+            <field name="name">Rent Agreement Expire Scheduler</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall"
+               eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 00:15:00')"/>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'vendor.advance'"/>
+            <field name="function" eval="'action_expire_agreement'"/>
+            <field name="args" eval="'()'" />
+        </record>
+    </data>
+</odoo>

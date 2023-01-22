@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_sub_operating_unit_wizard" model="ir.ui.view">
+        <field name="name">sub.operating.unit.wizard</field>
+        <field name="model">sub.operating.unit.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Proposed">
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="status"/>
+                    </group>
+                    <group>
+                        <field name="all_branch"/>
+                        <field name="inc_branch_ids" widget="many2many_tags"
+                               attrs="{'invisible':[('all_branch','=',True)]}"
+                               options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        <field name="excl_branch_ids" widget="many2many_tags"
+                               attrs="{'invisible':[('all_branch','=',True)]}"
+                               options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="act_change_req" string="Change Request" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sub_operating_unit_wizard" model="ir.actions.act_window">
+        <field name="name">Request for Change</field>
+        <field name="res_model">sub.operating.unit.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_sub_operating_unit_wizard"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequence Records -->
+        <record id="seq_rent_agreement" model="ir.sequence">
+            <field name="name">Rent Agreement</field>
+            <field name="code">rent.agreement</field>
+            <field name="prefix">RA/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field name="padding">5</field>
+            <field name="implementation">no_gap</field>
+        </record>
+
+        <record id="seq_vendor_bill_generation" model="ir.sequence">
+            <field name="name">Vendor Bill Generation</field>
+            <field name="code">vendor.bill.generation</field>
+            <field name="prefix">VBG/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field name="padding">5</field>
+            <field name="implementation">no_gap</field>
+        </record>
+
+    </data>
+</odoo>

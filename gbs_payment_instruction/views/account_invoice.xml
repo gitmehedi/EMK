@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="inherit_invoice_payment_instruction" model="ir.ui.view">
+        <field name="name">inherit.account.invoice.payment.instruction</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <!--<xpath expr="//field[@name='partner_id']" position="attributes">-->
+                <!--<attribute name="domain">[('supplier','=',True),('state','=','approve')]</attribute>-->
+                <!--<attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>-->
+            <!--</xpath>-->
+            <xpath expr="//button[@name='%(account.action_account_invoice_payment)d']" position="replace">
+                <field name="payment_btn_visible" invisible="1"/>
+                <button name="action_payment_instruction" type="object"
+                        attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
+                        string="Payment Instruction" class="oe_highlight" groups="account.group_account_user"/>
+            </xpath>
+            <xpath expr="//notebook/page[2]" position="after">
+                <page string="Payments" attrs="{'invisible': [('state', '=', 'draft')]}">
+                    <field name="payment_line_ids" readonly="1">
+                        <tree string="Payment lines">
+                            <field name="sequence" widget="handle"/>
+                            <field name="code"/>
+                            <field name="instruction_date"/>
+                            <field name="partner_id"/>
+                            <field name="amount"/>
+                            <field name="default_debit_account_id"/>
+                            <field name="debit_sub_operating_unit_id"/>
+                            <field name="debit_operating_unit_id"/>
+                            <field name="vendor_bank_acc"/>
+                            <field name="default_credit_account_id"/>
+                            <field name="credit_sub_operating_unit_id"/>
+                            <field name="credit_operating_unit_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="state" string="Status"/>
+                            <field name="is_sync" invisible="1"/>
+                            <button name="sync" string="Sync" type="action"
+                                    icon="fa fa-check text-success"
+                                    attrs="{'invisible': [('is_sync', '=', False)]}"/>
+                            <button name="not_sync" string="Not Sync" type="action"
+                                    icon="fa-times-circle text-danger"
+                                    attrs="{'invisible': [('is_sync', '=', True)]}"/>
+                        </tree>
+                        <form string="Payment">
+                            <group>
+                                <group>
+                                    <field name="invoice_id"/>
+                                    <field name="instruction_date"/>
+                                    <field name="partner_id"/>
+                                </group>
+                                <group>
+                                    <field name="amount"/>
+                                    <field name="currency_id"/>
+                                    <field name="is_sync" invisible="1"/>
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                    <group>
+                        <group></group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="total_payment_amount" class="oe_subtotal_footer_separator"
+                                   widget="monetary"/>
+                            <field name="total_payment_approved" class="oe_subtotal_footer_separator"
+                                   widget="monetary"/>
+                            <field name="payment_approver" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <!--<xpath expr="//notebook/page[1]/field/tree/field[@name='product_id']" position="attributes">-->
+                <!--<attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>-->
+                <!--<attribute name="domain">[('type','in',('service','consu'))]</attribute>-->
+                <!--<attribute name="required">1</attribute>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//notebook/page[1]/field/tree/field[@name='analytic_tag_ids']" position="attributes">-->
+                <!--<attribute name="invisible">True</attribute>-->
+                <!--<attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//notebook/page[2]/group/group/field[@name='journal_id']" position="attributes">-->
+                <!--<attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>-->
+                <!--<attribute name="readonly">True</attribute>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//notebook/page[2]/group/group/field[@name='date']" position="attributes">-->
+                <!--<attribute name="invisible">True</attribute>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//notebook/page[2]/group/group/field[@name='user_id']" position="attributes">-->
+                <!--<attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>-->
+                <!--<attribute name="readonly">True</attribute>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//notebook/page[2]/group/group/field[@name='account_id']" position="attributes">-->
+                <!--<attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>-->
+                <!--<attribute name="invisible">True</attribute>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//notebook/page[2]/group/group/field[@name='account_id']" position="after">-->
+                <!--<field name="vendor_account_id" readonly="1"-->
+                       <!--options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//field[@name='fiscal_position_id']" position="attributes">-->
+                <!--<attribute name="groups">base.group_system</attribute>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//field[@name='date']" position="after">-->
+                <!--&lt;!&ndash;<field name="provisional_expense"/>&ndash;&gt;-->
+                <!--<field name="merged_bill" groups="base.group_system"/>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//field[@name='date_due']" position="attributes">-->
+                <!--<attribute name="groups">base.group_system</attribute>-->
+            <!--</xpath>-->
+            <!--<xpath expr="//field[@name='tax_line_ids']" position="after">-->
+                <!--<label for="provisional_expense"/>-->
+                <!--<field name="provisional_expense"/>-->
+            <!--</xpath>-->
+        </field>
+    </record>
+
+    <record id="inherit_asset_invoice_payment_instruction" model="ir.ui.view">
+        <field name="name">inherit.asset.vendor.bill.payment.instruction</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account_fam.asset_account_invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_invoice_open']" position="after">
+                <field name="payment_btn_visible" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_payment_instruction']" position="attributes">
+                <attribute name="attrs">{'invisible': [('payment_btn_visible', '=', False)]}</attribute>
+            </xpath>
+
+            <xpath expr="//notebook/page[2]" position="after">
+                <page string="Payments" attrs="{'invisible': [('state', '=', 'draft')]}">
+                    <field name="payment_line_ids" readonly="1">
+                        <tree string="Payment lines">
+                            <field name="sequence" widget="handle"/>
+                            <field name="code"/>
+                            <field name="instruction_date"/>
+                            <field name="partner_id"/>
+                            <field name="amount"/>
+                            <field name="default_debit_account_id"/>
+                            <field name="debit_sub_operating_unit_id"/>
+                            <field name="debit_operating_unit_id"/>
+                            <field name="vendor_bank_acc"/>
+                            <field name="default_credit_account_id"/>
+                            <field name="credit_sub_operating_unit_id"/>
+                            <field name="credit_operating_unit_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="state" string="Status"/>
+                            <field name="is_sync" invisible="1"/>
+                            <button name="sync" string="Sync" type="action"
+                                    icon="fa fa-check text-success"
+                                    attrs="{'invisible': [('is_sync', '=', False)]}"/>
+                            <button name="not_sync" string="Not Sync" type="action"
+                                    icon="fa-times-circle text-danger"
+                                    attrs="{'invisible': [('is_sync', '=', True)]}"/>
+                        </tree>
+                        <form string="Payment">
+                            <group>
+                                <group>
+                                    <field name="invoice_id"/>
+                                    <field name="instruction_date"/>
+                                    <field name="partner_id"/>
+                                </group>
+                                <group>
+                                    <field name="amount"/>
+                                    <field name="currency_id"/>
+                                    <field name="is_sync" invisible="1"/>
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                    <group>
+                        <group></group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="total_payment_amount" class="oe_subtotal_footer_separator"
+                                   widget="monetary"/>
+                            <field name="total_payment_approved" class="oe_subtotal_footer_separator"
+                                   widget="monetary"/>
+                            <field name="payment_approver" invisible="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

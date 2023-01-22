@@ -1,0 +1,3250 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema elementFormDefault="qualified" targetNamespace="http://TCS.BANCS.Adapter/BANCSSchema" version="1.0" xmlns:tns="http://TCS.BANCS.Adapter/BANCSSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="1.0">
+
+  <xs:element name="BANCSTALK" type="tns:BANCSTALK"/>
+
+  <xs:complexType name="UsrDetailInqRq_Type">
+    <xs:sequence>
+      <xs:element name="RqHeader" type="tns:RqHeader_Type"/>
+      <xs:element name="Data" type="tns:UsrDetailInqRqData_Type"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="RqHeader_Type"> 
+    <xs:sequence>
+       	 <xs:element name="Filler1" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="MsgLen" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="4"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Filler2" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="MsgTyp" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	<xs:element name="Filler3" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="4"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+        <xs:element name="CycNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="6"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="MsgNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="6"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SegNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SegNum2" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="FrontEndNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TermlNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="6"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+		<xs:element name="InstNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchNum" minOccurs="1" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="WorkstationNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TellerNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TranNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="JrnlNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="HdrDt" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="4"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Filler4" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Filler5" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Filler6" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Flag1" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag2" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag3" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag4" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Flag5" minOccurs="1" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Flag6" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Flag7" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+           <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="SprvsrID" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="SupDate" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="CheckerID1" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	 <xs:element name="ParentBlinkJrnlNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CheckerID2" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BlinkJrnlNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="UUIDSource" minOccurs="1" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="UUIDNUM" minOccurs="1" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="32"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="UUIDSeqNo" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>	
+    </xs:sequence> 
+</xs:complexType> 
+
+  <xs:complexType name="UsrDetailInqRqData_Type">
+   <xs:sequence>
+    <xs:element  name="Func" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="1"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="EffDt" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="8"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="Instn" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="999"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="UsrNum" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="9999999"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+   </xs:sequence>
+</xs:complexType>
+
+
+  <xs:complexType name="UsrDetailInqRs_Type">
+    <xs:sequence>
+      <xs:element name="RsHeader" type="tns:RsHeader_Type"/>
+      <xs:element minOccurs="0" name="Stat" type="tns:RSOutput_Type"/>
+      <xs:element minOccurs="0" name="UsrDetailInqData" type="tns:UsrDetailInqRsData_Type"/>
+      
+    </xs:sequence>
+  </xs:complexType>
+
+ <xs:complexType name="RsHeader_Type"> 
+    <xs:sequence>
+	 <xs:element name="Filler1" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="MsgLen" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Filler2" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="MsgTyp" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	<xs:element name="Filler3" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CycNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="MsgNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SegNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="FrntEndNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TermlNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="InstNum" minOccurs="1" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchNum" minOccurs="1" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="WorkstationNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TellerNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TrnNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="6"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="JrnlNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RsHdrDt" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="4"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Filler4" minOccurs="0" >
+         <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Filler5" minOccurs="0" >
+         <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Filler6" minOccurs="0" >
+         <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	 <xs:element name="Flag1" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag2" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag3" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag4" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Flag5" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="Filler9" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="87"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="OutputType" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+      </xs:sequence> 
+</xs:complexType> 
+
+	<xs:complexType name="RSReceiptPrintData_Type"> 
+    <xs:sequence>
+    	<xs:element name="Name1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+        <xs:element name="PrtId" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BankName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchAddr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchAddr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchAddr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchPhn" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="12"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchFax" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="12"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchSwift" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchEmail" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AppName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AppAddr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AppAddr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AppAddr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AppAddr4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BnfcryName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BnfcryAddr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BnfcryAddr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BnfcryAddr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BnfcryPlace" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SecBnfcryName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SecBnfcryAddr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SecBnfcryAddr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SecBnfcryAddr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SecBnfcryAddr4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TrnDt" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Dt1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Dt2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Dt3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Dt4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt6" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt7" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt8" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt9" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt10" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt11" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt12" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt13" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt14" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt15" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RefNum1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="16"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RefNum2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="16"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RefNum3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="16"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RefNum4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="16"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RefNum5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="16"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Cur1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Cur2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Cur3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>	
+	<xs:element name="XchgRate6" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate7" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate8" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank1Name" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank1Addr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank1Addr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank1Addr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CorrMedium" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank2Name" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank2Addr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank2Addr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank2Addr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank2CorrMedium" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="PstvTlrnc" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="NgtvTlrnc" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AmendNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TenorTyp" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="6"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Int1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TxtArea1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="100"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="GdsDescptn" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="200"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TenorDay" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Place1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="300"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="PortCode" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1000"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ShipmentFrom" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ShipmentPeriod" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="100"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Misc1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail6" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail7" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Charges" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Days" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail8" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail9" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail10" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TxtArea2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="500"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TxtArea3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="150"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TxtArea4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="150"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="EmailFlag" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CustEmailId" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CustNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="17"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Name2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="UsrId" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="JrnlNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Dt" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Hh" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Min" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Scnd" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Mnem" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="4"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bal" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BaseAmt" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BaseCurCode" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SwiftRef" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BaseFCA" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CurCode" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="7"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchName1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Descptn" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="12"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AmtWord" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="200"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctTyp" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="4"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="IntCat" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="4"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+    </xs:sequence> 
+</xs:complexType>
+<xs:complexType name="RSOutput_Type"> 
+    <xs:sequence> 
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="passbook" type="tns:RSPassbookData_Type" />
+			<xs:element minOccurs="0" name="ErrorMessage"
+				type="tns:RSErrorMessageData_Type" />
+			<xs:element minOccurs="0" name="SupervisorMessage"
+				type="tns:RSSupervisorMessageData_Type" />
+			<xs:element minOccurs="0" name="OkMessage" type="tns:RSOkMessageData_Type" />
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="ReceiptPrint"
+				type="tns:RSReceiptPrintData_Type" />
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="PassbookCover"
+				type="tns:RSPBookCoverPrnData_Type" />
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="ReceiptPrintTF"
+				type="tns:RSReceiptPrintTFData_Type" />
+    </xs:sequence> 
+ </xs:complexType> 
+<xs:complexType name="RSPassbookData_Type"> 
+    <xs:sequence>
+        <xs:element name="Dt1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchNum1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="UsrId" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="WdlAmt" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="DepAmt" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ChqCreditAmt" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ChqDebitAmt" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bal" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BalEur" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CurCodeEur" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Mnem" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="6"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="FcaCurCode" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="FcaCurCodeNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Narr" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TrnAmt" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RecTyp" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Filler1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="17"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="PenRate" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="7"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TypRate" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RateMnem" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="PenDay" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="4"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="PenTyp" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Filler2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="PenMnem" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+   </xs:sequence> 
+</xs:complexType>
+   <xs:complexType name="RSErrorMessageData_Type"> 
+    <xs:sequence>  
+        <xs:element name="SupOverRide" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ErrorCode" minOccurs="1" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ErrorMessage" minOccurs="1" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="100"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+    </xs:sequence> 
+ </xs:complexType> 
+ <xs:complexType name="RSSupervisorMessageData_Type"> 
+    <xs:sequence>
+        <xs:element name="ErrMsg" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="91"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Capblty" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="OvrrdNum" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ErrCode" minOccurs="0" >
+          <xs:simpleType >
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+   </xs:sequence> 
+</xs:complexType>
+  <xs:complexType name="RSOkMessageData_Type"> 
+    <xs:sequence> 
+        <xs:element name="RcptData" minOccurs="1" >
+         <xs:simpleType >
+	 <xs:restriction base="xs:string">
+         <xs:maxLength value="80"/>
+         </xs:restriction>
+         </xs:simpleType>
+        </xs:element>
+	 <xs:element name="Filler2" minOccurs="0" >
+         <xs:simpleType >
+	 <xs:restriction base="xs:string">
+         <xs:maxLength value="10"/>
+         </xs:restriction>
+         </xs:simpleType>
+        </xs:element>
+	<xs:element name="CustNum" minOccurs="0" >
+         <xs:simpleType >
+	 <xs:restriction base="xs:string">
+         <xs:maxLength value="18"/>
+         </xs:restriction>
+         </xs:simpleType>
+        </xs:element>
+	<xs:element name="Filler1" minOccurs="1" >
+         <xs:simpleType >
+	 <xs:restriction base="xs:string">
+         <xs:maxLength value="4"/>
+         </xs:restriction>
+         </xs:simpleType>
+        </xs:element>
+	<xs:element name="AcctNum" minOccurs="0" >
+         <xs:simpleType >
+	 <xs:restriction base="xs:string">
+         <xs:maxLength value="18"/>
+         </xs:restriction>
+         </xs:simpleType>
+        </xs:element>
+    </xs:sequence>
+ </xs:complexType>
+ <xs:complexType name="RSPBookCoverPrnData_Type"> 
+    <xs:sequence> 
+         <xs:element name="AcctNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctTyp" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Cur" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Brch" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="9999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	 </xs:element>
+	 <xs:element name="FullName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="60"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Addr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Addr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Addr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="PstCode" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="State" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ProdDesc" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Name1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Name2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BaseAcct" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="PhnNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="12"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="IdTyp" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="4"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="IdNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="24"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CustNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="UsrId" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="FullName1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="60"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ShortName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="60"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="JointName1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="60"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="JointName2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="60"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="JointName3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="60"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="JointName4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="60"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element> 
+    </xs:sequence> 
+</xs:complexType>
+  <xs:complexType name="RSReceiptPrintTFData_Type"> 
+    <xs:sequence>
+    	<xs:element name="Name1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+        <xs:element name="PrtId" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BankName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchAddr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchAddr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchAddr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchPhn" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="12"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchFax" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="12"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchSwift" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BrchEmail" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AppName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AppAddr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AppAddr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AppAddr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AppAddr4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BnfcryName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BnfcryAddr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BnfcryAddr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BnfcryAddr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="BnfcryPlace" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SecBnfcryName" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SecBnfcryAddr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SecBnfcryAddr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SecBnfcryAddr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="SecBnfcryAddr4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TrnDt" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Dt1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Dt2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Dt3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Dt4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="8"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt6" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt7" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt8" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt9" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt10" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt11" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt12" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt13" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt14" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Amt15" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="19"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RefNum1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="16"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RefNum2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="16"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RefNum3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="16"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RefNum4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="16"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="RefNum5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="16"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Cur1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Cur2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Cur3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate6" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate7" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="XchgRate8" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="11"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AcctNum5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="99999999999999999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank1Name" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank1Addr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank1Addr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank1Addr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CorrMedium" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank2Name" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank2Addr1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank2Addr2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank2Addr3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Bank2CorrMedium" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="5"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="PstvTlrnc" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="NgtvTlrnc" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="AmendNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TenorTyp" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="6"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Int1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="9"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TxtArea1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="100"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="GdsDescptn" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="200"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TenorDay" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="999"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Place1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="300"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="PortCode" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Flag5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="2"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1000"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ShipmentFrom" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="ShipmentPeriod" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="100"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Misc1" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="30"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail5" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail6" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail7" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Charges" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="40"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Days" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="3"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail8" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="10"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail9" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="Detail10" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="20"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TxtArea2" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="500"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TxtArea3" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="150"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="TxtArea4" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="150"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="EmailFlag" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="1"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CustEmailId" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="50"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+	<xs:element name="CustNum" minOccurs="0" >
+          <xs:simpleType>
+          <xs:restriction base="xs:string">
+          <xs:maxLength value="17"/>
+	  </xs:restriction>
+	  </xs:simpleType>
+	</xs:element>
+    </xs:sequence> 
+  </xs:complexType>
+
+  <xs:complexType name="UsrDetailInqRsData_Type">
+   <xs:sequence>
+    <xs:element  name="Func" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="1"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="EffDt" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="8"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="Inst" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="999"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="UsrNo" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="9999999"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="Stat" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="9"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="UsrName" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="20"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="GrpNum" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="99"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="CapbltyNo" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="99"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="ForeignCurr" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="3"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="Lbl3" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="3"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="Lbl2" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="3"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="Lbl4" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="3"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="Lbl1" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="3"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="ElectMailLvl" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="99"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="DataSecCode" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="99"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="BrnchNum" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="99999"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="SuprvsrUsrNo" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="9999999"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="UsrAbsntRsn" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="9"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="UsrSec" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="6"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="TemplateCode" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="8"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="UsrCode" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="2"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="LmtMntrFlag" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="1"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="SecuGrpLvl" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="9999999"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="CustNum" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="99999999999999999"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="ProfileStrtDt" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="8"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="ProfileEndDt" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="8"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="AddLoginAuthEnabled" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="1"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="AddLoginAuthDt" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="8"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="AddAuthType" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="3"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="AddAuthKey" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="3"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="MobNum" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="999999999999"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="PswdSetDt" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="8"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="PswdSetTime" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="8"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="TermId" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="3"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="StaffAccStat" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:string">
+   <xs:maxLength value="1"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element  name="StaffNo" minOccurs="0">
+    <xs:simpleType>
+    <xs:annotation>
+    <xs:documentation>
+    </xs:documentation>
+    </xs:annotation>
+  <xs:restriction base="xs:integer">
+   <xs:minInclusive value="0"/>
+   <xs:maxInclusive value="99999999999"/>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+   </xs:sequence>
+</xs:complexType>
+
+
+  <xs:complexType name="SvcRq_Type">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="UsrDetailInqRq" type="tns:UsrDetailInqRq_Type"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SvcRs_Type">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="UsrDetailInqRs" type="tns:UsrDetailInqRs_Type"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BANCSTALK">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="SvcRq" type="tns:SvcRq_Type"/>
+      <xs:element minOccurs="0" name="SvcRs" type="tns:SvcRs_Type"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

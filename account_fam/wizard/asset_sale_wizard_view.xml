@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="asset_sale_wizard_form">
+        <field name="name">asset.sale.wizard</field>
+        <field name="model">asset.sale.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Asset Sale">
+                <field name="branch_id" invisible="1"/>
+                <field name="asset_ids"
+                       domain="[('state', '=', 'open'), ('depreciation_flag', '=', True), ('current_branch_id', '=', branch_id)]">
+                    <tree string="Assets"
+                          decoration-info="(state == 'open') and (allocation_status == False)"
+                          decoration-success="(state == 'open') and (allocation_status == True)"
+                          decoration-danger="(depreciation_flag == True) and (state == 'open') and (allocation_status == True)"
+                          decoration-muted="(state == 'close')">
+                        <field name="asset_seq"/>
+                        <field name="name"/>
+                        <field name="category_id"/>
+                        <field name="asset_type_id"/>
+                        <field name="current_branch_id"/>
+                        <field name="cost_centre_id"/>
+                        <field name="asset_usage_date"/>
+                        <field name="lst_depr_date"/>
+                        <field name="value" sum="value"/>
+                        <field name="value_residual" sum="value_residual"/>
+                        <field name="accumulated_value" sum="accumulated_value"/>
+                        <field name="lst_depr_amount" sum="depr_base_value"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                        <field name="company_id" groups="base.group_multi_company" invisible="True"/>
+                        <field name="depreciation_flag" invisible="True"/>
+                        <field name="state"/>
+                        <field name="allocation_status" invisible="True"/>
+                        <button name="allocation_status2" icon="fa-times-circle text-danger"
+                                attrs="{'invisible': [('allocation_status', '=', True)]}"/>
+                        <button name="allocation_status1" icon="fa fa-check text-success"
+                                attrs="{'invisible': [('allocation_status', '=', False)]}"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="sale" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_asset_sale_wizard" model="ir.actions.act_window">
+        <field name="name">Fixed Assets Sale</field>
+        <field name="res_model">asset.sale.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="asset_sale_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,5 @@
+Type,Account No,Amount,Narration,Reference No,Value,Date
+credit_dep,11206001,47250,Credit Department,Ref 2,,06/30/19
+debit_dep,12103001,57500,Debit Department,Ref 1,,07/02/19
+backdated_credit,12106001,462000,Backdated entry,Ref 3,,06/27/19
+debit_loan,12202001,279000,Loan,Ref 4,,07/02/19

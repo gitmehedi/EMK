@@ -1,0 +1,9 @@
+Name,Code,Journal,Asset Account,Asset Awaiting Allocation,Depreciation Exp. A/C,Accumulated Depreciation A/C,Asset Loss A/C,Asset Gain A/C,Asset Awaiting Disposal,Asset Life (In Year),One Entry (In Month),Computation Method,Degressive Factor,is_custom_depr,Active,Pending,State
+Building,20,Vendor Bill,11201001,11205001,11203003,11201001,11202001,11204001,11204001,1,1,Reducing Method,0.025,True,TRUE,FALSE,approve
+Fixture,21,Vendor Bill,11201001,11205001,11203003,11201001,11202001,11204001,11204001,1,1,Reducing Method,0.025,True,TRUE,FALSE,approve
+Furniture,22,Vendor Bill,11201001,11205001,11203003,11201001,11202001,11204001,11204001,1,1,Reducing Method,0.025,True,TRUE,FALSE,approve
+Computers & Peripherals,23,Vendor Bill,11201001,11205001,11203003,11201001,11202001,11204001,11204001,1,1,Reducing Method,0.025,True,TRUE,FALSE,approve
+Electric Equipment,24,Vendor Bill,11201001,11205001,11203003,11201001,11202001,11204001,11204001,1,1,Reducing Method,0.025,True,TRUE,FALSE,approve
+Office Equipment,25,Vendor Bill,11201001,11205001,11203003,11201001,11202001,11204001,11204001,1,1,Reducing Method,0.025,True,TRUE,FALSE,approve
+Intangible Asset,26,Vendor Bill,11201001,11205001,11203003,11201001,11202001,11204001,11204001,1,1,Reducing Method,0.025,True,TRUE,FALSE,approve
+Motor Vehicles,27,Vendor Bill,11201001,11205001,11203003,11201001,11202001,11204001,11204001,5,1,Straight Line/Linear,0.025,True,TRUE,FALSE,approve

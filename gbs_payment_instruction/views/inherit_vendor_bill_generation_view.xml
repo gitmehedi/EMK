@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="inherit_vendor_bill_generation_form" model="ir.ui.view">
+        <field name="name">inherit.vendor.bill.generation.form</field>
+        <field name="model">vendor.bill.generation</field>
+        <field name="inherit_id" ref="rent_agreement.vendor_bill_generation_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_bill_validate']" position="after">
+                <field name="approve_payment_button_visible" invisible="1"/>
+                <button string="Payment Instruction" name="action_payment" type="object"
+                        class="oe_highlight" states="bill_validate" groups="account.group_account_manager"/>
+                <button string="Approve Payment" name="action_approve_payment" type="object" groups="account.group_account_manager"
+                        class="oe_highlight" attrs="{'invisible': [('approve_payment_button_visible', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('line_ids', '=', []), ('state', 'in', ('confirm', 'approve', 'bill_generate', 'bill_validate', 'payment_done', 'cancel', 'payment_approve'))]}</attribute>
+            </xpath>
+            <xpath expr="//notebook/page/field/tree/field[@name='move_id']" position="after">
+                <field name="payment_instruction_id" readonly="1"/>
+                <field name="payment_instruction_state" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_vendor_bill_generation_tree" model="ir.ui.view">
+        <field name="name">inherit.vendor.bill.generation.tree</field>
+        <field name="model">vendor.bill.generation</field>
+        <field name="inherit_id" ref="rent_agreement.vendor_bill_generation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-primary">state=='draft'</attribute>
+                <attribute name="decoration-info">state=='confirm'</attribute>
+                <attribute name="decoration-success">state in ('bill_generate', 'bill_validate', 'payment_done', 'payment_approve')</attribute>
+                <attribute name="decoration-muted">state=='cancel'</attribute>
+                <attribute name="decoration-bf">state in ('confirm', 'bill_generate', 'bill_validate', 'payment_done', 'payment_approve')</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_vendor_bill_generation_search" model="ir.ui.view">
+        <field name="name">inherit.vendor.bill.generation.search</field>
+        <field name="model">vendor.bill.generation</field>
+        <field name="inherit_id" ref="rent_agreement.vendor_bill_generation_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='cancelled']" position="after">
+                <seperator/>
+                <filter name="payment_generated" string="Payment Generated" domain="[('state', '=', 'payment_done')]"/>
+                <seperator/>
+                <filter name="payment_approved" string="Payment Approved" domain="[('state', '=', 'payment_approve')]"/>
+                <seperator/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="action_trial_balance_exc" model="ir.actions.act_window">
+        <field name="name">Trial Balance (Exclude)</field>
+        <field name="res_model">account.balance.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_is_tb_exc': True}</field>
+        <field name="view_id" ref="account_report_balance_inherit_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_trial_balance_exc_report"
+              name="Trial Balance (Excl GL)"
+              parent="account.menu_finance_reports"
+              action="action_trial_balance_exc"
+              groups="account_mtbl.group_tb_user"
+              sequence="10"/>
+</odoo>

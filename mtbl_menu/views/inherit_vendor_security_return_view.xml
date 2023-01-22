@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_vendor_security_return_view_draft" model="ir.actions.act_window">
+        <field name="name">Vendor Security Return</field>
+        <field name="res_model">vendor.security.return</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="vendor_security_deposit.vendor_security_return_search"/>
+        <field name="domain">[('state', 'in', ('draft', 'cancel'))]</field>
+        <field name="context">{'search_default_state':0}</field>
+    </record>
+
+    <record id="action_vendor_security_return_view_confirm" model="ir.actions.act_window">
+        <field name="name">Vendor Security Return</field>
+        <field name="res_model">vendor.security.return</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="vendor_security_deposit.vendor_security_return_search"/>
+        <field name="domain">[('state', '=', 'confirm')]</field>
+        <field name="context">{'search_default_state':0}</field>
+    </record>
+
+    <record id="action_vendor_security_return_view_approve" model="ir.actions.act_window">
+        <field name="name">Vendor Security Return</field>
+        <field name="res_model">vendor.security.return</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="vendor_security_deposit.vendor_security_return_search"/>
+        <field name="domain">[('state', '=', 'approve'), ('amount_due', '&gt;', 0)]</field>
+        <field name="context">{'search_default_state':0}</field>
+    </record>
+
+    <record id="action_vendor_security_return_view_approve_paid" model="ir.actions.act_window">
+        <field name="name">Vendor Security Return</field>
+        <field name="res_model">vendor.security.return</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="vendor_security_deposit.vendor_security_return_search"/>
+        <field name="domain">[('state', '=', 'approve'), ('amount_due', '&lt;=', 0)]</field>
+        <field name="context">{'search_default_state':0}</field>
+    </record>
+
+    <menuitem id="menu_vendor_security_return_parent" name="Vendor Security Returns"
+                  parent="account.menu_finance"
+                  sequence="9" groups="base.group_vendor_advance_user"/>
+
+    <menuitem id="vendor_security_deposit.menu_vendor_security_return" name="VS Returns (Draft)"
+                  parent="menu_vendor_security_return_parent" action="action_vendor_security_return_view_draft"
+                  sequence="1" groups="base.group_vendor_advance_user"/>
+
+    <menuitem id="menu_vendor_security_return_confirm" name="VS Returns (Approval)"
+                  parent="menu_vendor_security_return_parent" action="action_vendor_security_return_view_confirm"
+                  sequence="2" groups="base.group_vendor_advance_user"/>
+
+    <menuitem id="menu_vendor_security_return_approve" name="VS Returns (Payment)"
+                  parent="menu_vendor_security_return_parent" action="action_vendor_security_return_view_approve"
+                  sequence="3" groups="base.group_vendor_advance_user"/>
+
+    <menuitem id="menu_vendor_security_return_approve_paid" name="VS Returns (Paid)"
+                  parent="menu_vendor_security_return_parent" action="action_vendor_security_return_view_approve_paid"
+                  sequence="3" groups="base.group_vendor_advance_user"/>
+</odoo>

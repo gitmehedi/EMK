@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="vendor_security_deposit_action_approve" model="ir.actions.act_window">
+            <field name="name">Vendor Security Deposit</field>
+            <field name="res_model">vendor.security.deposit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'approve')]</field>
+            <field name="context">{'search_default_state':0}</field>
+            <field name="search_view_id" ref="vendor_security_deposit.vendor_security_deposit_search"/>
+        </record>
+
+        <record id="vendor_security_deposit_action_closed" model="ir.actions.act_window">
+            <field name="name">Vendor Security Deposit</field>
+            <field name="res_model">vendor.security.deposit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', 'in', ('done', 'inactive'))]</field>
+            <field name="context">{'search_default_state':0}</field>
+            <field name="search_view_id" ref="vendor_security_deposit.vendor_security_deposit_search"/>
+        </record>
+
+        <menuitem id="Vendor_security_deposit_menu_parent" name="Vendor Security Deposits"
+                  sequence="8" groups="base.group_vendor_advance_user"
+                  parent="account.menu_finance"/>
+
+        <menuitem id="vendor_security_deposit.Vendor_security_deposit_menu" action="vendor_security_deposit_action_approve"
+                  name="VS Deposits (Approved)" sequence="1" groups="base.group_vendor_advance_user"
+                  parent="Vendor_security_deposit_menu_parent"/>
+
+        <menuitem id="Vendor_security_deposit_menu_closed" action="vendor_security_deposit_action_closed"
+                  name="VS Deposits (Closed)" sequence="2" groups="base.group_vendor_advance_user"
+                  parent="Vendor_security_deposit_menu_parent"/>
+</odoo>

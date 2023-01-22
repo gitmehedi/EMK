@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_account_tax_mng,access_account_tax_mng,base_vat_bd.model_account_tax,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_account_tax_usr,access_account_tax_usr,base_vat_bd.model_account_tax,account.group_account_user,1,1,1,0
+
+access_history_account_tax_mng,access_history_account_tax_mng,base_vat_bd.model_history_account_tax,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_history_account_tax_usr,access_history_account_tax_usr,base_vat_bd.model_history_account_tax,account.group_account_user,1,1,1,0
+
+access_account_tax_wizard_mng,access_account_tax_wizard_mng,base_vat_bd.model_account_tax_wizard,mtbl_access.group_mtbl_sys_admin,1,1,1,1
+access_account_tax_wizard_usr,access_account_tax_wizard_usr,base_vat_bd.model_account_tax_wizard,account.group_account_user,1,1,1,0

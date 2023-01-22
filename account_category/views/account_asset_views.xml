@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_view_account_asset_asset_form" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.form</field>
+        <field name="model">account.asset.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group/group/field[@name='category_id']" position="replace">
+                <field name="category_id" string="Asset Type" readonly="True"
+                       domain="[('type', '=', 'purchase'),('parent_id', '=',False)]"
+                       context="{'default_type': 'purchase'}"
+                       options="{'no_create':True,'no_create_edit':True}"/>
+                <field name="asset_type_id" readonly="True"
+                       domain="[('type', '=', 'purchase'),('parent_id', '!=',False)]"
+                       context="{'default_type': 'purchase'}"
+                       attrs="{'required': [('category_id','!=',False)]}"
+                       options="{'no_create':True,'no_create_edit':True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_account_asset_search" model="ir.ui.view">
+        <field name="model">account.asset.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="asset_type_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

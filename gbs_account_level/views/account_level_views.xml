@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_account_layer_tree" model="ir.ui.view">
+        <field name="name">account.account.level</field>
+        <field name="model">account.account.level</field>
+        <field name="arch" type="xml">
+            <tree string="Account Level" editable="bottom">
+                <field name="name"/>
+                <field name="parent_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <field name="size"/>
+                <field name="prefix"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_account_account_lavel" model="ir.actions.act_window">
+        <field name="name">Account Level</field>
+        <field name="res_model">account.account.level</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to start a new Account Level.
+            </p>
+        </field>
+    </record>
+
+</odoo>

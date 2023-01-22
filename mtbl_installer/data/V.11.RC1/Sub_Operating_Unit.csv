@@ -1,0 +1,69 @@
+Code,Name,Product,Active,Pending,Status
+101,Office,Land,TRUE,FALSE,approve
+101,Office,Building,TRUE,FALSE,approve
+,,,,,
+,,,,,
+,,,,,
+101,Office,Furniture,TRUE,FALSE,approve
+301,Kiosk,Furniture,TRUE,FALSE,approve
+101,Office,Electrical Equipments,TRUE,FALSE,approve
+201,ATM,Electrical Equipments,TRUE,FALSE,approve
+101,Office,Other Office Equipments (except Computers),TRUE,FALSE,approve
+201,ATM,Other Office Equipments (except Computers),TRUE,FALSE,approve
+301,Kiosk,Other Office Equipments (except Computers),TRUE,FALSE,approve
+601,POS,Other Office Equipments (except Computers),TRUE,FALSE,approve
+101,Office,Computers & Peripherals,TRUE,FALSE,approve
+002,Commission,Misc Expenses for DST employees,TRUE,FALSE,approve
+101,Office,Rent,TRUE,FALSE,approve
+201,ATM,Rent,TRUE,FALSE,approve
+301,Kiosk,Rent,TRUE,FALSE,approve
+401,Godown,Rent,TRUE,FALSE,approve
+501,Residential,Rent,TRUE,FALSE,approve
+101,Office,VAT on Rent,TRUE,FALSE,approve
+201,ATM,VAT on Rent,TRUE,FALSE,approve
+301,Kiosk,VAT on Rent,TRUE,FALSE,approve
+401,Godown,VAT on Rent,TRUE,FALSE,approve
+501,Residential Premises,VAT on Rent,TRUE,FALSE,approve
+101,Office,Insurance,TRUE,FALSE,approve
+201,ATM,Insurance,TRUE,FALSE,approve
+202,ATM 2,Insurance,TRUE,FALSE,approve
+301,Kiosk,Insurance,TRUE,FALSE,approve
+401,Godown,Insurance,TRUE,FALSE,approve
+101,Office,Electicity Charges,TRUE,FALSE,approve
+201,ATM,Electicity Charges,TRUE,FALSE,approve
+301,Kiosk,Electicity Charges,TRUE,FALSE,approve
+501,Residence,Electicity Charges,TRUE,FALSE,approve
+101,Office,Fuel for Generator,TRUE,FALSE,approve
+101,Office,WASA Bill (Office),TRUE,FALSE,approve
+501,residence,WASA Bill (Residence),TRUE,FALSE,approve
+101,Office,Security/Auxiliary Services,TRUE,FALSE,approve
+201,ATM,Security/Auxiliary Services,TRUE,FALSE,approve
+301,Kiosk,Security/Auxiliary Services,TRUE,FALSE,approve
+101,Office,Monthly Wages of Cleaner,TRUE,FALSE,approve
+101,Office,Cash Carrying / Loading Expenses,TRUE,FALSE,approve
+201,ATM,Cash Carrying / Loading Expenses,TRUE,FALSE,approve
+301,Kiosk,Cash Carrying / Loading Expenses,TRUE,FALSE,approve
+101,Office,Misc exp. On Office Maintenance,TRUE,FALSE,approve
+101,office,Tree Plants Expenses,TRUE,FALSE,approve
+101,Office,Drinking Water Expenses,TRUE,FALSE,approve
+101,Office,Material Purchase For Upkeep of Bank,TRUE,FALSE,approve
+002,Registration,Local Training Expenses <Registration Fee>,TRUE,FALSE,approve
+002,Registration,Foreign Training Expenses <Registration Fee>,TRUE,FALSE,approve
+101,Office,Connectivity Charge,TRUE,FALSE,approve
+201,ATM,Connectivity Charge,TRUE,FALSE,approve
+301,Kiosk,Connectivity Charge,TRUE,FALSE,approve
+601,POS,Connectivity Charge,TRUE,FALSE,approve
+101,Office,Repairs & Maintenance on Fixture,TRUE,FALSE,approve
+101,Office,Repairs & Maintenance on Furniture,TRUE,FALSE,approve
+301,Kiosk,Repairs & Maintenance on Furniture,TRUE,FALSE,approve
+101,Office,Repairs & Maintenance on Electrical Equipments,TRUE,FALSE,approve
+101,Office,Repairs & Maintenance on Other Office Equipments,TRUE,FALSE,approve
+201,ATM,Repairs & Maintenance on Other Office Equipments,TRUE,FALSE,approve
+101,Office,Repairs & Maintenance on Computers & Peripherals,TRUE,FALSE,approve
+501,Residence,Telephone Expenses <Residence>,TRUE,FALSE,approve
+101,Office,Telephone Expenses <Office>,TRUE,FALSE,approve
+101,Office,Mobile Bill Expenses,TRUE,FALSE,approve
+101,Office,Paper & Table Stationary,TRUE,FALSE,approve
+201,ATM,Paper & Table Stationary,TRUE,FALSE,approve
+301,Kiosk,Paper & Table Stationary,TRUE,FALSE,approve
+601,POS,Paper & Table Stationary,TRUE,FALSE,approve

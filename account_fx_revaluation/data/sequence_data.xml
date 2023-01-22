@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_account_fx_revaluation" model="ir.sequence">
+            <field name="name">Account FX Revaluation</field>
+            <field name="code">account.fx.revaluation</field>
+            <field name="prefix">FXR/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field name="padding">5</field>
+            <field name="implementation">no_gap</field>
+        </record>
+    </data>
+</odoo>

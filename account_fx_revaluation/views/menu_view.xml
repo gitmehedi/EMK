@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_account_fx_revaluation" name="Fx Revaluation"
+                  sequence="60" groups="base.group_fx_revaluation_user"/>
+
+        <menuitem id="account_fx_revaluation_main" name="Revaluation Operations"
+                  parent="menu_account_fx_revaluation"
+                  sequence="10" groups="base.group_fx_revaluation_user"/>
+
+        <menuitem id="account_fx_revaluation_configuration" name="Configurations"
+                  parent="menu_account_fx_revaluation"
+                  sequence="10" groups="base.group_fx_revaluation_user"/>
+    </data>
+</odoo>

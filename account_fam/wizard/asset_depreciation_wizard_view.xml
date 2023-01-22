@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="asset_depreciation_wizard_form">
+        <field name="name">asset.depreciation.wizard</field>
+        <field name="model">asset.depreciation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Assets Allocation">
+                <group>
+                    <group>
+                        <field name="date"/>
+                        <field name="sure"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="depreciate" string="Depreciate" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_asset_depreciation_wizard" model="ir.actions.act_window">
+        <field name="name">Execute Assets Depreciation</field>
+        <field name="res_model">asset.depreciation.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="asset_depreciation_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="main_fixed_asset_depreciation_menu" name="Execute Asset Depr"
+              parent="menu_action_account_asset_operation" sequence="10" action="action_asset_depreciation_wizard"
+              groups="grp_fixasset_manager"/>
+</odoo>

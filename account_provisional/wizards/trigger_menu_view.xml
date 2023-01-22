@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="act_provisional_scheduler_wizard_view" model="ir.ui.view">
+        <field name="name">provisional.scheduler.wizard</field>
+        <field name="model">provisional.scheduler.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml" >
+            <form string="Set Approver" create="false" edit="false">
+                <div>
+                    <h5>Change the date to generate previous month record</h5>
+                    <field name="date_selection"/>
+                </div>
+                <div>
+                    <h3>To generate provisional expense journal please trigger the button</h3>
+                    <br></br>
+                    <button string="Provisional Expense Scheduler" name="action_provisional_scheduler" type="object"
+                            class="oe_highlight"/>
+                </div>
+                <hr></hr>
+                <div>
+                    <h3>To generate provisional expense reverse journal please trigger the button</h3>
+                    <br></br>
+                    <button string="Provisional Expense Reverse Scheduler" name="action_provisional_reverse" type="object"
+                            class="oe_highlight"/>
+                </div>
+                <footer>
+                    <button special="cancel" string="Cancel" type="object"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_provision_trigger" model="ir.actions.act_window">
+        <field name="name">Provision Trigger</field>
+        <field name="res_model">provisional.scheduler.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="act_provisional_scheduler_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_provision_trigger"
+              name="Provision Trigger"
+              action="action_provision_trigger"
+              parent="account.account_account_menu"
+              sequence="41"/>
+</odoo>
+

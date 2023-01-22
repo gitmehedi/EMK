@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="inherit_report_trialbalance" inherit_id="account.report_trialbalance">
+        <xpath expr="//table" position="replace">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <strong>
+                            <th>Particulars</th>
+                            <th>Particulars</th>
+                            <th>GL Head</th>
+                            <th>CGL Code</th>
+                            <th class="text-right">Opening Balance</th>
+                            <th class="text-right">Debit</th>
+                            <th class="text-right">Credit</th>
+                            <th class="text-right">Current Balance</th>
+                        </strong>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="init_bal" t-value="0"/>
+                    <t t-set="debit" t-value="0"/>
+                    <t t-set="credit" t-value="0"/>
+                    <t t-set="balance" t-value="0"/>
+                    <tr t-foreach="Accounts" t-as="account">
+                        <td>
+                            <span t-att-style="style" t-esc="account['sec_layer']"/>
+                        </td>
+                        <td>
+                            <span t-att-style="style" t-esc="account['third_layer']"/>
+                        </td>
+                        <td>
+                            <span t-att-style="style" t-esc="account['name']"/>
+                        </td>
+                        <td>
+                            <span t-att-style="style" t-esc="account['code']"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-att-style="style" t-esc="account['init_bal']"
+                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-att-style="style" t-esc="account['debit']"
+                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-att-style="style" t-esc="account['credit']"
+                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-att-style="style" t-esc="account['balance']"
+                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                        </td>
+                        <t t-set="init_bal" t-value="init_bal+account['init_bal']"/>
+                        <t t-set="debit" t-value="debit+account['debit']"/>
+                        <t t-set="credit" t-value="credit+account['credit']"/>
+                        <t t-set="balance" t-value="balance+account['balance']"/>
+                    </tr>
+                    <tr style="font-weight: bold;">
+                        <td colspan="4" class="text-right">Total</td>
+                        <td class="text-right">
+                            <span t-att-style="style" t-esc="init_bal"
+                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-att-style="style" t-esc="debit"
+                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-att-style="style" t-esc="credit"
+                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-att-style="style" t-esc="abs(balance)"
+                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+
+    <template inherit_id="account_operating_unit.report_trialbalance_operating_units"
+              id="account_operating_unit_report_trialbalance_">
+        <xpath expr="//div[@class='row mt32']/div[4]" position="replace">
+            <div class="col-xs-4" t-if="data['operating_units']">
+                <strong>Branch (Include):</strong>
+                <p t-esc="data['operating_units']"/>
+            </div>
+            <div class="col-xs-4" t-if="data['ex_operating_units']">
+                <strong>Branch (Exclude):</strong>
+                <p t-esc="data['ex_operating_units']"/>
+            </div>
+        </xpath>
+    </template>
+
+    <record id="action_report_trial_balance_xlsx" model="ir.actions.report.xml">
+        <field name="name">Trial Balance</field>
+        <field name="model">account.balance.report</field>
+        <field name="type">ir.actions.report.xml</field>
+        <field name="report_name">account_reports_xls.payroll_xls</field>
+        <field name="report_type">xlsx</field>
+        <field name="auto" eval="False"/>
+    </record>
+
+    <record id="account.menu_general_Balance_report" model="ir.ui.menu">
+        <field name="parent_id" eval="ref('account.menu_finance_reports')"/>
+        <field name="groups_id" eval="[(4,[ref('account_mtbl.group_tb_user')])]"/>
+    </record>
+
+    <record id="account.menu_finance_legal_statement" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+</odoo>

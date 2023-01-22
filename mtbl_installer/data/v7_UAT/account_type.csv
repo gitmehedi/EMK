@@ -1,0 +1,20 @@
+Name,Type,Bring Accounts Balance Forward,Active,Pending,Status
+Liabilities: Office Accounts,Regular,Yes,True,False,approve
+Treasury Liabilities,Regular,Yes,True,False,approve
+Liabilities: Customer Accounts,Regular,Yes,True,False,approve
+Interest Payable Accounts,Regular,Yes,True,False,approve
+No BGL only CGL,Regular,Yes,True,False,approve
+Assets: Office Accounts,Regular,Yes,True,False,approve
+Assets: Customer Accounts,Regular,Yes,True,False,approve
+Treasury Asset,Regular,Yes,True,False,approve
+Interest Receivable Accounts,Regular,Yes,True,False,approve
+Income Accounts,Regular,No,True,False,approve
+Treasury Income,Regular,No,True,False,approve
+Expenditure Accounts,Regular,No,True,False,approve
+Tresury Expenditure,Regular,No,True,False,approve
+Contra Accounts,Regular,Yes,True,False,approve
+Contingent Accounts,Regular,Yes,True,False,approve
+Contra Liabilities,Regular,Yes,True,False,approve
+Contra Asset,Regular,Yes,True,False,approve
+Contingent Liability,Regular,Yes,True,False,approve
+Contingent Asset,Regular,Yes,True,False,approve

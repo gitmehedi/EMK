@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_account_asset_category_wizard" model="ir.ui.view">
+        <field name="name">account.asset.category.wizard</field>
+        <field name="model">account.asset.category.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Proposed">
+                <group>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="status"/>
+                    </group>
+                </group>
+                <group string="Journal Entries">
+                    <group>
+                        <label for="account_asset_id"/>
+                        <div>
+                            <field name="account_asset_id"
+                                   domain="[('internal_type','!=','view')]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="account_asset_seq_id"
+                                   class="oe_inline" domain="[('account_id', 'in', [account_asset_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                        <label for="asset_suspense_account_id"/>
+                        <div>
+                            <field name="asset_suspense_account_id"
+                                   domain="[('internal_type','!=','view')]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="asset_suspense_seq_id"
+                                   class="oe_inline" domain="[('account_id', 'in', [asset_suspense_account_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                        <label for="asset_sale_suspense_account_id"/>
+                        <div>
+                            <field name="asset_sale_suspense_account_id"
+                                   domain="[('internal_type','!=','view')]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="asset_sale_suspense_seq_id"
+
+                                   class="oe_inline" domain="[('account_id', 'in', [asset_sale_suspense_account_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="account_asset_loss_id"/>
+                        <div>
+                            <field name="account_asset_loss_id"
+                                   domain="[('internal_type','!=','view')]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="account_asset_loss_seq_id"
+                                   class="oe_inline" domain="[('account_id', 'in', [account_asset_loss_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                        <label for="account_asset_gain_id"/>
+                        <div>
+                            <field name="account_asset_gain_id"
+                                   domain="[('internal_type','!=','view')]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="account_asset_gain_seq_id"
+                                   class="oe_inline" domain="[('account_id', 'in', [account_asset_gain_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                        <label for="account_depreciation_expense_id"/>
+                        <div>
+                            <field name="account_depreciation_expense_id"
+                                   domain="[('internal_type','!=','view')]"
+                                   attrs="{'invisible': [('method', '=', 'no_depreciation')]}"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="account_depreciation_expense_seq_id"
+
+                                   class="oe_inline" domain="[('account_id', 'in', [account_depreciation_expense_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                        <label for="account_depreciation_id"/>
+                        <div>
+                            <field name="account_depreciation_id"
+                                   domain="[('internal_type','!=','view')]"
+                                   attrs="{'invisible': [('method', '=', 'no_depreciation')]}"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <field name="account_depreciation_seq_id"
+
+                                   class="oe_inline" domain="[('account_id', 'in', [account_depreciation_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </group>
+                </group>
+                <group>
+                    <group string="Depreciation Method">
+                        <field name="method" widget="radio"/>
+                        <field name="method_progress_factor"
+                               attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                        <field name="depreciation_year" string="Asset Life (In Year)"
+                               attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','degressive')], 'required':[('method','=','linear')]}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="act_change_name" string="Change Request" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_asset_category_wizard" model="ir.actions.act_window">
+        <field name="name">Request for Change</field>
+        <field name="res_model">account.asset.category.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_account_asset_category_wizard"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

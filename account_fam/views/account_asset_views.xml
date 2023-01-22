@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_view_account_asset_asset_form" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.form</field>
+        <field name="model">account.asset.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="duplicate">0</attribute>
+                <attribute name="delete">false</attribute>
+                <attribute name="create">false</attribute>
+            </xpath>
+            <xpath expr="//form/header" position="replace">
+                <header>
+                    <button name="validate" states="draft" string="Confirm" type="object" class="oe_highlight"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"/>
+                    <button name="%(action_asset_allocation_wizard)d" string="Allocate" class="oe_highlight"
+                            type="action" context="{'allocation':'True'}"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
+                            attrs="{'invisible': ['|',('allocation_status','=', True),('state','!=', 'open')]}"/>
+                    <button name="%(action_asset_allocation_wizard)d" string="Transfer" class="oe_highlight"
+                            type="action" context="{'transfer':'True'}"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings"
+                            attrs="{'invisible': ['|',('allocation_status','=', False),('state','!=', 'open')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
+                </header>
+            </xpath>
+            <xpath expr="//form/sheet/div[2]" position="replace">
+                <div class="oe_title">
+                    <h1>
+                        <field name="asset_seq" readonly="1"/>
+                    </h1>
+                </div>
+            </xpath>
+            <xpath expr="//form/sheet/div/button[@name='open_entries']" position="replace">
+                <button class="oe_stat_button" name="open_entries" type="object" icon="fa-pencil">
+                    <field string="Depr. Journals" name="entry_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='code']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/group" position="replace">
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="category_id" readonly="True" domain="[('type', '=', 'purchase')]"
+                               context="{'default_type': 'purchase'}"
+                               options="{'no_create':True,'no_create_edit':True}"/>
+                        <field name="partner_id" domain="[('supplier', '=', True)]" readonly="True"
+                               options="{'no_create':True,'no_create_edit':True}"/>
+                        <field name="invoice_id" readonly="True"
+                               options="{'no_create':True,'no_create_edit':True}"/>
+                        <field name="batch_no"/>
+                        <field name="model_name"/>
+                    </group>
+                    <group>
+                        <field name="invoice_date" readonly="True"/>
+                        <field name="warranty_date" readonly="True"/>
+                        <field name="date" readonly="True"/>
+                        <field name="asset_usage_date" readonly="True"/>
+                        <field name="dmc_date"/>
+                        <field name="lst_depr_date"/>
+                        <field name="code" invisible="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="allocation_status" invisible="True"/>
+                        <field name="depreciation_flag" invisible="True"/>
+                    </group>
+                </group>
+                <separator string="Asset Configure"/>
+                <group>
+                    <group>
+                        <field name="operating_unit_id" readonly="True"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="current_branch_id" readonly="True"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="sub_operating_unit_id" readonly="True"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="cost_centre_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="reconcile_ref" groups="account_fam.grp_fixasset_manager"
+                               attrs="{'invisible':[('reconcile_ref','=',False)]}"/>
+                        <field name="currency_id" groups="base.group_multi_currency"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        <field name="company_id" options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                               groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="depr_base_value" readonly="True" help="Depreciation base value of asset"/>
+                        <field name="value" readonly="True" help="Gross value of asset"/>
+                        <field name="value_residual"/>
+                        <field name="salvage_value" readonly="1" attrs="{'invisible': [('type','=','sale')]}"/>
+                        <field name="accumulated_value" attrs="{'invisible': [('type','=','sale')]}"/>
+                        <field name="lst_depr_amount" attrs="{'invisible': [('type','=','sale')]}"/>
+                    </group>
+                </group>
+                <separator string="Asset Description"/>
+                <field name="asset_description" widget="html"/>
+                <separator string="Note"/>
+                <field name="note" widget="html"/>
+            </xpath>
+
+            <xpath expr="//notebook/page[1]" position="replace">
+                <page string="Depreciation History">
+                    <field name="depreciation_line_ids" mode="tree" options="{'reload_whole_on_button': true}">
+                        <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false"
+                              edit="false" delete="false">
+                            <field name="depreciation_date"/>
+                            <field name="days"/>
+                            <field name="amount"/>
+                            <field name="depreciated_value" readonly="1"/>
+                            <field name="remaining_value" readonly="1"/>
+                            <field name="move_check" invisible="1"/>
+                            <field name="move_posted_check" invisible="1"/>
+                            <field name="parent_state" invisible="1"/>
+                            <button name="create_move" type="object" widget="widgetonbutton"/>
+                        </tree>
+                        <form string="Depreciation Lines" create="false" edit="false" delete="false">
+                            <group>
+                                <group>
+                                    <field name="parent_state" invisible="1"/>
+                                    <field name="name"/>
+                                    <field name="sequence"/>
+                                    <field name="move_id"/>
+                                    <field name="move_check"/>
+                                    <field name="parent_state" invisible="1"/>
+                                </group>
+                                <group>
+                                    <field name="amount"/>
+                                    <field name="depreciation_date"/>
+                                    <field name="depreciated_value"/>
+                                    <field name="remaining_value"/>
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//notebook/page[2]" position="replace">
+                <page string="Depreciation Information">
+                    <group>
+                        <group string="Depreciation Method">
+                            <field name="method" widget="radio"/>
+                            <field name="method_progress_factor"
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                            <field name="depreciation_year"
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','degressive')], 'required':[('method','=','linear')]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Allocation &amp; Transfer History">
+                    <field name="asset_allocation_ids" string="Allocation History">
+                        <tree string="Allocation History" decoration-success="state=='active'"
+                              decoration-muted="state=='inactive'" delete="0" create="0" edit="0">
+                            <field name="from_branch_id"/>
+                            <field name="operating_unit_id"/>
+                            <field name="sub_operating_unit_id"/>
+                            <field name="cost_centre_id"/>
+                            <field name="asset_user"/>
+                            <field name="receive_date"/>
+                            <field name="transfer_date"/>
+                            <field name="move_id"/>
+                            <field name="state"/>
+                        </tree>
+                        <form string="Allocation History" create="0" edit="0" delete="0">
+                            <header>
+                                <field name="state" widget="statusbar"/>
+                            </header>
+                            <group>
+                                <group>
+                                    <field name="operating_unit_id"
+                                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                    <field name="from_branch_id"
+                                           options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                                    <field name="sub_operating_unit_id"/>
+                                    <field name="cost_centre_id"/>
+                                </group>
+                                <group>
+                                    <field name="asset_user"/>
+                                    <field name="receive_date"/>
+                                    <field name="transfer_date"/>
+                                    <field name="move_id"/>
+                                    <field name="state"/>
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_account_asset_asset_purchase_tree" model="ir.ui.view">
+        <field name="model">account.asset.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree string="Assets" edit="0" create="0" delete="0" duplicate="0"
+                      decoration-info="(state == 'open') and (allocation_status == False)"
+                      decoration-success="(state == 'open') and (allocation_status == True)"
+                      decoration-danger="(depreciation_flag == True) and (state == 'open') and (allocation_status == True)"
+                      decoration-muted="(state == 'close')">
+                    <field name="asset_seq"/>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="asset_type_id"/>
+                    <field name="current_branch_id"/>
+                    <field name="cost_centre_id"/>
+                    <field name="asset_usage_date"/>
+                    <field name="lst_depr_date"/>
+                    <field name="value" sum="value"/>
+                    <field name="value_residual" sum="value_residual"/>
+                    <field name="accumulated_value" sum="accumulated_value"/>
+                    <field name="lst_depr_amount" sum="depr_base_value"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="True"/>
+                    <field name="depreciation_flag" invisible="True"/>
+                    <field name="state"/>
+                    <field name="allocation_status" invisible="True"/>
+                    <button name="allocation_status2" icon="fa-times-circle text-danger"
+                            attrs="{'invisible': [('allocation_status', '=', True)]}"/>
+                    <button name="allocation_status1" icon="fa fa-check text-success"
+                            attrs="{'invisible': [('allocation_status', '=', False)]}"/>
+                </tree>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_asset_search" model="ir.ui.view">
+        <field name="model">account.asset.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="asset_seq"/>
+                <field name="batch_no"/>
+            </xpath>
+            <xpath expr="//search" position="replace">
+                <search string="Asset Account">
+                    <field name="name" string="Asset Name"/>
+                    <field name="asset_seq" string="Asset Code"/>
+                    <field name="date" string="Purchase Date"/>
+                    <field name="category_id" string="Category"/>
+                    <field name="current_branch_id" string="Current Branch"/>
+                    <field name="state" string="Status"/>
+                    <field name="depreciation_flag" string="Awaiting Disposal"/>
+                    <field name="allocation_status" string="Allocation Status"/>
+                    <field name="partner_id" string="Vendor" filter_domain="[('partner_id','child_of',self)]"/>
+                    <group string="Group By...">
+                        <filter string="Current" domain="[('state','in', ('draft','open'))]"/>
+                        <filter string="Draft"
+                                domain="[('state','=', 'draft'),('allocation_status','=', False),('depreciation_flag','=', False)]"/>
+                        <filter string="Confirmed"
+                                domain="[('state','=', 'open'),('allocation_status','=', False),('depreciation_flag','=', False)]"/>
+                        <filter string="Allocated"
+                                domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', False)]"/>
+                        <filter string="Dispose or Sale"
+                                domain="[('state','=', 'open'),('allocation_status','=', True),('depreciation_flag','=', True)]"/>
+                        <filter string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
+                        <filter string="By Status"  domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="By Branch" domain="[]" context="{'group_by':'current_branch_id'}"/>
+                        <filter string="By Asset Type" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="By Asset Category" domain="[]" context="{'group_by':'asset_type_id'}"/>
+                        <filter string="By Computation Method" domain="[]" context="{'group_by':'method'}"/>
+                        <filter string="By Last Depr. Date" domain="[]" context="{'group_by':'lst_depr_date'}"/>
+                    </group>
+                </search>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="account_asset.action_account_asset_asset_form">
+        <field name="domain">[('category_id.type', '=', 'purchase'),('state','=','draft')]</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_account_asset_asset_form_open">
+        <field name="name">Fixed Assets (Running)</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
+        <field name="domain">[('category_id.type', '=', 'purchase'),('state', '=', 'open'),('depreciation_flag',
+            '=',False),('allocation_status','=',True)]
+        </field>
+    </record>
+
+    <menuitem parent="account_fam.sub_assets_menu" id="menu_action_account_asset_asset_form_open"
+              action="action_account_asset_asset_form_open" sequence="6" groups="account.group_account_user"/>
+
+    <record model="ir.actions.act_window" id="action_account_asset_asset_form_confirmed">
+        <field name="name">Fixed Assets (Draft)</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
+        <field name="domain">[('category_id.type', '=', 'purchase'),('state', '=', 'open'),
+            ('depreciation_flag','=',False),('allocation_status','=',False)]
+        </field>
+    </record>
+
+    <menuitem parent="account_fam.sub_assets_menu" id="menu_action_account_asset_asset_form_confirmed"
+              action="action_account_asset_asset_form_confirmed" sequence="5" groups="account.group_account_user"/>
+
+
+    <record model="ir.actions.act_window" id="action_account_asset_asset_form_disposal">
+        <field name="name">Fixed Assets (Disposal)</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
+        <field name="domain">[('category_id.type', '=', 'purchase'),('state', '=','open'),
+            ('depreciation_flag', '=',True)]
+        </field>
+    </record>
+
+    <menuitem parent="account_fam.sub_assets_menu" id="menu_action_account_asset_asset_form_disposal"
+              action="action_account_asset_asset_form_disposal" sequence="7" groups="account.group_account_user"/>
+
+    <record model="ir.actions.act_window" id="action_account_asset_asset_form_close">
+        <field name="name">Fixed Assets (Closed)</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="account_asset.view_account_asset_asset_purchase_tree"/>
+        <field name="domain">[('category_id.type', '=', 'purchase'),('state', '=','close')]</field>
+    </record>
+
+    <menuitem parent="account_fam.sub_assets_menu" id="menu_action_account_asset_asset_form_close"
+              action="action_account_asset_asset_form_close" sequence="8" groups="account.group_account_user"/>
+
+</odoo>

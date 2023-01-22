@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <act_window
+                id="account.action_account_payment_from_invoices"
+                name="Register Payment"
+                res_model="account.register.payments"
+                src_model="account.invoice"
+                view_mode="form"
+                multi="True"
+                target="new"
+                key2="client_action_multi"
+                groups="base.group_system"
+        />
+
+        <!--Vendor-->
+        <act_window
+                id="account.act_account_partner_ledger_payable"
+                name="Partner Ledger: Payable"
+                res_model="account.move.line"
+                context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_payable':1}"
+                src_model="res.partner"
+                groups="base.group_system"/>
+        <act_window
+                id="account.act_account_partner_ledger_payable_no_partner"
+                name="Unknown Partner Ledger"
+                res_model="account.move.line"
+                context="{'search_default_unreconciled':1, 'search_default_payable':1}"
+                domain="[('partner_id', '=', False)]"
+                src_model="res.partner"
+                groups="base.group_system"/>
+        <act_window
+                id="account.act_account_partner_ledger_receivable"
+                name="Partner Ledger: Receivable"
+                res_model="account.move.line"
+                context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_receivable':1}"
+                src_model="res.partner"
+                groups="base.group_system"/>
+        <act_window
+                id="account.act_account_partner_ledger_receivable_no_partner"
+                name="Unknown Partner Ledger"
+                res_model="account.move.line"
+                context="{'search_default_unreconciled':1, 'search_default_receivable':1}"
+                domain="[('partner_id', '=', False)]"
+                src_model="res.partner"
+                groups="base.group_system"/>
+        <act_window
+                id="account.action_move_line_select_by_partner"
+                name="Journal Items"
+                context="{'search_default_partner_id': [active_id]}"
+                res_model="account.move.line"
+                src_model="res.partner"
+                groups="base.group_system"/>
+
+        <record id="account.act_account_invoice_partner_relation" model="ir.actions.act_window">
+            <field name="name">Monthly Turnover</field>
+            <field name="res_model">account.invoice.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="target">new</field>
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('base.group_system')])]"/>
+        </record>
+        <record id="portal.partner_wizard_action" model="ir.actions.act_window">
+            <field name="name">Portal Access Management</field>
+            <field name="res_model">portal.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="groups_id"
+                   eval="[(6, 0, [ref('base.group_system')])]"/>
+        </record>
+
+
+    </data>
+</odoo>

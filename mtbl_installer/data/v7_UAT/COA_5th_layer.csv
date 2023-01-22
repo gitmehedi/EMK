@@ -1,0 +1,1531 @@
+Layer,Code,Name,Parent Account,Type,Active,Pending,Status,Allow Reconciliation
+Layer 5,11101001,Paid up Capital ,11101,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,11201001,General Reserve ,11201,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,11202001,Statutory Reserve ,11202,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,11203001,Revaluation gain on HTM Securities,11203,Treasury Liabilities,1,0,approve,0
+Layer 5,11203002,Revaluation gain on HFT Securities (T Bill),11203,Treasury Liabilities,1,0,approve,0
+Layer 5,11203003,Revaluation gain on HFT Securities (T Bond),11203,Treasury Liabilities,1,0,approve,0
+Layer 5,11204001,Share Premium ,11204,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,11205001,Retained earnings ,11205,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,11206001,Foreign Currency Translational Gain/ Loss,11206,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,12101001,EGBMP Fund,12101,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12101002,Special Repo ,12101,Treasury Liabilities,1,0,approve,0
+Layer 5,12101003,Assured Liquidity Support (ALS-Repo),12101,Treasury Liabilities,1,0,approve,0
+Layer 5,12101004,Export Dev. Fund USD,12101,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12101005,Repo Bangladesh Bank,12101,Treasury Liabilities,1,0,approve,0
+Layer 5,12102001,JICA Fund SME,12102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103001,"Solar Energy, Bio Gas EFT & HHK fund",12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103002,Taka 10 Account Holders,12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103003,Woman Enterpreneurs Fund (SME),12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103004,SME Loan Refinance,12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103005,Home Loan Refinance <Borrowings>,12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103006,ADB Fund (SME),12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103007,ADB Fund (Brick Klin),12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103008,EGBMP Fund (SME),12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103009,JICA Fund (SME),12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103010,Agro-Processing Rural Industries Fund,12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103011,Bangladesh Bank Fund (Others),12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12103012,Agro-Processing Rural Industries Fund Old,12103,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12104001,Investment Promotion and Financing Fund (IPFF) USD,12104,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12104002,Investment Promotion and Financing Facility (IPFF) GBP,12104,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12104101,Investment Promotion and Financing Fund (IPFF) USD OBU,12104,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12105001,Long Term Financing Facility (LTFF) under FSSP,12105,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12106001,Borrowing under EDF from Bangladesh Bank USD,12106,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12201001,Term Borrowing in FC <USD>,12201,Treasury Liabilities,1,0,approve,0
+Layer 5,12201002,Term Borrowing in FC <GBP>,12201,Treasury Liabilities,1,0,approve,0
+Layer 5,12202001,Call Borrowing <BDT>,12202,Treasury Liabilities,1,0,approve,0
+Layer 5,12203001,Term Borrowing <BDT>,12203,Treasury Liabilities,1,0,approve,0
+Layer 5,12204001,Repo T Bill,12204,Treasury Liabilities,1,0,approve,0
+Layer 5,12204002,Repo T Bond,12204,Treasury Liabilities,1,0,approve,0
+Layer 5,12205001,Call Borrowing in FC <USD>,12205,Treasury Liabilities,1,0,approve,0
+Layer 5,12205002,Call Borrowing in FC <GBP>,12205,Treasury Liabilities,1,0,approve,0
+Layer 5,12206001,Short Term Borrowing <BDT>,12206,Treasury Liabilities,1,0,approve,0
+Layer 5,12207001,Short Term Borrowing <USD>,12207,Treasury Liabilities,1,0,approve,0
+Layer 5,12207002,Short Term Borrowing <GBP>,12207,Treasury Liabilities,1,0,approve,0
+Layer 5,12208001,Overnight Borrowing <BDT>,12208,Treasury Liabilities,1,0,approve,0
+Layer 5,12301001,SME Foundation,12301,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12302001,SME Foundation Fund (MTB Youth Line),12302,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12302002,SME Foundation Fund (MTB Gunabati),12302,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12303001,Borrowings from NBFI,12303,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,12501001,Interest Payable on Borrowings from LTFF  under FSSP,12501,Interest Payable Accounts,1,0,approve,0
+Layer 5,12501002,Interest Payable on Borrowing -IPFF Fund USD,12501,Interest Payable Accounts,1,0,approve,0
+Layer 5,12501003,Interest Payable on Borrowing -IPFF Fund GBP,12501,Interest Payable Accounts,1,0,approve,0
+Layer 5,12501004,Interest Payable on Borrowings from BB-others,12501,Interest Payable Accounts,1,0,approve,0
+Layer 5,12501005,Interest Payable on Borrowings from BB-under prefinance,12501,Interest Payable Accounts,1,0,approve,0
+Layer 5,12501006,Interest Payable on Borrowings from BB-under Refinance,12501,Interest Payable Accounts,1,0,approve,0
+Layer 5,12501007,Intt Payable on Borrowing under EDF from BB,12501,Interest Payable Accounts,1,0,approve,0
+Layer 5,12501102,Interest Payable on Borrowing -IPFF Fund USD OBU,12501,Interest Payable Accounts,1,0,approve,0
+Layer 5,12502001,Interest Payable on Term Borrowing in FC <USD>,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12502002,Interest Payable on Term Borrowing in FC <GBP>,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12502003,Interest Payable on Term Borrowings BDT,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12502004,Interest Payable on Call Borrowing BDT,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12502006,Interest payable on Call Borrowing in FC <USD>,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12502007,Interest payable on Call Borrowing in FC <GBP>,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12502008,Interest Payable A/c- Repo T Bond,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12502009,Interest Payable on Short Term Borrowing in FC <USD>,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12502010,Interest Payable on Short Term Borrowing in FC <GBP>,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12502011,Interest Payable on Short Term Borrowings BDT,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12502012,Interest Payable on Overnight Borrowing <BDT>,12502,Treasury Liabilities,1,0,approve,0
+Layer 5,12503001,Interest Payable on Borrowings from SME Foundation,12503,Interest Payable Accounts,1,0,approve,0
+Layer 5,12503002,Interest Payable on Borrowing from NBFI,12503,Interest Payable Accounts,1,0,approve,0
+Layer 5,12504001,IP on SME Foundation Fund (MTB Youth Line),12504,Interest Payable Accounts,1,0,approve,0
+Layer 5,12504002,IP on SME Foundation Fund (MTB Gunabati),12504,Interest Payable Accounts,1,0,approve,0
+Layer 5,13101001,Current Account Regular <CAREG>,13101,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13101002,MTB Probaho,13101,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13101003,Current CMS,13101,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13101004,NON RESIDENT INVESTORS TAKA ACCOUNT (NITA),13101,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13101005,Non-Resident Taka Account (NRTA),13101,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13101006,CA Convertible Taka Account,13101,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13101901,Current Deposit (DST),13101,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102001,CA EXPORTER'S RETENTION QUOTA (ERQ) ACCOUNT-USD,13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102011,CA FC FOR THE EPZ COMPANIES (FCEPZ)_USD,13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102021,CA FC for DIPLOMATIC BONDED WAREHOUSE(DBW) & DUTY FREE SHOP (DFS) ACCOUNT_USD,13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102031,CA FCDAD USD,13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102041,CA FC OTHERS (IPO/SHIPBUILDERS/CARRIER)_USD,13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102051,CA FC Economic Zone,13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102061,CA FC USD (including DFC),13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102062,CA FC GBP (including DFC),13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102063,CA FC EUR (including DFC),13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102064,CA FC AED (including DFC),13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102065,CA FC QAR (including DFC),13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13102091,CA <for OBU Cust> USD,13102,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13103001,Credit Balance IN OD/CC Accounts,13103,No BGL only CGL,1,0,approve,0
+Layer 5,13104001,FBPAR USD,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104002,Sundry Deposit USD <OBU>,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104101,Clearing House Payable USD,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104102,Clearing House Payable GBP,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104103,Clearing House Payable EUR,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104104,Clearing House Payable JPY,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104105,Clearing House Payable CAD,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104201,BEFTN Transaction USD,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104202,BEFTN Transaction GBP,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104203,BEFTN Transaction EUR,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104204,BEFTN Transaction JPY,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13104205,BEFTN Transaction CAD,13104,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105001,RTGS Adjusting Account,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105002,RTGS FI to FI Settlement,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105003,Excess Cash,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105004,MasterCard Prepaid International (USD),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105006,bKash Commission Payable,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105007,Payable to Bangladesh Bank - Service Charge,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105008,BEFTN Transaction BDT,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105009,Exchange House Coop Fund,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105010,MasterCard Local Prepaid,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105011,Prepaid Gift Card,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105012,Prepaid International Card,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105013,Online Clearing Adjustment,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105014,Risk Fund (Auto Loan),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105015,Stamp Charge Recovery,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105016,Retail CIB Charge Recover for BB,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105017,Retail Notarization Charge Recovery,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105018,Central Fund (RMG Sector),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105019,Risk Fund (Card),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105020,Credit Report Charges Payable,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105021,Transfer Delivery,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105022,Online GL Transaction <Sundry Account>,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105023,Online Transfer DD Amount,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105024,Clearing House Payable,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105025,Risk Fund (Small Business Loan),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105026,Risk Fund (House Repair/Renovation Loan),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105027,Lease Deposit,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105028,P. Fund Loan Instalment,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105029,Foreign Bank Adjustment A/c,13105,Treasury Liabilities,1,0,approve,0
+Layer 5,13105030,Recovery of SWIFT Charges,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105031,Margin on L/C (Others),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105032,Margin on L/G (Inland),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105033,Margin on L/G (Foreign),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105034,Risk Fund (Lease Finance),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105035,AIT <Advance Income Tax> Payable Account,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105036,Fund Build up Aganist Export Bill,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105037,Sundry Creditors <Vendor Bill Payable>,13105,Payable,1,0,approve,1
+Layer 5,13105038,Security Deposit,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105039,Margin on L/C (Cash),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105040,Margin on IBP/FDBP,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105041,LDBC,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105042,Duty Draw Back,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105043,Cash Incentive (Traditional),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105044,Cash Incentive (Non Traditional),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105045,OBC Outward Bill Collection,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105046,Advance Lease Rental,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105047,Sanchay Patra (Issued),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105048,Risk Fund (CCS),13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13105106,bKash Settlement A/c,13105,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13201001,MTB Buniad,13201,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13201002,NRB Fixed Deposit,13201,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13201003,Term Deposit General,13201,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13201004,Term Deposit Monthly Benefit Plan,13201,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13201901,Best Investment TERM DEPOSIT,13201,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13201902,MTB Quarterly Benefit Plan,13201,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13202001,Reinvestment Term Deposit MTB Buniad,13202,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13202002,Reinvestment Term Deposits General,13202,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13202003,Reinvestment Term Deposit Double Benefit Scheme,13202,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13202004,Reinvestment Term Deposit NRB ,13202,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13202901,MTB DOUBLE SAVER (DST),13202,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13202902,MTB TRIPLE SAVER PLAN,13202,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13202903,FIXED DEPOSIT (DST),13202,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13202904,MTB 1.5 Times Benefit Plan,13202,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13203001,RD Brick-by-Brick,13203,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13203002,RD MTB Educational Plan,13203,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13203003,RD Kotipati,13203,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13203004,RD Millionnaire Plan,13203,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13203005,RD NRB,13203,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13204001,FC NON-RESIDENT FOREIGN CURRENCY DEPOSIT ACCOUNT(NFCD)_USD,13204,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13204002,FC FD from Individual OBU USD,13204,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13204003,FC FD from Institutions OBU USD,13204,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13205001,Special Notice Deposit,13205,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206001,MTB Ankur,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206002,MTB Ruby,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206003,MTB Graduate,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206004,MTB Junior,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206005,MTB Privilege Saving,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206006,NRB Savings Account,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206007,MTB Senior,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206008,MTB Inspire,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206009,MTB Shanchay,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206010,MTB Care,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206011,Regular Savings  Deposit,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206012,MTB Regular Savings Staff,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206013,MTB Payroll Premium,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206014,MTB Payroll eSavers,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206015,MTB Payroll Saver,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206016,MTB Children Education Deposit Scheme,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206901,MTB Inspire (DST),13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206902,MTB Senior (DST),13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206903,MTB Ruby (DST),13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206904,Savings Deposit (DST),13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206905,MTB Graduate (DST),13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206907,EID UL FITRE SANCHAY PROKALPA,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206908,EID UL AZHA SANCHAY PROKALPA,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206909,DURGA PUJA SANCHAY PROKALPA,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206910,CHRISTMAS SANCHAY PROKALPA,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206912,SAVE EVERY DAY DEPOSIT A/C,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206913,FESTIVAL SANCHAY PROKALPA,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206914,UNIQUE SAVING PLAN,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206911,BUDDHA PURNIMA SANCHAY PROKALPA,13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13206906,MTB JUNIOR (DST),13206,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13207001,SB Resident Foreign Currency Deposit (RFCD)_USD,13207,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13207011,FC PRIVATE FOREIGN CURRENCY ACCOUNT (PFC) INCLUDING DFC & RBN_USD,13207,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13208001,MTB Gift Cheque,13208,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13301001,Current Deposits from other Bank,13301,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13302001,Current Deposits from NBFI,13302,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13401001,Bank Deposits -FD  <BDT>,13401,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13401002,Bank Deposits -SND,13401,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13402001,NBFI Deposits -FD ,13402,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,13501001,Interest Payable MTB Probaho,13501,Interest Payable Accounts,1,0,approve,0
+Layer 5,13601001,Interest Payable on MTB Buniad,13601,Interest Payable Accounts,1,0,approve,0
+Layer 5,13601002,Interest Payable on NRB Fixed Deposit,13601,Interest Payable Accounts,1,0,approve,0
+Layer 5,13601003,Interest Payable on Term Deposit General,13601,Interest Payable Accounts,1,0,approve,0
+Layer 5,13601004,Interest Payable on Term Deposit Monthly Benefit Plan,13601,Interest Payable Accounts,1,0,approve,0
+Layer 5,13601901,Interest Payable on Best Investment TERM DEPOSIT,13601,Interest Payable Accounts,1,0,approve,0
+Layer 5,13601902,IP on MTB Quarterly Benefit Plan,13601,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602001,IP MTB Ankur,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602002,IP MTB Ruby,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602003,IP MTB Graduate,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602004,IP MTB Junior,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602005,IP MTB Privilege Saving,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602006,Interest Payable on NRB Savings Account,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602007,IP MTB Senior,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602008,IP on MTB Inspire,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602009,IP on MTB Shanchay,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602010,IP on MTB Care,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602011,IP on Regular Savings  Deposit,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602012,Interest Payable on MTB REGULAR SAVINGS STAFF,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602013,Interest Payable on MTB Payroll Premium,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602014,Interest Payable on MTB Payroll eSavers,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602015,Interest Payable on MTB Payroll Saver,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602016,Interest Payable on MTB Children Education Deposit Scheme,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602901,Interest Payable on MTB Inspire (DST),13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602903,Interest Payable on MTB Ruby (DST),13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602904,Interest Payable on Savings Deposit (DST),13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602905,Interest Payable on MTB Graduate (DST),13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602906,Interest Payable on MTB JUNIOR (DST),13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602907,Interest Payable on EID UL FITRE SANCHAY PROKALPA,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602908,Interest Payable on EID UL AZHA SANCHAY PROKALPA,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602909,Interest Payable on DURGA PUJA SANCHAY PROKALPA,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602910,Interest Payable on CHRISTMAS SANCHAY PROKALPA,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602911,Interest Payable on BUDDHA PURNIMA SANCHAY PROKALPA,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602912,Interest Payable on SAVE EVERY DAY DEPOSIT A/C,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602913,Interest Payable on FESTIVAL SANCHAY PROKALPA,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13602914,Interest Payable on UNIQUE SAVING PLAN,13602,Interest Payable Accounts,1,0,approve,0
+Layer 5,13603001,Interest payable on RD Brick-by-Brick,13603,Interest Payable Accounts,1,0,approve,0
+Layer 5,13603002,Interest payable on RD MTB Educational Plan,13603,Interest Payable Accounts,1,0,approve,0
+Layer 5,13603003,Interest payable on RD Kotipati,13603,Interest Payable Accounts,1,0,approve,0
+Layer 5,13603004,Interest payable on RD Millionnaire Plan,13603,Interest Payable Accounts,1,0,approve,0
+Layer 5,13603005,Interest payable on RD NRB,13603,Interest Payable Accounts,1,0,approve,0
+Layer 5,13604001,Interest Payable on Special Notice Deposits,13604,Interest Payable Accounts,1,0,approve,0
+Layer 5,13605001,Interest Payable on NFCD USD,13605,Interest Payable Accounts,1,0,approve,0
+Layer 5,13605002,IP FC FD Ind OBU,13605,Interest Payable Accounts,1,0,approve,0
+Layer 5,13605003,IP FC FD Inst OBU,13605,Interest Payable Accounts,1,0,approve,0
+Layer 5,13606001,Interest Payable on SB Personal Foreign Currency Account USD,13606,Interest Payable Accounts,1,0,approve,0
+Layer 5,13606002,Interest Payable on SBResident Foreign Currency USD,13606,Interest Payable Accounts,1,0,approve,0
+Layer 5,13607001,IP RTD Double Benefit Scheme,13607,Interest Payable Accounts,1,0,approve,0
+Layer 5,13607002,IP Reinvestment Term Deposits General,13607,Interest Payable Accounts,1,0,approve,0
+Layer 5,13607003,IP RTD MTB Buniad,13607,Interest Payable Accounts,1,0,approve,0
+Layer 5,13607004,Interest payable on Reinvestment Term Deposit NRB ,13607,Interest Payable Accounts,1,0,approve,0
+Layer 5,13607901,Interest payable MTB DOUBLE SAVER (DST),13607,Interest Payable Accounts,1,0,approve,0
+Layer 5,13607902,Interest payable MTB TRIPLE SAVER PLAN,13607,Interest Payable Accounts,1,0,approve,0
+Layer 5,13607903,Interest Payable Fixed Deposit (DST),13607,Interest Payable Accounts,1,0,approve,0
+Layer 5,13607904,Interest Payable MTB 1.5 Times Benefit Plan,13607,Interest Payable Accounts,1,0,approve,0
+Layer 5,13608001,Interest Payable on MTB Gift Cheque,13608,Interest Payable Accounts,1,0,approve,0
+Layer 5,13701001,Interest Payable on Bank Deposits (Time Deposit),13701,Interest Payable Accounts,1,0,approve,0
+Layer 5,13701002,Interest Payable on Bank Deposits (SND),13701,Interest Payable Accounts,1,0,approve,0
+Layer 5,13702001,Interest Payable on NBFI Term Deposits,13702,Interest Payable Accounts,1,0,approve,0
+Layer 5,13801001,P O Issued,13801,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13801002,P.S. Issued,13801,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13801003,DD Payable,13801,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13801004,T.T. Payable,13801,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,13801005,M.T. Payable,13801,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,14101001,Subordinated Bond,14101,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,14102001,Interest Payable on Subordinated Bond,14102,Interest Payable Accounts,1,0,approve,0
+Layer 5,14201001,Other Bond,14201,Liabilities: Customer Accounts,1,0,approve,0
+Layer 5,14202001,Interest Payable on Other Bond,14202,Interest Payable Accounts,1,0,approve,0
+Layer 5,15101001,Interest Suspenses Account Sub-Standard,15101,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15101002,Interest Suspenses Account Doubtful,15101,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15101003,Interest Suspenses Account Bad & Loss,15101,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15201001,Clearing House Adjustment IW,15201,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15202001,Provision for Tax,15202,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15203001,Adjusting A/c Credit (Sundry Liab),15203,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15203002,Adjusting A/c Credit USD OBU,15203,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15204001,Profit for the Year,15204,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15205001,Unearned Income,15205,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15206001, Liabilities under Finance Lease,15206,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15207001,Deferred Tax Liability,15207,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15208001,Employees Welfare Fund,15208,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15208002,Employees Medical Assistance Fund (Liability),15208,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15208003,Employees Provident Fund,15208,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15208004,Employees' Death Benefit  Fund,15208,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15209001,Contribution to MTB Foundation (Liability),15209,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15210001,Repo Interest Income Account,15210,Treasury Liabilities,1,0,approve,0
+Layer 5,15211001,Exchange Equalization Fund,15211,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15212001,Advance Intt. on Treasury Bill,15212,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15213001,NOSTRO A/c Adjustment,15213,Treasury Liabilities,1,0,approve,0
+Layer 5,15214001,Transit A/c- Reverse Repo,15214,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15215001,Revaluation Gain on HFT Securities,15215,Treasury Liabilities,1,0,approve,0
+Layer 5,15216001,VAT on Income,15216,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15216002,VAT on Expenditure,15216,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15216003,VAT on Other <Customer>,15216,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15216004,VAT on Utility Bill,15216,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15217001,Excise Duty,15217,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15218001,Source Tax on Revenue Expenses,15218,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15218002,Source Tax on Interest on Deposits,15218,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15218003,"Source Tax on SWIFT, Reuters & VISA Bill <Outward remittance>",15218,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15218004,Source Tax on misc income of customers,15218,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15219001,Insurance Premium (BDT),15219,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15219002,Card Settlement Account,15219,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15219003,Dispute Account - ATM,15219,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15219004,Dispute Account - POS,15219,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15219005,Marchant Payable A/c,15219,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15219006,Card Tran. Fees Receive (VISA),15219,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15220001,VISA Prepaid International (USD),15220,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15221001,NPSB  OFF-US ATM,15221,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15221002,Transaction Fee (NPSB) Debit Card,15221,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15222001,Agent Banking Utility Bill Payable,15222,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15222002,Agent Banking Utility Bill Commision Payable,15222,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15222003,Agent Banking Float Sharing Commision Payable,15222,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15222004,Agent Banking Loan Reletionship Fee Payable,15222,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15222005,Agent Banking Cheque Book Fee Comm. Payable,15222,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15222006,Agent Banking Transaction Commision Payable,15222,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15222007,Agent Banking Remittance Commision Payable,15222,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15222008,Agent Banking Debit Card Fee Commision Payable,15222,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15223001,Outstanding Expenses,15223,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15224001,Bonus Payable,15224,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15225001,Gratuity Payable,15225,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15227001,Sundry Liability (Trickle Field),15227,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15226001,Share Money Deposit Account,15226,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15301001,Provision for Unclassified Loans & Advance,15301,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15301002,Provision for Classified Loans & Advance,15301,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15301003,Provision for Off-balance sheet Items (Liability),15301,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15301004,General Provision ,15301,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15302001,Provision agt. Investment in Securities,15302,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15303001,Provision for Other Asset,15303,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15401001,Accumulated Depreciation on Immovable Property,15401,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15402001,Accumulated Depreciation on Fixture,15402,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15402002,Accumulated Depreciation on Furniture,15402,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15403001,Accumulated Depreciation on Electrical Equipments,15403,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15403002,Accumulated Depreciation on other Office Equipments,15403,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15404001,Accumulated Depreciation on Computers,15404,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15405001,Accumulated Depreciation on Motor Cars,15405,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15405002,Accumulated Depreciation on Motor Cycles,15405,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15501001,Profit and Loss for OBU,15501,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15406001,Accumulated Amortization of Software,15406,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,15999001,Miscellaneous Liabilities created for Migration,15999,Liabilities: Office Accounts,1,0,approve,0
+Layer 5,21101001,Cash with Vault (including Cash with Tellers),21101,Assets: Office Accounts,1,0,approve,0
+Layer 5,21101002,Cash in Transit,21101,Assets: Office Accounts,1,0,approve,0
+Layer 5,21101003,Cash with ATM ,21101,Assets: Office Accounts,1,0,approve,0
+Layer 5,21101004,Cash in Kiosk ATM,21101,Assets: Office Accounts,1,0,approve,0
+Layer 5,21101005,Cash with Service Provider,21101,Assets: Office Accounts,1,0,approve,0
+Layer 5,21102001,Cash with Vault <USD>,21102,Assets: Office Accounts,1,0,approve,0
+Layer 5,21102002,Cash with Vault <GBP>,21102,Assets: Office Accounts,1,0,approve,0
+Layer 5,21102003,Cash with Vault <JPY>,21102,Assets: Office Accounts,1,0,approve,0
+Layer 5,21102004,Cash with Vault <EUR>,21102,Assets: Office Accounts,1,0,approve,0
+Layer 5,21102011,Cash in Transit <USD>,21102,Assets: Office Accounts,1,0,approve,0
+Layer 5,21102012,Cash in Transit <GBP>,21102,Assets: Office Accounts,1,0,approve,0
+Layer 5,21102013,Cash in Transit <JPY>,21102,Assets: Office Accounts,1,0,approve,0
+Layer 5,21102014,Cash in Transit <EUR>,21102,Assets: Office Accounts,1,0,approve,0
+Layer 5,21201001,Balance with Bangladesh Bank,21201,Assets: Office Accounts,1,0,approve,0
+Layer 5,21201002,Bangladesh Bank- RTGS Settlement A/c,21201,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202001,Bangladesh Bank FC Clearing A/c (EUR),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202002,Bangladesh Bank FC Clearing A/c (USD),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202003,Bangladesh Bank FC Clearing A/c (CNY),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202004,Bangladesh Bank FC Clearing A/c (GBP),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202006,Bangladesh Bank FC Clearing A/c (CAD),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202005,Bangladesh Bank FC Clearing A/c (JPY),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202041,Bangladesh Bank RTGS Settlement A/c (USD),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202042,Bangladesh Bank RTGS Settlement A/c (GBP),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202043,Bangladesh Bank RTGS Settlement A/c (EUR),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202044,Bangladesh Bank RTGS Settlement A/c (JPY),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202045,Bangladesh Bank RTGS Settlement A/c (CAD),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202921,Bangladesh Bank FC Clearing A/c (DAD-USD),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202922,Bangladesh Bank FC Clearing A/c (DAD-EUR),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21202923,Bangladesh Bank FC Clearing A/c (DAD-GBP),21202,Assets: Office Accounts,1,0,approve,0
+Layer 5,21301001,Balance with Sonali Bank,21301,Assets: Office Accounts,1,0,approve,0
+Layer 5,21401001,Balance with other Banks <Cont. Acctts.> BDT,21401,Assets: Customer Accounts,1,0,approve,0
+Layer 5,21401002,Balance with other Banks <Deal Acctts.> BDT,21401,Assets: Customer Accounts,1,0,approve,0
+Layer 5,21401003,Balance with Mobile Wallet,21401,Assets: Office Accounts,1,0,approve,0
+Layer 5,21403001,Foreign Banks Nostro (USD),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403002,Foreign Banks Nostro (ACU),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403003,Foreign Banks Nostro (EUR),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403004,Foreign Banks Nostro (GBP),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403005,Foreign Banks Nostro (JPY),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403006,Foreign Banks Nostro (SGD),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403007,Foreign Banks Nostro (CHF),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403008,Foreign Banks Nostro(ACU-USD),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403009,Foreign Banks Nostro (ACU-EUR),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403010,Foreign Banks Nostro (AED),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403011,Foreign Banks Nostro (QAR),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403012,Foreign Banks Nostro (AUD),21403,Treasury Asset,1,0,approve,0
+Layer 5,21403013,Foreign Banks Nostro (SAR),21403,Treasury Asset,1,0,approve,0
+Layer 5,21404001,Local Bank Nostro <USD>,21404,Assets: Office Accounts,1,0,approve,0
+Layer 5,21405001,Interest Receivable on Balance with other Bank <Cont. Acctts> (BDT),21405,Assets: Office Accounts,1,0,approve,0
+Layer 5,21405002,Interest Receivable on Balance with other Bank <Deal Acctts> (BDT),21405,Assets: Office Accounts,1,0,approve,0
+Layer 5,22101001,Call Money Lending,22101,Treasury Asset,1,0,approve,0
+Layer 5,22102001,Call Money USD,22102,Treasury Asset,1,0,approve,0
+Layer 5,22102002,Call Money GBP,22102,Treasury Asset,1,0,approve,0
+Layer 5,22103001,Interest Receivable on Call Money <BDT>,22103,Treasury Asset,1,0,approve,0
+Layer 5,22104001,Interest Receivable on Call Money <USD>,22104,Treasury Asset,1,0,approve,0
+Layer 5,22104002,Interest Receivable on Call Money <GBP>,22104,Treasury Asset,1,0,approve,0
+Layer 5,22105001,Term Placement ,22105,Treasury Asset,1,0,approve,0
+Layer 5,22106001,Term Placement USD,22106,Treasury Asset,1,0,approve,0
+Layer 5,22106002,Term Placement GBP,22106,Treasury Asset,1,0,approve,0
+Layer 5,22107001,Interest Receivable on Term Placement <BDT>,22107,Treasury Asset,1,0,approve,0
+Layer 5,22108001,Interest Receivable on Term Placement <USD>,22108,Treasury Asset,1,0,approve,0
+Layer 5,22108002,Interest Receivable on Term Placement <GBP>,22108,Treasury Asset,1,0,approve,0
+Layer 5,22109001,Short Term Placement ,22109,Treasury Asset,1,0,approve,0
+Layer 5,22110001,Short Term Placement USD,22110,Treasury Asset,1,0,approve,0
+Layer 5,22110002,Short Term Placement GBP,22110,Treasury Asset,1,0,approve,0
+Layer 5,22111001,Interest Receivable on Short Term Placement <BDT>,22111,Treasury Asset,1,0,approve,0
+Layer 5,22112001,Interest Receivable on Short Term Placement <USD>,22112,Treasury Asset,1,0,approve,0
+Layer 5,22112002,Interest Receivable on Short Term Placement <GBP>,22112,Treasury Asset,1,0,approve,0
+Layer 5,22113001,Overnight Lending,22113,Treasury Asset,1,0,approve,0
+Layer 5,22114001,Interest Receivable on Overnight Lending <BDT>,22114,Treasury Asset,1,0,approve,0
+Layer 5,23101001,Stock of Prize Bonds,23101,Assets: Office Accounts,1,0,approve,0
+Layer 5,23101002,Govt. Securities (Encumbered),23101,Treasury Asset,1,0,approve,0
+Layer 5,23101003,Bangladesh Bank Bill,23101,Treasury Asset,1,0,approve,0
+Layer 5,23101004,Repo Interest Adjustment,23101,Treasury Asset,1,0,approve,0
+Layer 5,23102001,Treasury Bills Held for Trading (HFT) Reverse Repo,23102,Treasury Asset,1,0,approve,0
+Layer 5,23102002,Treasury Bills Held for Trading (HFT),23102,Treasury Asset,1,0,approve,0
+Layer 5,23102003,Treasury Bills Held to Maturity (HTM) Reverse Repo,23102,Treasury Asset,1,0,approve,0
+Layer 5,23102004,Treasury Bills Held to Maturity (HTM),23102,Treasury Asset,1,0,approve,0
+Layer 5,23102005,Govt. Securities T Bill  (Encumbered),23102,Treasury Asset,1,0,approve,0
+Layer 5,23103001,Treasury Bond (HTM) Reverse Repo,23103,Treasury Asset,1,0,approve,0
+Layer 5,23103002,Treasury Bond Held for Trading (HFT) Reverse Repo,23103,Treasury Asset,1,0,approve,0
+Layer 5,23103003,Treasury Bond Held to Maturity (HTM),23103,Treasury Asset,1,0,approve,0
+Layer 5,23103004,Remeasured HTM,23103,Treasury Asset,1,0,approve,0
+Layer 5,23103005,Interest Receivables on Treasury Bond,23103,Treasury Asset,1,0,approve,0
+Layer 5,23103006,Treasury Bond Held for Trading (HFT),23103,Treasury Asset,1,0,approve,0
+Layer 5,23201001,<Private> Equity Investments,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201002,<Private> Investments in Debenture,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201003,<Private> Investments in Bonds <Corp>,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201004,<Private> Investments in Bonds <Sub-ordinated>,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201005,<Public> Proprietary Investment Portfolio,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201006,Investment under Managed Portfolio,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201007,Investment in Mutual Fund <pvt placement> Open ended,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201008,Investment in Mutual Fund <pvt placement> Closed ended,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201009,Investment in Preference Share,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201010,Investment in Zero Coupon Bond <Corporate>,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201011,Investment in Commercial Paper,23201,Treasury Asset,1,0,approve,0
+Layer 5,23201012,Interest Receivable on Investment  in Commercial Paper,23201,Treasury Asset,1,0,approve,0
+Layer 5,23201013,Interest Receivable in <Private> Investments in Debenture,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201014,Interest Receivable in <Private> Investments in Bonds <Corp>,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23201015,Interest Receivable in <Private> Investments in Bonds <Sub-ordinated>,23201,Assets: Office Accounts,1,0,approve,0
+Layer 5,23301001,Investment in Subsidiaries MTB Securities Limited,23301,Assets: Office Accounts,1,0,approve,0
+Layer 5,23301002,Investment in Subsidiaries MTB Capital Limited,23301,Assets: Office Accounts,1,0,approve,0
+Layer 5,23301003,Investment in Subsidiaries MTB Exchange (UK) Limited,23301,Assets: Office Accounts,1,0,approve,0
+Layer 5,24101001,Auto Loan,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101002,MTB Home Loan,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101003,MTB Home Equity Loan,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101004,MTB NRB Home Loan,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101005,MTB Neer,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101006,MTB Personal Loan,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101007,MTB Professional Loan,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101008,MTB Consumer Loan,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101009,MTB EDU Finance (TL),24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101010,MTB EDU Finance- Secured (RTL),24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101011,MTB Life Line <RTL>,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101012,MTB Cash Line <RTL>,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101013,MTB Home Loan (Staff),24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101014,MTB Home Equity Loan (Staff),24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101015,MTB Neer (Staff),24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101901,MTB Personal Loan <DST>,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101902,MTB Home Loan <DST>,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101903,MTB Home Equity Loan <DST>,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101904,Home Loan refinance,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101906,Retail Term Loan Discontinued Products,24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24101905,Auto Loan (Old),24101,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24102001,Staff Auto Loan,24102,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24102002,Staff Housing Loan,24102,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24102003,Staff Loan Against Prov. Fund,24102,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24102004,Staff Personal Loan,24102,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24103001,House Building Loan <Developer>,24103,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24103002,Lease Finance (Monthly) [C&S],24103,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24103003,Lease Finance (Quarterly) [C&S],24103,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24103004,House Building Loan <Commercial>,24103,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24103005,Term Loan Non Industrial [C&S],24103,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24103006,Term Loan Industrial [C&S],24103,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24103007,House Building Loan-Residential [C&S],24103,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24103008,Term Loan-IPFF Fund,24103,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24103009,Term Loan-LTFF,24103,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24103010,Term Loan-by OBU USD,24103,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104001,MTB Digoon,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104002,MTB Small Business Loan Scheme,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104003,MTB Youth Line,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104004,Microfinance <Enterprise-TL>,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104005,Microfinance Scheme (Ent.  -TL) <SME>,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104006,MTB Bhagyabati <Refinance>,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104007,MTB Gunabati <pre-finance>,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104008,MTB Green Energy,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104009,MTB IT Genius (TL),24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104010,MTB Krishijat (TL),24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104011,MTB Light Engineering (TL),24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104012,MTB Small Business Loan Scheme Unsecured,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104013,MTB Shachal,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104014,MTB Green Energy Unsecured,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104015,MTB Krishijat (TL) Unsecured,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24104016,MTB Light Engineering (TL) Unsecured,24104,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24105001,Microfinance <Agri-TL>,24105,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24105002,MTB Krishi TL,24105,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201001,Demand Loan General,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201002,Demand Loan <Forced>,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201003,Demand Loan Short Term,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201004,Demand Loan Time,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201005,Payment Aganist Document <PAD>,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201006,Payment Against Document (Back to Back),24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201007,Inland Doc. Bill Purchased <Sight>,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201008,Inland Doc. Bill Discounted <Usance> ,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201010,Foreign Demand Bill Purchased <Sight>,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201011,Foreign Demand Bill Discounted <Usance> ,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201013,Loan against Trust Receipt ,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201014,Advance against Cash Incentive ,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201015,Cash Aganist Document DL,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201016,Secured Overdraft Garments <DL>,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201017,Packing Credit Loan DL,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201018,Secured Overdraft Genl Business DL,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201019,FDBP - Advance Against Collection Bill,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24201020,IDBP - Advance Against Collection Bill,24201,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24202001,Loan under EDF DL FC,24202,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24202002,PAD EDF  FC DL,24202,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24203001,Loans against Rural Credit <SME> DL,24203,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24203002,MTB Supply Chain Finance <SME> DL,24203,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24203003,MTB Mousumi,24203,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24204001,Foreign Cheque Purchased,24204,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24204002,Inland Cheque Purchased,24204,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24205001,MTB Krishi DL,24205,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24301001,Secured Overdraft (FO) against Bank's own TD,24301,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24301002,Secured Overdraft against other Bank's TD,24301,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24301003,Secured Overdraft (FO) against Shares etc.,24301,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24301004,MTB EDU Finance - Over Draft (Revolving),24301,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24301005,MTB Cash Line <ROD>,24301,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24302001,Corporate Cash Credit (Hypo),24302,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24302002,Secured Overdraft (Shares and Debenture) [C&S],24302,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24302003,Secured Overdraft (FO)-WBD  [C&S],24302,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24302004,Secured Overdraft (General) Work/Supply Order [C&S],24302,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24302005,Secured Overdraft (General) -Pay Order  [C&S],24302,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24302006,Secured Overdraft Real Estate [C&S],24302,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24302007,Secured Overdraft (General)-Business  [C&S],24302,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24302010,Secured Overdraft (Others)-Business  [C&S],24302,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24302901,C & S Discontinued Continuous Loans,24302,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24302011,Secured Overdraft (lP)-Business  [C&S],24302,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24303001,MTB SME Cash Credit (Hypo),24303,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24303002,MTB Revolving Loan,24303,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24303004,MTB Microfinance enterprise Revolving Loan,24303,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24303005,MTB Light Engineering Revolving Loan,24303,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24303006,MTB IT Genious Revolving Loan,24303,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24303007,MTB Krishijat Revolving Loan,24303,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24305001,MTB Microfinance Agri Revolving Loan,24305,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24401001,Credit Card Loans,24401,Assets: Office Accounts,1,0,approve,0
+Layer 5,24402001,Credit Card Loans USD,24402,Assets: Office Accounts,1,0,approve,0
+Layer 5,24501001,Interest Receivable on MTB Auto Loan,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501002,Interest Receivable on MTB Home Loan,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501003,Interest Receivable on MTB Home Equity Loan,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501004,Interest Receivable on MTB NRB Home Loan,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501005,Interest Receivable on MTB Neer,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501006,Interest Receivable on MTB Personal Loan,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501007,Interest Receivable on MTB Professional Loan,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501008,Interest Receivable on Consumer Financing,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501009,Interest Receivable on MTB EDU Finance (TL),24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501010,IR on MTB EDU Finance- Secured (RTL),24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501011,Interest Receivable on  MTB Life Line,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501012,Interest Receivable on MTB Cash Line <RTL>,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501013,Interest Receivable on MTB Home Loan (Staff),24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501014,Interest Receivable on MTB Home Equity Loan (Staff),24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501015,Interest Receivable on MTB Neer (Staff),24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501901,Interest Receivable on MTB Personal Loan <DST>,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501902,Interest Receivable on MTB Home Loan <DST>,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501903,Interest Receivable on MTB Home Equity Loan <DST>,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501904,Interest Receivable on Home Loan refinance,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501905,IR on Auto Loan (Old),24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24501906,Interest Receivable on Retail Term Loan Discontinued Products,24501,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24502001,Interest Receivable on Car Loan (Employee),24502,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24502002,Interest Receivable on Employees House Building Loan,24502,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24502003,Interest Receivable on Staff Loan Aganist Prov. Fund,24502,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24502004,Interest Receivable on Staff Loan Personal Loan,24502,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503001,Interest Receivable on House Building Loan <Developer>,24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503002,Lease Finance (Monthly) Rental receivables,24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503003,Lease Finance (Quarterly) Rental receivables,24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503004,Interest Receivable on House Building Loan <Commercial>,24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503005,Interest Receivable on Term Loan Non-Industrial,24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503006,Interest Receivable on Term Loan Industrial,24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503007,Interest Receivable on House Building Loan-Residential [C&S],24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503008,Interest Receivable on Term Loan-IPFF Fund,24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503009,Interest Receivable on Term Loan-LTFF,24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503010,Interest Receivable on Term Loan-by OBU USD,24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503011,IR on Converted Term Loan fm Term Loan [C&S],24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24503012,IR on Converted Term Loan fm DL & Continuous Loan [C&S],24503,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504001,Interest Receivable on MTB Digoon,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504002,Interest Receivable on Small Business Loan Scheme,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504003,Interest Receivable on  MTB Youth Line,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504004,Interest Receivable on  Micro-finance <Ent.-TL>,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504005,Interest Receivable on MTB Inclusive Finance,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504006,Interest Receivable on MTB Bhagyaboti <Re-finance>,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504007,Interest Receivable on MTB Gunaboti <Pre-finance>,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504008,Interest Receivable on MTB Green Energy,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504009,Interest Receivable on MTB IT Geniuos,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504010,Interest Receivable on MTB Krishijat,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504011,Interest Receivable on MTB Light Engineering,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504012,IR on MTB Small Business Loan Scheme Unsecured,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504013,Interest Receivable on MTB Shachal,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504014,Interest Receivable on MTB Green Energy Unsecured,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504015,IR on MTB Krishijat (TL) Unsecured,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24504016,IR on MTB Light Engineering (TL) Unsecured,24504,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24505001,Interest Receivable on Microfinance <Agri-TL>,24505,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24505002,Interest Receivable on MTB Krishi  (TL),24505,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506001,Interest Receivable on Demand Loan General,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506002,Interest Receivable on Demand Loan Forced,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506003,Interest Receivable on Demand Loan Short Term,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506004,Interest Receivable on Demand Loan Time,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506005,Interest Receivable on Payment Aganist Document,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506006,Interest Receivable on Payment Against Document (B-to-B),24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506007,Interest Receivable on Inland Doc. Bill Purchased <Sight>,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506008,Interest Receivable on Inland Doc. Bill Discounted <Usance>,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506010,Interest Receivable on Foreign D.B Purchased <Sight>,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506011,Interest Receivable on Foreign D.B Discounted <Usance> ,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506013,Interest Receivable on Loan Against Trust Receipt ,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506014,Interest Receivable on Cash Aganist Document DL,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506015,Interest Receivable on Demand Loan Garments,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506016,Interest Receivable on Packing Credit,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506017,Interest Receivable on Advance Against Cash Incentive ,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506018,Interest Receivable Secured Overdraft Genl Business DL,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506019,IR on FDBP - Advance Against Collection Bill,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24506020,IR on IDBP - Advance Against Collection Bill,24506,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24507001,Interest Receivable on EDF Loan <USD>,24507,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24507002,Interest Receivable on PAD EDF Loan <USD> DL,24507,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24508001,Interest Receivable on Demand Loans against Rural Credit,24508,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24508002,Interest Receivable on MTB Supply Chain Finance <SME> DL,24508,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24508003,Interest Receivable on  MTB Mousumi,24508,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24509001,Interest Receivable on Secured Overdraft against Bank's own TD,24509,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24509002,Interest Receivable on Secured Overdraft against other Bank's TD,24509,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24509003,Interest Receivable on Secured Overdraft against Shares etc.,24509,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24509004,Interest Receivable on MTB EDU Finance - Over Draft (Revolving),24509,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24509005,Interest Receivable on MTB Cash Line <ROD>,24509,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24510001,Interest Receivable on Corp Cash Credit Hypo,24510,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24510002,Interest Receivable on SOD (Shares & Debentures) C&S,24510,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24510003,Interest Receivable on SOD (FO) WBD C&S,24510,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24510004,Interest Receivable on Secured Overdraft Work/ Supply Order C & S,24510,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24510005,Interest Receivable on Secured Overdraft Pay Order C & S,24510,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24510006,Interest Receivable on Secured Overdraft Real Estate C & S,24510,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24510007,Interest Receivable on Secured Overdraft Business C & S,24510,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24510010,Interest Receivable on Secured Overdraft (Others)-Business  [C&S],24510,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24510011,Interest Receivable on Secured Overdraft (lP)-Business  [C&S],24510,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24510901,Interest Receivable on Discontinued Continuous Loans <C & S>,24510,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24511001,Interest Receivable on MTB SME Cash Credit Hypo,24511,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24511002,Interest Receivable on MTB Revolving Loan,24511,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24511004,Interest Receivable on MTB Microfinance enterprise Revolving Loan,24511,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24511005,Interest Receivable on MTB Light Engineering Revolving Loan,24511,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24511006,Interest Receivable on MTB IT Genious Revolving Loan,24511,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24511007,Interest Receivable on MTB Krishijat Revolving Loan,24511,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24512001,Interest Receivable on Debit Balance in Liability Accounts,24512,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24513001,Interest Receivable on Foreign Cheque Purchased,24513,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24513002,Interest Receivable on Inland Cheque Purchased,24513,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24515001,Interest Receivable on Bill Discounting USD (OBU) Foreign,24515,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24515002,Interest Receivable on UPAS/ Buyer's Credit USD (OBU),24515,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24515003,Interest Receivable on Bill Discounting USD (OBU) Inland,24515,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24516001,Interest Receivable <Miscellaneous-Legacy>,24516,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24517001,Interest Receivable on MTB Microfinance Agri Revolving Loan,24517,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24518001,Intersest Receivable on MTB Krishi DL,24518,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601001,Penal Interest Receivable on MTB Auto Loan,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601002,Penal Interest Receivable on MTB Home Loan,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601003,Penal Interest Receivable on MTB Home Equity Loan,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601004,Penal Interest Receivable on MTB NRB Home Loan,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601005,Penal Interest Receivable on MTB Neer,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601006,Penal Interest Receivable on MTB Personal Loan,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601007,Penal Interest Receivable on MTB Professional Loan,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601008,Penal Interest Receivable on Consumer Financing,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601009,Penal Interest Receivable on MTB EDU Finance (TL),24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601011,Penal Interest Receivable on  MTB Life Line,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601012,Penal Interest Receivable on MTB Cash Line <RTL>,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601013,PIR on MTB Home Loan (Staff),24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601014,PIR on MTB Home Equity Loan (Staff),24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601015,PIR on MTB Neer (Staff),24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601901,Penal Interest Receivable on MTB Personal Loan <DST>,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601902,Penal Interest Receivable on MTB Home Loan <DST>,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601903,Penal Interest Receivable on MTB Home Equity Loan <DST>,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601904,Penal Interest Receivable on Home Loan refinance,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601906,Penal Interest Receivable on Retail Term Loan Discontinued Products,24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24601905,Penal Interest Receivable on Auto Loan (Old),24601,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24602001,Penal Interest Receivable on Car Loan (Employee),24602,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24602002,Penal Interest Receivable on Employees House Building Loan,24602,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24602003,Penal Interest Receivable on Staff Loan Aganist Prov. Fund,24602,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24602004,Penal Interest Receivable on Staff Personal Loan,24602,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603001,Lease Finance (Monthly) Rental receivables Penal,24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603002,Lease Finance (Quarterly) Rental receivables Penal,24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603003,Penal Interest Receivable on House Building Loan <Developer>,24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603004,Penal Interest Receivable on House Building Loan <Commercial>,24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603005,Penal Interest Receivable on Term Loan Non-Industrial,24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603006,Penal Interest Receivable on Term Loan Industrial,24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603007,Penal Interest Receivable on House Building Loan-Residential [C&S],24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603008,Penal Interest Receivable on Term Loan-IPFF Fund,24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603009,Penal Interest Receivable on Term Loan-LTFF,24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603010,Penal Interest Receivable on Term Loan-by OBU USD,24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603011,PIR on Converted Term Loan fm Term Loan [C&S],24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24603012,PIR onConverted Term Loan fm DL & Continuous Loan [C&S],24603,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604001,Penal Interest Receivable on MTB Digoon,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604002,Penal Interest Receivable on Small Business Loan Scheme,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604003,Penal Interest Receivable on  MTB Youth Line,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604004,Penal Interest Receivable on  Micro-finance <Ent.-TL>,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604005,Penal Interest Receivable on MTB Inclusive Finance,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604006,Penal Interest Receivable on MTB Bhagyaboti <Re-finance>,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604007,Penal Interest Receivable on MTB Gunaboti <Pre-finance>,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604008,Penal Interest Receivable on MTB Green Energy,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604009,Penal Interest Receivable on MTB IT Geniuos,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604010,Penal Interest Receivable on MTB Krishijat,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604011,Penal Interest Receivable on MTB Light Engineering,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604012,Penal Interest Receivable  on MTB Small Business Loan Scheme Unsecured,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604013,Penal Interest Receivable on MTB Shachal,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604014,Penal Interest Receivable  on MTB Green Energy Unsecured,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604015,Penal Interest Receivable  on MTB Krishijat (TL) Unsecured,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24604016,Penal Interest Receivable  on MTB Light Engineering (TL) Unsecured,24604,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24605001,Penal Interest Receivable on Microfinance <Agri-TL>,24605,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24605002,Penal Interest Receivable on MTB Krishi (TL),24605,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606001,Penal Interest Receivable on Demand Loan General,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606002,Penal Interest Receivable on Demand Loan Forced,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606003,Penal Interest Receivable on Demand Loan Short Term,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606004,Penal Interest Receivable on Demand Loan Time,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606005,Penal Interest Receivable on Payment Aganist Document,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606006,Penal Interest Receivable on Payment Against Document (B-to-B),24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606007,Penal Interest Receivable on Inland Doc. Bill Purchased <Sight>,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606008,Penal Interest Receivable on Inland Doc. Bill Discounted <Usance> C,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606010,Penal Interest Receivable on Foreign D.B Purchased <Sight>,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606011,Penal Interest Receivable on Foreign D.B Discounted <Usance> ,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606013,Penal Interest Receivable on Loan Against Trust Receipt ,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606014,Penal Interest Receivable on Cash Aganist Document DL,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606015,Penal Interest Receivable on Demand Loan Garments,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606016,Penal Interest Receivable on Packing Credit,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606017,Penal Interest Receivable on Advance Against Cash Incentive ,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606018,Penal Interest Receivable on Secured Overdraft Genl Business DL,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606019,Penal Interest Receivable on FDBP - Advance Against Collection Bill,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24606020,Penal Interest Receivable on IDBP - Advance Against Collection Bill,24606,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24607001,Penal Interest Receivable on EDF Loan <USD>,24607,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24608001,Penal Interest Receivable on Demand Loans against Rural Credit,24608,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24608002,Penal Interest Receivable on MTB Supply Chain Finance <SME> DL,24608,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24608003,Penal Interest Receivable on  MTB Mousumi,24608,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24609001,Penal Interest Receivable on Secured Overdraft against Bank's own TD,24609,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24609002,Penal Interest Receivable on Secured Overdraft against other Bank's TD,24609,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24609003,Penal Interest Receivable on Secured Overdraft against Shares etc.,24609,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24609004,Penal Interest Receivable on MTB EDU Finance - Over Draft (Revolving),24609,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24609005,Penal Interest Receivable on MTB Cash Line <ROD>,24609,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24610001,Penal Interest Receivable on Corporate Cash Credit Hypo,24610,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24610002,Penal Interest Receivable on SOD (Shares & Debentures) C&S,24610,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24610003,Penal Interest Receivable on SOD (FO) WBD C&S,24610,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24610004,Penal Interest Receivable on Secured Overdraft Work/ Supply Order C & S,24610,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24610005,Penal Interest Receivable on Secured Overdraft Pay Order C & S,24610,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24610006,Penal Interest Receivable on Secured Overdraft Real Estate C & S,24610,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24610007,Penal Interest Receivable on Secured Overdraft Business C & S,24610,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24610010,Penal Interest Receivable on Secured Overdraft (Others)-Business  [C&S],24610,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24610011,Penal Interest Receivable on Secured Overdraft (lP)-Business  [C&S],24610,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24610901,Penal Interest Receivable on Discontinued Continuous Loans <C & S>,24610,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24611001,Penal Interest Receivable on MTB SME Cash Credit Hypo,24611,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24611002,Penal Interest Receivable on MTB Revolving Loan,24611,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24611004,Penal Interest Receivable on MTB Microfinance enterprise Revolving Loan,24611,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24611005,Penal Interest Receivable on MTB Light Engineering Revolving Loan,24611,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24611006,Penal Interest Receivable on MTB IT Genious Revolving Loan,24611,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24611007,Penal Interest Receivable on MTB Krishijat Revolving Loan,24611,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24613001,Penal Interest Receivable <overdue> on Foreign Cheque Purchased,24613,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24613002,Penal Interest Receivable <overdue> on Inland Cheque Purchased,24613,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24615001,Penal Interest Receivable on Bill Discounting USD (OBU Foreign,24615,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24615002,Penal Interest Receivable on UPAS/ Buyer's Credit USD (OBU),24615,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24615003,Penal Interest Receivable on Bill Discounting USD (OBU) Inland,24615,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24616001,Penal Interest Receivable on MTB Microfinance Agri Revolving Loan,24616,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24617001,Penal Interest Receivable on MTB Krishi DL,24617,Interest Receivable Accounts,1,0,approve,0
+Layer 5,24701001,Foreign Bill Discounting USD,24701,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24701002,Inland Bill Discounting USD,24701,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24702001,UPAS/ Buyer's Credit USD,24702,Assets: Customer Accounts,1,0,approve,0
+Layer 5,24801001,Debit Balance in Libility Accounts,24801,No BGL only CGL,1,0,approve,0
+Layer 5,25101001,Land,25101,Assets: Office Accounts,1,0,approve,0
+Layer 5,25101002,Building,25101,Assets: Office Accounts,1,0,approve,0
+Layer 5,25102001,Fixture,25102,Assets: Office Accounts,1,0,approve,0
+Layer 5,25102002,Furniture,25102,Assets: Office Accounts,1,0,approve,0
+Layer 5,25103001,Electrical Equipments,25103,Assets: Office Accounts,1,0,approve,0
+Layer 5,25103002,Other Office Equipments,25103,Assets: Office Accounts,1,0,approve,0
+Layer 5,25104001,Computers & Peripherals,25104,Assets: Office Accounts,1,0,approve,0
+Layer 5,25105001,Motor Cars,25105,Assets: Office Accounts,1,0,approve,0
+Layer 5,25105002,Motor Cycles,25105,Assets: Office Accounts,1,0,approve,0
+Layer 5,25201001,Software,25201,Assets: Office Accounts,1,0,approve,0
+Layer 5,26101001,Adjusting A/C Debit,26101,Assets: Office Accounts,1,0,approve,0
+Layer 5,26101002,Adjusting A/C Debit USD OBU,26101,Assets: Office Accounts,1,0,approve,0
+Layer 5,26102001,Clearing House Adjustment,26102,Assets: Office Accounts,1,0,approve,0
+Layer 5,26103001,Coupon Interest Adjustment Account,26103,Assets: Office Accounts,1,0,approve,0
+Layer 5,26201001,Advance paid to Employees,26201,Assets: Office Accounts,1,0,approve,0
+Layer 5,26202001,Advance against Suppliers/ Parties <Vendors>,26202,Assets: Office Accounts,1,0,approve,0
+Layer 5,26203001,Advance Deposit,26203,Assets: Office Accounts,1,0,approve,0
+Layer 5,26204001,Advance Income Tax,26204,Assets: Office Accounts,1,0,approve,0
+Layer 5,26205001,Advance Remuneration/Salary,26205,Assets: Office Accounts,1,0,approve,0
+Layer 5,26206001,Advance Rent <Advance Rent_less than 1 year>,26206,Assets: Office Accounts,1,0,approve,0
+Layer 5,26206002,Advance Rent <Advance Rent_more than 1 year>,26206,Assets: Office Accounts,1,0,approve,0
+Layer 5,26207001,Advance pymt to construction of HO bldg,26207,Assets: Office Accounts,1,0,approve,0
+Layer 5,26208001,Advance against TA/DA,26208,Assets: Office Accounts,1,0,approve,0
+Layer 5,26209001,Advance against POSTAGE,26209,Assets: Office Accounts,1,0,approve,0
+Layer 5,26210001,Advance against  PETTY CASH,26210,Assets: Office Accounts,1,0,approve,0
+Layer 5,26501001,Receivable from Subsidiaries,26501,Assets: Office Accounts,1,0,approve,0
+Layer 5,26501002,Receivable from Subsidiaries Others,26501,Assets: Office Accounts,1,0,approve,0
+Layer 5,26601001,Chargeback Settlement A/c,26601,Assets: Office Accounts,1,0,approve,0
+Layer 5,26602001,Sundry Debtors,26602,Assets: Office Accounts,1,0,approve,0
+Layer 5,26603001,Sanchay Patra (Encashed/Interest Paid),26603,Assets: Office Accounts,1,0,approve,0
+Layer 5,26604001,Legal Expense,26604,Assets: Office Accounts,1,0,approve,0
+Layer 5,26605001,Economic Exchange Centre,26605,Assets: Office Accounts,1,0,approve,0
+Layer 5,26608001,Remittance Payment Account,26608,Assets: Office Accounts,1,0,approve,0
+Layer 5,26609001,DD Paid Without Advice,26609,Assets: Office Accounts,1,0,approve,0
+Layer 5,26610001,DD CANCELLED,26610,Assets: Office Accounts,1,0,approve,0
+Layer 5,26701001,Receivable from OBU,26701,Treasury Asset,1,0,approve,0
+Layer 5,26801001,Preliminary Expenses,26801,Assets: Office Accounts,1,0,approve,0
+Layer 5,26803001,Prepaid Promotional and Development Expenses,26803,Assets: Office Accounts,1,0,approve,0
+Layer 5,26804001,Stamps in Hand,26804,Assets: Office Accounts,1,0,approve,0
+Layer 5,26805001,Stock of Commemorative Coins,26805,Assets: Office Accounts,1,0,approve,0
+Layer 5,26806001,Stock of Fixed Assets,26806,Assets: Office Accounts,1,0,approve,0
+Layer 5,26807001,Printed stationeries,26807,Assets: Office Accounts,1,0,approve,0
+Layer 5,26807002,Security Stationeries,26807,Assets: Office Accounts,1,0,approve,0
+Layer 5,26812001,Assets awaiting disposal,26812,Assets: Office Accounts,1,0,approve,0
+Layer 5,26808001,Transit Account _Repo,26808,Assets: Office Accounts,1,0,approve,0
+Layer 5,26808002,Transit Account Bangladesh Bank,26808,Assets: Office Accounts,1,0,approve,0
+Layer 5,26809001,Deferred Tax Asset,26809,Assets: Office Accounts,1,0,approve,0
+Layer 5,26811001,Sundry Asset (Trickle Field),,Assets: Office Accounts,1,0,approve,0
+Layer 5,26810001,Protested Bills,26810,Assets: Office Accounts,1,0,approve,0
+Layer 5,26999001,Miscellaneous Assets created for Migration,26999,Assets: Office Accounts,1,0,approve,0
+Layer 5,31101001,Interest Earnedon MTB Auto Loan,31101,Income Accounts,1,0,approve,0
+Layer 5,31101002,Interest Earnedon MTB Home Loan,31101,Income Accounts,1,0,approve,0
+Layer 5,31101003,Interest Earnedon MTB Home Equity Loan,31101,Income Accounts,1,0,approve,0
+Layer 5,31101004,Interest Earnedon MTB NRB Home Loan,31101,Income Accounts,1,0,approve,0
+Layer 5,31101005,Interest Earnedon MTB Neer,31101,Income Accounts,1,0,approve,0
+Layer 5,31101006,Interest Earned on MTB Personal Loan,31101,Income Accounts,1,0,approve,0
+Layer 5,31101007,Interest Earned on MTB Professional Loan,31101,Income Accounts,1,0,approve,0
+Layer 5,31101008,Interest Earned on Consumer Financing,31101,Income Accounts,1,0,approve,0
+Layer 5,31101009,Interest Earned on MTB EDU Finance (TL),31101,Income Accounts,1,0,approve,0
+Layer 5,31101011,Interest Earned on  MTB Life Line,31101,Income Accounts,1,0,approve,0
+Layer 5,31101012,Interest Earned on MTB Cash Line <RTL>,31101,Income Accounts,1,0,approve,0
+Layer 5,31101013,IE on MTB Home Loan (Staff),31101,Income Accounts,1,0,approve,0
+Layer 5,31101014,IE on MTB Home Equity Loan (Staff),31101,Income Accounts,1,0,approve,0
+Layer 5,31101015,IE on MTB Neer (Staff),31101,Income Accounts,1,0,approve,0
+Layer 5,31101901,Interest Earned on MTB Personal Loan <DST>,31101,Income Accounts,1,0,approve,0
+Layer 5,31101902,Interest Earnedon MTB Home Loan <DST>,31101,Income Accounts,1,0,approve,0
+Layer 5,31101903,Interest Earnedon MTB Home Equity Loan <DST>,31101,Income Accounts,1,0,approve,0
+Layer 5,31101904,Interest Earnedon Home Loan refinance,31101,Income Accounts,1,0,approve,0
+Layer 5,31101905,IE on Auto Loan (Old),31101,Income Accounts,1,0,approve,0
+Layer 5,31101906,Interest Income on Retail Term Loan Discontinued Products,31101,Income Accounts,1,0,approve,0
+Layer 5,31102001,Interest Earnedon Car Loan (Employee),31102,Income Accounts,1,0,approve,0
+Layer 5,31102002,Interest Earnedon Employees House Building Loan,31102,Income Accounts,1,0,approve,0
+Layer 5,31102003,Interest Earnedon Staff Loan Aganist Prov. Fund,31102,Income Accounts,1,0,approve,0
+Layer 5,31102004,Interest Earnedon Staff Personal Loan,31102,Income Accounts,1,0,approve,0
+Layer 5,31103001,Interest Earnedon House Building Loan <Developer>,31103,Income Accounts,1,0,approve,0
+Layer 5,31103002,Interest Earnedon Lease Finance (Monthly) Rental Earned,31103,Income Accounts,1,0,approve,0
+Layer 5,31103003,Lease Finance (Quarterly) Rental Earned,31103,Income Accounts,1,0,approve,0
+Layer 5,31103004,Interest Earnedon House Building Loan <Commercial>,31103,Income Accounts,1,0,approve,0
+Layer 5,31103005,Interest Earned on Term Loan Non-Industrial,31103,Income Accounts,1,0,approve,0
+Layer 5,31103006,Interest Earnedon Term Loan Industrial,31103,Income Accounts,1,0,approve,0
+Layer 5,31103007,Interest Earned on House Building Loan-Residential [C&S],31103,Income Accounts,1,0,approve,0
+Layer 5,31103008,Interest Earned on Term Loan-IPFF Fund,31103,Income Accounts,1,0,approve,0
+Layer 5,31103009,Interest Earned on Term Loan-LTFF,31103,Income Accounts,1,0,approve,0
+Layer 5,31103010,Interest Earned on Term Loan-by OBU USD,31103,Income Accounts,1,0,approve,0
+Layer 5,31103011,IE on Converted Term Loan fm Term Loan [C&S],31103,Income Accounts,1,0,approve,0
+Layer 5,31103012,IE onConverted Term Loan fm DL & Continuous Loan [C&S],31103,Income Accounts,1,0,approve,0
+Layer 5,31104001,Interest Earned on MTB Digoon,31104,Income Accounts,1,0,approve,0
+Layer 5,31104002,Interest Earnedon Small Business Loan Scheme,31104,Income Accounts,1,0,approve,0
+Layer 5,31104003,Interest Earnedon MTB Youth Line,31104,Income Accounts,1,0,approve,0
+Layer 5,31104004,Interest Earnedon  Micro-finance <Ent.-TL>,31104,Income Accounts,1,0,approve,0
+Layer 5,31104005,Interest Earnedon Microfinance Scheme (Ent.  -TL) <SME>,31104,Income Accounts,1,0,approve,0
+Layer 5,31104006,Interest Earnedon MTB Bhagyaboti <Re-finance>,31104,Income Accounts,1,0,approve,0
+Layer 5,31104007,Interest Earned on MTB Gunaboti <Pre-finance>,31104,Income Accounts,1,0,approve,0
+Layer 5,31104008,Interest Earned on MTB Green Energy,31104,Income Accounts,1,0,approve,0
+Layer 5,31104009,Interest Earned on MTB IT Geniuos,31104,Income Accounts,1,0,approve,0
+Layer 5,31104010,Interest Earned on MTB Krishijat,31104,Income Accounts,1,0,approve,0
+Layer 5,31104011,Interest Earned on MTB Light Engineering,31104,Income Accounts,1,0,approve,0
+Layer 5,31104012,Interest Earned  on MTB Small Business Loan Scheme Unsecured,31104,Income Accounts,1,0,approve,0
+Layer 5,31104013,Interest Earned on MTB Shachal,31104,Income Accounts,1,0,approve,0
+Layer 5,31104014,Interest Earned  on MTB Green Energy Unsecured,31104,Income Accounts,1,0,approve,0
+Layer 5,31104015,Interest Earned  on MTB Krishijat (TL) Unsecured,31104,Income Accounts,1,0,approve,0
+Layer 5,31104016,Interest Earned  on MTB Light Engineering (TL) Unsecured,31104,Income Accounts,1,0,approve,0
+Layer 5,31105001,Interest Earned on Microfinance <Agri -TL>,31105,Income Accounts,1,0,approve,0
+Layer 5,31105002,Interest Earned on MTB Krishi -TL,31105,Income Accounts,1,0,approve,0
+Layer 5,31106001,Interest Earned on Demand Loan General,31106,Income Accounts,1,0,approve,0
+Layer 5,31106002,Interest Earned on Demand Loan Forced,31106,Income Accounts,1,0,approve,0
+Layer 5,31106003,Interest Earned on Demand Loan Short Term,31106,Income Accounts,1,0,approve,0
+Layer 5,31106004,Interest Earned on Demand Loan Time,31106,Income Accounts,1,0,approve,0
+Layer 5,31106005,Interest Earned on Payment Aganist Document,31106,Income Accounts,1,0,approve,0
+Layer 5,31106006,Interest Earned on Payment Against Document (B-to-B),31106,Income Accounts,1,0,approve,0
+Layer 5,31106007,Interest Earned on Inland Doc. Bill Purchased <Sight>,31106,Income Accounts,1,0,approve,0
+Layer 5,31106008,Interest Earned on Inland Doc. Bill Discounted <Usance> ,31106,Income Accounts,1,0,approve,0
+Layer 5,31106010,Interest Earned on Foreign D.B Purchased <Sight>,31106,Income Accounts,1,0,approve,0
+Layer 5,31106011,Interest Earned on Foreign D.B Discounted <Usance> ,31106,Income Accounts,1,0,approve,0
+Layer 5,31106013,Interest Earned on Loan Against Trust Receipt ,31106,Income Accounts,1,0,approve,0
+Layer 5,31106014,Interest Earned on Advance Against Cash Incentive ,31106,Income Accounts,1,0,approve,0
+Layer 5,31106015,Interest Earned on Cash Aganist Document DL,31106,Income Accounts,1,0,approve,0
+Layer 5,31106016,Interest Earned on Secured Overdraft Garments,31106,Income Accounts,1,0,approve,0
+Layer 5,31106017,Interest Earned on Packing Credit,31106,Income Accounts,1,0,approve,0
+Layer 5,31106018,Interest Earned Secured Overdraft Genl Business DL,31106,Income Accounts,1,0,approve,0
+Layer 5,31106019,IE on FDBP - Advance Against Collection Bill,31106,Income Accounts,1,0,approve,0
+Layer 5,31106020,IE on IDBP - Advance Against Collection Bill,31106,Income Accounts,1,0,approve,0
+Layer 5,31107001,Interest Earned on EDF Loan <USD>,31107,Income Accounts,1,0,approve,0
+Layer 5,31107002,Interest Earned on PAD EDF Loan <USD> DL,31107,Income Accounts,1,0,approve,0
+Layer 5,31108001,Interest Earned on Demand Loans against Rural Credit,31108,Income Accounts,1,0,approve,0
+Layer 5,31108002,Interest Earned on MTB Supply Chain Finance <SME> DL,31108,Income Accounts,1,0,approve,0
+Layer 5,31108003,Interest Earned on  MTB Mousumi,31108,Income Accounts,1,0,approve,0
+Layer 5,31109001,Interest Earned on Secured Overdraft against Bank's own TD,31109,Income Accounts,1,0,approve,0
+Layer 5,31109002,Interest Earned on Secured Overdraft against other Bank's TD,31109,Income Accounts,1,0,approve,0
+Layer 5,31109003,Interest Earned on Secured Overdraft against Shares etc.,31109,Income Accounts,1,0,approve,0
+Layer 5,31109004,Interest Earned on MTB EDU Finance - Over Draft (Revolving),31109,Income Accounts,1,0,approve,0
+Layer 5,31109005,Interest Earned on MTB Cash Line <ROD>,31109,Income Accounts,1,0,approve,0
+Layer 5,31110001,Interest Earned on Corp Cash Credit Hypo,31110,Income Accounts,1,0,approve,0
+Layer 5,31110002,Interest Earned on SOD (Shares & Debentures) C&S,31110,Income Accounts,1,0,approve,0
+Layer 5,31110003,Interest Earned on SOD (FO) WBD [C&S],31110,Income Accounts,1,0,approve,0
+Layer 5,31110004,Interest Earned on Secured Overdraft Work/ Supply Order [C&S],31110,Income Accounts,1,0,approve,0
+Layer 5,31110005,Interest Earned on Secured Overdraft Pay Order [C&S],31110,Income Accounts,1,0,approve,0
+Layer 5,31110006,Interest Earned on Secured Overdraft Real Estate [C&S],31110,Income Accounts,1,0,approve,0
+Layer 5,31110007,Interest Earned on Secured Overdraft Business [C&S],31110,Income Accounts,1,0,approve,0
+Layer 5,31110008,Interest Earned on Advance against Export Bill [C&S],31110,Income Accounts,1,0,approve,0
+Layer 5,31110009,Interest Earned on Advance against Inland Bill [C&S],31110,Income Accounts,1,0,approve,0
+Layer 5,31110010,Interest Earned on Secured Overdraft (Others)-Business  [C&S],31110,Income Accounts,1,0,approve,0
+Layer 5,31110011,Interest Earned on Secured Overdraft (lP)-Business  [C&S],31110,Income Accounts,1,0,approve,0
+Layer 5,31110901,Interest Income on Discontinued Continuous Loans <C & S>,31110,Income Accounts,1,0,approve,0
+Layer 5,31111001,Interest Earned on MTB SME Cash Credit Hypo,31111,Income Accounts,1,0,approve,0
+Layer 5,31111002,Interest Earned on MTB Revolving Loan,31111,Income Accounts,1,0,approve,0
+Layer 5,31111004,Interest Earned on MTB Microfinance enterprise Revolving Loan,31111,Income Accounts,1,0,approve,0
+Layer 5,31111005,Interest Earned on MTB Light Engineering Revolving Loan,31111,Income Accounts,1,0,approve,0
+Layer 5,31111006,Interest Earned on MTB IT Genious Revolving Loan,31111,Income Accounts,1,0,approve,0
+Layer 5,31111007,Interest Earned on MTB Krishijat Revolving Loan,31111,Income Accounts,1,0,approve,0
+Layer 5,31112001,Interest Earned on Foreign Cheque Purchased,31112,Income Accounts,1,0,approve,0
+Layer 5,31112002,Interest Earned on Inland Cheque Purchased,31112,Income Accounts,1,0,approve,0
+Layer 5,31113001,Interest Earned on Balance with other Bank <Cont. Acctts> (BDT),31113,Income Accounts,1,0,approve,0
+Layer 5,31113002,Interest Earned on Balance with other Bank <Deal Acctts> (BDT),31113,Income Accounts,1,0,approve,0
+Layer 5,31115001,Interest Earned on Bill Discounting USD (OBU) Foreign,31115,Income Accounts,1,0,approve,0
+Layer 5,31115002,Interest Earned on UPAS/ Buyer's Credit USD (OBU),31115,Income Accounts,1,0,approve,0
+Layer 5,31115003,Interest Earned on Bill Discounting USD (OBU) Inland,31115,Income Accounts,1,0,approve,0
+Layer 5,31116001,Interest Earned on Credit Cards,31116,Income Accounts,1,0,approve,0
+Layer 5,31117001,Interest Earned on Debit Balance in Liability Accounts,31117,Income Accounts,1,0,approve,0
+Layer 5,31118001,Interest Earned [Rebate] on Balance with Nostro Banks in FC  USD <Cont. Accounts>,31118,Treasury Income,1,0,approve,0
+Layer 5,31118002,Interest Earned on Balance with Nostro Banks in FC  GBP ,31118,Treasury Income,1,0,approve,0
+Layer 5,31118003,Interest Earned on Balance with Nostro Banks in FC  EUR <Cont. Accounts>,31118,Treasury Income,1,0,approve,0
+Layer 5,31119001,Interest Earned on MTB Microfinance Agri Revolving Loan,31119,Income Accounts,1,0,approve,0
+Layer 5,31120001,Interest Earned on MTB Krishi DL,31120,Income Accounts,1,0,approve,0
+Layer 5,31201001,Penal Interest Earnedon MTB Auto Loan,31201,Income Accounts,1,0,approve,0
+Layer 5,31201002,Penal Interest Earnedon MTB Home Loan,31201,Income Accounts,1,0,approve,0
+Layer 5,31201003,Penal Interest Earnedon MTB Home Equity Loan,31201,Income Accounts,1,0,approve,0
+Layer 5,31201004,Penal Interest Earnedon MTB NRB Home Loan,31201,Income Accounts,1,0,approve,0
+Layer 5,31201005,Penal Interest Earnedon MTB Neer,31201,Income Accounts,1,0,approve,0
+Layer 5,31201006,Penal Interest Earnedon MTB Personal Loan,31201,Income Accounts,1,0,approve,0
+Layer 5,31201007,Penal Interest Earnedon MTB Professional Loan,31201,Income Accounts,1,0,approve,0
+Layer 5,31201008,Penal Interest Earnedon Consumer Financing,31201,Income Accounts,1,0,approve,0
+Layer 5,31201009,Penal Interest Earned on MTB EDU Finance (TL) Unsecured,31201,Income Accounts,1,0,approve,0
+Layer 5,31201010,Penal Interest - MTB EDU Finance- Secured TL,31201,Income Accounts,1,0,approve,0
+Layer 5,31201011,Penal Interest Earned on  MTB Life Line,31201,Income Accounts,1,0,approve,0
+Layer 5,31201012,Penal Interest Earned on MTB Cash Line <RTL>,31201,Income Accounts,1,0,approve,0
+Layer 5,31201013,PIE on MTB Home Loan (Staff),31201,Income Accounts,1,0,approve,0
+Layer 5,31201014,PIE on MTB Home Equity Loan (Staff),31201,Income Accounts,1,0,approve,0
+Layer 5,31201015,PIE on MTB Neer (Staff),31201,Income Accounts,1,0,approve,0
+Layer 5,31201901,Penal Interest Earned on MTB Personal Loan <DST>,31201,Income Accounts,1,0,approve,0
+Layer 5,31201902,Penal Interest Earned on MTB Home Loan <DST>,31201,Income Accounts,1,0,approve,0
+Layer 5,31201903,Penal Interest Earned on MTB Home Equity Loan <DST>,31201,Income Accounts,1,0,approve,0
+Layer 5,31201904,Penal Interest Earned on Home Loan refinance,31201,Income Accounts,1,0,approve,0
+Layer 5,31201905,Penal Interest Earned on Auto Loan (Old),31201,Income Accounts,1,0,approve,0
+Layer 5,31201906,Penal Interest Income on Retail Term Loan Discontinued Products,31201,Income Accounts,1,0,approve,0
+Layer 5,31202001,Penal Interest Earnedon Car Loan (Employee),31202,Income Accounts,1,0,approve,0
+Layer 5,31202002,Penal Interest Earnedon Employees House Building Loan,31202,Income Accounts,1,0,approve,0
+Layer 5,31202003,Penal Interest Earnedon Staff Loan Aganist Prov. Fund,31202,Income Accounts,1,0,approve,0
+Layer 5,31202004,Penal Interest Earnedon Staff Personal Loan,31202,Income Accounts,1,0,approve,0
+Layer 5,31203001,Penal Interest Earnedon House Building Loan <Developer>,31203,Income Accounts,1,0,approve,0
+Layer 5,31203002,Lease Finance (Monthly) Rental Earned <Penalty>,31203,Income Accounts,1,0,approve,0
+Layer 5,31203003,Lease Finance (Qtly) Rental Earned <Penalty>,31203,Income Accounts,1,0,approve,0
+Layer 5,31203004,Penal Interest Earnedon House Building Loan <Commercial>,31203,Income Accounts,1,0,approve,0
+Layer 5,31203005,Penal Interest Earnedon Term Loan Non-Industrial,31203,Income Accounts,1,0,approve,0
+Layer 5,31203006,Penal Interest Earnedon Term Loan Industrial,31203,Income Accounts,1,0,approve,0
+Layer 5,31203007,Penal Interest Earnedon House Building Loan-Residential [C&S],31203,Income Accounts,1,0,approve,0
+Layer 5,31203008,Penal Interest Earnedon Term Loan-IPFF Fund,31203,Income Accounts,1,0,approve,0
+Layer 5,31203009,Penal Interest Earnedon Term Loan-LTFF,31203,Income Accounts,1,0,approve,0
+Layer 5,31203010,Penal Interest Earnedon Term Loan-by OBU USD,31203,Income Accounts,1,0,approve,0
+Layer 5,31203011,Penal Interest Earned on Converted Term Loan fm Term Loan [C&S],31203,Income Accounts,1,0,approve,0
+Layer 5,31203012,Penal Interest Earned onConverted Term Loan fm DL & Continuous Loan [C&S],31203,Income Accounts,1,0,approve,0
+Layer 5,31204001,Penal Interest Earnedon MTB Digoon,31204,Income Accounts,1,0,approve,0
+Layer 5,31204002,Penal Interest Earnedon Small Business Loan Scheme,31204,Income Accounts,1,0,approve,0
+Layer 5,31204003,Penal Interest Earnedon  MTB Youth Line,31204,Income Accounts,1,0,approve,0
+Layer 5,31204004,PIE on  Micro-finance <Ent.-TL>,31204,Income Accounts,1,0,approve,0
+Layer 5,31204005,Penal Interest Earnedon Microfinance Scheme (Ent.  -TL) <SME>,31204,Income Accounts,1,0,approve,0
+Layer 5,31204006,Penal Interest Earnedon MTB Bhagyaboti <Re-finance>,31204,Income Accounts,1,0,approve,0
+Layer 5,31204007,Penal Interest Earnedon MTB Gunaboti <Pre-finance>,31204,Income Accounts,1,0,approve,0
+Layer 5,31204008,Penal Interest Earnedon MTB Green Energy,31204,Income Accounts,1,0,approve,0
+Layer 5,31204009,Penal Interest Earnedon MTB IT Geniuos,31204,Income Accounts,1,0,approve,0
+Layer 5,31204010,Penal Interest Earnedon MTB Krishijat,31204,Income Accounts,1,0,approve,0
+Layer 5,31204011,Penal Interest Earnedon MTB Light Engineering,31204,Income Accounts,1,0,approve,0
+Layer 5,31204012,Penal Interest Earned  on MTB Small Business Loan Scheme Unsecured,31204,Income Accounts,1,0,approve,0
+Layer 5,31204013,Penal Interest Earnedon  MTB Sachal,31204,Income Accounts,1,0,approve,0
+Layer 5,31204014,Penal Interest Earned  on MTB Green Energy Unsecured,31204,Income Accounts,1,0,approve,0
+Layer 5,31204015,Penal Interest Earned  on MTB Krishijat (TL) Unsecured,31204,Income Accounts,1,0,approve,0
+Layer 5,31204016,Penal Interest Earned  on MTB Light Engineering (TL) Unsecured,31204,Income Accounts,1,0,approve,0
+Layer 5,31205001,Penal Interest Earnedon Microfinance <Agri-TL>,31205,Income Accounts,1,0,approve,0
+Layer 5,31205002,Penal Interest Earned on MTB Krishi TL,31205,Income Accounts,1,0,approve,0
+Layer 5,31206001,Penal Interest Earnedon Demand Loan General,31206,Income Accounts,1,0,approve,0
+Layer 5,31206002,Penal Interest Earnedon Demand Loan Forced,31206,Income Accounts,1,0,approve,0
+Layer 5,31206003,Penal Interest Earnedon Demand Loan Short Term,31206,Income Accounts,1,0,approve,0
+Layer 5,31206004,Penal Interest Earnedon Demand Loan Time,31206,Income Accounts,1,0,approve,0
+Layer 5,31206005,Penal Interest Earnedon Payment Aganist Document,31206,Income Accounts,1,0,approve,0
+Layer 5,31206006,Penal Interest Earnedon Payment Against Document (B-to-B),31206,Income Accounts,1,0,approve,0
+Layer 5,31206007,Penal Interest Earnedon Inland Doc. Bill Purchased <Sight>,31206,Income Accounts,1,0,approve,0
+Layer 5,31206008,Penal Interest Earnedon Inland Doc. Bill Discounted <Usance> ,31206,Income Accounts,1,0,approve,0
+Layer 5,31206010,Penal Interest Earnedon Foreign D.B Purchased <Sight>,31206,Income Accounts,1,0,approve,0
+Layer 5,31206011,Penal Interest Earnedon Foreign D.B Discounted <Usance> ,31206,Income Accounts,1,0,approve,0
+Layer 5,31206013,Penal Interest Earnedon Loan Against Trust Receipt ,31206,Income Accounts,1,0,approve,0
+Layer 5,31206014,Penal Interest Earnedon Advance Against Cash Incentive ,31206,Income Accounts,1,0,approve,0
+Layer 5,31206015,Penal Interest Earnedon Cash Aganist Document DL,31206,Income Accounts,1,0,approve,0
+Layer 5,31206016,Penal Interest Earned on Secured Overdraft Garments DL,31206,Income Accounts,1,0,approve,0
+Layer 5,31206017,Penal Interest Earned on Packing Credit,31206,Income Accounts,1,0,approve,0
+Layer 5,31206018,Penal Interest Earned on Secured Overdraft Genl Business DL,31206,Income Accounts,1,0,approve,0
+Layer 5,31206019,PIE on FDBP - Advance Against Collection Bill,31206,Income Accounts,1,0,approve,0
+Layer 5,31206020,PIE on IDBP - Advance Against Collection Bill,31206,Income Accounts,1,0,approve,0
+Layer 5,31207001,Penal Interest Earnedon EDF Loan <USD>,31207,Income Accounts,1,0,approve,0
+Layer 5,31208001,Penal Interest Earnedon Demand Loans against Rural Credit,31208,Income Accounts,1,0,approve,0
+Layer 5,31208002,Penal Interest Earnedon MTB Supply Chain Finance <SME> DL,31208,Income Accounts,1,0,approve,0
+Layer 5,31208003,Penal Interest Earnedon  MTB Mousumi,31208,Income Accounts,1,0,approve,0
+Layer 5,31209001,Penal Interest Earnedon Secured Overdraft against Bank's own TD,31209,Income Accounts,1,0,approve,0
+Layer 5,31209002,Penal Interest Earnedon Secured Overdraft against other Bank's TD,31209,Income Accounts,1,0,approve,0
+Layer 5,31209003,Penal Interest Earnedon Secured Overdraft against Shares etc.,31209,Income Accounts,1,0,approve,0
+Layer 5,31209004,Penal Interest Earnedon MTB EDU Finance - Over Draft (Revolving),31209,Income Accounts,1,0,approve,0
+Layer 5,31209005,Penal Interest Earnedon MTB Cash Line <ROD>,31209,Income Accounts,1,0,approve,0
+Layer 5,31210001,Penal Interest Earnedon Corp Cash Credit Hypo,31210,Income Accounts,1,0,approve,0
+Layer 5,31210002,Penal Interest Earnedon SOD (Shares & Debentures) C&S,31210,Income Accounts,1,0,approve,0
+Layer 5,31210003,Penal Interest Earnedon SOD (FO) WBD C&S,31210,Income Accounts,1,0,approve,0
+Layer 5,31210004,Penal Interest Earnedon Secured Overdraft Work/ Supply Order C&S,31210,Income Accounts,1,0,approve,0
+Layer 5,31210005,Penal Interest Earnedon Secured Overdraft Pay Order C&S,31210,Income Accounts,1,0,approve,0
+Layer 5,31210006,Penal Interest Earnedon Secured Overdraft Real Estate C&S,31210,Income Accounts,1,0,approve,0
+Layer 5,31210007,Penal Interest Earnedon Secured Overdraft [General] Business C&S,31210,Income Accounts,1,0,approve,0
+Layer 5,31210010,Penal Interest Earned on Secured Overdraft (Others)-Business  [C&S],31210,Income Accounts,1,0,approve,0
+Layer 5,31210011,Penal Interest Earned on Secured Overdraft (lP)-Business  [C&S],31210,Income Accounts,1,0,approve,0
+Layer 5,31210901,Penal Interest Income on Discontinued Continuous Loans <C & S>,31210,Income Accounts,1,0,approve,0
+Layer 5,31211001,Penal Interest Earnedon MTB SME Cash Credit Hypo,31211,Income Accounts,1,0,approve,0
+Layer 5,31211002,Penal Interest Earnedon MTB Revolving Loan,31211,Income Accounts,1,0,approve,0
+Layer 5,31211004,Penal Interest Earnedon MTB Microfinance enterprise Revolving Loan,31211,Income Accounts,1,0,approve,0
+Layer 5,31211005,Penal Interest Earnedon MTB Light Engineering Revolving Loan,31211,Income Accounts,1,0,approve,0
+Layer 5,31211006,Penal Interest Earnedon MTB IT Genious Revolving Loan,31211,Income Accounts,1,0,approve,0
+Layer 5,31211007,Penal Interest Earnedon MTB Krishijat Revolving Loan,31211,Income Accounts,1,0,approve,0
+Layer 5,31213001,Penal Interest Earned/ overdue on Foreign Cheque Purchased,31213,Income Accounts,1,0,approve,0
+Layer 5,31213002,Penal Interest Earned/ overdue on Inland Cheque Purchased,31213,Income Accounts,1,0,approve,0
+Layer 5,31215001,Penal Interest Earnedon Bill Discounting USD (OBU),31215,Income Accounts,1,0,approve,0
+Layer 5,31215002,Penal Interest Earnedon UPAS/ Buyer's Credit USD (OBU) foreign,31215,Income Accounts,1,0,approve,0
+Layer 5,31215003,Penal Interest Earnedon Bill Discounting USD (OBU) Inland,31215,Income Accounts,1,0,approve,0
+Layer 5,31216001,Penal Interest Earnedon MTB Microfinance Agri Revolving Loan,31216,Income Accounts,1,0,approve,0
+Layer 5,31217001,Penal Interest Earned on MTB Krishi DL,31217,Income Accounts,1,0,approve,0
+Layer 5,31301001,Interest on MTB General Account,31301,Income Accounts,1,0,approve,0
+Layer 5,31401001,Interest Earned on Call  Money Placement BDT ,31401,Treasury Income,1,0,approve,0
+Layer 5,31402001,Interest Earned on Call  Money Placement USD,31402,Treasury Income,1,0,approve,0
+Layer 5,31402002,Interest Earned on Call  Money Placement GBP,31402,Treasury Income,1,0,approve,0
+Layer 5,31403001,Interest Earned on Term Placement BDT ,31403,Treasury Income,1,0,approve,0
+Layer 5,31404001,Interest Earned on Term Placement USD,31404,Treasury Income,1,0,approve,0
+Layer 5,31404002,Interest Earned on Term Placement GBP,31404,Treasury Income,1,0,approve,0
+Layer 5,31405001,Interest Earned on Short Term Placement USD,31405,Treasury Income,1,0,approve,0
+Layer 5,31405002,Interest Earned on Short Term Placement GBP,31405,Treasury Income,1,0,approve,0
+Layer 5,31406001,Interest Earned on Short Term Placement BDT,31406,Treasury Income,1,0,approve,0
+Layer 5,31407001,Interest on Bangladesh Bank Foreign Currency Clearing A/c,31407,Treasury Income,1,0,approve,0
+Layer 5,31408001,Interest on Placement to Off-Shore Banking Unit USD,31408,Treasury Income,1,0,approve,0
+Layer 5,31409001,Interest Income on Overnight Lending BDT,31409,Treasury Income,1,0,approve,0
+Layer 5,32101001,Treasury Bill at Redemption,32101,Treasury Income,1,0,approve,0
+Layer 5,32101002,Amortization of HFT Securites Treasury Bill,32101,Treasury Income,1,0,approve,0
+Layer 5,32101004,Capital Gain on Sale of Treasury Bill,32101,Treasury Income,1,0,approve,0
+Layer 5,32101005,Gain from Repo (Treasury Bill),32101,Treasury Income,1,0,approve,0
+Layer 5,32101006,Interest on Treasury Bond,32101,Treasury Income,1,0,approve,0
+Layer 5,32101008,Capital Gain on Sale of Treasury Bond,32101,Treasury Income,1,0,approve,0
+Layer 5,32101009,Gain from Repo (Treasury Bond),32101,Treasury Income,1,0,approve,0
+Layer 5,32101010,Coupon Interest of Treasury Bond (Repo),32101,Treasury Income,1,0,approve,0
+Layer 5,32101011,Underwriting Commission on Treasury Bill/ Bond,32101,Treasury Income,1,0,approve,0
+Layer 5,32101013,Interest on Reverse REPO,32101,Treasury Income,1,0,approve,0
+Layer 5,32201001,Interest on Investment in Commercial Paper,32201,Treasury Income,1,0,approve,0
+Layer 5,32202001,Income from Bond,32202,Income Accounts,1,0,approve,0
+Layer 5,32202002,Capital Gain from Investment in Shares,32202,Income Accounts,1,0,approve,0
+Layer 5,32202003,Dividend Income from Investment in Shares,32202,Income Accounts,1,0,approve,0
+Layer 5,32202004,Capital Gain from Mutual Fund,32202,Income Accounts,1,0,approve,0
+Layer 5,32202005,Income from Debentures,32202,Income Accounts,1,0,approve,0
+Layer 5,32202006,Dividend Income from Mutual Fund,32202,Income Accounts,1,0,approve,0
+Layer 5,32202007,Income from Investment in Subsidiaries,32202,Income Accounts,1,0,approve,0
+Layer 5,32202008,Income from Other Investments,32202,Income Accounts,1,0,approve,0
+Layer 5,33101001,Inland Remittances (DD/TT),33101,Income Accounts,1,0,approve,0
+Layer 5,33101002,Pay Order Issued,33101,Income Accounts,1,0,approve,0
+Layer 5,33101003,Commission on IPO Collection,33101,Income Accounts,1,0,approve,0
+Layer 5,33101004,Foreign Remittance (FDD/TC),33101,Income Accounts,1,0,approve,0
+Layer 5,33101005,Online Service,33101,Income Accounts,1,0,approve,0
+Layer 5,33101007,POS Commission,33101,Income Accounts,1,0,approve,0
+Layer 5,33101008,RTGS Commission,33101,Income Accounts,1,0,approve,0
+Layer 5,33101009,Comm. on OBC/IBC <SC> Inland Cheque Collection,33101,Income Accounts,1,0,approve,0
+Layer 5,33101010,Comm. on FSC <Foreign Cheque Collection>,33101,Income Accounts,1,0,approve,0
+Layer 5,33101011,Comm. on CP <Inland Cheque Purchased>,33101,Income Accounts,1,0,approve,0
+Layer 5,33101012,Comm. on FCP <Foreign Cheque Purchased>,33101,Income Accounts,1,0,approve,0
+Layer 5,33102001,Collection Commission - Import,33102,Income Accounts,1,0,approve,0
+Layer 5,33102002,Collection Commission - Export,33102,Income Accounts,1,0,approve,0
+Layer 5,33102003,Commn on Bills Purchased ,33102,Income Accounts,1,0,approve,0
+Layer 5,33102004,Commn on Bank Guarantee,33102,Income Accounts,1,0,approve,0
+Layer 5,33102005,L.C. (Advising/Transfer),33102,Income Accounts,1,0,approve,0
+Layer 5,33102006,Comm. on Acceptance of Bill _ VAT Applicable,33102,Income Accounts,1,0,approve,0
+Layer 5,33102007,Comm. on Acceptance of Bill - VAT Not Applicable,33102,Income Accounts,1,0,approve,0
+Layer 5,33102008,Commission on LC - VAT applicable,33102,Income Accounts,1,0,approve,0
+Layer 5,33102009,Commission on LC -VAT-Not Applicable ,33102,Income Accounts,1,0,approve,0
+Layer 5,33102010,Commission on Shipping Guarantee,33102,Income Accounts,1,0,approve,0
+Layer 5,33103001,Commission on Exchange House,33103,Income Accounts,1,0,approve,0
+Layer 5,33104001,Commn on Bank Guarantee USD <for OBU>,33104,Income Accounts,1,0,approve,0
+Layer 5,33201001,Exchange Gain on Foreign Currency,33201,Treasury Income,1,0,approve,0
+Layer 5,33202001,Income on Forex Deal,33202,Income Accounts,1,0,approve,0
+Layer 5,34101001,Rent on Lockers,34101,Income Accounts,1,0,approve,0
+Layer 5,34101002,Rent on Godown,34101,Income Accounts,1,0,approve,0
+Layer 5,34101003,Rent on Others,34101,Income Accounts,1,0,approve,0
+Layer 5,34102001,Godown Insurance Recoveries,34102,Income Accounts,1,0,approve,0
+Layer 5,34102002,Postage Recoveries,34102,Income Accounts,1,0,approve,0
+Layer 5,34102003,Telex/TP/Telegram/SMS Recoveries,34102,Income Accounts,1,0,approve,0
+Layer 5,34102004,Printing and Stationary Charges Recovery,34102,Income Accounts,1,0,approve,0
+Layer 5,34102005,Incidental Charge Recoveries,34102,Income Accounts,1,0,approve,0
+Layer 5,34102006,Legal Charge Recoveries,34102,Income Accounts,1,0,approve,0
+Layer 5,34102007,SWIFT Charges Recoveries,34102,Income Accounts,1,0,approve,0
+Layer 5,34102008,Recovery of NID varification charges,34102,Income Accounts,1,0,approve,0
+Layer 5,34102009,Locker Insurance Premium Recoveries,34102,Income Accounts,1,0,approve,0
+Layer 5,34102010,CVP Charge Recoveries,34102,Income Accounts,1,0,approve,0
+Layer 5,34103001,Annual Service Charge <Cards>,34103,Income Accounts,1,0,approve,0
+Layer 5,34103003,Cards Replacement Charge,34103,Income Accounts,1,0,approve,0
+Layer 5,34103005,Cheque Processing Fees - Credit Card,34103,Income Accounts,1,0,approve,0
+Layer 5,34103006,Late Payment Charge - Credit Card,34103,Income Accounts,1,0,approve,0
+Layer 5,34103007,Transaction Charge - Credit Card,34103,Income Accounts,1,0,approve,0
+Layer 5,34103013,Credit Card Insurance Premium,34103,Income Accounts,1,0,approve,0
+Layer 5,34103014,Mark-Up Fee,34103,Income Accounts,1,0,approve,0
+Layer 5,34103017,Mnonthly Protection Plan,34103,Income Accounts,1,0,approve,0
+Layer 5,34103015,Card Acquiring Income (ATM),34103,Income Accounts,1,0,approve,0
+Layer 5,34103016,POS Issuer Fee,34103,Income Accounts,1,0,approve,0
+Layer 5,34104001,Early Settlement Fee on MTB Auto Loan,34104,Income Accounts,1,0,approve,0
+Layer 5,34104002,Early Settlement Fee - MTB Neer,34104,Income Accounts,1,0,approve,0
+Layer 5,34104003,Early Settlement Fee on MTB Personal Loan,34104,Income Accounts,1,0,approve,0
+Layer 5,34104004,Early Settlement Fee on MTB Home Equity Loan ,34104,Income Accounts,1,0,approve,0
+Layer 5,34104005,Early Settlement Fee on MTB Home Loan ,34104,Income Accounts,1,0,approve,0
+Layer 5,34104006,Early Settlement Charge others,34104,Income Accounts,1,0,approve,0
+Layer 5,34105001,Loan Processing Fee- MTB Auto loan,34105,Income Accounts,1,0,approve,0
+Layer 5,34105002,Loan Processing Fee  - MTB Neer,34105,Income Accounts,1,0,approve,0
+Layer 5,34105003,Loan Processing Fee- MTB Personal loan,34105,Income Accounts,1,0,approve,0
+Layer 5,34105004,Loan Processing Fee- MTB Home Equity loan,34105,Income Accounts,1,0,approve,0
+Layer 5,34105005,Loan Processing Fee- MTB Home loan,34105,Income Accounts,1,0,approve,0
+Layer 5,34105006,Loan Processing Fee others,34105,Income Accounts,1,0,approve,0
+Layer 5,34106001,Partial Payment Fee- MTB Auto Loan ,34106,Income Accounts,1,0,approve,0
+Layer 5,34106002,Partial Payment Fee- MTB Home Loan,34106,Income Accounts,1,0,approve,0
+Layer 5,34106003,Partial Payment Fee- MTB Personal Loan ,34106,Income Accounts,1,0,approve,0
+Layer 5,34106004,Partial Payment Fee- MTB Home Equity Loan ,34106,Income Accounts,1,0,approve,0
+Layer 5,34106005,Partial Payment Fee  - MTB Neer,34106,Income Accounts,1,0,approve,0
+Layer 5,34107001,Processing Fees,34107,Income Accounts,1,0,approve,0
+Layer 5,34107002,Partial Settlement Fees,34107,Income Accounts,1,0,approve,0
+Layer 5,34107003,Early Settlement Fees,34107,Income Accounts,1,0,approve,0
+Layer 5,34107004,Loan Application Fees,34107,Income Accounts,1,0,approve,0
+Layer 5,34107005,Rescheduling Fees,34107,Income Accounts,1,0,approve,0
+Layer 5,34107006,Security Replacement Fees,34107,Income Accounts,1,0,approve,0
+Layer 5,34107007,Loan Reduction & Security Partial Release,34107,Income Accounts,1,0,approve,0
+Layer 5,34107008,Excess Over Limit (EOL) Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107009,Guarantor Change Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107010,Certificate Issuance Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107011,Documentation Waiver Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107012,Loan Type Conversion Fees,34107,Income Accounts,1,0,approve,0
+Layer 5,34107013,Transfer Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107014,Standing Instruction Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107015,Account Closing Fees,34107,Income Accounts,1,0,approve,0
+Layer 5,34107016,A/c Maintenance Fees,34107,Income Accounts,1,0,approve,0
+Layer 5,34107017,Time Extension Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107018,CPV Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107019,Doc. Exception Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107020,Postage Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107021,Other Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107022,Interest Reduction Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107023,Documentation Deferral Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107024,Change of Management/Business Title Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34107025,Account Statement Charges,34107,Income Accounts,1,0,approve,0
+Layer 5,34108001,Service Charges,34108,Income Accounts,1,0,approve,0
+Layer 5,34108002,Handling Charges,34108,Income Accounts,1,0,approve,0
+Layer 5,34108003,Service Charge-Refund Warrant,34108,Income Accounts,1,0,approve,0
+Layer 5,34108004,Margin A/C Maintenance Income,34108,Income Accounts,1,0,approve,0
+Layer 5,34109001,Syndication Participation Fee,34109,Income Accounts,1,0,approve,0
+Layer 5,34109002,Add Confirmation (Management Fee),34109,Income Accounts,1,0,approve,0
+Layer 5,34109003,Management Fee (Corporate Finance),34109,Income Accounts,1,0,approve,0
+Layer 5,34110001,Gain on Sale of Fixed Assets,34110,Income Accounts,1,0,approve,0
+Layer 5,34111001,NPSB Acquirer Income,34111,Income Accounts,1,0,approve,0
+Layer 5,34112001,Miscellaneous Earnings,34112,Income Accounts,1,0,approve,0
+Layer 5,34112002,Miscellaneous Income Retail,34112,Income Accounts,1,0,approve,0
+Layer 5,34112003,Income from Agent Banking,,Income Accounts,1,0,approve,0
+Layer 5,34112004,Income from Student File,34112,Income Accounts,1,0,approve,0
+Layer 5,34112005,Miscellaneous Income Trade,34112,Income Accounts,1,0,approve,0
+Layer 5,34113001,Recovery of Written Off Loans - Corporate,34113,Income Accounts,1,0,approve,0
+Layer 5,34113002,Recovery of Written Off Loans - Retail,34113,Income Accounts,1,0,approve,0
+Layer 5,34113003,Recovery of Written Off Loans - SME,34113,Income Accounts,1,0,approve,0
+Layer 5,34114001,Excess Over Limit (EOL) Charges Others,34114,Income Accounts,1,0,approve,0
+Layer 5,41101001,Interest Expenses MTB Probaho,41101,Expenditure Accounts,1,0,approve,0
+Layer 5,41102001,I Expenses MTB Ankur,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102002,I Expenses MTB Ruby,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102003,I Expenses MTB Graduate,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102004,I Expenses MTB Junior,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102005,Interest Expense on MTB Privilege Saving,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102006,Interest Expenses on NRB Savings Account,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102007,I Expenses MTB Senior,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102008,I Expenses on MTB Inspire,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102009,I Expenses MTB Sanchay,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102010,I Expenses on MTB Care,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102011,I Expenses on Regular Savings  Deposit,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102012,Interest Expense on MTB REGULAR SAVINGS STAFF,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102013,Interest Expense on MTB Payroll Premium,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102014,Interest Expense on MTB Payroll eSavers,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102015,Interest Expense on MTB Payroll Saver,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102016,Interest Expense on MTB Children Education Deposit Scheme,41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102901,Interest Expense on MTB Inspire (DST),41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102902,Interest Expense on MTB Senior (DST),41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102903,Interest Expense on MTB Ruby (DST),41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102904,Interest Expense on Savings Deposit (DST),41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102905,Interest Expense on MTB Graduate (DST),41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102906,Interest Expense on MTB JUNIOR (DST),41102,Expenditure Accounts,1,0,approve,0
+Layer 5,41102907,Interest Expense on EID UL FITRE SANCHAY PROKALPA,41102,Income Accounts,1,0,approve,0
+Layer 5,41102908,Interest Expense on EID UL AZHA SANCHAY PROKALPA,41102,Income Accounts,1,0,approve,0
+Layer 5,41102909,Interest Expense on DURGA PUJA SANCHAY PROKALPA,41102,Income Accounts,1,0,approve,0
+Layer 5,41102910,Interest Expense on CHRISTMAS SANCHAY PROKALPA,41102,Income Accounts,1,0,approve,0
+Layer 5,41102911,Interest Expense on BUDDHA PURNIMA SANCHAY PROKALPA,41102,Income Accounts,1,0,approve,0
+Layer 5,41102912,Interest Expense on SAVE EVERY DAY DEPOSIT A/C,41102,Income Accounts,1,0,approve,0
+Layer 5,41102913,Interest Expense on FESTIVAL SANCHAY PROKALPA,41102,Income Accounts,1,0,approve,0
+Layer 5,41102914,Interest Expense on UNIQUE SAVING PLAN,41102,Income Accounts,1,0,approve,0
+Layer 5,41103001,Interest Expenses on SBResident Foreign Currency USD,41103,Expenditure Accounts,1,0,approve,0
+Layer 5,41103002,Interest Expenses on SB Personal Foreign Currency Account USD,41103,Expenditure Accounts,1,0,approve,0
+Layer 5,41104001,Interest Expenses on Special Notice Deposits,41104,Expenditure Accounts,1,0,approve,0
+Layer 5,41201001,Interest Expenses MTB Buniad,41201,Expenditure Accounts,1,0,approve,0
+Layer 5,41201002,Interest Expenses NRB Fixed Deposit,41201,Expenditure Accounts,1,0,approve,0
+Layer 5,41201003,Interest Expenses Term Deposit General,41201,Expenditure Accounts,1,0,approve,0
+Layer 5,41201004,Interest Expenses Term Deposit Monthly Benefit Plan,41201,Expenditure Accounts,1,0,approve,0
+Layer 5,41201005,Interest Expense on Best Investment TERM DEPOSIT,41201,Expenditure Accounts,1,0,approve,0
+Layer 5,41201902,Interest Expense on MTB Quarterly Benefit Plan,41201,Expenditure Accounts,1,0,approve,0
+Layer 5,41202001,Interest Expenses RTD MTB Buniad,41202,Expenditure Accounts,1,0,approve,0
+Layer 5,41202002,Interest Expenses Reinvestment Term Deposits General,41202,Expenditure Accounts,1,0,approve,0
+Layer 5,41202003,Interest Expenses RTD Double Benefit Scheme,41202,Expenditure Accounts,1,0,approve,0
+Layer 5,41202004,Interest Expense on Reinvestment Term Deposit NRB ,41202,Expenditure Accounts,1,0,approve,0
+Layer 5,41202901,Interest Expense MTB DOUBLE SAVER (DST),41202,Expenditure Accounts,1,0,approve,0
+Layer 5,41202902,Interest Expense MTB TRIPLE SAVER PLAN,41202,Expenditure Accounts,1,0,approve,0
+Layer 5,41202903,Interest Expense Fixed Deposit (DST),41202,Expenditure Accounts,1,0,approve,0
+Layer 5,41202904,Interest expense on MTB 1.5 Times Benefit Plan,41202,Expenditure Accounts,1,0,approve,0
+Layer 5,41203001,Interest Expenses on RD Brick-by-Brick,41203,Expenditure Accounts,1,0,approve,0
+Layer 5,41203002,Interest Expenses on RD MTB Educational Plan,41203,Expenditure Accounts,1,0,approve,0
+Layer 5,41203003,Interest Expenses on RD Kotipati,41203,Expenditure Accounts,1,0,approve,0
+Layer 5,41203004,Interest Expenses on RD Millionnaire Plan,41203,Expenditure Accounts,1,0,approve,0
+Layer 5,41203005,Interest Expenses on RD NRB,41203,Expenditure Accounts,1,0,approve,0
+Layer 5,41204001,Interest Expenses on NFCD USD,41204,Expenditure Accounts,1,0,approve,0
+Layer 5,41204002,Interest Expenses on FC FD Ind OBU USD,41204,Expenditure Accounts,1,0,approve,0
+Layer 5,41204003,Interest Expenses on FC FD Inst OBU USD,41204,Expenditure Accounts,1,0,approve,0
+Layer 5,41205001,Interest Expense  on Bank Deposits -FD  <BDT>,41205,Expenditure Accounts,1,0,approve,0
+Layer 5,41205002,Interest Expense  on Bank Deposits -FD  <SND>,41205,Expenditure Accounts,1,0,approve,0
+Layer 5,41206001,Interest expense on NBFI Deposits -FD ,41206,Expenditure Accounts,1,0,approve,0
+Layer 5,41207001,Interest expense on MTB Gift Cheque,41207,Expenditure Accounts,1,0,approve,0
+Layer 5,41207002,Interest Expense on Others,41207,Expenditure Accounts,1,0,approve,0
+Layer 5,41301001,Interest Expenses on Borrowings from LTFF (FSSP),41301,Expenditure Accounts,1,0,approve,0
+Layer 5,41301002,Interest Expenses on Borrowing -IPFF Fund USD,41301,Expenditure Accounts,1,0,approve,0
+Layer 5,41301003,Interest Expenses on Borrowing -IPFF Fund GBP,41301,Expenditure Accounts,1,0,approve,0
+Layer 5,41301004,Interest Expense on Borrowings from BB-others,41301,Expenditure Accounts,1,0,approve,0
+Layer 5,41301005,Interest Expense on Borrowings from BB-under prefinance,41301,Expenditure Accounts,1,0,approve,0
+Layer 5,41301006,Interest Expense on Borrowings from BB-under Refinance,41301,Expenditure Accounts,1,0,approve,0
+Layer 5,41301007,Interest Expense on Borrowing under EDF from Bangladesh Bank,41301,Expenditure Accounts,1,0,approve,0
+Layer 5,41301008,Interest Expenses on Term Borrowings USD,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301009,Interest Expenses on Term Borrowings GBP,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301010,Interest Expenses on Call Borrowing BDT,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301011,Interest Expenses on Term Borrowing BDT,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301012,Interest Expenses on Call Borrowing USD,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301013,Interest Expenses on Call Borrowing GBP,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301014,Intt Expenses on Special Repo,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301015,Intt Expenses on Assured liquidity Support (ALS-Repo),41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301016,Interest Expenses on Short Term Borrowings USD,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301017,Interest Expenses on Short Term Borrowings GBP,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301018,Interest Expenses on Short Term Borrowing BDT,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301019,Interest Expense on Bangladesh Bank Repo,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301020,Interest Expense on Overnight Borrowing,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301021,Interest Expense on Notivce Borrowing BDT,41301,Tresury Expenditure,1,0,approve,0
+Layer 5,41301102,Interest Expenses on Borrowing -IPFF Fund USD OBU,41301,Expenditure Accounts,1,0,approve,0
+Layer 5,41303001,Interest Expense on SME Foundation,41303,Expenditure Accounts,1,0,approve,0
+Layer 5,41303002,Interest Expense on Borrowings from NBFI,41303,Tresury Expenditure,1,0,approve,0
+Layer 5,41304001,Interest expense on SME Foundation Fund (MTB Youth Line),41304,Expenditure Accounts,1,0,approve,0
+Layer 5,41304002,Interest Expense on SME Foundation Fund (MTB Gunabati),41304,Expenditure Accounts,1,0,approve,0
+Layer 5,41401001,Interest Expense on 12 Partially Convertible Bond,41401,Expenditure Accounts,1,0,approve,0
+Layer 5,41401002,Interest Expense on MTB 2nd Subordinate Bond,41401,Expenditure Accounts,1,0,approve,0
+Layer 5,41401003,Interest Expense on MTB 3rd Subordinate Bond,41401,Expenditure Accounts,1,0,approve,0
+Layer 5,41501001,Interest Expense on Purchase of Treasury Bond,41501,Tresury Expenditure,1,0,approve,0
+Layer 5,41501002,Interest Expense on Purchase of Treasury Bill,41501,Tresury Expenditure,1,0,approve,0
+Layer 5,41501003,Coupon Interest Expenditure <Repo>,41501,Tresury Expenditure,1,0,approve,0
+Layer 5,41501004,Repo Interest Expenditure Account,41501,Tresury Expenditure,1,0,approve,0
+Layer 5,41601001,Interest Paid on MTBL General A/c,41601,Expenditure Accounts,1,0,approve,0
+Layer 5,42101001,Basic Salaries,42101,Expenditure Accounts,1,0,approve,0
+Layer 5,42101002,Personal Pay  <Basic>,42101,Expenditure Accounts,1,0,approve,0
+Layer 5,42101003,Salary for Contractual [Kiosk] Staff <Basic Pay>],42101,Expenditure Accounts,1,0,approve,0
+Layer 5,42102001,House  Rent Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102002,Conveyance Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102003,Medical Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102004,Entertainment  Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102005,Washing Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102006,Dearness Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102007,Risk  Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102008,Evening Banking Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102009,Discomfort Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102010,Technical Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102011,House Maintenance Allowance,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102012,Medical Reimbursement,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102013,Uniform And Other Apparels,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42102014,Utility Charges,42102,Expenditure Accounts,1,0,approve,0
+Layer 5,42103001,Ordinary Bonus,42103,Expenditure Accounts,1,0,approve,0
+Layer 5,42103002,Incentive Bonus,42103,Expenditure Accounts,1,0,approve,0
+Layer 5,42104001,Gratuity,42104,Expenditure Accounts,1,0,approve,0
+Layer 5,42105001,Leave Fare Assistance,42105,Expenditure Accounts,1,0,approve,0
+Layer 5,42106001,Bank's Contribution to EPF,42106,Expenditure Accounts,1,0,approve,0
+Layer 5,42107006,DMD's Remuneration,42107,Expenditure Accounts,1,0,approve,0
+Layer 5,42107007,Misc expenses for DST employees,42107,Expenditure Accounts,1,0,approve,0
+Layer 5,42108001,Leave Encashment,42108,Expenditure Accounts,1,0,approve,0
+Layer 5,42201001,Rent,42201,Expenditure Accounts,1,0,approve,0
+Layer 5,42201002,VAT on Rent,42201,Expenditure Accounts,1,0,approve,0
+Layer 5,42202001,City Corp./Municipality Taxes,42202,Expenditure Accounts,1,0,approve,0
+Layer 5,42202002,Trade License Fees,42202,Expenditure Accounts,1,0,approve,0
+Layer 5,42202003,Excise Duty on Bank's own Deposits with other Banks,42202,Expenditure Accounts,1,0,approve,0
+Layer 5,42202004,MD/DMD's Income Tax,42202,Expenditure Accounts,1,0,approve,0
+Layer 5,42202005,VAT/Tax on Other Activities,42202,Expenditure Accounts,1,0,approve,0
+Layer 5,42203001,Insurance for Cash in Transit,42203,Expenditure Accounts,1,0,approve,0
+Layer 5,42203002,Insurance for Cash in Safe/Counter,42203,Expenditure Accounts,1,0,approve,0
+Layer 5,42203003,Group Insurance Premium-Life,42203,Expenditure Accounts,1,0,approve,0
+Layer 5,42203005,"Insurance for Bank's Property at Office, Godown, ATM, Kiosk",42203,Expenditure Accounts,1,0,approve,0
+Layer 5,42203006,Deposit Insurance Premium,42203,Expenditure Accounts,1,0,approve,0
+Layer 5,42203007,Insurance Premium on Locker Services,42203,Expenditure Accounts,1,0,approve,0
+Layer 5,42203008,Insurance Premium on Motor Vehicles Executives,42203,Expenditure Accounts,1,0,approve,0
+Layer 5,42203009,Insurance Premium on Motor Vehicles Pool,42203,Expenditure Accounts,1,0,approve,0
+Layer 5,42204001,Electicity Charges,42204,Expenditure Accounts,1,0,approve,0
+Layer 5,42204002,Fuel for Generator,42204,Expenditure Accounts,1,0,approve,0
+Layer 5,42204003,WASA Bill,42204,Expenditure Accounts,1,0,approve,0
+Layer 5,42204004,Gas Bill,42204,Expenditure Accounts,1,0,approve,0
+Layer 5,42204005,Fuel for Car Executives,42204,Expenditure Accounts,1,0,approve,0
+Layer 5,42204006,Fuel for Car Pool,42204,Expenditure Accounts,1,0,approve,0
+Layer 5,42205001,Lease Rent <Car>,42205,Expenditure Accounts,1,0,approve,0
+Layer 5,42301001,Security/Auxiliary Services ,42301,Expenditure Accounts,1,0,approve,0
+Layer 5,42301002,Security/Auxiliary Services Others,42301,Expenditure Accounts,1,0,approve,0
+Layer 5,42301003,Monthly Wages of Cleaner,42301,Expenditure Accounts,1,0,approve,0
+Layer 5,42301004,Cash Carrying / Loading Expenses,42301,Expenditure Accounts,1,0,approve,0
+Layer 5,42303001,Service Charge of Building Rented ,42303,Expenditure Accounts,1,0,approve,0
+Layer 5,42303002,Misc exp. On Office Maintenance ,42303,Expenditure Accounts,1,0,approve,0
+Layer 5,42303003,Tree Plants Expenses,42303,Expenditure Accounts,1,0,approve,0
+Layer 5,42303004,Drinking Water Expenses,42303,Expenditure Accounts,1,0,approve,0
+Layer 5,42303005,Material Purchase For Upkeep of Bank,42303,Expenditure Accounts,1,0,approve,0
+Layer 5,42304001,"Taxes (Token, Fitness) & Registration cost Motor Vehicle Pool",42304,Expenditure Accounts,1,0,approve,0
+Layer 5,42304002,"Taxes (Token, Fitness)& Registration cost Motor Vehicle Executives",42304,Expenditure Accounts,1,0,approve,0
+Layer 5,42304003,CNG Conversion Cost Motor Vehicle Executives,42304,Expenditure Accounts,1,0,approve,0
+Layer 5,42304004,CNG Conversion Cost Motor Vehicle Pool,42304,Expenditure Accounts,1,0,approve,0
+Layer 5,42304005,Car Loan Instalment Expenses <Employees>,42304,Expenditure Accounts,1,0,approve,0
+Layer 5,42304007,Car Allowance <Employee>,42304,Expenditure Accounts,1,0,approve,0
+Layer 5,42304006,Car hiring charges <Rent> for MV Pool,42304,Expenditure Accounts,1,0,approve,0
+Layer 5,42305001,Entertainment Expenses,42305,Expenditure Accounts,1,0,approve,0
+Layer 5,42306001,News Paper & Periodicals,42306,Expenditure Accounts,1,0,approve,0
+Layer 5,42307001,Clearing House expenses,42307,Expenditure Accounts,1,0,approve,0
+Layer 5,42308001,T.A/D.A (Foreign Travel),42308,Expenditure Accounts,1,0,approve,0
+Layer 5,42308002,T.A/D.A (Domestic Travel),42308,Expenditure Accounts,1,0,approve,0
+Layer 5,42308003,Conveyance for official purpose,42308,Expenditure Accounts,1,0,approve,0
+Layer 5,42308004,Holiday Conveyance,42308,Expenditure Accounts,1,0,approve,0
+Layer 5,42309001,Foreign Bank Charges,42309,Tresury Expenditure,1,0,approve,0
+Layer 5,42309002,Local Bank other than BB Charges,42309,Expenditure Accounts,1,0,approve,0
+Layer 5,42309003,Bangladesh Bank Charges,42309,Expenditure Accounts,1,0,approve,0
+Layer 5,42309004,Foreign Bank Charges in USD <for OBU>,42309,Expenditure Accounts,1,0,approve,0
+Layer 5,42310001,Local Training Expenses,42310,Expenditure Accounts,1,0,approve,0
+Layer 5,42310002,Foreign Training Expenses,42310,Expenditure Accounts,1,0,approve,0
+Layer 5,42310003,Daily Allowances (Training),42310,Expenditure Accounts,1,0,approve,0
+Layer 5,42310004,Entertainment (Training),42310,Expenditure Accounts,1,0,approve,0
+Layer 5,42310005,Venue Rent (Training),42310,Expenditure Accounts,1,0,approve,0
+Layer 5,42310006,Honorarium (Training),42310,Expenditure Accounts,1,0,approve,0
+Layer 5,42311001,Professional Fees,42311,Expenditure Accounts,1,0,approve,0
+Layer 5,42312001,AGM Expenses,42312,Expenditure Accounts,1,0,approve,0
+Layer 5,42313001,Subscription,42313,Expenditure Accounts,1,0,approve,0
+Layer 5,42313002,Donation,42313,Expenditure Accounts,1,0,approve,0
+Layer 5,42314001,Reuter Charges,42314,Expenditure Accounts,1,0,approve,0
+Layer 5,42315001,CDBL Charges,42315,Expenditure Accounts,1,0,approve,0
+Layer 5,42316002,Fees for Regis. at Joint Stock Comp.,42316,Expenditure Accounts,1,0,approve,0
+Layer 5,42316003,All Other Fees,42316,Expenditure Accounts,1,0,approve,0
+Layer 5,42317001,Business Development Expenses,42317,Expenditure Accounts,1,0,approve,0
+Layer 5,42317002,CSR Activities,42317,Expenditure Accounts,1,0,approve,0
+Layer 5,42317003,Branch Opening Expenses,42317,Expenditure Accounts,1,0,approve,0
+Layer 5,42318001,Contribution to MTB Foundation (Expenditure),42318,Expenditure Accounts,1,0,approve,0
+Layer 5,42319001,Employees Medical Assistance Fund (Expenditure),42319,Expenditure Accounts,1,0,approve,0
+Layer 5,42322001,CPV Charge- Payment to Vendor (Retail),42322,Expenditure Accounts,1,0,approve,0
+Layer 5,42322002,CPV Charge - Deposit KYC (Retail),42322,Expenditure Accounts,1,0,approve,0
+Layer 5,42323001,Site Maintenance & Support Service,42323,Expenditure Accounts,1,0,approve,0
+Layer 5,42324001,Connectivity Charge,42324,Expenditure Accounts,1,0,approve,0
+Layer 5,42325011,NID Verification Charge,42325,Expenditure Accounts,1,0,approve,0
+Layer 5,42326001,Loss on sale of Fixed Assets,42326,Expenditure Accounts,1,0,approve,0
+Layer 5,42327001,Misc Expenses not classified elsewhere,42327,Expenditure Accounts,1,0,approve,0
+Layer 5,42327002,POS Intercharge Reimbursement Fee Paid for,42327,Expenditure Accounts,1,0,approve,0
+Layer 5,42327004,bKash Commission,42327,Expenditure Accounts,1,0,approve,0
+Layer 5,42328061,Amortization Loss on HFT Securities T Bill,42328,Tresury Expenditure,1,0,approve,0
+Layer 5,42328062,Revaluation Loss on HFT Securities Treasury Bill,42328,Tresury Expenditure,1,0,approve,0
+Layer 5,42328063,Revaluation Loss on HFT Securities Treasury Bond,42328,Tresury Expenditure,1,0,approve,0
+Layer 5,42328064,Amortization Loss on HTM Securities Treasury Bond,42328,Tresury Expenditure,1,0,approve,0
+Layer 5,42328065,Loss on Sale of Treasury Bond,42328,Tresury Expenditure,1,0,approve,0
+Layer 5,42328066,Loss from Repo (Treasury Bond),42328,Tresury Expenditure,1,0,approve,0
+Layer 5,42328067,Loss on Sale of Treasury Bill,42328,Tresury Expenditure,1,0,approve,0
+Layer 5,42328068,Loss from Repo (Treasury Bill),42328,Tresury Expenditure,1,0,approve,0
+Layer 5,42328161,Loss for Exchange,42328,Tresury Expenditure,1,0,approve,0
+Layer 5,42329001,UPI Charges,42329,Expenditure Accounts,1,0,approve,0
+Layer 5,42329051,Card Transaction Charges,42329,Expenditure Accounts,1,0,approve,0
+Layer 5,42329055,Operational Loss - Cards,42329,Expenditure Accounts,1,0,approve,0
+Layer 5,42330001,Operational Loss,42330,Expenditure Accounts,1,0,approve,0
+Layer 5,42331001,Penalty of CRR/SLR,42331,Tresury Expenditure,1,0,approve,0
+Layer 5,42332021,ATM Intercharge Reimbursement Fee Paid for,42332,Expenditure Accounts,1,0,approve,0
+Layer 5,42333071,Agent Banking Float Sharing Commission,42333,Expenditure Accounts,1,0,approve,0
+Layer 5,42334001,CRR Cost <for PB>,42334,Expenditure Accounts,1,0,approve,0
+Layer 5,42335001,Auditor's Fees,42335,Expenditure Accounts,1,0,approve,0
+Layer 5,42336001,Agency Commission on Student File,42336,Expenditure Accounts,1,0,approve,0
+Layer 5,42337001,Other Fees & Commission USD <OBU>,42337,Expenditure Accounts,1,0,approve,0
+Layer 5,42401001,Depreciation on Building,42401,Expenditure Accounts,1,0,approve,0
+Layer 5,42402001,Depreciation on Fixture,42402,Expenditure Accounts,1,0,approve,0
+Layer 5,42402002,Depreciation on Furniture,42402,Expenditure Accounts,1,0,approve,0
+Layer 5,42403001,Depreciation on Electrical Equipments,42403,Expenditure Accounts,1,0,approve,0
+Layer 5,42403002,Depreciation on Other Office Equipments ,42403,Expenditure Accounts,1,0,approve,0
+Layer 5,42404001,Depreciation on Computers & Peripherals,42404,Expenditure Accounts,1,0,approve,0
+Layer 5,42405001,Depreciation on Motor Cars,42405,Expenditure Accounts,1,0,approve,0
+Layer 5,42405002,Depreciation on Motor Cycles,42405,Expenditure Accounts,1,0,approve,0
+Layer 5,42406001,Depreciation on Intangible Assets,42406,Expenditure Accounts,1,0,approve,0
+Layer 5,42409001,Repairs & Maintenance on Building,42409,Expenditure Accounts,1,0,approve,0
+Layer 5,42409101,Repairs & Maintenance on Fixture,42409,Expenditure Accounts,1,0,approve,0
+Layer 5,42409102,Repairs & Maintenance on Furniture,42409,Expenditure Accounts,1,0,approve,0
+Layer 5,42409301,Repairs & Maintenance on Electrical Equipments,42409,Expenditure Accounts,1,0,approve,0
+Layer 5,42409302,Repairs & Maintenance on Other Office Equipments ,42409,Expenditure Accounts,1,0,approve,0
+Layer 5,42409401,Repairs & Maintenance on Computers & Peripherals,42409,Expenditure Accounts,1,0,approve,0
+Layer 5,42409501,Repairs & Maintenance on Motor Cars,42409,Expenditure Accounts,1,0,approve,0
+Layer 5,42409502,Repairs & Maintenance on Motor Cycles,42409,Expenditure Accounts,1,0,approve,0
+Layer 5,42409601,Software Maintenance,42409,Expenditure Accounts,1,0,approve,0
+Layer 5,42501001,Postage,42501,Expenditure Accounts,1,0,approve,0
+Layer 5,42501002,Postage/Courier Service Charges,42501,Expenditure Accounts,1,0,approve,0
+Layer 5,42502001,Telephone Expenses,42502,Expenditure Accounts,1,0,approve,0
+Layer 5,42502002,Fax/E-Mail,42502,Expenditure Accounts,1,0,approve,0
+Layer 5,42502003,Telex/Telegraph,42502,Expenditure Accounts,1,0,approve,0
+Layer 5,42502004,Mobile Bill Expenses,42502,Expenditure Accounts,1,0,approve,0
+Layer 5,42502005,SWIFT Charges (Expenses),42502,Expenditure Accounts,1,0,approve,0
+Layer 5,42503001,Stamp Expenses,42503,Expenditure Accounts,1,0,approve,0
+Layer 5,42601001,Lawyer's Charges,42601,Expenditure Accounts,1,0,approve,0
+Layer 5,42601002,Legal Charges,42601,Expenditure Accounts,1,0,approve,0
+Layer 5,42601003,Legal Stamps Charges,42601,Expenditure Accounts,1,0,approve,0
+Layer 5,42601004,Court Fees & Charges,42601,Expenditure Accounts,1,0,approve,0
+Layer 5,42701001,Security Stationery,42701,Expenditure Accounts,1,0,approve,0
+Layer 5,42701002,Computer Stationery,42701,Expenditure Accounts,1,0,approve,0
+Layer 5,42701003,Paper & Table Stationary,42701,Expenditure Accounts,1,0,approve,0
+Layer 5,42701005,Printed Stationery,42701,Expenditure Accounts,1,0,approve,0
+Layer 5,42702001,Printing Expenses,42702,Expenditure Accounts,1,0,approve,0
+Layer 5,42703001,Advertisement & Publicity,42703,Expenditure Accounts,1,0,approve,0
+Layer 5,42703002,News Paper Advertisements,42703,Expenditure Accounts,1,0,approve,0
+Layer 5,42703003,Broad Casting Advertisements,42703,Expenditure Accounts,1,0,approve,0
+Layer 5,42703004,Hoarding/ Neon Signs,42703,Expenditure Accounts,1,0,approve,0
+Layer 5,42703005,Souvenir/Magazine,42703,Expenditure Accounts,1,0,approve,0
+Layer 5,42703006,Cut Out Dangler Flex Backdrop etc branding expenses,42703,Expenditure Accounts,1,0,approve,0
+Layer 5,42801001,Director's Fees,42801,Expenditure Accounts,1,0,approve,0
+Layer 5,42801002,Parties & Dinner,42801,Expenditure Accounts,1,0,approve,0
+Layer 5,42801003,Director's Traveling Expenses,42801,Expenditure Accounts,1,0,approve,0
+Layer 5,42901001,MD Basic,42901,Expenditure Accounts,1,0,approve,0
+Layer 5,42901002,MD House Rent,42901,Expenditure Accounts,1,0,approve,0
+Layer 5,42901003,MD House Maintenance,42901,Expenditure Accounts,1,0,approve,0
+Layer 5,42901004,MD Entertainment,42901,Expenditure Accounts,1,0,approve,0
+Layer 5,42901005,MD Festival Bonus,42901,Expenditure Accounts,1,0,approve,0
+Layer 5,42901006,MD Incentive Bonus,42901,Expenditure Accounts,1,0,approve,0
+Layer 5,42901007,MD Leave Fare Assistance,42901,Expenditure Accounts,1,0,approve,0
+Layer 5,42901008,MD Security & Personal Wages,42901,Expenditure Accounts,1,0,approve,0
+Layer 5,42901009,MD Provident Fund,42901,Expenditure Accounts,1,0,approve,0
+Layer 5,43101001,Provision for Unclassified Loan and Advance,43101,Expenditure Accounts,1,0,approve,0
+Layer 5,43101002,Provision for Classified Loan and Advance,43101,Expenditure Accounts,1,0,approve,0
+Layer 5,43101003,Provision for Off-Balance Sheet items (Expenses),43101,Expenditure Accounts,1,0,approve,0
+Layer 5,43201001,Provision for Investment in Share of Quoted Co.,43201,Expenditure Accounts,1,0,approve,0
+Layer 5,43301001,Provision for Other Assets,43301,Expenditure Accounts,1,0,approve,0
+Layer 5,51101001,Foreign Bills sent for collection,51101,Contra Liabilities,1,0,approve,0
+Layer 5,51101002,Foreign Cheques sent for collection,51101,Contra Liabilities,1,0,approve,0
+Layer 5,51102001,Inland Bills sent for collection,51102,Contra Liabilities,1,0,approve,0
+Layer 5,51102002,Inland Cheques sent for collection,51102,Contra Liabilities,1,0,approve,0
+Layer 5,51201001,Foreign Bills recvd. for collection,51201,Contra Liabilities,1,0,approve,0
+Layer 5,51201002,Foreign Cheques recvd. for collection,51201,Contra Liabilities,1,0,approve,0
+Layer 5,51202001,Inland Bills received for collection,51202,Contra Liabilities,1,0,approve,0
+Layer 5,51202002,Inland Cheques received for collection,51202,Contra Liabilities,1,0,approve,0
+Layer 5,51301001,Forward Contract Cus. USD Purchase,51301,Contra Liabilities,1,0,approve,0
+Layer 5,51302001,Forward Contract Cus. USD Sale,51302,Contra Asset,1,0,approve,0
+Layer 5,52101001,Bankers Liability on BG Outward Performance (Inland),52101,Contingent Liability,1,0,approve,0
+Layer 5,52101002,Bankers Liability on BG Outward Financial  (Inland),52101,Contingent Liability,1,0,approve,0
+Layer 5,52101003,Bankers Liability on BG Outward DPG (Inland),52101,Contingent Liability,1,0,approve,0
+Layer 5,52102001,Bankers Liability on BG Outward  Performance (Foreign),52102,Contingent Liability,1,0,approve,0
+Layer 5,52102002,Bankers Liability on BG Outward  Financial  (Foreign),52102,Contingent Liability,1,0,approve,0
+Layer 5,52102003,Bankers Liability on BG Outward  DPG  (Foreign),52102,Contingent Liability,1,0,approve,0
+Layer 5,52103001,Bankers Liability on BG Outward  Performance (Foreign) <OBU>,52103,Contingent Liability,1,0,approve,0
+Layer 5,52103002,Bankers Liability on BG Outward  Financial  (Foreign) <OBU>,52103,Contingent Liability,1,0,approve,0
+Layer 5,52103003,Bankers Liability on BG Outward  DPG  (Foreign) <OBU>,52103,Contingent Liability,1,0,approve,0
+Layer 5,52201001,Banker's Liability on ILC Sight,52201,Contingent Liability,1,0,approve,0
+Layer 5,52201002,Banker's Liability on ILC Cash,52201,Contingent Liability,1,0,approve,0
+Layer 5,52201003,Banker's Liability on BTB ILC Cash,52201,Contingent Liability,1,0,approve,0
+Layer 5,52201004,Banker's Liability on BTB ILC Usance,52201,Contingent Liability,1,0,approve,0
+Layer 5,52202001,Banker's Liability on Cash FLC Sight,52202,Contingent Liability,1,0,approve,0
+Layer 5,52202002,Banker's Liability on FLC Usance,52202,Contingent Liability,1,0,approve,0
+Layer 5,52202003,Banker's Liability on BTB FLC Sight,52202,Contingent Liability,1,0,approve,0
+Layer 5,52202004,Banker's Liability on BTB FLC Usance,52202,Contingent Liability,1,0,approve,0
+Layer 5,52301001,Bankers Liability for Accepted Bills <Inland>,52301,Contingent Liability,1,0,approve,0
+Layer 5,52302002,Bankers Liability for Accepted Bills other Banks <Foreign>,52302,Contingent Liability,1,0,approve,0
+Layer 5,61101001,Foreign Bills sent for collection,61101,Contra Asset,1,0,approve,0
+Layer 5,61101002,Foreign Cheques sent for collection,61101,Contra Asset,1,0,approve,0
+Layer 5,61102001,Inland Bills sent for collection,61102,Contra Asset,1,0,approve,0
+Layer 5,61102002,Inland Cheques sent for collection,61102,Contra Asset,1,0,approve,0
+Layer 5,61201001,Foreign Bills recvd. for collection,61201,Contra Asset,1,0,approve,0
+Layer 5,61201002,Foreign Cheques recvd. for collection,61201,Contra Asset,1,0,approve,0
+Layer 5,61202001,Inland Bills received for collection,61202,Contra Asset,1,0,approve,0
+Layer 5,61202002,Inland Cheques received for collection,61202,Contra Asset,1,0,approve,0
+Layer 5,61301001,Forward Contract Cus. USD Purchase,61301,Contra Asset,1,0,approve,0
+Layer 5,61302001,Forward Contract Cus. USD Sale,61302,Contra Asset,1,0,approve,0
+Layer 5,62101001,Customers' Liability on BG Outward Performance (Inland),62101,Contingent Asset,1,0,approve,0
+Layer 5,62101002,Customers' Liability on BG Outward Financial  (Inland),62101,Contingent Asset,1,0,approve,0
+Layer 5,62101003,Customers' Liability on BG Outward Bidbond (Inland),62101,Contingent Asset,1,0,approve,0
+Layer 5,62102001,Customers' Liability on BG Outward  Performance (Foreign),62102,Contingent Asset,1,0,approve,0
+Layer 5,62102002,Customers' Liability on BG Outward  Financial  (Foreign),62102,Contingent Asset,1,0,approve,0
+Layer 5,62102003,Customers' Liability on BG Outward  Bid bond  (Foreign),62102,Contingent Asset,1,0,approve,0
+Layer 5,62103001,Customers' Liability on BG Outward  Performance (Foreign) <OBU>,62103,Contingent Asset,1,0,approve,0
+Layer 5,62103002,Customers' Liability on BG Outward  Financial  (Foreign) <OBU>,62103,Contingent Asset,1,0,approve,0
+Layer 5,62103003,Customers' Liability on BG Outward  DPG  (Foreign) <OBU>,62103,Contingent Asset,1,0,approve,0
+Layer 5,62201001,Customers' Liability on  Cash ILC Sight,62201,Contingent Asset,1,0,approve,0
+Layer 5,62201002,Customers' Liability on ILC Usance,62201,Contingent Asset,1,0,approve,0
+Layer 5,62201003,Customers' Liability on BTB ILC Sight,62201,Contingent Asset,1,0,approve,0
+Layer 5,62201004,Customers' Liability on BTB ILC Usance,62201,Contingent Asset,1,0,approve,0
+Layer 5,62202001,Customers' Liability on Cash FLC Sight,62202,Contingent Asset,1,0,approve,0
+Layer 5,62202002,Customers' Liability on Cash FLC Usance,62202,Contingent Asset,1,0,approve,0
+Layer 5,62202003,Customers' Liability on BTB FLC Sight,62202,Contingent Asset,1,0,approve,0
+Layer 5,62202004,Customers' Liability on BTB FLC Usance,62202,Contingent Asset,1,0,approve,0
+Layer 5,62301001,Customers' Liability for Accepted Bills <Inland>,62301,Contingent Asset,1,0,approve,0
+Layer 5,62302002,Customers' Liability for Accepted Bills other Banks <Foreign>,62302,Contingent Asset,1,0,approve,0
+Layer 5,90001001,MTB General Account <inter Branch Suspense> ,90001,No BGL only CGL,1,0,approve,0
+Layer 5,90002001,Intra Branch Suspense Account,90002,No BGL only CGL,1,0,approve,0
+Layer 5,90003001,Cross Currency Suspense Account,90003,No BGL only CGL,1,0,approve,0
+Layer 5,90004001,Currency Position Account <USD>,90004,No BGL only CGL,1,0,approve,0
+Layer 5,90004002,Currency Position Account <GBP>,90004,No BGL only CGL,1,0,approve,0
+Layer 5,90004003,Currency Position Account <EUR>,90004,No BGL only CGL,1,0,approve,0
+Layer 5,90004004,Currency Position Account <CHF>,90004,No BGL only CGL,1,0,approve,0
+Layer 5,90004005,Currency Position Account <JPY>,90004,No BGL only CGL,1,0,approve,0
+Layer 5,90004006,Currency Position Account <SGD>,90004,No BGL only CGL,1,0,approve,0
+Layer 5,90004007,Currency Position Account <AUD>,90004,No BGL only CGL,1,0,approve,0
+Layer 5,90004008,Currency Position Account <AED>,90004,No BGL only CGL,1,0,approve,0
+Layer 5,90004009,Currency Position Account <QAR>,90004,No BGL only CGL,1,0,approve,0
+Layer 5,90004010,Currency Position Account <SAR>,90004,No BGL only CGL,1,0,approve,0
+Layer 5,90005001,BDT Position Account,90005,No BGL only CGL,1,0,approve,0
+Layer 5,90006001,Inter System Suspense Account BDT,90006,No BGL only CGL,1,0,approve,0
+Layer 5,90007001,Inter System Suspense Account <USD>,90007,No BGL only CGL,1,0,approve,0
+Layer 5,90007002,Inter System Suspense Account <GBP>,90007,No BGL only CGL,1,0,approve,0

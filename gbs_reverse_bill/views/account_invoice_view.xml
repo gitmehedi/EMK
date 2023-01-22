@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_asset_invoice_supplier_form" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.inherit.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="asset_vendor_bill.asset_invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="replace">
+                <button name="%(gbs_reverse_bill.action_account_invoice_reverse)d" type='action' string='Reverse'
+                        groups="account.group_account_manager"
+                        attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),
+                        ('state','not in',('open','paid'))]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_rev_invoice_supplier_form" model="ir.ui.view">
+        <field name="name">inherit.account.invoice.payment.instruction</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="replace">
+                <button name="%(gbs_reverse_bill.action_account_invoice_reverse)d" type='action' string='Reverse'
+                        groups="account.group_account_manager"
+                        attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),
+                        ('state','not in',('open','paid'))]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

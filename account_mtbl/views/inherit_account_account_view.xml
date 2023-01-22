@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_account_form" model="ir.ui.view">
+            <field name="name">view.account.form.view</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="edit">0</attribute>
+                    <attribute name="duplicate">0</attribute>
+                </xpath>
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
+                                groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                        <button name="act_reject" string="Reject" type="object" states="draft"
+                                groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                        <button name="%(action_account_account_wizard)d" string="Edit" type="action"
+                                class="oe_highlight"
+                                groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                        <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                                groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
+                        <button name="act_reject_pending" string="Reject" type="object"
+                                groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
+                        <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                                groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                        <field name="state" widget="statusbar" invisible="True"/>
+                    </header>
+                </xpath>
+
+                <xpath expr="//field[@name='code']" position="before">
+                    <field name="pending" invisible="True"/>
+                    <field name="level_size" invisible="True"/>
+                    <field name="level_id" domain="[('is_visible','=',1)]"
+                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                    <field name="parent_id"
+                           context="{'show_parent_account':True}"
+                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                           attrs="{'invisible': [('level_size','in',[0,1])], 'required':[('level_size','>',0)]}"/>
+                </xpath>
+                <xpath expr="//sheet/group/group/div" position="after">
+                    <field name="originating_type"
+                           attrs="{'invisible': [('reconcile', '=', False)], 'required':[('reconcile','=',True)]}"/>
+                    <field name="tb_filter"/>
+                    <field name="maker_id" invisible="1"/>
+                    <field name="approver_id" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='tax_ids']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='tag_ids']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='deprecated']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_open_reconcile']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='currency_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                    <attribute name="groups">base.group_system,base.group_multi_currency</attribute>
+                </xpath>
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="tpm_currency_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                           required="True"/>
+                </xpath>
+
+                <xpath expr="//sheet" position="inside">
+                    <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
+                        <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                              decoration-bf="state in ('pending',)"
+                              decoration-danger="state=='reject'">
+                            <field name="change_name"/>
+                            <field name="user_type_id"/>
+                            <field name="currency_id"/>
+                            <field name="tpm_currency_id"/>
+                            <field name="reconcile"/>
+                            <field name="status"/>
+                            <field name="request_date"/>
+                            <field name="change_date"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </xpath>
+                <xpath expr="//sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_withparent_form" model="ir.ui.view">
+            <field name="name">inherit.account.account.list</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account_parent.view_account_withparent_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="replace">
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_view_account_list" model="ir.ui.view">
+            <field name="name">inherit.account.account.list</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <tree string="Chart of Accounts" decoration-info="state=='draft'"
+                          decoration-success="state=='approve'"
+                          decoration-danger="state=='reject'"
+                          decoration-bf="state in ('approve',)" duplicate="0">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="level_id"/>
+                        <field name="user_type_id"/>
+                        <field name="tpm_currency_id"/>
+                        <field name="reconcile"/>
+                        <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"
+                               invisible="True"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <field name="state"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_view_account_search" model="ir.ui.view">
+            <field name="name">inherit.account.account.search</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="replace">
+                    <search>
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('code','=like',str(self)+'%')]"
+                               string="Account"/>
+                        <filter string="Receivable Accounts" domain="[('internal_type','=','receivable')]"/>
+                        <filter string="Payable Accounts" domain="[('internal_type','=','payable')]"/>
+                        <field name="tpm_currency_id"/>
+                        <field name="user_type_id"/>
+                        <group string="Group By">
+                            <filter string="Account Type" domain="" context="{'group_by':'user_type_id'}"/>
+                            <filter name="level_id" string="Layer" context="{'group_by': 'level_id'}"/>
+                            <filter string="Pending" name="pending" icon="terp-personal"
+                                    domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                            <filter string="Rejected" name="state" icon="terp-personal"
+                                    domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                            <filter string="In-Active" name="state" icon="terp-personal"
+                                    domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                        </group>
+                    </search>
+                </xpath>
+            </field>
+        </record>
+        <record id="account.action_account_form" model="ir.actions.act_window">
+            <field name="domain">[('level_id.is_visible', '=', True)]</field>
+            <field name="context">
+                {"search_default_level_id":1,
+                "show_parent_account":True,"search_default_active":'False',"search_default_pending":'True'}
+            </field>
+        </record>
+
+        <record id="account_parent.action_open_account" model="ir.values">
+            <field eval="'account.move.line'" name="model"/>
+        </record>
+    </data>
+</odoo>
+

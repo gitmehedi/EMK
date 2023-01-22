@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.cron" id="provisional_journal_create_scheduler">
+            <field name="name">Provisional Journal Scheduler</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'account.move'"/>
+            <field name="function" eval="'action_create_provisional_journal'"/>
+            <field name="args" eval="'()'" />
+        </record>
+
+        <record model="ir.cron" id="provisional_journal_reverse_scheduler">
+            <field name="name">Provisional Reverse Scheduler</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'account.move'"/>
+            <field name="function" eval="'action_reverse_provisional_journal'"/>
+            <field name="args" eval="'()'" />
+        </record>
+<!--<field name="nextcall" eval="(DateTime.now() + relativedelta(days=1)).strftime('%Y-%m-%d 00:00:00')" />-->
+    </data>
+</odoo>
+
+
+

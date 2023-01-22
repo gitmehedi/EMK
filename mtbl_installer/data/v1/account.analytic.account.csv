@@ -1,0 +1,31 @@
+name,code,active
+Retail Finance Business Unit 1,601,True
+Retail Finance Business Unit 2,602,True
+Retail Finance processing,603,True
+NRB,620,True
+Privilige Gulshan Centre,651,True
+Privilige Uttara Centre,652,True
+Corporate Unit 1,701,True
+Corporate Unit 2,702,True
+Corporate Unit 3 <Synd. & struc Fin.>,703,True
+SME Unit 1,801,True
+SME Unit 2,802,True
+SME Unit 3,803,True
+Agent Banking Centre,901,True
+Audit,902,True
+Cards Division,903,True
+Contact Centre,904,True
+Group Finance,905,True
+HO CTG Airport Lounge,906,True
+HO HSIA Lounge,907,True
+IT,908,True
+Legal,909,True
+MITS Chattogram,910,True
+MITS Dhaka,911,True
+MITS Motijheel,912,True
+Operations Central Clearing,913,True
+Operations CPU,914,True
+Operations HO,915,True
+SWIFT,916,True
+Treasury,917,True
+HO Miscellaneous,999,True

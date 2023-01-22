@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_vendor_advance_sou" model="ir.ui.view">
+        <field name="name">inherit.vendor.advance.sou</field>
+        <field name="model">vendor.advance</field>
+        <field name="inherit_id" ref="vendor_advance.vendor_advance_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="replace">
+                <field name="account_id" domain="[('reconcile', '=', True), ('originating_type', '=', 'debit')]"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position="after">
+                <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_vendor_advance_form_view_2" model="ir.ui.view">
+        <field name="name">inherit.vendor.advance.form.view</field>
+        <field name="model">vendor.advance</field>
+        <field name="inherit_id" ref="vendor_advance_ou.inherit_vendor_advance_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='operating_unit_id']" position="after">
+                <field name="operating_unit_domain_ids" widget="many2many_tags" invisible="1"/>
+                <field name="account_analytic_id" options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+            <xpath expr="//field[@name='operating_unit_id']" position="replace">
+                <field name="operating_unit_id" string="Branch" required="True"
+                       domain="[('id', 'in', operating_unit_domain_ids and operating_unit_domain_ids[0] and operating_unit_domain_ids[0][2] or False)]"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_rent_agreement_sou" model="ir.ui.view">
+        <field name="name">inherit.rent.agreement.sou</field>
+        <field name="model">vendor.advance</field>
+        <field name="inherit_id" ref="rent_agreement.rent_agreement_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="replace">
+                <field name="account_id" domain="[('reconcile', '=', False), '|', ('originating_type', '!=', 'credit'), ('originating_type', '=', False)]"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position="after">
+                <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+            <xpath expr="//field[@name='operating_unit_id']" position="after">
+                <field name="operating_unit_domain_ids" widget="many2many_tags" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='operating_unit_id']" position="replace">
+                <field name="operating_unit_id" string="Branch" required="True"
+                       domain="[('id', 'in', operating_unit_domain_ids and operating_unit_domain_ids[0] and operating_unit_domain_ids[0][2] or False)]"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+            <xpath expr="//group[@name='main-2']" position="after">
+                <group name="main-3">
+                    <group name="left" string="Payment Information">
+                        <field name="payment_type"/>
+                        <field name="vendor_bank_acc"
+                               attrs="{'invisible':[('payment_type','=','credit')],'required':[('payment_type','=','casa')]}"/>
+                        <field name="credit_account_id" domain="[('gl_type','=','online')]"
+                               attrs="{'invisible':[('payment_type','=','casa')],'required':[('payment_type','=','credit')]}"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        <field name="credit_sub_operating_unit_id" domain="[('account_id', 'in', [credit_account_id])]"
+                               attrs="{'invisible':[('payment_type','=','casa')], 'required':[('payment_type','=','credit')]}"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="credit_operating_unit_id"
+                               domain="[('id', 'in', credit_operating_unit_domain_ids and credit_operating_unit_domain_ids[0] and credit_operating_unit_domain_ids[0][2] or False)]"
+                               attrs="{'invisible':[('payment_type','=','casa')],'required':[('payment_type','=','credit')]}"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="credit_operating_unit_domain_ids" widget="many2many_tags" invisible="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

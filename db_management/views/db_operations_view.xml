@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_db_operation_manage_form" model="ir.ui.view">
+            <field name="name">view.account.app.config.form</field>
+            <field name="model">db.operation.manage</field>
+            <field name="arch" type="xml">
+                <form string="Database Sync" duplicate="0">
+                    <header>
+                        <button name="action_duplicate" string="Sync Database" type="object"
+                                confirm="Are you sure to sync database?"
+                                class="oe_highlight" attrs="{'invisible': [('location', '=', 'remote')]}"/>
+                        <button name="action_restore" string="Sync Database" type="object"
+                                confirm="Are you sure to sync database?"
+                                class="oe_highlight" attrs="{'invisible': [('location', '=', 'local')]}"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="backup_path"/>
+                            </group>
+                            <group>
+                                <field name="location"/>
+                                <field name="operation_type"/>
+                                <field name="query" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="source_db"/>
+                                <field name="source_ip" attrs="{'required': [('location', '=', 'remote')]}"/>
+                                <field name="source_port" attrs="{'required': [('location', '=', 'remote')]}"/>
+                                <field name="source_db_user" attrs="{'required': [('location', '=', 'remote')]}"/>
+                                <field name="source_db_pass" attrs="{'required': [('location', '=', 'remote')]}"
+                                       password="True"/>
+                            </group>
+                            <group>
+                                <field name="destination_db"/>
+                                <field name="dest_ip" attrs="{'required': [('location', '=', 'remote')]}"/>
+                                <field name="dest_port" attrs="{'required': [('location', '=', 'remote')]}"/>
+                                <field name="dest_db_user" attrs="{'required': [('location', '=', 'remote')]}"/>
+                                <field name="dest_db_pass" attrs="{'required': [('location', '=', 'remote')]}"
+                                       password="True"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Daily Updates">
+                                <field name="line_ids">
+                                    <tree readonly="1">
+                                        <field name="date"/>
+                                        <field name="name"/>
+                                        <field name="query_result" filename="name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_db_operation_manage_tree" model="ir.ui.view">
+            <field name="name">view.db.operation.manage.tree</field>
+            <field name="model">db.operation.manage</field>
+            <field name="arch" type="xml">
+                <tree string="Sync" duplicate="0"
+                          decoration-info="location=='local'" decoration-success="location=='remote'"
+                          decoration-bf="location in ('local','remote')" >
+                    <field name="name"/>
+                    <field name="location"/>
+                    <field name="source_db"/>
+                    <field name="destination_db"/>
+                    <field name="source_ip"/>
+                    <field name="dest_ip"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_db_operation_manage_search" model="ir.ui.view">
+            <field name="name">db.operation.manage.search</field>
+            <field name="model">db.operation.manage</field>
+            <field name="arch" type="xml">
+                <search string="Branch">
+                    <field name="source_db"/>
+                    <field name="destination_db"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="seq_db_operation_manage" model="ir.sequence">
+            <field name="name">Duplicate Database</field>
+            <field name="code">db.operation.manage</field>
+            <field name="prefix">App/</field>
+            <field name="padding">4</field>
+            <field name="number_increment" eval="1"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="action_db_operation_manage" model="ir.actions.act_window">
+            <field name="name">Database Sync</field>
+            <field name="res_model">db.operation.manage</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Duplicate Database.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_db_operation_manage" parent="db_management.main_menu_db" action="action_db_operation_manage"
+                  sequence="100"/>
+    </data>
+</odoo>

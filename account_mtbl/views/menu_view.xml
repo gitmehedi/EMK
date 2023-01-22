@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account.menu_action_account_payments_payable" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account.menu_action_account_payments_payable" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account.menu_finance_receivables" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account_type_menu.account_type_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account.menu_board_journal_1" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account.account_analytic_tag_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account.menu_action_account_fiscal_position_form" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <menuitem id="account.menu_finance_receivables" name="Sales" parent="account.menu_finance" sequence="2"
+              groups="base.group_no_one"/>
+
+    <menuitem action="operating_unit.action_operating_unit_tree"
+              id="operating_unit.menu_action_operating_unit_tree"
+              sequence="13" parent="account.account_account_menu"
+              groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
+
+    <record id="account.menu_action_manual_reconciliation" model="ir.ui.menu">
+        <field name="action" eval="False"/>
+    </record>
+
+    <record id="account.menu_action_tax_adjustment" model="ir.ui.menu">
+        <field name="action" eval="False"/>
+    </record>
+
+    <record id="account.menu_finance_payables" model="ir.ui.menu">
+        <field name="name">Vendor Operations</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <menuitem id="menu_gl_operations" name="GL Operations"
+              sequence="20" groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
+
+    <record id="account.menu_action_move_journal_line_form" model="ir.ui.menu">
+        <field name="name">Journal Entries</field>
+        <field name="parent_id" eval="ref('menu_gl_operations')"/>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="account.menu_finance_reports" model="ir.ui.menu">
+        <field name="name">Reports</field>
+        <field name="parent_id" eval="ref('menu_gl_operations')"/>
+        <field name="groups_id" eval="[(4,[ref('group_tb_user')])]"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="account.menu_finance_entries" model="ir.ui.menu">
+        <field name="name">GL Accounts</field>
+        <field name="sequence">25</field>
+        <field name="parent_id" eval="ref('menu_gl_operations')"/>
+    </record>
+
+    <record id="account.menu_finance" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4,ref('group_tb_user'))]"/>
+         <field name="sequence">10</field>
+    </record>
+
+    <menuitem id="menu_main_configuration" name="Configurations"
+              sequence="80" groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
+
+    <record id="account.menu_finance_configuration" model="ir.ui.menu">
+        <field name="name">Configuration</field>
+        <field name="sequence">30</field>
+        <field name="parent_id" eval="ref('menu_main_configuration')"/>
+    </record>
+
+    <record id="account.menu_account_supplier" model="ir.ui.menu">
+        <field name="parent_id" eval="ref('account.menu_finance_configuration')"/>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="account.account_account_menu" model="ir.ui.menu">
+        <field name="parent_id" eval="ref('account.menu_finance_configuration')"/>
+        <field name="sequence">30</field>
+        <field name="groups_id"
+               eval="[(6,0,[ref('mtbl_access.group_mtbl_sys_admin'),ref('account.group_account_manager')])]"/>
+    </record>
+
+    <record id="account.menu_account_reports" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+        <field name="parent_id" eval="ref('account.menu_finance')"/>
+        <field name="sequence">24</field>
+    </record>
+
+    <menuitem id="account.menu_config_multi_currency" name="Multi-Currencies"
+              parent="account.menu_finance_configuration" sequence="40"
+              groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
+
+    <menuitem id="account.menu_action_currency_form" action="base.action_currency_form" name="Currencies"
+              parent="account_fx_revaluation.account_fx_revaluation_configuration" sequence="20"
+              groups="base.group_multi_currency,mtbl_access.group_mtbl_sys_admin"/>
+
+    <menuitem action="account.action_account_journal_form" id="account.menu_action_account_journal_form"
+              name="Journal Type" sequence="25" parent="account.menu_finance_configuration"
+              groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"/>
+
+
+    <menuitem action="account.action_account_type_form" id="account_parent.menu_action_account_type_form"
+              parent="account.account_account_menu" sequence="5" groups="mtbl_access.group_mtbl_sys_admin"/>
+
+    <record id="account.menu_analytic_accounting" model="ir.ui.menu">
+        <field name="action" eval="False"/>
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <menuitem action="analytic.action_account_analytic_account_form" id="account.account_analytic_def_account"
+              parent="account.menu_analytic_accounting"
+              groups="analytic.group_analytic_accounting,mtbl_access.group_mtbl_sys_admin" sequence="0"/>
+
+    <record id="mail.mail_channel_menu_root_chat" model="ir.ui.menu">
+        <field name="action" eval="False"/>
+    </record>
+
+    <record id="account.account_management_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account.menu_action_account_bank_journal_form" model="ir.ui.menu">
+        <field name="action" eval="False"/>
+    </record>
+
+    <record id="account.account_reports_business_intelligence_menu" model="ir.ui.menu">
+        <field name="action" eval="False"/>
+        <field name="groups_id" eval="[(6,0,[ref('mtbl_access.make_invisible')])]"/>
+    </record>
+
+    <record id="account_fiscal_year.menu_date_range_accounting" model="ir.ui.menu">
+        <field name="name">Accounting Period</field>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+        <field name="parent_id" eval="ref('account.menu_finance_configuration')"/>
+        <field name="sequence">35</field>
+    </record>
+
+    <record id="account_fiscal_year.menu_date_range_action_accounting" model="ir.ui.menu">
+        <field name="name">Accounting Period</field>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+    </record>
+
+    <record id="account_fiscal_year.menu_date_range_type_action_accounting" model="ir.ui.menu">
+        <field name="name">Accounting Period Types</field>
+        <field name="groups">mtbl_access.group_mtbl_sys_admin</field>
+    </record>
+
+    <record id="date_range.menu_date_range" model="ir.ui.menu">
+        <field name="name">Accounting Period</field>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+    </record>
+
+    <record id="date_range.menu_date_range_action" model="ir.ui.menu">
+        <field name="name">Accounting Period</field>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+    </record>
+
+    <record id="date_range.menu_date_range_type_action" model="ir.ui.menu">
+        <field name="name">Accounting Period Types</field>
+        <field name="groups_id" eval="[(4,[ref('mtbl_access.group_mtbl_sys_admin')])]"/>
+    </record>
+
+    <menuitem id="date_range.menu_date_range_generator_action" action="date_range.date_range_generator_action"
+              parent="account_fiscal_year.menu_date_range_accounting" name="Generate Account Period" sequence="30"
+              groups="mtbl_access.group_mtbl_sys_admin"/>
+</odoo>
+
+

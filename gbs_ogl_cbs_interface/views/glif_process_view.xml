@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_server_file_process_form">
+        <field name="name">Middleware/FTP Config</field>
+        <field name="model">server.file.process</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="Name"/>
+                            <field name="type"/>
+                            <field name="sys_file_name"
+                                   attrs="{'invisible':[('type','!=','sys_dt')],'required':[('type','=','sys_dt')]}"/>
+                        </group>
+                        <group>
+                            <field name="method"/>
+                            <field name="folder"
+                                   attrs="{'invisible': [('method', '!=', 'sftp')],'required': [('method', '=', 'sftp')]}"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Source Settings">
+                            <field name="source_path" placeholder="/var/source"/>
+                            <field name="source_sftp_host" placeholder="192.168.1.1"
+                                   attrs="{'invisible': [('method', 'in', ('local','dest_sftp'))],'required': [('method', '=', 'sftp')]}"/>
+                            <field name="source_sftp_port"
+                                   attrs="{'invisible': [('method', 'in', ('local','dest_sftp'))],'required': [('method', '=', 'sftp')]}"/>
+                            <field name="source_sftp_user" placeholder="john"
+                                   attrs="{'invisible': [('method', 'in', ('local','dest_sftp'))],'required': [('method', '=', 'sftp')]}"/>
+                            <field name="source_sftp_password" password="True"
+                                   attrs="{'invisible': [('method', 'in', ('local','dest_sftp'))],'required': [('method', '=', 'sftp')]}"/>
+                            <br/>
+                            <br/>
+                            <button name="action_sftp_test_connection"
+                                    type="object" context="{'target':'source'}"
+                                    string="Test Source Middleware"
+                                    icon="fa-television"
+                                    attrs="{'invisible': [('method', 'in', ('local','dest_sftp'))],'required': [('method', '=', 'sftp')]}"/>
+                        </group>
+                        <group string="Destination Settings">
+                            <field name="dest_arc_path"
+                                   attrs="{'invisible': [('type', 'not in', ('mdc'))],'required': [('type', '=', 'mdc')]}"/>
+                            <field name="dest_path" placeholder="/var/destination"/>
+                            <field name="dest_sftp_host" placeholder="192.168.1.2"
+                                   attrs="{'invisible': [('method', '=', 'local')],'required': [('method', 'in', ('sftp','dest_sftp'))]}"/>
+                            <field name="dest_sftp_port"
+                                   attrs="{'invisible': [('method', '=', 'local')],'required': [('method', 'in', ('sftp','dest_sftp'))]}"/>
+                            <field name="dest_sftp_user" placeholder="john"
+                                   attrs="{'invisible': [('method', '=', 'local')],'required': [('method', 'in', ('sftp','dest_sftp'))]}"/>
+                            <field name="dest_sftp_password" password="True"
+                                   attrs="{'invisible': [('method', '=', 'local')],'required': [('method', 'in', ('sftp','dest_sftp'))]}"/>
+                            <br/>
+                            <br/>
+                            <button
+                                    name="action_sftp_test_connection"
+                                    type="object" context="{'target':'destination'}"
+                                    string="Test Destination Middleware"
+                                    icon="fa-television"
+                                    attrs="{'invisible': [('method', '=', 'local')],'required': [('method', 'in', ('sftp','dest_sftp'))]}"/>
+                        </group>
+                    </group>
+
+                    <separator string="Help" colspan="2"/>
+                    <div class="bg-warning text-warning">
+                        <h3>Warning:</h3>
+                        Use SFTP with caution! This writes files to external servers under the path you specify.
+                    </div>
+                    <div>
+                        CBS Integration Config of the database can be scheduled as follows:
+                        <ol>
+                            <li>Go to Settings --> Technical --> Automation --> Scheduled Actions.</li>
+                            <li>Search the action named 'Middleware/FTP Config Scheduler'.</li>
+                            <li>Set the scheduler to active and fill in how often you want process.</li>
+                        </ol>
+                    </div>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_server_file_process_tree">
+        <field name="name">Middleware/FTP Config</field>
+        <field name="model">server.file.process</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Backups" decoration-success="status==True"
+                  decoration-muted="status==False">
+                <field name='name'/>
+                <field name="type"/>
+                <field name="source_sftp_host" string="Source Middleware"/>
+                <field name="source_path" string="Source Middleware Path"/>
+                <field name="dest_sftp_host" string="Destination Middleware"/>
+                <field name="dest_path" string="Destination Middleware Path"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_server_file_process_search">
+        <field name="name">Middleware/FTP Config</field>
+        <field name="model">server.file.process</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search options">
+                <field name='name'/>
+                <field name='folder'/>
+                <field name="source_sftp_host"/>
+                <field name="status"/>
+            </search>
+        </field>
+    </record>
+
+    <act_window
+            name="Middleware/FTP Config"
+            id="action_server_file_process_form"
+            res_model="server.file.process"/>
+
+    <menuitem parent="main_api_interface"
+              action="action_server_file_process_form"
+              id="server_file_process_menu"
+              groups="grp_api_interface_manager,grp_api_group_finance"
+              sequence="30"/>
+
+
+</odoo>

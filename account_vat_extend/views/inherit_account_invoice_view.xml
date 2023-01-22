@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="inherit_invoice_supplier_form_2" model="ir.ui.view">
+            <field name="name">inherited.account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="reference" position="after">
+                    <field name="vat_selection"/>
+                </field>
+                <field name="amount_tax" position="after">
+                    <field name="amount_vat_payable" widget="monetary"/>
+                </field>
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="after">
+                    <field name="amount_vat_payable" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

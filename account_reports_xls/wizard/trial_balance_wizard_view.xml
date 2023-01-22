@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_report_balance_inherit_view" model="ir.ui.view">
+        <field name="name">Trial Balance</field>
+        <field name="model">account.balance.report</field>
+        <field name="inherit_id" ref="account.account_common_report_view"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//footer/button[@name='check_report']" position="after">
+                    <button name="button_export_xlsx" type="object" string="Export XLSX" class="oe_highlight" />
+                    or
+                </xpath>
+                <xpath expr="//field[@name='date_from']" position="attributes">
+                    <attribute name="required">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='display_account']" position="after">
+                    <field name="include_profit_loss"/>
+                    <field name="is_tb_exc" invisible="True"/>
+                </xpath>
+                <xpath expr="//field[@name='date_to']" position="attributes">
+                    <attribute name="required">True</attribute>
+                </xpath>
+                <field name="operating_unit_ids" position="after">
+                    <field name="ex_operating_unit_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                </field>
+            </data>
+        </field>
+    </record>
+</odoo>

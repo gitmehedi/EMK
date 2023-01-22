@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_soap_process_form">
+        <field name="name">API Config</field>
+        <field name="model">soap.process</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="API Config">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="endpoint_fullname" string="API Endpoint"/>
+                        <h4>
+                            <field name="endpoint_fullname" placeholder="Endpoint Name"/>
+                        </h4>
+                    </div>
+                    <group string="API Settings">
+                        <group>
+                            <field name="name"/>
+                            <field name="http_method"/>
+                            <field name="endpoint_url"/>
+                            <field name="endpoint_port"/>
+                            <field name="wsdl_type"/>
+                            <field name="wsdl_name"/>
+                            <field name="status"/>
+                        </group>
+                        <group string="Credentials">
+                            <field name="username"/>
+                            <field name="password" password="True"/>
+                        </group>
+                    </group>
+                    <group string="Additional Settings">
+                        <group>
+                            <field name="teller_no"/>
+                            <field name="ins_num"/>
+                            <field name="uuid_source"/>
+                        </group>
+                        <group>
+                            <field name="flag_1"/>
+                            <field name="flag_2"/>
+                            <field name="flag_3"/>
+                            <field name="flag_4"/>
+                            <field name="flag_5"/>
+                            <field name="flag_6"/>
+                        </group>
+                    </group>
+                    <group string="Optional Settings">
+                        <group>
+                            <field name="msg_len"/>
+                            <field name="msg_typ"/>
+                            <field name="cyc_num"/>
+                            <field name="msg_num"/>
+                            <field name="seg_num"/>
+                            <field name="seg_num2"/>
+                            <field name="frontend_num"/>
+                            <field name="terml_num"/>
+                            <field name="inst_num"/>
+                            <field name="brch_num"/>
+
+                        </group>
+                        <group>
+                            <field name="workstation_num"/>
+                            <field name="teller_num"/>
+                            <field name="tran_num"/>
+                            <field name="jrnl_num"/>
+                            <field name="hdr_dt"/>
+                            <field name="filler1"/>
+                            <field name="filler2"/>
+                            <field name="filler3"/>
+                            <field name="filler4"/>
+                            <field name="filler5"/>
+                            <field name="filler6"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_soap_process_tree">
+        <field name="name">API Config</field>
+        <field name="model">soap.process</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="API Config" decoration-success="status==True"
+                  decoration-muted="status==False">
+                <field name='name'/>
+                <field name="endpoint_url"/>
+                <field name="endpoint_port"/>
+                <field name="wsdl_name"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_soap_process_search">
+        <field name="name">API Config</field>
+        <field name="model">soap.process</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search options">
+                <field name='name'/>
+                <field name='endpoint_fullname'/>
+                <field name="endpoint_url"/>
+                <field name="endpoint_port"/>
+                <field name="wsdl_name"/>
+                <field name="status"/>
+            </search>
+        </field>
+    </record>
+
+    <act_window name="API Config" id="action_soap_process_form" res_model="soap.process"/>
+
+    <menuitem parent="main_api_interface" action="action_soap_process_form" id="soap_process_menu"
+              groups="grp_api_interface_manager" sequence="10"/>
+
+</odoo>

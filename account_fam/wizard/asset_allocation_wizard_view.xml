@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="asset_allocation_wizard_form">
+        <field name="name">asset.allocation.wizard</field>
+        <field name="model">asset.allocation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Fixed Assets Allocation">
+                <group>
+                    <group>
+                        <field name="date" readonly="True"/>
+                        <field name="usage_date"
+                               attrs="{'invisible':[('is_allocate','=',False)],'required':[('is_allocate','=',True)]}"/>
+                        <field name="warranty_date"
+                               attrs="{'invisible':[('is_allocate','=',False)],'required':[('is_allocate','=',True)]}"/>
+                        <field name="narration"/>
+                        <field name="is_allocate" invisible="True"/>
+                    </group>
+                    <group>
+                        <field name="operating_unit_id"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="to_operating_unit_id"
+                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="cost_centre_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        <field name="asset_user"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="allocation" string="Process" type="object"
+                            context="{'allocation': context.get('allocation')}" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_asset_allocation_wizard" model="ir.actions.act_window">
+        <field name="name">Fixed Assets Allocation/Transfer</field>
+        <field name="res_model">asset.allocation.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="asset_allocation_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

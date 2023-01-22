@@ -1,0 +1,268 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="inherited_view_tax_form" model="ir.ui.view">
+            <field name="name">inherited.account.tax.view</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="priority" eval="30"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="replace">
+                    <form string="Account VAT" edit="0" duplicate="0">
+                        <header>
+                            <button name="act_approve" string="Approve" type="object" states="draft"
+                                    class="oe_highlight"
+                                    groups="mtbl_access.group_mtbl_sys_admin"/>
+                            <button name="act_reject" string="Reject" type="object" states="draft"
+                                    groups="mtbl_access.group_mtbl_sys_admin"/>
+                            <button name="%(action_vat_wizard)d" string="Edit" type="action"
+                                    class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin"
+                                    attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                            <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                                    groups="mtbl_access.group_mtbl_sys_admin"
+                                    attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            <button name="act_reject_pending" string="Reject" type="object"
+                                    groups="mtbl_access.group_mtbl_sys_admin"
+                                    attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                                    groups="mtbl_access.group_mtbl_sys_admin"/>
+                            <field name="state" widget="statusbar" invisible="True"/>
+                        </header>
+                        <sheet>
+                            <group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="pending" invisible="1"/>
+                                    <field name="maker_id" invisible="1"/>
+                                    <field name="approver_id" invisible="1"/>
+                                </group>
+                                <group>
+                                    <field name="type_tax_use"/>
+                                    <field name="operating_unit_id"
+                                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                </group>
+                            </group>
+                            <notebook>
+                                <page string="Definition">
+                                    <group>
+                                        <group>
+                                            <field name="amount_type"/>
+                                            <label for="amount"
+                                                   attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
+                                            <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
+                                                <field name="amount" class="oe_inline"/>
+                                                <label string="%" class="oe_inline"
+                                                       attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                                            </div>
+                                            <label for="mushok_amount"
+                                                   attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}"/>
+                                            <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}">
+                                                <field name="mushok_amount" class="oe_inline"/>
+                                                <label string="%" class="oe_inline"
+                                                       attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                                            </div>
+                                            <label for="vds_amount"
+                                                   attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}"/>
+                                            <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent'))]}">
+                                                <field name="vds_amount" class="oe_inline"/>
+                                                <label string="%" class="oe_inline"
+                                                       attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                                            </div>
+                                        </group>
+                                        <group attrs="{'invisible':[('amount_type','=', 'group')]}">
+                                            <field name="price_include"
+                                                   attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                            <field name="account_id" domain="[('internal_type','=','other')]"
+                                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                            <field name="refund_account_id"
+                                                   groups="base.group_system"
+                                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                        </group>
+                                    </group>
+                                    <field name="children_tax_ids"
+                                           attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
+                                           domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
+                                        <tree string="Children Taxes">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="name"/>
+                                            <field name="amount_type"/>
+                                            <field name="amount"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Advanced Options" groups="base.group_system">
+                                    <group>
+                                        <group>
+                                            <field name="description"
+                                                   attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                            <field name="tax_group_id"
+                                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                                   groups="base.group_system"/>
+                                            <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]"
+                                                   widget="many2many_tags"
+                                                   context="{'default_applicability': 'taxes'}"
+                                                   groups="base.group_system"/>
+                                            <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}"
+                                                   groups="analytic.group_analytic_accounting"/>
+                                            <field name="company_id"
+                                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                                   groups="base.group_multi_company"/>
+                                            <field name="active" groups="base.group_system"/>
+                                        </group>
+                                        <group name="advanced_booleans">
+                                            <field name="include_base_amount"
+                                                   attrs="{'invisible':[('amount_type','=', 'group')]}"
+                                                   string="Affect Base of Subsequent Vat"
+                                                   groups="base.group_system"/>
+                                            <field name="tax_adjustment"
+                                                   groups="base.group_system"/>
+                                        </group>
+                                    </group>
+                                </page>
+                            </notebook>
+                            <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
+                                <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                                      decoration-bf="state in ('pending',)"
+                                      decoration-danger="state=='reject'">
+                                    <field name="change_name"/>
+                                    <field name="request_date"/>
+                                    <field name="change_date"/>
+                                    <field name="status"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </sheet>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                    </form>
+                </xpath>
+            </field>
+        </record>
+        <record id="inherited_view_tax_tree" model="ir.ui.view">
+            <field name="name">account.tax.tree</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <tree string="Account VAT" decoration-info="state=='draft'"
+                          decoration-success="state=='approve'"
+                          decoration-danger="state=='reject'"
+                          decoration-bf="state in ('approve',)">
+                        <field name="sequence" widget="handle"/>
+                        <field name="name" string="VAT Name"/>
+                        <field name="amount"/>
+                        <field name="description" string="Short Name"/>
+                        <field name="type_tax_use" string="VAT Scope"/>
+                        <field name="amount_type"/>
+                        <field name="state"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_account_tax_search1" model="ir.ui.view">
+            <field name="name">account.tax.search</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_account_tax_search"/>
+            <field name="arch" type="xml">
+                <search string="Search Taxes">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]"
+                           string="Tax"/>
+                    <field name="pending" string="Pending"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]"/>
+                    <filter string="Purchase" name="purchase" domain="[('type_tax_use','=','purchase')]"/>
+                    <group string="Group By">
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}"
+                                groups="base.group_multi_company"/>
+                        <filter string="Tax Application" domain="[]" context="{'group_by':'type_tax_use'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="account.action_tax_form" model="ir.actions.act_window">
+            <field name="name">VAT Rule</field>
+            <field name="res_model">account.tax</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain" eval="False"/> <!-- Force empty -->
+            <field name="context">
+                {"search_default_active":'False',"search_default_pending":'True',}
+            </field>
+            <field name="view_id" ref="inherited_view_tax_tree"/>
+            <field name="search_view_id" ref="view_account_tax_search1"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new VAT.
+                </p>
+            </field>
+
+        </record>
+
+
+        <record id="inherited_invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice.from</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line_tax_ids']" position="attributes">
+                    <attribute name="string">VAT</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='name']" position="attributes">
+                    <attribute name="string">VAT / Tax Description</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="attributes">
+                    <attribute name="string">Account</attribute>
+                </xpath>
+                <xpath expr="//field[@name='amount_untaxed']" position="attributes">
+                    <attribute name="string">Without VAT Amount</attribute>
+                </xpath>
+                <xpath expr="//field[@name='amount_tax']" position="attributes">
+                    <attribute name="string">VAT</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <act_window
+                id="account.act_account_tax_net"
+                name="Net Tax Lines"
+                res_model="account.move.line"
+                context="{'search_default_tax_ids': [active_id]}"
+                src_model="account.tax"
+                groups="base.group_system"/>
+
+        <act_window
+                id="account.act_account_tax_tax"
+                name="Tax Lines"
+                res_model="account.move.line"
+                context="{'search_default_tax_line_id': [active_id]}"
+                src_model="account.tax"
+                groups="base.group_system"/>
+
+        <act_window
+                id="account.act_account_tax_net_posted"
+                name="Net Tax Lines"
+                res_model="account.move.line"
+                context="{'search_default_tax_ids': [active_id], 'search_default_posted': 1}"
+                src_model="account.tax"
+                groups="base.group_system"/>
+
+        <act_window
+                id="account.act_account_tax_tax_posted"
+                name="Tax Lines"
+                res_model="account.move.line"
+                context="{'search_default_tax_line_id': [active_id], 'search_default_posted': 1}"
+                src_model="account.tax"
+                groups="base.group_system"/>
+
+    </data>
+</odoo>

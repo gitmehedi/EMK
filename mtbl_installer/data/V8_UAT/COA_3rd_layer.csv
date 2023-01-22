@@ -1,0 +1,89 @@
+Layer,Code,Name,Parent Account,,Type,Active,Pending,Status
+Layer 3,111,Capital,11,Capital & Reserve,View Type,1,0,approve
+Layer 3,112,Reserve,11,Capital & Reserve,View Type,1,0,approve
+Layer 3,121,Borrowings under Bangladesh Bank,12,Borrowings,View Type,1,0,approve
+Layer 3,122,Borrowings from other Banks,12,Borrowings,View Type,1,0,approve
+Layer 3,123,Borrowings from other Institutions,12,Borrowings,View Type,1,0,approve
+Layer 3,125,Interest Payable on Borrowings,12,Borrowings,View Type,1,0,approve
+Layer 3,131,Customer Deposits -Current & Others,13,Deposits,View Type,1,0,approve
+Layer 3,132,"Customer Deposits -SB, FD, RD, SND etc.",13,Deposits,View Type,1,0,approve
+Layer 3,133,Bank & NBFI Deposits -Current & Others,13,Deposits,View Type,1,0,approve
+Layer 3,134,Bank & NBFI Deposits -FD & Others,13,Deposits,View Type,1,0,approve
+Layer 3,135,IP on Customer Deposits -Current & Others,13,Deposits,View Type,1,0,approve
+Layer 3,136,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",13,Deposits,View Type,1,0,approve
+Layer 3,137,Interest Payable on Bank & NBFI Deposits,13,Deposits,View Type,1,0,approve
+Layer 3,138,Customer Deposits -Bills Payable,13,Deposits,View Type,1,0,approve
+Layer 3,141,Subordinated Bond,14,Bond,View Type,1,0,approve
+Layer 3,142,Other Bond,14,Bond,View Type,1,0,approve
+Layer 3,151,Interest Suspenses Account,15,Other Liabilities,View Type,1,0,approve
+Layer 3,152,Other misc. liabilities,15,Other Liabilities,View Type,1,0,approve
+Layer 3,153,Provision,15,Other Liabilities,View Type,1,0,approve
+Layer 3,154,Accumulated Depreciation,15,Other Liabilities,View Type,1,0,approve
+Layer 3,155,Profit and Loss for OBU,15,Other Liabilities,View Type,1,0,approve
+Layer 3,211,Cash,21,Cash & Bank Balance,View Type,1,0,approve
+Layer 3,212,Balance with Bangladesh Bank,21,Cash & Bank Balance,View Type,1,0,approve
+Layer 3,213,Balance with Agent Bank,21,Cash & Bank Balance,View Type,1,0,approve
+Layer 3,214,Balance with other banks and Fis,21,Cash & Bank Balance,View Type,1,0,approve
+Layer 3,221,Money at Call & Short Notice,22,Money at Call & Short Notice,View Type,1,0,approve
+Layer 3,231,Government,23,Investments,View Type,1,0,approve
+Layer 3,232,Other Investments,23,Investments,View Type,1,0,approve
+Layer 3,233,Inv in Subsidiaries,23,Investments,View Type,1,0,approve
+Layer 3,241,Term Loans,24,Loans & Advances,View Type,1,0,approve
+Layer 3,242,Demand Loans,24,Loans & Advances,View Type,1,0,approve
+Layer 3,243,Continuous Loans,24,Loans & Advances,View Type,1,0,approve
+Layer 3,244,Credit Cards,24,Loans & Advances,View Type,1,0,approve
+Layer 3,245,Interest Receivable,24,Loans & Advances,View Type,1,0,approve
+Layer 3,246,Penal Interest Receivables,24,Loans & Advances,View Type,1,0,approve
+Layer 3,247,OBU Loans & Advances,24,Loans & Advances,View Type,1,0,approve
+Layer 3,248,Other Loans & Assets,24,Loans & Advances,View Type,1,0,approve
+Layer 3,251,Tangible Fixed Assets,25,Fixed Assets,View Type,1,0,approve
+Layer 3,252,Intangible Assets,25,Fixed Assets,View Type,1,0,approve
+Layer 3,261,Adjustment Account,26,Other Assets,View Type,1,0,approve
+Layer 3,262,Advances,26,Other Assets,View Type,1,0,approve
+Layer 3,265,Receivable from Subsidiaries,26,Other Assets,View Type,1,0,approve
+Layer 3,266,Suspense Account,26,Other Assets,View Type,1,0,approve
+Layer 3,267,Receivable from OBU,26,Other Assets,View Type,1,0,approve
+Layer 3,268,Miscellaneous Other Assets,26,Other Assets,View Type,1,0,approve
+Layer 3,900,System,90,System,View Type,1,0,approve
+Layer 3,311,Interest Earned,31,Interest Income,View Type,1,0,approve
+Layer 3,312,Penal Interest Earned,31,Interest Income,View Type,1,0,approve
+Layer 3,313,Interest on MTB Branch Account,31,Interest Income,View Type,1,0,approve
+Layer 3,314,Income on Money Market/ Placements,31,Interest Income,View Type,1,0,approve
+Layer 3,321,Income fm Govt Securities,32,Income fm Investments,View Type,1,0,approve
+Layer 3,322,Income from Other Investments,32,Income fm Investments,View Type,1,0,approve
+Layer 3,331,Commission,33,"Comm, Exch & Brokerage",View Type,1,0,approve
+Layer 3,332,Exchange,33,"Comm, Exch & Brokerage",View Type,1,0,approve
+Layer 3,333,Brokerage,33,"Comm, Exch & Brokerage",View Type,1,0,approve
+Layer 3,341,Other Operating Income,34,Other Operating Income,View Type,1,0,approve
+Layer 3,411,Interest Expenses on Customer Accounts <CASA>,41,Interest Expenses,View Type,1,0,approve
+Layer 3,412,Interest Expenses on Customer Accounts <Term Deposits>,41,Interest Expenses,View Type,1,0,approve
+Layer 3,413,Interest Expenses on Borrowings,41,Interest Expenses,View Type,1,0,approve
+Layer 3,414,Interest Expenses on Bonds,41,Interest Expenses,View Type,1,0,approve
+Layer 3,415,Interest Expense on Others,41,Interest Expenses,View Type,1,0,approve
+Layer 3,416,Interest Expense on Branch A/C,41,Interest Expenses,View Type,1,0,approve
+Layer 3,421,Salary & Allowances,42,Non-Interest Expenses,View Type,1,0,approve
+Layer 3,422,"Rent, Taxes, Insurance, Electricity etc.",42,Non-Interest Expenses,View Type,1,0,approve
+Layer 3,423,Other Expenses,42,Non-Interest Expenses,View Type,1,0,approve
+Layer 3,424,Depreciation & Repair & Maintenance of Assets,42,Non-Interest Expenses,View Type,1,0,approve
+Layer 3,425,"Postage, Stamps and Telecommunication etc.",42,Non-Interest Expenses,View Type,1,0,approve
+Layer 3,426,Legal Expenses,42,Non-Interest Expenses,View Type,1,0,approve
+Layer 3,427,"Stationery, Printing and Advertisements etc.",42,Non-Interest Expenses,View Type,1,0,approve
+Layer 3,428,Director's Expenses,42,Non-Interest Expenses,View Type,1,0,approve
+Layer 3,429,Managing Director's Remuneration,42,Non-Interest Expenses,View Type,1,0,approve
+Layer 3,431,Provision for Loans,43,Provisions,View Type,1,0,approve
+Layer 3,432,Provision for diminution in value of Invsetments,43,Provisions,View Type,1,0,approve
+Layer 3,433,Other Provisions,43,Provisions,View Type,1,0,approve
+Layer 3,511,Bills sent for collection,51,Contra,View Type,1,0,approve
+Layer 3,512,Bills received for Collection,51,Contra,View Type,1,0,approve
+Layer 3,513,Forward Contract,51,Contra,View Type,1,0,approve
+Layer 3,521,Bank Guarantee <Contingent>,52,Contingent,View Type,1,0,approve
+Layer 3,522,Letter of Credit <Contingent>,52,Contingent,View Type,1,0,approve
+Layer 3,523,Accepted Bills under LC <Contingent>,52,Contingent,View Type,1,0,approve
+Layer 3,611,Bills sent for collection,61,Contra,View Type,1,0,approve
+Layer 3,612,Bills received for Collection,61,Contra,View Type,1,0,approve
+Layer 3,613,Forward Contract,61,Contra,View Type,1,0,approve
+Layer 3,621,Bank Guarantee <Contingent>,62,Contingent,View Type,1,0,approve
+Layer 3,622,Letter of Credit <Contingent>,62,Contingent,View Type,1,0,approve
+Layer 3,623,Accepted Bills under LC <Contingent>,62,Contingent,View Type,1,0,approve
+Layer 3,159,Miscellaneous Liabilities created for Migration,15,Other Liabilities,Liabilities: Office Accounts,1,0,approve
+Layer 3,269,Miscellaneous Assets created for Migration,26,Other Assets,Assets: Office Accounts,1,0,approve

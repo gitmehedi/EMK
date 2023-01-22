@@ -1,0 +1,7 @@
+https://github.com/OCA/server-tools.git
+https://bitbucket.org/matiarrahman/odoo-community-addons.git
+https://github.com/OCA/reporting-engine.git
+https://github.com/OCA/web.git
+https://github.com/OCA/account-financial-tools.git
+https://github.com/OCA/operating-unit.git
+https://github.com/OCA/account-invoicing.git

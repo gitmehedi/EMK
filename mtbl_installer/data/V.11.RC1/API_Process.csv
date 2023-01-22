@@ -1,0 +1,2 @@
+Endpoint Name,HTTP Method,Host IP,Host Port,WSDL,Username,Password
+GenericTransferAmountInterfaceHttpService,https,124.109.105.40,9601,GenericTransferAmount/GenericTransferAmountInterfaceHttpService?wsdl,OdooGL,OdooGL@1234

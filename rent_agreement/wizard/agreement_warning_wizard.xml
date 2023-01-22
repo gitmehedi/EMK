@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="agreement_warning_wizard_view" model="ir.ui.view">
+        <field name="name">agreement.warning</field>
+        <field name="model">agreement.warning.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Warning">
+                <group>
+                    <div class="pull-left">
+
+                        <field name="text" readonly="1" nolabel="1"/>
+
+                    </div>
+                </group>
+                <footer>
+                    <field name="warning_type" invisible="1"/>
+                    <button name="action_reject_amendment" string="Yes" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('warning_type', '=', 'reject_agreement')]}"/>
+                    <button name="action_reject_agreement" string="Yes" type="object"
+                            class="oe_highlight" attrs="{'invisible': [('warning_type', '=', 'reject_amendment')]}"/>
+                    or
+                    <button string="No" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

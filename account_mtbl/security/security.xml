@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="group_finance" model="res.groups">
+            <field name="name">Group Finance</field>
+        </record>
+
+        <record id="group_tb_user" model="res.groups">
+            <field name="name">Show Trial Balance</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+    </data>
+</odoo>

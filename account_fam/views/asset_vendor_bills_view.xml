@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="asset_account_invoice_form" model="ir.ui.view">
+        <field name="name">asset.account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <form string="Vendor Bill" duplicate="0">
+                <header>
+                    <button name="action_invoice_open" type="object" states="draft,proforma2" string="Validate"
+                            class="oe_highlight" groups="account.group_account_invoice"/>
+                    <button name="action_payment_instruction" type="object"
+                            string="Payment Instruction" class="oe_highlight" groups="account.group_account_user"/>
+                    <!--<button name="198" type="action" string="Ask Refund" groups="account.group_account_invoice"-->
+                    <!--attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open','paid'))]}"/>-->
+                    <button name="action_invoice_cancel" type="object" states="draft,proforma2" string="Cancel Bill"
+                            groups="account.group_account_invoice"/>
+                    <button name="action_invoice_draft" states="cancel" string="Set to Draft" type="object"
+                            groups="account.group_account_invoice"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,paid"/>
+                </header>
+                <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                     attrs="{'invisible': [('has_outstanding','=',False)]}">
+                    You have
+                    <bold>
+                        <a class="alert-link" href="#outstanding" role="button">outstanding debits</a>
+                    </bold>
+                    for this supplier. You can allocate them to mark this bill as paid.
+                </div>
+                <field name="has_outstanding" invisible="1"/>
+                <sheet string="Vendor Bill">
+                    <div>
+                        <label string="Draft Bill"
+                               attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_invoice')]}"/>
+                        <label string="Draft Refund"
+                               attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_refund')]}"/>
+                        <label string="Bill "
+                               attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_invoice')]}"/>
+                        <label string="Refund "
+                               attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','&lt;&gt;','in_refund')]}"/>
+                        <h1 class="mt0">
+                            <field name="number" class="oe_inline" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                        </h1>
+                    </div>
+                    <field name="type" invisible="1"/>
+                    <group>
+                        <group>
+                            <field string="Vendor" name="partner_id"
+                                   options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
+                                   context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
+                                   domain="[('supplier', '=', True)]"/>
+                            <field name="reference" string="Vendor Reference"/>
+                            <field name="advance_ids"
+                                   domain="[('state', '=', 'approve'), ('partner_id', 'in', [partner_id]), ('active', '=', True), ('outstanding_amount', '&gt;', 0)]"
+                                   widget="many2many_tags" attrs="{'invisible': [('partner_id', '=', False)]}"
+                                   options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="adjusted_advance"
+                                   attrs="{'invisible': ['|', ('advance_ids', '=', []), ('partner_id', '=', False)]}"/>
+                            <field name="vat_selection"/>
+                        </group>
+                        <group>
+                            <field name="is_asset" invisible="1"/>
+                            <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
+                            <field name="date_invoice" string="Bill Date" readonly="1"/>
+                            <field name="date_due" readonly="1"/>
+                            <field name="move_name" invisible="1"/>
+                            <field name="currency_id"
+                                   options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
+                                   groups="base.group_multi_currency"/>
+                            <field name="company_currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Bill">
+                            <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line_ids">
+                                <tree string="Bill lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id" context="{'partner_id': parent.partner_id}" required="True"
+                                           domain="[('type','=','asset')]"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
+                                    <field name="asset_name" required="True"/>
+                                    <field name="name"/>
+                                    <field name="account_id" groups="account.group_account_user"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
+                                           domain="['|', ('code', '=ilike', '2%'), ('code', '=ilike', '4%'),
+                                           ('company_id', '=', parent.company_id),
+                                           ('internal_type', '=', 'other'), ('deprecated', '=', False),
+                                           ('originating_type', '!=', 'credit')]"/>
+                                    <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
+                                    <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                                           readonly="0" string="Branch"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
+                                           domain="[('id', 'in', operating_unit_domain_ids and operating_unit_domain_ids[0] and operating_unit_domain_ids[0][2] or False)]"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="operating_unit_domain_ids" invisible="1" widget="many2many_tags"/>
+                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
+                                           domain="[('company_id', '=', parent.company_id)]"/>
+                                    <field name="asset_category_id" required="True"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting"
+                                           invisible="1" widget="many2many_tags"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id" groups="product.group_uom"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount" groups="base.group_no_one" invisible="1"/>
+                                    <field name="invoice_line_tax_ids" widget="many2many_tags" invisible="1"
+                                           context="{'type':parent.type}"
+                                           domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"
+                                           options="{'no_create': True}"/>
+                                    <field name="vat_id" domain="[('is_vat', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
+                                    <field name="tds_id" domain="[('is_tds', '=', True)]"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <group>
+                                    <group>
+                                        <field name="security_deposit" class="oe_subtotal_footer_separator"/>
+                                    </group>
+                                    <div class="oe_inline">
+                                        <field name="tax_line_ids" groups="base.group_system">
+                                            <tree editable="bottom" string="Taxes">
+                                                <field name="name"/>
+                                                <!--Need invisible fields for on_change to create all necessary info -->
+                                                <field name="tax_id" invisible="1"/>
+                                                <field name="product_id" invisible="1"/>
+                                                <field name="sequence" invisible="1"/>
+                                                <field name="manual" invisible="1"/>
+                                                <field name="account_id" groups="account.group_account_invoice"/>
+                                                <field name="account_analytic_id" string="Cost Centre"
+                                                       domain="[('company_id', '=', parent.company_id)]"
+                                                       groups="analytic.group_analytic_accounting"/>
+                                                <field name="amount"/>
+                                                <field name="currency_id" invisible="1"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+                                    <group>
+                                        <field name="adjusted_vat" string="Adjusted VAT Amount"
+                                               attrs="{'invisible': ['|', ('advance_ids', '=', []), ('state', '=', 'draft')]}"/>
+                                        <field name="adjusted_tds" string="Adjusted TDS Amount"
+                                               attrs="{'invisible': ['|', ('advance_ids', '=', []), ('state', '=', 'draft')]}"/>
+                                    </group>
+                                </group>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_untaxed"/>
+                                    <field name="amount_tax"/>
+                                    <!--<field name="amount_vat_payable"/>-->
+                                    <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                                    <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                    <field name="amount_tds" widget="monetary"/>
+                                    <field name="amount_vat_payable" widget="monetary"/>
+                                    <field name="residual" class="oe_subtotal_footer_separator"
+                                           attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                    <field name="amount_payable" readonly="1"
+                                           attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                                    <!--<field name="amount_tds" class="oe_subtotal_footer_separator" widget="monetary"/>-->
+                                    <field name="reconciled" invisible="1"/>
+                                    <field name="outstanding_credits_debits_widget" colspan="2" nolabel="1"
+                                           widget="payment" invisible="1"/>
+                                </group>
+                            </group>
+                            <div>
+                                <field name="comment" placeholder="Additional notes..."/>
+                            </div>
+                        </page>
+                        <page string="Other Info">
+                            <group>
+                                <group>
+                                    <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"
+                                           string="Branch" readonly="1"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
+                                    <field name="journal_id" groups="account.group_account_user"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
+                                           readonly="1"/>
+                                    <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id"
+                                           invisible="1"/>
+                                    <field name="user_id" string="Responsible" readonly="1"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"/>
+                                    <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
+                                           name="account_id" groups="account.group_account_manager"/>
+                                    <field name="name" invisible="1"/>
+                                    <field name="payment_term_id"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
+                                           attrs="{'invisible': [('payment_term_id','=',False)]}"/>
+                                </group>
+                                <group>
+                                    <field name="fiscal_position_id"
+                                           options="{'no_create': True, 'no_open': True,'no_create_edit': True}"
+                                           placeholder="Auto-detect"/>
+                                    <field name="move_id" groups="account.group_account_manager"
+                                           options="{'no_create': True, 'no_create_edit': True}"
+                                           attrs="{'invisible': [('move_id', '=', False)]}"/>
+                                    <field name="date"
+                                           domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]"
+                                           groups="account.group_account_user"/>
+                                    <field name="company_id" options="{'no_create': True}"
+                                           groups="base.group_multi_company"/>
+                                    <field name="commercial_partner_id" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="asset_account_invoice_tree" model="ir.ui.view">
+        <field name="name">asset.account.invoice.tree</field>
+        <field name="model">account.invoice</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" decoration-success="state == 'open'"
+                  decoration-muted="state in('paid','cancel') "
+                  decoration-bf="state in ('open','paid')" string="Invoice">
+                <field name="number" string="Bill No"/>
+                <field name="partner_id" groups="base.group_user" string="Vendor"/>
+                <field name="date_invoice" string="Bill Date"/>
+                <field name="user_id" string="Responsible"/>
+                <field name="residual_signed" string="To Pay" sum="To pay"/>
+                <field name="commercial_partner_id" invisible="1"/>
+                <field name="reference" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <field name="journal_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="user_id" invisible="1"/>
+                <field name="date_due" invisible="1"/>
+                <field name="origin" invisible="1"/>
+                <field name="state"/>
+                <field name="type" invisible="context.get('type',True)"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_asset_vendor_bill_draft" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',1), ('state', '=', 'draft')]
+        </field>
+        <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type':
+            'in_invoice','journal_type': 'purchase'}
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to record a new Assets Vendor Bill.
+            </p>
+            <p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_asset_invoice_draft_form_view" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="asset_account_invoice_form"/>
+        <field name="act_window_id" ref="action_asset_vendor_bill_draft"/>
+    </record>
+
+    <record id="action_asset_invoice_draft_tree_view" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="asset_account_invoice_tree"/>
+        <field name="act_window_id" ref="action_asset_vendor_bill_draft"/>
+    </record>
+
+    <menuitem action="action_asset_vendor_bill_draft" id="menu_asset_action_invoice_tree2_draft"
+              parent="sub_assets_vendor_menu" name="Vendor Bills (Draft)" sequence="5"/>
+
+    <record id="action_asset_vendor_bill_open" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',1), ('state', 'in', ('open',
+            'paid')), ('residual', '&gt;', 0)]
+        </field>
+        <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type':
+            'in_invoice','journal_type': 'purchase'}
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to record a new Assets Vendor Bill.
+            </p>
+            <p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_asset_invoice_open_form_view" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="asset_account_invoice_form"/>
+        <field name="act_window_id" ref="action_asset_vendor_bill_open"/>
+    </record>
+
+    <record id="action_asset_invoice_open_tree_view" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="asset_account_invoice_tree"/>
+        <field name="act_window_id" ref="action_asset_vendor_bill_open"/>
+    </record>
+
+    <menuitem action="action_asset_vendor_bill_open" id="menu_asset_action_invoice_tree2_open"
+              parent="sub_assets_vendor_menu" name="Vendor Bills (Validated)" sequence="6"/>
+
+
+    <record id="action_asset_vendor_bill_paid" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('is_asset','=',1), ('state', 'in', ('open',
+            'paid')), ('residual', '&lt;=', 0)]
+        </field>
+        <field name="context">{'default_type': 'in_invoice','default_is_asset': '1', 'type':
+            'in_invoice','journal_type': 'purchase'}
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to record a new Assets Vendor Bill.
+            </p>
+            <p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_asset_invoice_paid_form_view" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="asset_account_invoice_form"/>
+        <field name="act_window_id" ref="action_asset_vendor_bill_paid"/>
+    </record>
+
+    <record id="action_asset_invoice_paid_tree_view" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="asset_account_invoice_tree"/>
+        <field name="act_window_id" ref="action_asset_vendor_bill_paid"/>
+    </record>
+
+    <menuitem action="action_asset_vendor_bill_paid" id="menu_asset_action_invoice_tree2_paid"
+              parent="sub_assets_vendor_menu" name="Vendor Bills (Paid)" sequence="7"/>
+
+    <record id="view_inherite_invoice_asset_type" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="sequence" eval='1'/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="is_asset" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='asset_category_id']" position="replace">
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

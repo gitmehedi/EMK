@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_journal_form_inherit_pro" model="ir.ui.view">
+            <field name="name">account.journal.form.pro</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='default_credit_account_id']" position="replace">
+                    <field name="default_credit_account_id"
+                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                           attrs="{'required': [('type', '=', 'provisional')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='default_debit_account_id']" position="replace">
+                    <field name="default_debit_account_id"
+                           options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                           attrs="{'required': [('type', '=', 'provisional')]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

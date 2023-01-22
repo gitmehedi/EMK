@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_bill_payment_instruction_wizard" model="ir.ui.view">
+        <field name="name">bill.payment.instruction.wizard.form</field>
+        <field name="model">bill.payment.instruction.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Payment Instruction">
+                <group>
+                    <group>
+                        <field name="payment_type" invisible="1"/>
+                        <field name="advance_type" invisible="1"/>
+                        <field name="invoice_id" attrs="{'invisible': [('payment_type', '!=', 'invoice')]}"/>
+                        <field name="advance_id" string="Advance" readonly="1"
+                               attrs="{'invisible': [('payment_type', '!=', 'advance')]}"/>
+                        <field name="security_return_id" string="Security Return"
+                               attrs="{'invisible': [('payment_type', '!=', 'security_return')]}" readonly="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="narration"/>
+                        <field name="instruction_date" invisible="1"/>
+                        <field name="debit_operating_unit_id" invisible="1"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="debit_sub_operating_unit_id" invisible="1"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                    </group>
+                    <group>
+                        <field name="type" required="True"/>
+                        <field name="partner_id" readonly="True"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                               attrs="{'invisible':[('type','=','credit')],'required':[('type','=','casa')]}"/>
+                        <field name="vendor_bank_acc"
+                               attrs="{'invisible':[('type','=','credit')],'required':[('type','=','casa')]}"/>
+                        <field name="credit_account_id" domain="[('gl_type','=','online')]"
+                               attrs="{'invisible':[('type','=','casa')],'required':[('type','=','credit')]}"
+                               options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        <field name="credit_sub_operating_unit_id" domain="[('account_id', 'in', [credit_account_id])]"
+                               attrs="{'invisible':[('type','=','casa')], 'required':[('type','=','credit')]}"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="credit_operating_unit_id"
+                               domain="[('id', 'in', credit_operating_unit_domain_ids and credit_operating_unit_domain_ids[0] and credit_operating_unit_domain_ids[0][2] or False)]"
+                               attrs="{'invisible':[('type','=','casa')],'required':[('type','=','credit')]}"
+                               options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                        <field name="credit_operating_unit_domain_ids" widget="many2many_tags" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Confirm" name="action_validate" type="object"
+                            confirm="Are you sure to generate payment instruction?" class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_security_return_payment_instruction" model="ir.ui.view">
+        <field name="name">inherit.security.return.payment.instruction</field>
+        <field name="model">vendor.security.return</field>
+        <field name="inherit_id" ref="vendor_security_deposit.vendor_security_return_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_approve']" position="after">
+                <field name="payment_btn_visible" invisible="1"/>
+                <button name="action_payment_instruction" type="object"
+                        attrs="{'invisible': [('payment_btn_visible', '=', False)]}"
+                        string="Payment Instruction" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//notebook/page[1]" position="after">
+                <page string="Payments" class="oe_page_title"
+                      attrs="{'invisible': [('payment_line_ids', '=', [])]}">
+                    <field name="payment_line_ids" string="Payments" readonly="1">
+                        <tree string="Payment lines">
+                            <field name="sequence" widget="handle"/>
+                            <field name="code"/>
+                            <field name="instruction_date"/>
+                            <field name="partner_id"/>
+                            <field name="amount"/>
+                            <field name="default_debit_account_id"/>
+                            <field name="debit_sub_operating_unit_id"/>
+                            <field name="debit_operating_unit_id"/>
+                            <field name="vendor_bank_acc"/>
+                            <field name="default_credit_account_id"/>
+                            <field name="credit_sub_operating_unit_id"/>
+                            <field name="credit_operating_unit_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="state" string="Status"/>
+                            <field name="is_sync" invisible="1"/>
+                            <button name="sync" string="Sync" type="action"
+                                    icon="fa fa-check text-success"
+                                    attrs="{'invisible': [('is_sync', '=', False)]}"/>
+                            <button name="not_sync" string="Not Sync" type="action"
+                                    icon="fa-times-circle text-danger"
+                                    attrs="{'invisible': [('is_sync', '=', True)]}"/>
+                        </tree>
+                        <form string="Payment">
+                            <group>
+                                <group>
+                                    <field name="security_return_id"/>
+                                    <field name="instruction_date"/>
+                                    <field name="partner_id"/>
+                                </group>
+                                <group>
+                                    <field name="amount"/>
+                                    <field name="currency_id"/>
+                                    <field name="is_sync" invisible="1"/>
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                    <group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="total_payment_approved" widget="monetary"/>
+                            <field name="amount_due" widget="monetary" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_vendor_security_deposit_tree" model="ir.ui.view">
+        <field name="name">inherit.security.return.tree</field>
+        <field name="model">vendor.security.return</field>
+        <field name="inherit_id" ref="vendor_security_deposit.vendor_security_return_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="amount_due" string="Need To Pay"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

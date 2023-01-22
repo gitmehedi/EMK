@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="inherit_tds_vat_payment_wizard" model="ir.ui.view">
+        <field name="name">inherit.tds.vat.payment.wizard</field>
+        <field name="model">tds.vat.move.payment.wizard</field>
+        <field name="inherit_id" ref="account_tax_challan.tds_vat_move_payment_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit_account_id']" position="replace">
+                <field name="credit_account_id" domain="[('gl_type','=','online')]"
+                       options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='credit_account_id']" position="after">
+                <field name="credit_sub_operating_unit_id"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                       domain="[('account_id', 'in', [credit_account_id])]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

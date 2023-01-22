@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_receive_outstanding_advance_form_view_ou" model="ir.ui.view">
+        <field name="name">inherit.receive.outstanding.advance.form.view.ou</field>
+        <field name="model">receive.outstanding.advance</field>
+        <field name="inherit_id" ref="vendor_advance.receive_outstanding_advance_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='debit_account_id']" position="after">
+                <field name="debit_operating_unit_id" string="Debit Branch" required="True"
+                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

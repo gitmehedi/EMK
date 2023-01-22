@@ -1,0 +1,15 @@
+Name,Type,include_initial_balance,active,pending,state
+View Type,View,True,True,False,approve
+Liabilities: Office Accounts,Regular,True,True,False,approve
+Treasury Liabilities,Regular,True,True,False,approve
+Liabilities: Customer Accounts,Regular,True,True,False,approve
+Interest Payable Accounts,Regular,True,True,False,approve
+No BGL only CGL,Regular,True,True,False,approve
+Assets: Office Accounts,Regular,True,True,False,approve
+Assets: Customer Accounts,Regular,True,True,False,approve
+Treasury Asset,Regular,True,True,False,approve
+Interest Receivable Accounts,Regular,True,True,False,approve
+Income Accounts,Regular,False,True,False,approve
+Treasury Income,Regular,False,True,False,approve
+Expenditure Accounts,Regular,False,True,False,approve
+Tresury Expenditure,Regular,False,True,False,approve

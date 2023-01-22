@@ -1,0 +1,130 @@
+Name,Code,Active,Pending,Status
+NRB Division,100,True,False,Approved
+SWIFT Department,104,True,False,Approved
+Treasury Department,106,True,False,Approved
+MITS Dhaka Centre,108,True,False,Approved
+MITS Chattogram Centre,109,True,False,Approved
+Contact Centre,111,True,False,Approved
+MITS Motijheel Sub-Centre,112,True,False,Approved
+Agent Banking Department,113,True,False,Approved
+Alternate Delivery Channel (ADC) Unit,115,True,False,Approved
+Branch-GB Customer Service,501,True,False,Approved
+Branch-Cash Department,502,True,False,Approved
+Branch Manager,503,True,False,Approved
+Branch-DM- Operations,504,True,False,Approved
+Branch-SME RM,521,True,False,Approved
+Branch-Retail RM,522,True,False,Approved
+Branch-Deposit RM,523,True,False,Approved
+Branch-Trade Support- Import & Guarantee,524,True,False,Approved
+Branch-Operational Risk Assurance,525,True,False,Approved
+Transaction Banking,507,True,False,Approved
+Centralized Account Opening Unit,508,True,False,Approved
+FATCA Compliance Unit,509,True,False,Approved
+FC Account Operations Unit,510,True,False,Approved
+Liability Operations Unit,511,True,False,Approved
+MTB Payments System Unit,512,True,False,Approved
+MTB Operations Division,514,True,False,Approved
+Retail Banking Division,401,True,False,Approved
+Retail Finance Centre (RFC),402,True,False,Approved
+NRB & Inward Remittance Unit,603,True,False,Approved
+Card Operations Unit,610,True,False,Approved
+Card Sales Office-Dhaka,611,True,False,Approved
+Card Sales Office-Chattagram,612,True,False,Approved
+Card Division,613,True,False,Approved
+Payroll Banking Unit,403,True,False,Approved
+RFC-Card Credit Department,404,True,False,Approved
+RFC-Retail Loan Department,405,True,False,Approved
+Privilege Banking Department,650,True,False,Approved
+Privilege Centre-Gulshan,651,True,False,Approved
+Privilege Centre-Uttara,652,True,False,Approved
+Privilege Centre-Banani,653,True,False,Approved
+Privilege Centre-Baridhara,654,True,False,Approved
+Privilege Centre-Chittagong,655,True,False,Approved
+Privilege Centre-Motijheel,656,True,False,Approved
+Privilege Centre-Panthapath,657,True,False,Approved
+Privilege Centre-Tejgaon,658,True,False,Approved
+Corporate Banking Division,701,True,False,Approved
+Cash Management Unit,702,True,False,Approved
+Sustainable Finance Unit (SFU),703,True,False,Approved
+WBD Chattogram Hub,704,True,False,Approved
+WBD Gulshan Hub,705,True,False,Approved
+WBD Motijheel Hub,706,True,False,Approved
+Syndication & Structured Finance Unit,105,True,False,Approved
+SME- CRM Department,801,True,False,Approved
+SME Banking Division,802,True,False,Approved
+SME & Consumer Banking Division,803,True,False,Approved
+ICC Division,901,True,False,Approved
+Group Finance,905,True,False,Approved
+Air Lounge SAIA Chittagong,906,True,False,Approved
+Air Lounge HSIA,907,True,False,Approved
+ITS Division,908,True,False,Approved
+Legal Department,909,True,False,Approved
+Network Expansion Unit,910,True,False,Approved
+MTB UK Back Office,915,True,False,Approved
+Board Division,916,True,False,Approved
+AML & CFT Division,918,True,False,Approved
+CIB Department,919,True,False,Approved
+Credit Administration Department,920,True,False,Approved
+Credit Monitoring Department,921,True,False,Approved
+Credit Risk management Division,922,True,False,Approved
+Engineering Department,923,True,False,Approved
+Group Security & Fire Safety Department,924,True,False,Approved
+Human Resource Division,925,True,False,Approved
+Information Technology Security Department,926,True,False,Approved
+MDs Secretariat,927,True,False,Approved
+"MTB Collection Unit for SME, Retail and Cards",928,True,False,Approved
+MTB Communication Department,929,True,False,Approved
+MTB Financial Institutions Services,930,True,False,Approved
+MTB Infrastructure Division,931,True,False,Approved
+MTB Tower,932,True,False,Approved
+Reconciliation Department,933,True,False,Approved
+Research & Development Dept.,934,True,False,Approved
+Risk Management Division,935,True,False,Approved
+Security & Printing Department,936,True,False,Approved
+Share Department,937,True,False,Approved
+Special Asset Management Dept.,938,True,False,Approved
+Trainning Institute,940,True,False,Approved
+Transport Department,941,True,False,Approved
+MTB Dhaka Division Branches,942,True,False,Approved
+Office of the Chattogram Division,943,True,False,Approved
+MTB Other Division Branches,944,True,False,Approved
+Digital Banking Division,945,True,False,Approved
+MTB Operational Analytics Depaerment,946,True,False,Approved
+MTB Service Quality Department,947,True,False,Approved
+MTB Investor Relations Department,948,True,False,Approved
+MTB Centralized Report Unit,949,True,False,Approved
+MNC Banking Unit,950,True,False,Approved
+Branch Operations Department,951,True,False,Approved
+Asset Operations Unit,953,True,False,Approved
+"System,Policies,Procedure,Processes Unit",954,True,False,Approved
+Centralized Bond Management Unit,955,True,False,Approved
+Operational Risk Assurance Unit,956,True,False,Approved
+MTB Square,957,True,False,Approved
+Air Lounge OIA Sylhet,958,True,False,Approved
+Airport Lounge Department,959,True,False,Approved
+Agent Banking Operations Unit,960,True,False,Approved
+Treasury Back Office,962,True,False,Approved
+Treasury Font Office,963,True,False,Approved
+Asset & Liability Management Cell,964,True,False,Approved
+HSIA Booth,601,True,False,Approved
+Islamic Banking Division,967,True,False,Approved
+MTB Centre,968,True,False,Approved
+MTB CBS Transformation (MCT),998,True,False,Approved
+HO Miscellaneous,999,True,False,Approved
+ATM Project,995,True,False,Approved
+Commercial Banking,972,True,False,Approved
+KIOSK Project,996,True,False,Approved
+MITS Facilitation Department,971,True,False,Approved
+MTB OBU (Business),969,True,False,Approved
+MTB OBU (Operations),970,True,False,Approved
+Office of the MTB AMD,917,True,False,Approved
+Office of the MTB DMD-1,939,True,False,Approved
+Office of the MTB DMD-2,961,True,False,Approved
+Office of the MTB DMD-3,965,True,False,Approved
+POS Project,997,True,False,Approved
+SAM Hub-Chattogram,902,True,False,Approved
+SAM Hub-Other,903,True,False,Approved
+Branch (Operation),505,True,False,Approved
+MTB China Desk,981,True,False,Approved
+MTB Proposition and Alliances Department,982,True,False,Approved
+Reception Desk,983,True,False,Approved

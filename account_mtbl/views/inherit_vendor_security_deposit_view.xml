@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="inherit_vendor_security_deposit_form" model="ir.ui.view">
+            <field name="name">inherit.vendor.security.deposit.form.view</field>
+            <field name="model">vendor.security.deposit</field>
+            <field name="inherit_id" ref="vendor_security_deposit.vendor_security_deposit_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="create">0</attribute>
+                    <attribute name="edit">0</attribute>
+                    <attribute name="delete">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='account_id']" position="after">
+                    <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]" required="1"
+                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_vendor_security_deposit_tree" model="ir.ui.view">
+            <field name="name">inherit.vendor.security.deposit.tree</field>
+            <field name="model">vendor.security.deposit</field>
+            <field name="inherit_id" ref="vendor_security_deposit.vendor_security_deposit_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="create">0</attribute>
+                    <attribute name="edit">0</attribute>
+                    <attribute name="delete">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='account_id']" position="after">
+                    <field name="sub_operating_unit_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

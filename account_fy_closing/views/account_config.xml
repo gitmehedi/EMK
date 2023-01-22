@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_fy_config_settings" model="ir.ui.view">
+        <field name="name">account.fy.config.settings</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting']" position="after">
+                <group string="General/Banking" name="general_banking">
+                    <label for="id" string="EOY Type" groups="account.group_account_user"/>
+                    <div name="eoy_type">
+                        <div>
+                            <field name="eoy_type" class="oe_inline"/>
+                        </div>
+                    </div>
+                    <label for="id" string="Profit for the Year" groups="account.group_account_user"/>
+                    <div name="profit_fy_id">
+                        <div>
+                            <field name="profit_fy_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                    <label for="id" string="Retain Earning Account" groups="account.group_account_user"/>
+                    <div name="retain_earning_id">
+                        <div>
+                            <field name="retain_earning_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                    <label for="id" string="General Account" attrs="{'invisible': [('eoy_type', '=', 'general')]}"
+                           groups="account.group_account_user"/>
+                    <div name="general_account_id" attrs="{'invisible': [('eoy_type', '=', 'general')]}">
+                        <div>
+                            <field name="general_account_id" class="oe_inline" attrs="{'required': [('eoy_type', '=', 'banking')]}"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

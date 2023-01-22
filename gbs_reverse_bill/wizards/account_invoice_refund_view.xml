@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_invoice_reverse" model="ir.ui.view">
+        <field name="name">account.invoice.reverse.form</field>
+        <field name="model">account.invoice.reverse</field>
+        <field name="arch" type="xml">
+            <form string="Credit Note">
+                <group>
+                    <field name="reverse_option" invisible="1"/>
+                    <div class="oe_grey" colspan="4">
+                        If you reverse this invoice then reverse journal will be generate.
+                    </div>
+                    <div attrs="{'invisible':[('reverse_option','!=','op2')]}" class="oe_grey" colspan="4">
+                        There are same VAT/TDS has been paid or in payment instruction pending process.
+                        So reverse journal will be generate without those value.
+                    </div>
+                </group>
+                <footer>
+                    <button string='Create Reverse' name="invoice_reverse"
+                            type="object" class="btn-primary"
+                            confirm="Are you sure to reverse this invoice?"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account_invoice_reverse" model="ir.actions.act_window">
+        <field name="name">Reverse Invoice</field>
+        <field name="res_model">account.invoice.reverse</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_account_invoice_reverse"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

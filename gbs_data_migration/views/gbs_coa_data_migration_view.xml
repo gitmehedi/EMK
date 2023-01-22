@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="gbs_coa_data_migration_form" model="ir.ui.view">
+            <field name="name">gbs.coa.data.migration.form</field>
+            <field name="model">gbs.coa.data.migration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="gbs_data_migration.action_gbs_coa_data_migration_wizard"
+                                groups="mtbl_access.group_mtbl_sys_admin"
+                                type="action" string="Upload" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <div>
+                            <h1>
+                                <field name="date" invisible="True"/>
+                            </h1>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="gbs_coa_data_migration_tree" model="ir.ui.view">
+            <field name="name">gbs.coa.data.migration.tree</field>
+            <field name="model">gbs.coa.data.migration</field>
+            <field name="arch" type="xml">
+                <tree string="COA">
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_gbs_coa_data_migration" model="ir.actions.act_window">
+            <field name="name">COA Data Migration</field>
+            <field name="res_model">gbs.coa.data.migration</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_coa_data_migration" name="COA"
+                  parent="menu_data_migration"
+                  sequence="20" groups="mtbl_access.group_mtbl_sys_admin"
+                  action="action_gbs_coa_data_migration"/>
+    </data>
+</odoo>

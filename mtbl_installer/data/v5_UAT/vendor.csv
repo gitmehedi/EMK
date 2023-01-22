@@ -1,0 +1,2 @@
+name,company_type,Account Payable,street,street2,city,zip,country,Phone,Mobile,Fax,Email,Trade License,VAT Registration,BIN Number,TIN Number,active,pending,state
+T. K. Group,company,Sundry Creditors,T. K. Bhaban (2nd Floor),"13, Karwan Bazar",Dhaka,1215,Bangladesh,9114332,19144136,9.14233339142333E+015,info@tkgroupbd.com,417136,32156498701,989811111,646897646897,True,False,approve

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <menuitem
+                name="Divisions"
+                id="main_menu_division"
+                parent="account.account_account_menu"
+                sequence="90"
+        />
+        <record id="view_bd_division_tree" model="ir.ui.view">
+            <field name="name">bd.division.tree</field>
+            <field name="model">bd.division</field>
+            <field name="arch" type="xml">
+                <tree string="Divisions">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_bd_division_form" model="ir.ui.view">
+            <field name="name">bd.division.form</field>
+            <field name="model">bd.division</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Divisions">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group></group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_bd_division" model="ir.actions.act_window">
+            <field name="name">Divisions</field>
+            <field name="res_model">bd.division</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Division.
+                </p>
+            </field>
+        </record>
+
+        <record id="view_bd_district_tree" model="ir.ui.view">
+            <field name="name">bd_district_tree</field>
+            <field name="model">bd.district</field>
+            <field name="arch" type="xml">
+                <tree string="Districts">
+                    <field name="name" />
+                    <field name="division_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_bd_district_form" model="ir.ui.view">
+            <field name="name">bd_district_form</field>
+            <field name="model">bd.district</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Districts">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="division_id"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_bd_district" model="ir.actions.act_window">
+            <field name="name">Districts</field>
+            <field name="res_model">bd.district</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new District.
+                </p>
+            </field>
+        </record>
+
+
+        <record id="view_bd_upazila_tree" model="ir.ui.view">
+            <field name="name">bd.upazila.tree</field>
+            <field name="model">bd.upazila</field>
+            <field name="arch" type="xml">
+                <tree string="Upazila/Thana">
+                    <field name="name" />
+                    <field name="division_id"/>
+                    <field name="district_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_bd_upazila_form" model="ir.ui.view">
+            <field name="name">bd.upazila.form</field>
+            <field name="model">bd.upazila</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Upazila/Thana">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="division_id"/>
+                                <field name="district_id"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_bd_upazila" model="ir.actions.act_window">
+            <field name="name">Upazila/Thana</field>
+            <field name="res_model">bd.upazila</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new District.
+                </p>
+            </field>
+        </record>
+
+        <record id="view_bd_postal_code_tree" model="ir.ui.view">
+            <field name="name">bd.postal.code.tree</field>
+            <field name="model">bd.postal.code</field>
+            <field name="arch" type="xml">
+                <tree string="Postal Code">
+                    <field name="name" />
+                    <field name="upazila_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_bd_postal_code_form" model="ir.ui.view">
+            <field name="name">bd.postal.code.form</field>
+            <field name="model">bd.postal.code</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml" >
+                <form string="Postal Code">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="upazila_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_bd_postal_code" model="ir.actions.act_window">
+            <field name="name">Postal Code</field>
+            <field name="res_model">bd.postal.code</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new Postal Code.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem
+                name="Divisions"
+                parent="main_menu_division"
+                id="menu_bd_division"
+                sequence="1"
+                action="action_bd_division"/>
+
+        <menuitem
+                name="Districts"
+                parent="main_menu_division"
+                id="menu_bd_district"
+                sequence="2"
+                action="action_bd_district"/>
+
+        <menuitem
+                name="Upazila/Thana"
+                parent="main_menu_division"
+                id="menu_bd_upazila"
+                sequence="3"
+                action="action_bd_upazila"/>
+
+        <menuitem
+                name="Postal Code"
+                parent="main_menu_division"
+                id="menu_bd_postal_code"
+                sequence="4"
+                action="action_bd_postal_code"/>
+    </data>
+</odoo>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+            id="main_menu_account_budget"
+            name="Budget"
+            parent="account.menu_finance"
+            sequence="15"
+            groups="account.group_account_manager"/>
+
+    <record id="bottom_line_budget_tree" model="ir.ui.view">
+        <field name="name">bottom.line.budget.tree</field>
+        <field name="model">bottom.line.budget</field>
+        <field name="arch" type="xml">
+            <tree string="GL Budget" decoration-info="state == 'draft'" decoration-success="state == 'confirm'"
+                  decoration-muted="state in ('approve','cancel') "
+                  decoration-bf="state in ('confirm','approve') ">
+                <field name="date_create"/>
+                <field name="name"/>
+                <field name="fiscal_year"/>
+                <field name="state" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="bottom_line_budget_form">
+        <field name="name">bottom.line.budget.form</field>
+        <field name="model">bottom.line.budget</field>
+        <field name="arch" type="xml">
+            <form string="GL Budget">
+                <header>
+                    <button string="Confirm" name="action_budget_confirm"
+                            groups="account.group_account_manager,account.group_account_user"
+                            states="draft" type="object" class="oe_highlight"/>
+                    <button string="Approve" name="action_budget_approve"
+                            groups="account.group_account_manager"
+                            states="confirm" type="object" class="oe_highlight"/>
+                    <button string="Reset to Draft" name="action_budget_draft"
+                            groups="account.group_account_manager,account.group_account_user"
+                            states="cancel" type="object"/>
+                    <button string="Cancel Budget" name="action_budget_cancel"
+                            groups="account.group_account_manager"
+                            states="confirm" type="object"/>
+                    <button string="Select Accounts" name="action_select_accounts"
+                            groups="account.group_account_manager,account.group_account_user"
+                            states="draft" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object"
+                                groups="account.group_account_manager"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                   options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="pull-left">
+                        <h1>
+                            <field name="name" nolabel="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="fiscal_year" string="Period"/>
+                            <div>
+                                <field name="fiscal_year"
+                                       options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                                <field name="date_from" class="oe_inline"/>
+                                -
+                                <field name="date_to" class="oe_inline" nolabel="1"/>
+                            </div>
+                            <field name="creating_user_id"/>
+                            <field name="confirm_date" attrs="{'invisible':[('state','=','draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="total_planned_amount" widget="monetary"/>
+                            <field name="approve_date"
+                                   attrs="{'invisible':[('state','in',('draft','confirm','cancel'))]}"/>
+                            <field name="approved_user_id"
+                                   attrs="{'invisible':[('state','in',('draft','confirm','cancel'))]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Accounts">
+                            <field name="bottom_line_budgets">
+                                <tree editable="bottom">
+                                    <field name="bottom_line_account_id"
+                                           options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                                    <field name="planned_amount"/>
+                                    <field name="state" invisible="1"/>
+                                    <button name="action_budget_distribute"
+                                            groups="account.group_account_manager,account.group_account_user"
+                                            attrs="{'invisible' : [('state','!=','approve')]}"
+                                            type="object" string="Distribution" class="oe_highlight"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="bottom_line_budget_search" model="ir.ui.view">
+        <field name="name">bottom.line.budget.search</field>
+        <field name="model">bottom.line.budget</field>
+        <field name="arch" type="xml">
+            <search string="GL Budget">
+                <field name="name" filter_domain="[('name','ilike',self)]" string="Bottom Line Budgetary"/>
+                <field name="fiscal_year" filter_domain="[('fiscal_year','ilike',self)]" string="Year"/>
+                <group expand="0" string="Group By">
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="[('state','=','confirm')]"/>
+                    <filter string="Distributed" name="distribution" icon="terp-personal"
+                            domain="[('state','=','approve')]"/>
+                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Period" domain="[]" context="{'group_by':'fiscal_year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_bottom_line_budget" model="ir.actions.act_window">
+        <field name="name">GL Budget</field>
+        <field name="res_model">bottom.line.budget</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="bottom_line_budget_search"/>
+        <field name="context">
+            {"search_default_pending":1,"search_default_distribution":1,}
+        </field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to start a new Budget.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            action="action_bottom_line_budget"
+            id="menu_bottom_line_budget"
+            parent="main_menu_account_budget"
+            groups="account.group_account_manager,account.group_account_user"
+            sequence="1"/>
+</odoo>

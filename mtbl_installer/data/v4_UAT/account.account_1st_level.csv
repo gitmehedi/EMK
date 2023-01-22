@@ -1,0 +1,8 @@
+Layer,Code,Name,Parent Account,Type,active,pending,state
+Layer 1,1,Liability,Mutual Trust Bank Limited,View Type,True,False,approve
+Layer 1,2,Asset,Mutual Trust Bank Limited,View Type,True,False,approve
+Layer 1,9,System,Mutual Trust Bank Limited,View Type,True,False,approve
+Layer 1,3,Income,Mutual Trust Bank Limited,View Type,True,False,approve
+Layer 1,4,Expenditure,Mutual Trust Bank Limited,View Type,True,False,approve
+Layer 1,5,Contra & Contingent <L>,Mutual Trust Bank Limited,View Type,True,False,approve
+Layer 1,6,Contra & Contingent <A>,Mutual Trust Bank Limited,View Type,True,False,approve

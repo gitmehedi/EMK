@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="inherit_view_amendment_agreement_form_wizard" model="ir.ui.view">
+            <field name="name">amendment.agreement.wizard.form</field>
+            <field name="model">amendment.agreement.wizard</field>
+            <field name="inherit_id" ref="rent_agreement.view_amendment_agreement_form_wizard"/>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='service_value']" position="after">
+                    <field name="vat_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                    <field name="tds_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                </xpath>
+                <xpath expr="//field[@name='service_value']" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                </xpath>
+                <xpath expr="//field[@name='advance_amount_add']" position="before">
+                    <field name="additional_service_value"/>
+                    <field name="billing_period"/>
+                </xpath>
+
+                <xpath expr="//form/group" position="after">
+                    <group name="main-3">
+                        <group name="left" string="Payment Information">
+                            <field name="payment_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="vendor_bank_acc" readonly="True"
+                                   attrs="{'invisible':['|',('payment_type','=','credit'),('payment_type','=',False)],'required':[('payment_type','=','casa')]}"/>
+                            <field name="credit_account_id" domain="[('gl_type','=','online')]"
+                                   attrs="{'invisible':['|',('payment_type','=','casa'),('payment_type','=',False)],'required':[('payment_type','=','credit')]}"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            <field name="credit_sub_operating_unit_id"
+                                   domain="[('account_id', 'in', [credit_account_id])]"
+                                   attrs="{'invisible':['|',('payment_type','=','casa'),('payment_type','=',False)], 'required':[('payment_type','=','credit')]}"
+                                   options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                            <field name="credit_operating_unit_id"
+                                   domain="[('id', 'in', credit_operating_unit_domain_ids and credit_operating_unit_domain_ids[0] and credit_operating_unit_domain_ids[0][2] or False)]"
+                                   attrs="{'invisible':['|',('payment_type','=','casa'),('payment_type','=',False)],'required':[('payment_type','=','credit')]}"
+                                   options="{'no_create': True,'no_create_edit': True,'no_open': True}"/>
+                            <field name="credit_operating_unit_domain_ids" widget="many2many_tags" invisible="1"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

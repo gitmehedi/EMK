@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_account_asset_type_form">
+        <field name="name">account.asset.category.form</field>
+        <field name="model">account.asset.category</field>
+        <field name="arch" type="xml">
+            <form string="Account Asset Category" edit="0" duplicate="0">
+                <header>
+                    <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"/>
+                    <button name="act_reject" string="Reject" type="object" states="draft"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"/>
+                    <button name="%(account_fam.action_account_asset_category_wizard)d" string="Edit" type="action"
+                            class="oe_highlight"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                    <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                    <button name="act_reject_pending" string="Reject" type="object"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                    <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                            groups="account_fam.grp_fixasset_manager,account_fam.grp_fam_system_settings,account.group_account_manager"/>
+                    <field name="state" widget="statusbar" invisible="True"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"
+                               attrs="{'invisible': [('type','!=','purchase')]}"/>
+                        <label for="name" string="Deferred Revenue Type" class="oe_edit_only"
+                               attrs="{'invisible': [('type','==','purchase')]}"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Lenovo"/>
+                        </h1>
+                        <label for="parent_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                        <h1>
+                            <field name="parent_id" required="True"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                                   domain="[('parent_id','=',False)]"/>
+                        </h1>
+                    </div>
+                    <div class="oe_title pull-left">
+                        <label for="code" string="Code"/>
+                        <h1>
+                            <field name="code"/>
+                        </h1>
+                    </div>
+                    <div>
+                        <field name="pending" invisible="1"/>
+                        <field name="is_custom_depr" invisible="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="company_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                               groups="base.group_multi_company"/>
+                    </div>
+                    <group string="Journal Entries">
+                        <group>
+                            <field name="journal_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            <label for="account_asset_id"/>
+                            <div>
+                                <field name="account_asset_id" attrs="{'invisible': [('type','=', False)]}"
+                                       class="oe_inline"
+                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_asset_seq_id" attrs="{'invisible': [('type','=', False)]}"
+                                       class="oe_inline" domain="[('account_id', 'in', [account_asset_id])]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </div>
+                            <label for="asset_suspense_account_id"/>
+                            <div>
+                                <field name="asset_suspense_account_id" class="oe_inline"
+                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="asset_suspense_seq_id" attrs="{'invisible': [('type','=', False)]}"
+                                       class="oe_inline" domain="[('account_id', 'in', [asset_suspense_account_id])]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </div>
+                            <label for="asset_sale_suspense_account_id"/>
+                            <div>
+                                <field name="asset_sale_suspense_account_id" class="oe_inline"
+                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="asset_sale_suspense_seq_id"
+                                       attrs="{'invisible': [('type','=', False)]}"
+                                       class="oe_inline"
+                                       domain="[('account_id', 'in', [asset_sale_suspense_account_id])]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="account_asset_loss_id"/>
+                            <div>
+                                <field name="account_asset_loss_id" class="oe_inline"
+                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_asset_loss_seq_id" attrs="{'invisible': [('type','=', False)]}"
+                                       class="oe_inline" domain="[('account_id', 'in', [account_asset_loss_id])]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </div>
+                            <label for="account_asset_gain_id"/>
+                            <div>
+                                <field name="account_asset_gain_id" class="oe_inline"
+                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_asset_gain_seq_id" attrs="{'invisible': [('type','=', False)]}"
+                                       class="oe_inline" domain="[('account_id', 'in', [account_asset_gain_id])]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </div>
+                            <label for="account_depreciation_expense_id" attrs="{'invisible': [('method','=','no_depreciation')]}"/>
+                            <div>
+                                <field name="account_depreciation_expense_id" class="oe_inline"
+                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                       attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_depreciation_expense_seq_id" class="oe_inline"
+                                       attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
+                                       domain="[('account_id', 'in', [account_depreciation_expense_id])]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </div>
+                            <label for="account_depreciation_id" attrs="{'invisible': [('method','=','no_depreciation')]}"/>
+                            <div>
+                                <field name="account_depreciation_id" class="oe_inline"
+                                       domain="[('company_id', '=', company_id),('internal_type','!=','view')]"
+                                       attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="account_depreciation_seq_id"
+                                       attrs="{'invisible': [('method','=','no_depreciation')],'required': [('method','!=','no_depreciation')]}"
+                                       class="oe_inline" domain="[('account_id', 'in', [account_depreciation_id])]"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
+                            <field name="method" widget="radio"/>
+                            <field name="method_progress_factor"
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                            <field name="depreciation_year"
+                                   attrs="{'invisible':['|',('method','=','no_depreciation'),('method','=','degressive')], 'required':[('method','=','linear')]}"/>
+                        </group>
+                    </group>
+                    <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
+                        <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                              decoration-bf="state in ('pending',)"
+                              decoration-danger="state=='reject'">
+                            <field name="change_name"/>
+                            <field name="account_asset_id"/>
+                            <field name="account_asset_seq_id"/>
+                            <field name="asset_suspense_account_id"/>
+                            <field name="asset_suspense_seq_id"/>
+                            <field name="asset_sale_suspense_account_id"/>
+                            <field name="asset_sale_suspense_seq_id"/>
+                            <field name="account_asset_loss_id"/>
+                            <field name="account_asset_loss_seq_id"/>
+                            <field name="account_asset_gain_id"/>
+                            <field name="account_asset_gain_seq_id"/>
+                            <field name="account_depreciation_expense_id"/>
+                            <field name="account_depreciation_expense_seq_id"/>
+                            <field name="account_depreciation_id"/>
+                            <field name="account_depreciation_seq_id"/>
+                            <field name="method"/>
+                            <field name="method_progress_factor"/>
+                            <field name="depreciation_year"/>
+                            <field name="status"/>
+                            <field name="state"/>
+                            <field name="request_date"/>
+                            <field name="change_date"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_asset_type_kanban" model="ir.ui.view">
+        <field name="name">account.asset.category.kanban</field>
+        <field name="model">account.asset.category</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="method"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div class="col-xs-6">
+                                    <strong>
+                                        <span>
+                                            <t t-esc="record.name.value"/>
+                                        </span>
+                                    </strong>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <span class="badge">
+                                        <strong>
+                                            <t t-esc="record.method.value"/>
+                                        </strong>
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <t t-esc="record.journal_id.value"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_asset_type_tree">
+        <field name="name">account.asset.category.tree</field>
+        <field name="model">account.asset.category</field>
+        <field name="arch" type="xml">
+            <tree string="Account Asset Category" decoration-info="state=='draft'"
+                  decoration-success="state=='approve'"
+                  decoration-danger="state=='reject'"
+                  decoration-bf="state in ('approve',)">
+                <field name="name" string="Asset Category"/>
+                <field name="code"/>
+                <field name="parent_id"/>
+                <field name="journal_id"/>
+                <field name="method"/>
+                <field name="state" string="Status"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_asset_type_search">
+        <field name="name">account.asset.category.search</field>
+        <field name="model">account.asset.category</field>
+        <field name="arch" type="xml">
+            <search string="Search Asset Category">
+                <field name="name" string="Category"/>
+                <field name="journal_id"/>
+                <group expand='0' string="Group By">
+                    <filter name="parent_id" string="Asset Type" context="{'group_by': 'parent_id'}"/>
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                    <filter string="Rejected" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    <filter string="In-Active" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_account_asset_type">
+        <field name="name">Fixed Assets Category</field>
+        <field name="res_model">account.asset.category</field>
+        <field name="domain">[('type', '=', 'purchase'),('parent_id','!=',False)]</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="view_account_asset_type_search"/>
+        <field name="context">
+            {"search_default_parent_id":1,"search_default_active":'False',"search_default_pending":'True',}
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_account_asset_type_tree">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_account_asset_type_tree"/>
+        <field name="act_window_id" ref="action_account_asset_type"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_account_asset_type_kanban">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_account_asset_type_kanban"/>
+        <field name="act_window_id" ref="action_account_asset_type"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_account_asset_type_form">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_account_asset_type_form"/>
+        <field name="act_window_id" ref="action_account_asset_type"/>
+    </record>
+
+    <menuitem parent="account_fam.sub_configuration_menu" id="menu_action_account_asset_type"
+              action="action_account_asset_type" sequence="10"/>
+
+    <record model="ir.actions.act_window" id="account_asset.action_account_asset_asset_list_normal_purchase">
+        <field name="domain">[('type', '=', 'purchase'),('parent_id','=',False)]</field>
+    </record>
+</odoo>

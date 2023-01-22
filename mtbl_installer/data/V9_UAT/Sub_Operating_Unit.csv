@@ -1,0 +1,242 @@
+Code,Name,Product,Active,Pending,Status
+101,Office,Land,True,False,approve
+101,Office,Building,True,False,approve
+101,Office,Fixture <Interior Work Office premises>,True,False,approve
+201,ATM,Fixture <Interior Work ATM>,True,False,approve
+301,Kiosk,Fixture <Interior Work at Kiosk>,True,False,approve
+101,Office,Furniture <Office Premises>,True,False,approve
+301,Kiosk,Furniture <Kiosk>,True,False,approve
+101,Office,Electrical Equipments <Office Premises>,True,False,approve
+201,ATM,Electrical Equipments <ATM>,True,False,approve
+101,Office,Other Office Equipments (except Computers) at office premises,True,False,approve
+201,ATM,Other Office Equipments <at ATM premises>,True,False,approve
+301,Kiosk,Other Office Equipments <at Kiosk premises>,True,False,approve
+601,POS,Other Office Equipments (POS machine),True,False,approve
+101,Office,Computers & Peripherals <Office Premises>,True,False,approve
+001,General,Motor Cars,True,False,approve
+001,General,Motor Cycles,True,False,approve
+001,General,Software ,True,False,approve
+001,General,Basic Salary,True,False,approve
+001,General,Personal Pay  <Basic>,True,False,approve
+001,General,Salary for Contractual Kiosk Staff <Basic Pay>,True,False,approve
+001,General,House  Rent Allowance,True,False,approve
+001,General,Conveyance Allowance,True,False,approve
+001,General,Medical Allowance,True,False,approve
+001,General,Entertainment  Allowance,True,False,approve
+001,General,Washing Allowance,True,False,approve
+001,General,Dearness Allowance,True,False,approve
+001,General,Risk  Allowance,True,False,approve
+001,General,Evening Banking Allowance,True,False,approve
+001,General,Discomfort Allowance,True,False,approve
+001,General,Technical Allowance,True,False,approve
+001,General,House Maintenance Allowance,True,False,approve
+001,General,Medical Reimbursement,True,False,approve
+001,General,Uniform And Other Apparels,True,False,approve
+001,General,Utility Charges,True,False,approve
+001,General,Ordinary Bonus,True,False,approve
+001,General,Incentive Bonus,True,False,approve
+001,General,Gratuity,True,False,approve
+001,General,Leave Fare Assistance,True,False,approve
+001,General,Bank's Contribution to EPF,True,False,approve
+001,General,DMD's Remuneration,True,False,approve
+001,salary ,Misc Expenses for DST employees <Salary>,True,False,approve
+002,Commission,Misc Expenses for DST employees Commission,True,False,approve
+001,General,Leave Encashment,True,False,approve
+101,Office,Rent for Office Premises,True,False,approve
+201,ATM,Rent for ATM Premises,True,False,approve
+301,Kiosk,Rent for Kiosk Premises,True,False,approve
+401,Godown,Rent for Godown Premises,True,False,approve
+501,Residential,Rent for Residential Premises,True,False,approve
+101,Office,VAT on Rent <Office Premises>,True,False,approve
+201,ATM,VAT on Rent <Expenses> ATM,True,False,approve
+301,Kiosk,VAT on Rent <Expenses> Kiosk,True,False,approve
+401,Godown,VAT on Rent <Expenses> Godown,True,False,approve
+501,Residential Premises,VAT on Rent <Expenses> Residential Premises,True,False,approve
+001,General,City Corp./Municipality Taxes,True,False,approve
+001,General,Trade License Fees,True,False,approve
+001,General,Excise Duty on Bank's own Deposits with other Banks,True,False,approve
+001,General,MD/DMD's Income Tax,True,False,approve
+001,General,VAT/Tax on Other Activities <Expenses>,True,False,approve
+001,General,Insurance for Cash in Transit,True,False,approve
+001,General,Insurance for Cash in Safe/Counter,True,False,approve
+001,General,Group Insurance Premium-Life,True,False,approve
+101,Office,Insurance for Bank's Property Office,True,False,approve
+201,ATM,Insurance for Bank's Property at ATM,True,False,approve
+202,ATM,Insurance for Cash at ATM,True,False,approve
+301,Kiosk,Insurance for Bank's Property at Kiosk,True,False,approve
+401,Godown,Insurance for Bank's Property at Godown,True,False,approve
+001,General,Deposit Insurance Premium,True,False,approve
+001,General,Insurance Premium on Locker Services,True,False,approve
+001,General,Insurance Premium on Motor Vehicles Executives,True,False,approve
+001,General,Insurance Premium on Motor Vehicles Pool,True,False,approve
+101,Office,Electicity Charges <Office Premises>,True,False,approve
+201,ATM,Electicity Charges ATM,True,False,approve
+301,Kiosk,Electicity Charges Kiosk,True,False,approve
+501,Residence,Electicity Charges <Residence>,True,False,approve
+101,Office,Fuel for Generator,True,False,approve
+101,Offcie,WASA Bill (Office),True,False,approve
+501,residence,WASA Bill (Residence)                                                        ,True,False,approve
+001,General,Gas Bill,True,False,approve
+001,General,Fuel for Car Executives,True,False,approve
+001,General,Fuel for Car Pool,True,False,approve
+001,General,Lease Rent <Car>,True,False,approve
+101,Office,Security/Auxiliary Services <Branch/ Office>,True,False,approve
+201,ATM,Security/Auxiliary Services <ATM>,True,False,approve
+301,Kiosk,Security/Auxiliary Services <Kiosk>,True,False,approve
+001,General,Security/Auxiliary Services others,True,False,approve
+101,Office,Monthly Wages of Cleaner,True,False,approve
+101,Office,Cash Carrying / Loading Expenses <Branch>,True,False,approve
+201,ATM,Cash Carrying / Loading Expenses <ATM>,True,False,approve
+301,Kiosk,Cash Carrying / Loading Expenses <Kiosk>,True,False,approve
+001,General,Service Charge of Building Rented ,True,False,approve
+101,Office,Misc exp. On Office Maintenance ,True,False,approve
+101,office,Tree Plants Expenses,True,False,approve
+101,Office,Drinking Water Expenses,True,False,approve
+101,Office,Material Purchase For Upkeep of Bank,True,False,approve
+001,General,"Taxes (Token, Fitness) & Registration cost Motor Vehicle Pool",True,False,approve
+001,General,"Taxes (Token, Fitness)& Registration cost Motor Vehicle Executives",True,False,approve
+001,General,CNG Conversion Cost Motor Vehicle Executives,True,False,approve
+001,General,CNG Conversion Cost Motor Vehicle Pool,True,False,approve
+001,General,Car Loan Instalment Expenses <Employees>,True,False,approve
+001,General,Car hiring charges <Rent> for MV Pool,True,False,approve
+001,General,Car Allowance <Employee>,True,False,approve
+001,General,Entertainment Expenses,True,False,approve
+001,General,News Paper & Periodicals,True,False,approve
+001,General,Clearing House expenses,True,False,approve
+001,General,T.A/D.A (Foreign Travel),True,False,approve
+001,General,T.A/D.A (Domestic Travel),True,False,approve
+001,General,Conveyance for official purpose,True,False,approve
+001,General,Holiday Conveyance,True,False,approve
+001,General,Foreign Bank Charges,True,False,approve
+001,General,Local Bank other than BB Charges,True,False,approve
+001,General,Bangladesh Bank Charges,True,False,approve
+001,General,Foreign Bank Charges in USD <for OBU>,True,False,approve
+001,Other than Regn,Local Training Expenses,True,False,approve
+002,Registration,Local Training Expenses <Registration Fee>,True,False,approve
+001,Other than Regn,Foreign Training Expenses,True,False,approve
+002,Registration,Foreign Training Expenses <Registration Fee>,True,False,approve
+001,General,Daily Allowances (Training),True,False,approve
+001,General,Entertainment (Training),True,False,approve
+001,General,Venue Rent (Training),True,False,approve
+001,General,Honorarium (Training),True,False,approve
+001,General,Professional Fees,True,False,approve
+001,General,AGM Expenses,True,False,approve
+001,General,Subscription,True,False,approve
+001,General,Donation,True,False,approve
+001,General,Reuter Charges,True,False,approve
+001,General,CDBL Charges,True,False,approve
+001,General,Fees for Regis. at Joint Stock Comp.,True,False,approve
+001,General,All Other Fees,True,False,approve
+001,General,Business Development Expenses,True,False,approve
+001,General,CSR Activities,True,False,approve
+001,General,Branch Opening Expenses,True,False,approve
+001,General,Contribution to MTB Foundation (Expenditure),True,False,approve
+001,General,Employees Medical Assistance Fund (Expenditure),True,False,approve
+001,General,CPV Charge- Payment to Vendor (Retail),True,False,approve
+001,General,CPV Charge - Deposit KYC (Retail),True,False,approve
+001,General,Site Maintenance & Support Service,True,False,approve
+101,Office,Connectivity Charge <Office Premises>,True,False,approve
+201,ATM, Connectivity Charge <ATM>,True,False,approve
+301,Kiosk,Connectivity Charge <Kiosk>,True,False,approve
+601,POS,Connectivity Charge <POS>,True,False,approve
+001,General,NID Verification Charge,True,False,approve
+001,General,Loss on sale of Fixed Assets,True,False,approve
+001,General,Misc Expenses not classified elsewhere,True,False,approve
+001,General,POS Intercharge Reimbursement Fee Paid for,True,False,approve
+001,General,bKash Commission,True,False,approve
+001,General,Amortization Loss on HFT Securities T.Bill,True,False,approve
+001,General,Revaluation Loss on HFT Securities T.Bill,True,False,approve
+001,General,Revaluation Loss on HFT Securities Treasury Bond,True,False,approve
+001,General,Revaluation Loss on HTM Securities Treasury Bond,True,False,approve
+001,General,Loss on Sale of Treasury Bond,True,False,approve
+001,General,Loss from Repo (Ttreasury Bond),True,False,approve
+001,General,Loss on Sale of Treasury Bill,True,False,approve
+001,General,Loss from Repo (Treasury Bill),True,False,approve
+001,General,Loss for Exchange                                                               ,True,False,approve
+001,General,UPI Charges for Cards,True,False,approve
+001,General,UPI Charges for ADC,True,False,approve
+001,VISA,Card Transaction Charges <Fees paid for VISA>,True,False,approve
+002,MC,Card Transaction Charges <Fees paid for MasterCard>,True,False,approve
+002,MC,Card Transaction Charges <Fees paid for MasterCard> ADC,True,False,approve
+003,sharing,Card Transaction Charges <Sharing Charges>,True,False,approve
+004,Visa tr,Card Transaction Charges <VISA Transaction charges>,True,False,approve
+004,Visa tr,Card Transaction Charges <VISA Transaction charges> ADC,True,False,approve
+005,NPSB,Card Transaction Charges <NPSB>,True,False,approve
+001,General,Operational Loss - Cards,True,False,approve
+001,General,Exchange Loss -Cards,True,False,approve
+001,General,Operational Loss,True,False,approve
+001,General,Penalty of CRR/ SLR,True,False,approve
+001,General,ATM Intercharge Reimbursement Fee Paid for,True,False,approve
+001,General,Agent Banking Float Sharing Commission,True,False,approve
+001,General,CRR Cost <for PB>,True,False,approve
+001,General,Auditor's Fees,True,False,approve
+001,General,Agency Commission on Student File,True,False,approve
+001,General,Other Fees & Commission USD <OBU>,True,False,approve
+001,General,Depreciation on Building,True,False,approve
+101,Office,Depreciation on Fixture <at office premises>,True,False,approve
+201,ATM,Depreciation on Fixture <at ATM premises>,True,False,approve
+301,Kiosk,Depreciation on Fixture <at Kiosk premises>,True,False,approve
+101,Office,Depreciation on Furniture <at office premises>,True,False,approve
+301,Kiosk,Depreciation on Furniture <at Kiosk premises>,True,False,approve
+101,Office,Depreciation on Electrical Equipments <Office Premises>,True,False,approve
+201,ATM,Depreciation on Electrical Equipments <ATM Premises>,True,False,approve
+301,Kiosk,Depreciation on Electrical Equipments <Kiosk Premises>,True,False,approve
+101,Office,Depreciation on Other Office Equipments <at office premises>,True,False,approve
+201,ATM,Depreciation on Other Office Equipments <at ATM premises>,True,False,approve
+301,Kiosk,Depreciation on Other Office Equipments at Kiosk,True,False,approve
+601,POS,Depreciation on Other Office Equipments <POS Machines>,True,False,approve
+001,General,Depreciation on Computers & Peripherals,True,False,approve
+001,General,Depreciation on Motor Cars,True,False,approve
+001,General,Depreciation on Motor Cycles,True,False,approve
+001,General,Depreciation on Intangible Assets,True,False,approve
+001,General,Repairs & Maintenance on Building,True,False,approve
+101,Office,Repairs & Maintenance on Fixture,True,False,approve
+101,Office,Repairs & Maintenance on Furniture,True,False,approve
+301,Kiosk,Repairs & Maintenance on Furniture at Kiosk,True,False,approve
+101,Office,Repairs & Maintenance on Electrical Equipments,True,False,approve
+101,Office,Repairs & Maintenance on Other Office Equipments ,True,False,approve
+201,ATM,Repairs & Maintenance on Other Office Equipments ATMs,True,False,approve
+101,Office,Repairs & Maintenance on Computers & Peripherals,True,False,approve
+001,General,Repairs & Maintenance on Motor Cars,True,False,approve
+001,General,Repairs & Maintenance on Motor Cycles,True,False,approve
+001,General,Software Maintenance,True,False,approve
+001,General,Postage,True,False,approve
+001,General,Postage/Courier Service Charges,True,False,approve
+501,Residence,Telephone Expenses <Residence>,True,False,approve
+101,Office,Telephone Expenses <Office>,True,False,approve
+001,General,Fax/E-Mail Expenses,True,False,approve
+001,General,Telex/Telegraph  Expenses,True,False,approve
+101,Office,Mobile Bill Expenses,True,False,approve
+001,General,SWIFT Charges (Expenses),True,False,approve
+001,General,Stamp Charges                                                                  ,True,False,approve
+001,General,Lawyer's Charges,True,False,approve
+001,General,Legal Charges,True,False,approve
+001,General,Legal Stamps Charges,True,False,approve
+001,General,Court Fees & Charges,True,False,approve
+001,General,Security Stationery,True,False,approve
+001,General,Computer Stationery,True,False,approve
+001,General,Paper & Table Stationary <Petty Stationery>,True,False,approve
+101,Office,Paper & Table Stationary <Office>,True,False,approve
+201,ATM,Paper & Table Stationary ATM,True,False,approve
+301,Kiosk,Paper & Table Stationary Kiosk,True,False,approve
+601,POS,Paper & Table Stationary POS,True,False,approve
+001,General,Printed Stationery,True,False,approve
+001,General,Printing Expenses,True,False,approve
+001,General,Advertisement & Publicity,True,False,approve
+001,General,News Paper Advertisements,True,False,approve
+001,General,Broad Casting Advertisements,True,False,approve
+001,General,Hoarding/ Neon Signs,True,False,approve
+001,General,Souvenir/Magazine,True,False,approve
+001,General,Cut Out Dangler Flex Backdrop etc branding expenses,True,False,approve
+001,General,Director's Fees,True,False,approve
+001,General,Parties & Dinner,True,False,approve
+001,General,Director's Traveling Expenses,True,False,approve
+001,General,MD Basic,True,False,approve
+001,General,MD House Rent,True,False,approve
+001,General,MD House Maintenance,True,False,approve
+001,General,MD Entertainment,True,False,approve
+001,General,MD Festival Bonus,True,False,approve
+001,General,MD Incentive Bonus,True,False,approve
+001,General,MD Leave Fare Assistance,True,False,approve
+001,General,MD Security & Personal Wages,True,False,approve
+001,General,MD Provident Fund,True,False,approve

@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_partner_tree_inherit" model="ir.ui.view">
+        <field name="name">partner.tree.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="vendor_bank_acc" string="Bank Account"/>
+                <field name="bin"/>
+                <field name="tin"/>
+                <field name="nid"/>
+                <field name="debit"/>
+                <field name="company_type" string="Vendor Type"/>
+                <field name="state"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-info">state == 'draft'</attribute>
+                <attribute name="decoration-success">state=='approve'</attribute>
+                <attribute name="decoration-danger">state=='reject'</attribute>
+                <attribute name="decoration-bf">state in ('approve',)</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherited_res_partner_form_view" model="ir.ui.view">
+        <field name="name">inherited.res.partner.view</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="edit">0</attribute>
+                <attribute name="duplicate">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="pending" invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='zip']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='city']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="act_approve" string="Approve" type="object" states="draft"
+                            class="oe_highlight"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                    <button name="act_reject" string="Reject" type="object" states="draft"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                    <button name="%(action_res_partner_wizard)d" string="Edit" type="action"
+                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                    <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                    <button name="act_reject_pending" string="Reject" type="object"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                    <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                    <field name="state" widget="statusbar" invisible="True"/>
+                </header>
+            </xpath>
+            <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"/>
+            <xpath expr="//field[@name='company_type']" position="attributes">
+                <attribute name="class">[]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='function']" position="replace">
+                <field name="contact_person"/>
+                <field name="designation_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+            </xpath>
+            <xpath expr="//field[@name='lang']" position="after">
+                <field name="nid"/>
+                <field name="bin"/>
+                <field name="tin"/>
+                <field name="maker_id" invisible="1"/>
+                <field name="approver_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='street2']" position="attributes">
+                <attribute name="placeholder">etc.</attribute>
+                <attribute name="widget">text</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="division_id" placeholder="Divisions" class="oe_inline"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <br></br>
+                <field name="district_id" placeholder="Districts" class="oe_inline"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <br></br>
+                <field name="upazila_id" placeholder="Upazila/Thana" class="oe_inline"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <br></br>
+                <field name="postal_code" placeholder="Postal Code" class="oe_inline"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                <br></br>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="entity_services" placeholder="Services..." widget="many2many_tags"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+            </xpath>
+            <xpath expr="//sheet/notebook" position="after">
+                <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
+                    <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                          decoration-bf="state in ('pending',)"
+                          decoration-danger="state=='reject'">
+                        <field name="change_name"/>
+                        <field name="website"/>
+                        <field name="phone"/>
+                        <field name="mobile"/>
+                        <field name="email"/>
+                        <field name="street"/>
+                        <field name="street2"/>
+                        <field name="bin"/>
+                        <field name="tin"/>
+                        <field name="fax"/>
+                        <field name="nid"/>
+                        <field name="property_account_receivable_id"/>
+                        <field name="property_account_payable_id"/>
+                        <field name="vendor_bank_acc"/>
+                        <field name="division_id"/>
+                        <field name="district_id"/>
+                        <field name="upazila_id"/>
+                        <field name="postal_code"/>
+                        <field name="company_type"/>
+                        <field name="parent_id"/>
+                        <field name="entity_services"/>
+                        <field name="designation_id"/>
+                        <field name="contact_person"/>
+                        <field name="request_date"/>
+                        <field name="change_date"/>
+                        <field name="status"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </xpath>
+            <xpath expr="//page[@name='accounting']" position="inside">
+                <group>
+                    <field name="vendor_bank_acc" class="oe_inline"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter1" model="ir.ui.view">
+        <field name="name">res.partner.select</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="replace">
+                <search>
+                    <field name="name" string="Vendor Name"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="vendor_bank_acc" string="Bank Account"/>
+                    <field name="bin"/>
+                    <field name="tin"/>
+                    <field name="nid"/>
+                    <field name="company_type" string="Vendor Type"/>
+                    <group name="group_by" position="inside">
+                        <filter string="Vendor" domain="[('is_company','=', False)]"/>
+                        <filter string="Company" domain="[('is_company','=', True)]"/>
+                        <filter string="Pending" name="pending" icon="terp-personal"
+                                domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                        <filter string="Rejected" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                        <filter string="In-Active" name="state" icon="terp-personal"
+                                domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                        <filter string="Vendor Type" domain="[]" context="{'group_by':'company_type'}"/>
+                    </group>
+                </search>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="inherit_partner_view_button_contracts">
+        <field name="name">inherit.partner.view.button.contracts</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.partner_view_button_contracts_count"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(account.action_open_partner_analytic_accounts)d']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="base.action_partner_supplier_form" model="ir.actions.act_window">
+        <field name="name">Vendors</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('supplier','=',True)]</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{'search_default_supplier': 1,'default_customer': 0,
+            'default_supplier':1,"search_default_active":'False',"search_default_pending":'True',}
+        </field>
+        <field name="filter" eval="True"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+            </p>
+            <p>
+                Odoo helps you easily track all activities related to
+                a supplier: discussions, history of purchases,
+                documents, etc.
+            </p>
+        </field>
+    </record>
+
+</odoo>

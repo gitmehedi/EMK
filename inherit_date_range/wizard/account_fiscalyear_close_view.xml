@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_fiscalyear_close" model="ir.ui.view">
+            <field name="name">account.fiscalyear.close.form</field>
+            <field name="model">account.fiscalyear.close</field>
+            <field name="arch" type="xml">
+                <form string="Generate Fiscal Year Opening Entries">
+                    <separator string="Generate Fiscal Year Opening Entries"/>
+                    <group>
+                        <group>
+                            <field name="close_fy_id"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            <field name="journal_id"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            <field name="report_name" invisible="True"/>
+                        </group>
+                        <group>
+                            <field name="start_fy_id"
+                                   options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Create" name="data_save" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_fiscalyear_close" model="ir.actions.act_window">
+            <field name="name">Generate Opening Entries</field>
+            <field name="res_model">account.fiscalyear.close</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_fiscalyear_close"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_account_fiscalyear_close"
+                  id="menu_wizard_fy_close"
+                  parent="account_fiscal_year.menu_date_range_accounting"/>
+    </data>
+</odoo>

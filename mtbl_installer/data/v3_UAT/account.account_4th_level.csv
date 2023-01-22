@@ -1,0 +1,336 @@
+Layer,Code,Name,Parent Account,Type,active,pending,state
+Layer 4,11101,Paid up Capital,Capital,View Type,True,False,approve
+Layer 4,11201,General Reserve,Reserve,View Type,True,False,approve
+Layer 4,11202,Statutory Reserve,Reserve,View Type,True,False,approve
+Layer 4,11203,Revaluation Reserve,Reserve,View Type,True,False,approve
+Layer 4,11204,Share Premium,Reserve,View Type,True,False,approve
+Layer 4,11205,Retained earnings,Reserve,View Type,True,False,approve
+Layer 4,11206,Foreign Currency Translational Gain/ Loss,Reserve,View Type,True,False,approve
+Layer 4,12101,Borrowings under Bangladesh Bank-others,Borrowings under Bangladesh Bank,View Type,True,False,approve
+Layer 4,12102,Borrowings under BB Pre-finance,Borrowings under Bangladesh Bank,View Type,True,False,approve
+Layer 4,12103,Borrowings under BB Refinance,Borrowings under Bangladesh Bank,View Type,True,False,approve
+Layer 4,12104,Investment Promotion and Financing Facility (IPFF) FC,Borrowings under Bangladesh Bank,View Type,True,False,approve
+Layer 4,12105,Long Term Financing Facility (LTFF),Borrowings under Bangladesh Bank,View Type,True,False,approve
+Layer 4,12106,Borrowing under EDF from Bangladesh Bank,Borrowings under Bangladesh Bank,View Type,True,False,approve
+Layer 4,12201,Term Borrowing in FC,Borrowings from other Banks,View Type,True,False,approve
+Layer 4,12202,Call Borrowing <BDT>,Borrowings from other Banks,View Type,True,False,approve
+Layer 4,12203,Term Borrowing <BDT>,Borrowings from other Banks,View Type,True,False,approve
+Layer 4,12204,REPO <Borrowings under>,Borrowings from other Banks,View Type,True,False,approve
+Layer 4,12205,Call Borrowing in FC,Borrowings from other Banks,View Type,True,False,approve
+Layer 4,12206,Short Term Borrowing <BDT>,Borrowings from other Banks,View Type,True,False,approve
+Layer 4,12207,Short Term Borrowing <FC>,Borrowings from other Banks,View Type,True,False,approve
+Layer 4,12301,Borrowing fm. Other Institutes,Borrowings from other Institutions,View Type,True,False,approve
+Layer 4,12302,Borrowing under Pre-finance (Other Institute),Borrowings from other Institutions,View Type,True,False,approve
+Layer 4,12303,Borrowings from NBFI,Borrowings from other Institutions,View Type,True,False,approve
+Layer 4,12501,Interest Payable on Borrowings fm BB,Interest Payable on Borrowings,View Type,True,False,approve
+Layer 4,12502,Interest Payable on Borrowings from other Banks,Interest Payable on Borrowings,View Type,True,False,approve
+Layer 4,12503,Interest Payable on Borrowings fm other Institution,Interest Payable on Borrowings,View Type,True,False,approve
+Layer 4,12504,Interest Payable on Borrowings fm other Institution <prefinance>,Interest Payable on Borrowings,View Type,True,False,approve
+Layer 4,13101,Current Accounts <BDT>,Customer Deposits -Current & Others,View Type,True,False,approve
+Layer 4,13102,Current Accounts <FC>,Customer Deposits -Current & Others,View Type,True,False,approve
+Layer 4,13103,MiSc Customer Deposit,Customer Deposits -Current & Others,View Type,True,False,approve
+Layer 4,13104,Sundry Deposits <FC>,Customer Deposits -Current & Others,View Type,True,False,approve
+Layer 4,13105,Sundry Deposits,Customer Deposits -Current & Others,View Type,True,False,approve
+Layer 4,13201,Term Deposits,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13202,Term Deposits Reinvestments,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13203,Recurring Deposit,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13204,Term Deposits FC,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13205,Special Notice Deposit,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13206,Savings Bank Account,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13207,Savings Bank Account <FC>,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13208,Other Deposit product,"Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13301,Current Deposits from other Bank,Bank & NBFI Deposits -Current & Others,View Type,True,False,approve
+Layer 4,13302,Current Deposits from NBFI,Bank & NBFI Deposits -Current & Others,View Type,True,False,approve
+Layer 4,13401,Bank Deposits -FD,Bank & NBFI Deposits -FD & Others,View Type,True,False,approve
+Layer 4,13402,NBFI Deposits -FD,Bank & NBFI Deposits -FD & Others,View Type,True,False,approve
+Layer 4,13501,Interest Payable on Current Deposits,IP on Customer Deposits -Current & Others,View Type,True,False,approve
+Layer 4,13601,Interest Payable on TD Accounts,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13602,Interest Payable on Savings Bank Accounts,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13603,Interest payable on Recurring Deposit,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13604,Interest Payable on Special Notice Deposits,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13605,Interest Payable on Term Deposits FC,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13606,Interest Payable on Savings Bank Accounts FC,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13607,Interest payable on Term Deposits Reinvestments,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13608,Interest Payable on Other Deposit Products,"Interest Payable on Customer Deposits -SB, FD, RD, SND etc.",View Type,True,False,approve
+Layer 4,13701,Interest Payable on Bank Deposits,Interest Payable on Bank & NBFI Deposits,View Type,True,False,approve
+Layer 4,13702,Interest Payable on NBFI Deposits,Interest Payable on Bank & NBFI Deposits,View Type,True,False,approve
+Layer 4,13801,Bills Payable,Customer Deposits -Bills Payable,View Type,True,False,approve
+Layer 4,14102,Interest on Subordinated Bond,Subordinated Bond,View Type,True,False,approve
+Layer 4,14202,Interest on Other Bond,Other Bond,View Type,True,False,approve
+Layer 4,15101,Interest Suspenses Account ,Interest Suspenses Account ,View Type,True,False,approve
+Layer 4,15201,Clearing House Adjustment,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15202,Provision for Tax,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15203,Adjusting A/c Credit,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15204,Profit for the Year,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15205,Unearned Income,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15206,Liabilities under Finance Lease,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15207,Deferred Tax Liability,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15208,Staff Fund,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15209,Contribution to MTB Foundation,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15210,Repo Interest Income Account,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15211,Exchange Equalization Fund,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15212,Advance Intt. on Treasury Bill,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15213,NOSTRO A/c Adjustment,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15214,Transit A/c- Reverse Repo,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15215,Revaluation Gain on HFT Securities,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15216,VAT payable,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15217,Excise Duty payable,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15218,Source Tax <TDS> payable,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15219,Card Settlement Account,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15220,Card Settlement Account <FC>,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15221,NPSB Transaction Settlement,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15222,Agent Banking,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15223,Outstanding Expenses,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15224,Bonus Payable,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15225,Gratuity Payable,Other misc. liabilities,View Type,True,False,approve
+Layer 4,15301,Provision for Advances,Provision,View Type,True,False,approve
+Layer 4,15302,Provision for Investments,Provision,View Type,True,False,approve
+Layer 4,15303,Provision for others,Provision,View Type,True,False,approve
+Layer 4,15401,Accumulated Depreciation on Immovable Property,Accumulated Depreciation,View Type,True,False,approve
+Layer 4,15402,Accumulated Depreciation on Furniture & Fixture,Accumulated Depreciation,View Type,True,False,approve
+Layer 4,15403,Accumulated Depreciation on Office Equipments,Accumulated Depreciation,View Type,True,False,approve
+Layer 4,15404,Accumulated Depreciation on Computers,Accumulated Depreciation,View Type,True,False,approve
+Layer 4,15405,Accumulated Depreciation on Motor Vehicles,Accumulated Depreciation,View Type,True,False,approve
+Layer 4,15406,Accumulated Amortization of Intangible Assets,Accumulated Depreciation,View Type,True,False,approve
+Layer 4,16101,Branch Accounts,Inter Branch Account,View Type,True,False,approve
+Layer 4,21101,Cash in Hand <BDT>,Cash,View Type,True,False,approve
+Layer 4,21102,Cash in Hand <FC>,Cash,View Type,True,False,approve
+Layer 4,21201,Balance with BB <LCY>,Balance with Bangladesh Bank,View Type,True,False,approve
+Layer 4,21202,Balance with BB  <FCY>,Balance with Bangladesh Bank,View Type,True,False,approve
+Layer 4,21301,Balance with Agent Bank <BDT>,Balance with Agent Bank,View Type,True,False,approve
+Layer 4,21401,Other Banks & FIs in Bangladesh,Balance with other banks and Fis,View Type,True,False,approve
+Layer 4,21403,Other Banks & FIs outside Bangladesh <FC>,Balance with other banks and Fis,View Type,True,False,approve
+Layer 4,21404,Other Banks & FIs within Bangladesh <FC>,Balance with other banks and Fis,View Type,True,False,approve
+Layer 4,21405,Interest Receivable on Other Banks & FIs in Bangladesh,Balance with other banks and Fis,View Type,True,False,approve
+Layer 4,22101,Call Money <BDT>,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22102,Call Money <FC>,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22103,Interest Receivable on Call Money <BDT>,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22104,Interest Receivable on Call Money <FC>,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22105,Term Placement BDT,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22106,Term Placement FC,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22107,Intt receivable on Term Placement BDT,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22108,Intt receivable on Term Placement FC,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22109,Short Term Placement,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22110,Short Term Placement FC,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22111,Intt receivable on Short Term Placement BDT,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,22112,Intt receivable on Short Term Placement FC,Money at Call & Short Notice,View Type,True,False,approve
+Layer 4,23101,Securities other than Tbill Tbond,Government,View Type,True,False,approve
+Layer 4,23102,Treasury Bills,Government,View Type,True,False,approve
+Layer 4,23103,Treasury Bonds,Government,View Type,True,False,approve
+Layer 4,23301,Investment in Subsidiaries,Inv in Subsidiaries,View Type,True,False,approve
+Layer 4,24101,Retail Term Loans <excl. Staff Loans>,Term Loans,View Type,True,False,approve
+Layer 4,24102,Retail Term Loans <Staff>,Term Loans,View Type,True,False,approve
+Layer 4,24103,Corporate & SME Term Loan,Term Loans,View Type,True,False,approve
+Layer 4,24104,SME Term Loan excl Agri & Micro Fin.,Term Loans,View Type,True,False,approve
+Layer 4,24105,SME Term Loan <Agri Fin.>,Term Loans,View Type,True,False,approve
+Layer 4,24201,Corporate & SME Demand Loan,Demand Loans,View Type,True,False,approve
+Layer 4,24202,Corporate & SME Demand Loan <FC>,Demand Loans,View Type,True,False,approve
+Layer 4,24203,SME Demand Loan,Demand Loans,View Type,True,False,approve
+Layer 4,24204,Misc Demand Loans <C/S/R>,Demand Loans,View Type,True,False,approve
+Layer 4,24301,Retail Continuous Loans,Continuous Loans,View Type,True,False,approve
+Layer 4,24302,Corporate & SME Continuous Loan,Continuous Loans,View Type,True,False,approve
+Layer 4,24303,SME Continuous Loan,Continuous Loans,View Type,True,False,approve
+Layer 4,24304,PAD EDF Loan,Continuous Loans,View Type,True,False,approve
+Layer 4,24501,Interest Receivable on RTL,Interest Receivable,View Type,True,False,approve
+Layer 4,24502,Interest Receivable on Staff Loans,Interest Receivable,View Type,True,False,approve
+Layer 4,24503,Interest Reeceivable on Corporate Term Loan,Interest Receivable,View Type,True,False,approve
+Layer 4,24504,Interest Receivable on SME Term Loan excl Agri & MF,Interest Receivable,View Type,True,False,approve
+Layer 4,24505,Interest Receivable on SME Term Loan <Agri Fin.>,Interest Receivable,View Type,True,False,approve
+Layer 4,24506,Interest Receivable on Corporate & SME Demand Loan,Interest Receivable,View Type,True,False,approve
+Layer 4,24507,Interest Receivable on Corporate & SME Demand Loan FC,Interest Receivable,View Type,True,False,approve
+Layer 4,24508,Interest Receivable on SME Demand Loan,Interest Receivable,View Type,True,False,approve
+Layer 4,24509,Interest Receivable on Retail Continuous Loans,Interest Receivable,View Type,True,False,approve
+Layer 4,24510,Interest Receivable on Corporate & SME Continuous Loan,Interest Receivable,View Type,True,False,approve
+Layer 4,24511,Interest Receivable on SME Continuous Loan,Interest Receivable,View Type,True,False,approve
+Layer 4,24512,Interest Receivable on Other Loans & Assets,Interest Receivable,View Type,True,False,approve
+Layer 4,24513,Interest Receivable on Misc Demand Loans <C/S/R>,Interest Receivable,View Type,True,False,approve
+Layer 4,24514,Interest Receivable on C&S Continuous Loan (FC),Interest Receivable,View Type,True,False,approve
+Layer 4,24515,Interest Receivable on Bill Discounting,Interest Receivable,View Type,True,False,approve
+Layer 4,24516,Interest Receivable <Miscellaneous>,Interest Receivable,View Type,True,False,approve
+Layer 4,24601,Penal Interest Receivable on RTL,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24602,Penal Interest Receivable on Staff Loans,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24603,Penal Interest Receivable on Corporate Term Loan,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24604,Penal Interest Receivable on SME Term Loan excl Agri & MF,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24605,Penal Interest Receivable on SME Term Loan <Agri & MF>,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24606,Penal Interest Receivable on Corporate & SME Demand Loan,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24607,Penal Interest Receivable on Corporate & SME Demand Loan FC,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24608,Penal Interest Receivable on SME Demand Loan,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24609,Penal Interest Receivable on Retail Continuous Loan,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24610,Penal Interest Receivable on Corporate &/ or SME Continuous Loan,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24611,Penal Interest Receivable on SME Continuous Loan,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24614,Penal Interest Receivable on PAD EDF Loan FC,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24615,Penal Interest Receivable on Bill Discounting FC (OBU)Foreign,Penal Interest Receivables,View Type,True,False,approve
+Layer 4,24701,OBU Bill discounting FC,OBU Loans & Advances,View Type,True,False,approve
+Layer 4,24702,OBU UPAS/ Buyer's Credit FC,OBU Loans & Advances,View Type,True,False,approve
+Layer 4,25101,Immovable Property,Tangible Fixed Assets,View Type,True,False,approve
+Layer 4,25102,Furniture & Fixture,Tangible Fixed Assets,View Type,True,False,approve
+Layer 4,25103,Office Equipments,Tangible Fixed Assets,View Type,True,False,approve
+Layer 4,25104,Computers,Tangible Fixed Assets,View Type,True,False,approve
+Layer 4,25105,Motor Vehicles,Tangible Fixed Assets,View Type,True,False,approve
+Layer 4,26101,Adjusting A/C Debit,Adjustment Account,View Type,True,False,approve
+Layer 4,26103,Coupon Interest Adjustment Account,Adjustment Account,View Type,True,False,approve
+Layer 4,26201,Advance paid to Employees,Advances,View Type,True,False,approve
+Layer 4,26202,Advance against Suppliers/ Parties,Advances,View Type,True,False,approve
+Layer 4,26203,Advance Deposit,Advances,View Type,True,False,approve
+Layer 4,26204,Advance Income Tax,Advances,View Type,True,False,approve
+Layer 4,26205,Advance Remuneration/Salary,Advances,View Type,True,False,approve
+Layer 4,26206,Advance Rent,Advances,View Type,True,False,approve
+Layer 4,26207,Advance pymt to construction of HO bldg,Advances,View Type,True,False,approve
+Layer 4,26208,Advance against TA/DA,Advances,View Type,True,False,approve
+Layer 4,26209,Advance against POSTAGE,Advances,View Type,True,False,approve
+Layer 4,26210,Advance against  PETTY CASH,Advances,View Type,True,False,approve
+Layer 4,26601,Chargeback Settlement A/c,Suspense Account,View Type,True,False,approve
+Layer 4,26602,Sundry Debtors,Suspense Account,View Type,True,False,approve
+Layer 4,26603,Sanchay Patra,Suspense Account,View Type,True,False,approve
+Layer 4,26604,Legal Expense,Suspense Account,View Type,True,False,approve
+Layer 4,26605,Economic Exchange Centre,Suspense Account,View Type,True,False,approve
+Layer 4,26608,Remittance Payment Account,Suspense Account,View Type,True,False,approve
+Layer 4,26609,DD Paid Without Advice,Suspense Account,View Type,True,False,approve
+Layer 4,26610,DD CANCELLED,Suspense Account,View Type,True,False,approve
+Layer 4,26801,Preliminary Expenses,Miscellaneous Other Assets,View Type,True,False,approve
+Layer 4,26803,Prepaid Promotional and Development Expenses,Miscellaneous Other Assets,View Type,True,False,approve
+Layer 4,26804,Stamps in Hand,Miscellaneous Other Assets,View Type,True,False,approve
+Layer 4,26805,Stock of Commemorative Coins,Miscellaneous Other Assets,View Type,True,False,approve
+Layer 4,26806,Stock of Fixed Assets,Miscellaneous Other Assets,View Type,True,False,approve
+Layer 4,26807,Stock of stationeries,Miscellaneous Other Assets,View Type,True,False,approve
+Layer 4,26808,Transit Account,Miscellaneous Other Assets,View Type,True,False,approve
+Layer 4,26809,Deferred Tax Asset,Miscellaneous Other Assets,View Type,True,False,approve
+Layer 4,26810,Proteste Bills,Miscellaneous Other Assets,View Type,True,False,approve
+Layer 4,27101,Branch Account,Inter Branch Account,View Type,True,False,approve
+Layer 4,31101,Interest Earned on RTL,Interest Earned,View Type,True,False,approve
+Layer 4,31102,Interest Earned on Staff Loans,Interest Earned,View Type,True,False,approve
+Layer 4,31103,Interest Earnedon Corporate Term Loan,Interest Earned,View Type,True,False,approve
+Layer 4,31104,Interest Earnedon SME Term Loan excl Agri & MF,Interest Earned,View Type,True,False,approve
+Layer 4,31105,Interest Earned on SME Term Loan <Agri & MF>,Interest Earned,View Type,True,False,approve
+Layer 4,31106,Interest Earned on Corporate & SME Demand Loan,Interest Earned,View Type,True,False,approve
+Layer 4,31107,Interest Earned on Corporate & SME Demand Loan FC,Interest Earned,View Type,True,False,approve
+Layer 4,31108,Interest Earned on SME Demand Loan,Interest Earned,View Type,True,False,approve
+Layer 4,31109,Interest Earned on Retail Continuous Loan,Interest Earned,View Type,True,False,approve
+Layer 4,31110,Interest Earned on Corporate &/ or SME Continuous Loan,Interest Earned,View Type,True,False,approve
+Layer 4,31111,Interest Earned on SME Continuous Loan,Interest Earned,View Type,True,False,approve
+Layer 4,31112,Interest Earned on Misc Demand Loan,Interest Earned,View Type,True,False,approve
+Layer 4,31113,Interest Earned on Balance with other Bank  (BDT),Interest Earned,View Type,True,False,approve
+Layer 4,31114,Interest Earned on C&S Continuous Loan FC,Interest Earned,View Type,True,False,approve
+Layer 4,31115,Interest Earned on OBU Loans & Advances,Interest Earned,View Type,True,False,approve
+Layer 4,31116,Interest Earned on Credit Cards,Interest Earned,View Type,True,False,approve
+Layer 4,31117,Interest Earned on Other Loans & Advances,Interest Earned,View Type,True,False,approve
+Layer 4,31118,Interest Earned on Balance with other Bank  (FC),Interest Earned,View Type,True,False,approve
+Layer 4,31201,Penal Interest Earned on RTL,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31202,Penal Interest Earned on Staff Loans,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31203,Penal Interest Earnedon Corporate Term Loan,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31204,Penal Interest Earnedon SME Term Loan excl Agri & MF,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31205,Penal Interest Earnedon SME Term Loan <Agri & MF>,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31206,Penal Interest Earnedon Corporate & SME Demand Loan,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31207,Penal Interest Earnedon Corporate & SME Demand Loan FC,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31208,Penal Interest Earnedon SME Demand Loan,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31209,Penal Interest Earnedon Retail Continuous Loan,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31210,Penal Interest Earnedon Corporate &/ or SME Continuous Loan,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31211,Penal Interest Earnedon SME Continuous Loan,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31213,Penal Interest Earned on Miscellaneous Demand Loans,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31214,Penal Interest Earnedon Corporate &/ or SME Continuous Loan FC,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31215,Penal Interest Earned on OBU Loans & Advances,Penal Interest Earned,View Type,True,False,approve
+Layer 4,31301,Interest on MTB General Account,Interest on MTB Branch Account,View Type,True,False,approve
+Layer 4,31401,Interest Earned on Call  Money Placement BDT , Income on Money Market/ Placements,View Type,True,False,approve
+Layer 4,31402,Interest Earned on Call  Money Placement FC , Income on Money Market/ Placements,View Type,True,False,approve
+Layer 4,31403,Interest Earned on Term Placement BDT, Income on Money Market/ Placements,View Type,True,False,approve
+Layer 4,31404,Interest Earned on Term Placement FC, Income on Money Market/ Placements,View Type,True,False,approve
+Layer 4,31405,Interest Earned on Short Term Placement FC, Income on Money Market/ Placements,View Type,True,False,approve
+Layer 4,31406,Interest Earned on Short Term Placement BDT, Income on Money Market/ Placements,View Type,True,False,approve
+Layer 4,31407,Interest on Bangladesh Bank Foreign Currency Clearing A/c, Income on Money Market/ Placements,View Type,True,False,approve
+Layer 4,31408,Interest on Placement to Off-Shore Banking Unit FC, Income on Money Market/ Placements,View Type,True,False,approve
+Layer 4,32101,Income from Treasury Operations <Govt Sec.>,Income fm Govt Securities,View Type,True,False,approve
+Layer 4,32201,Income from Treasury Operations <other than Govt Sec.>,Income from Other Investments,View Type,True,False,approve
+Layer 4,33101,Commission on GB operations,Commission,View Type,True,False,approve
+Layer 4,33102,Commission on Trade operations,Commission,View Type,True,False,approve
+Layer 4,33103,Commission on NRB operations,Commission,View Type,True,False,approve
+Layer 4,33104,Commission frm OBU operations FC,Commission,View Type,True,False,approve
+Layer 4,33201,Exchange Gain on Foreign Currency,Exchange,View Type,True,False,approve
+Layer 4,33202,Income on Forex Deal,Exchange,View Type,True,False,approve
+Layer 4,33302,Underwriting Commission,Brokerage,View Type,True,False,approve
+Layer 4,34101,Rental Income,Other Operating Income,View Type,True,False,approve
+Layer 4,34102,Recoveries of various charges,Other Operating Income,View Type,True,False,approve
+Layer 4,34103,Income fm Cards operations,Other Operating Income,View Type,True,False,approve
+Layer 4,34104,Early Settlement Fees,Other Operating Income,View Type,True,False,approve
+Layer 4,34105,Loan Processing Fees,Other Operating Income,View Type,True,False,approve
+Layer 4,34106,Partial Payment Fees,Other Operating Income,View Type,True,False,approve
+Layer 4,34107,SME Fees & Charges,Other Operating Income,View Type,True,False,approve
+Layer 4,34108,Service Charges,Other Operating Income,View Type,True,False,approve
+Layer 4,34109,Management Fees,Other Operating Income,View Type,True,False,approve
+Layer 4,34110,Gain on Sale of Fixed Assets,Other Operating Income,View Type,True,False,approve
+Layer 4,34111,NPSB Acquirer Income,Other Operating Income,View Type,True,False,approve
+Layer 4,34112,Miscellneous Earnings,Other Operating Income,View Type,True,False,approve
+Layer 4,34113,Income on account of recovery from written off loans,Other Operating Income,View Type,True,False,approve
+Layer 4,34114,Excess Over Limit Charges,Other Operating Income,View Type,True,False,approve
+Layer 4,41101,Interest Expenses on Current Deposits,Interest Expenses on Customer Accounts <CASA>,View Type,True,False,approve
+Layer 4,41102,Interest Expenses on Savings Bank Accounts,Interest Expenses on Customer Accounts <CASA>,View Type,True,False,approve
+Layer 4,41103,Interest Expenses on Savings Bank Accounts FC,Interest Expenses on Customer Accounts <CASA>,View Type,True,False,approve
+Layer 4,41104,Interest Expenses on Special Notice Deposits,Interest Expenses on Customer Accounts <CASA>,View Type,True,False,approve
+Layer 4,41201,Interest Expenses on TD Accounts,Interest Expenses on Customer Accounts <Term Deposits>,View Type,True,False,approve
+Layer 4,41202,Interest Expenses on Term Deposits Reinvestments,Interest Expenses on Customer Accounts <Term Deposits>,View Type,True,False,approve
+Layer 4,41203,Interest Expenses on Recurring Deposit,Interest Expenses on Customer Accounts <Term Deposits>,View Type,True,False,approve
+Layer 4,41204,Interest Expenses on Term Deposits FC,Interest Expenses on Customer Accounts <Term Deposits>,View Type,True,False,approve
+Layer 4,41205,Interest Expenses on Term Deposits Bank,Interest Expenses on Customer Accounts <Term Deposits>,View Type,True,False,approve
+Layer 4,41206,Interest Expenses on Term Deposits NBFI,Interest Expenses on Customer Accounts <Term Deposits>,View Type,True,False,approve
+Layer 4,41207,Interest Expense on other deposit products,Interest Expenses on Customer Accounts <Term Deposits>,View Type,True,False,approve
+Layer 4,41303,Interest Expenses on Borrowings <>,Interest Expenses on Borrowings,View Type,True,False,approve
+Layer 4,41304,Interest Expenses on Borrowings Other institutes,Interest Expenses on Borrowings,View Type,True,False,approve
+Layer 4,41601,Interest Paid on MTBL General A/c,Interest Expense on Branch A/C,View Type,True,False,approve
+Layer 4,42101,Basic Pay Expenses,Salary & Allowances,View Type,True,False,approve
+Layer 4,42102,Allowances Expenses,Salary & Allowances,View Type,True,False,approve
+Layer 4,42103,Bonus Expenses,Salary & Allowances,View Type,True,False,approve
+Layer 4,42104,Gratuity Expenses,Salary & Allowances,View Type,True,False,approve
+Layer 4,42105,Leave Fare Assistance Expenses,Salary & Allowances,View Type,True,False,approve
+Layer 4,42106,Provident Fund Expenses,Salary & Allowances,View Type,True,False,approve
+Layer 4,42107,Misc. Salary & Allowances,Salary & Allowances,View Type,True,False,approve
+Layer 4,42108,Leave Encashment,Salary & Allowances,View Type,True,False,approve
+Layer 4,42201,Rent Expenses,"Rent, Taxes, Insurance, Electricity etc.",View Type,True,False,approve
+Layer 4,42202,Rates & Taxes Expenses,"Rent, Taxes, Insurance, Electricity etc.",View Type,True,False,approve
+Layer 4,42203,Insurance Expenses,"Rent, Taxes, Insurance, Electricity etc.",View Type,True,False,approve
+Layer 4,42204,"Power, Electricity & Utilities","Rent, Taxes, Insurance, Electricity etc.",View Type,True,False,approve
+Layer 4,42205,Lease Rent Expenses,"Rent, Taxes, Insurance, Electricity etc.",View Type,True,False,approve
+Layer 4,42301,"Security, Auxiliary Services and Other Assitance",Other Expenses,View Type,True,False,approve
+Layer 4,42302,Office Cleaning,Other Expenses,View Type,True,False,approve
+Layer 4,42303,Office Maintenance,Other Expenses,View Type,True,False,approve
+Layer 4,42304,Car Expenses <not classified elsewhere>,Other Expenses,View Type,True,False,approve
+Layer 4,42305,Entertainment,Other Expenses,View Type,True,False,approve
+Layer 4,42306,News Paper & Periodicals,Other Expenses,View Type,True,False,approve
+Layer 4,42307,Clearing House Expenses,Other Expenses,View Type,True,False,approve
+Layer 4,42308,Travelling & Conveyance Expenses,Other Expenses,View Type,True,False,approve
+Layer 4,42309,Bank charges,Other Expenses,View Type,True,False,approve
+Layer 4,42310,Training Expenses,Other Expenses,View Type,True,False,approve
+Layer 4,42311,Professional Fees,Other Expenses,View Type,True,False,approve
+Layer 4,42312,AGM Expenses,Other Expenses,View Type,True,False,approve
+Layer 4,42313,Subscription & Donation,Other Expenses,View Type,True,False,approve
+Layer 4,42314,Reuter Charges,Other Expenses,View Type,True,False,approve
+Layer 4,42315,CDBL Charges,Other Expenses,View Type,True,False,approve
+Layer 4,42316,Fees & Registrations,Other Expenses,View Type,True,False,approve
+Layer 4,42317,Business Development Expenses,Other Expenses,View Type,True,False,approve
+Layer 4,42319,Employees Medical Assistance Fund,Other Expenses,View Type,True,False,approve
+Layer 4,42320,Honorarium,Other Expenses,View Type,True,False,approve
+Layer 4,42321,Cash Carrying/loading expenses,Other Expenses,View Type,True,False,approve
+Layer 4,42322,Contact Point Verification Charge,Other Expenses,View Type,True,False,approve
+Layer 4,42323,Site Maintenance & Support Service,Other Expenses,View Type,True,False,approve
+Layer 4,42324,On-line & Connectivity charges,Other Expenses,View Type,True,False,approve
+Layer 4,42325,NID Verification Charge,Other Expenses,View Type,True,False,approve
+Layer 4,42326,Loss on sale of Fixed Assets,Other Expenses,View Type,True,False,approve
+Layer 4,42327,Misc Expenses <not classified elsewhere>,Other Expenses,View Type,True,False,approve
+Layer 4,42328,Investment Expenses,Other Expenses,View Type,True,False,approve
+Layer 4,42329,Charges other than Bank in FC,Other Expenses,View Type,True,False,approve
+Layer 4,42330,Operational Loss,Other Expenses,View Type,True,False,approve
+Layer 4,42331,Penalty of CRR/SLR,Other Expenses,View Type,True,False,approve
+Layer 4,42332,ATM Intercharge Reimbursement Fee Paid for,Other Expenses,View Type,True,False,approve
+Layer 4,42333,Agent Banking Float Sharing Commission,Other Expenses,View Type,True,False,approve
+Layer 4,42334,CRR Cost,Other Expenses,View Type,True,False,approve
+Layer 4,42401,Depreciation on Immovable Property,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Layer 4,42402,Depreciation on Furniture & Fixture,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Layer 4,42403,Depreciation on Office Equipments,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Layer 4,42404,Depreciation on Computers,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Layer 4,42405,Depreciation on Motor Vehicles,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Layer 4,42406,Depreciation on Intangible Assets,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Layer 4,42409,Repair and Maintenance,Depreciation & Repair & Maintenance of Assets,View Type,True,False,approve
+Layer 4,42501,Postage Expenses,"Postage, Stamps and Telecommunication etc.",View Type,True,False,approve
+Layer 4,42502,Telecommunication expenses,"Postage, Stamps and Telecommunication etc.",View Type,True,False,approve
+Layer 4,42503,Stamp Expenses,"Postage, Stamps and Telecommunication etc.",View Type,True,False,approve
+Layer 4,42701,Stationery Expenses,"Stationery, Printing and Advertisements etc.",View Type,True,False,approve
+Layer 4,42702,Printing Expenses,"Stationery, Printing and Advertisements etc.",View Type,True,False,approve
+Layer 4,42703,Advertisements Expenses,"Stationery, Printing and Advertisements etc.",View Type,True,False,approve

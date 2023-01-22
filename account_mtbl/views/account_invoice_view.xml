@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_invoice_supplier_form_ou" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.inherit.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account_operating_unit.invoice_supplier_form_ou"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="duplicate">0</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='operating_unit_id']" position="attributes">
+                <attribute name="string">Branch</attribute>
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position="attributes">
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="after">
+                <field name="operating_unit_domain_ids" widget="many2many_tags" invisible="1"/>
+                <field name="sub_operating_unit_id" domain="[('account_id', 'in', [account_id])]"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                       groups="operating_unit.group_multi_operating_unit"/>
+                <field name="operating_unit_id" readonly="0"
+                       domain="[('id', 'in', operating_unit_domain_ids and operating_unit_domain_ids[0] and operating_unit_domain_ids[0][2] or False)]"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                       groups="operating_unit.group_multi_operating_unit"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
+                   position="attributes">
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='analytic_tag_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tax_line_ids']" position="attributes">
+                <attribute name="groups">base.group_system</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="after">
+                <field name="product_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_id']" position="attributes">
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_analytic_id']" position="attributes">
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                <attribute name="string">Cost Centre</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_account_invoice_form" model="ir.ui.view">
+        <field name="name">inherit.view.account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[1]/field[@name='invoice_line_ids']/tree/field[@name='account_id']"
+                   position="attributes">
+                <attribute name="domain">['|', ('code', '=ilike', '2%'), ('code', '=ilike', '4%'), ('company_id', '=',
+                    parent.company_id),
+                    ('internal_type', '=', 'other'), ('deprecated', '=', False), ('originating_type', '!=', 'credit')]
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='outstanding_credits_debits_widget']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page/group/group/field[@name='account_id']" position="attributes">
+                <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='residual']" position="after">
+                <field name="amount_payable" readonly="1" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='date_invoice']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_due']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherited_invoice_supplier_tree" model="ir.ui.view">
+        <field name="name">invoice.supplier.tree.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-info">state == 'draft'</attribute>
+                <attribute name="decoration-success">state == 'open'</attribute>
+                <attribute name="decoration-muted">state in('paid','cancel')</attribute>
+                <attribute name="decoration-bf">state in ('open','paid')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='reference']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_due']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='number']" position="attributes">
+                <attribute name="string">Bill No</attribute>
+            </xpath>
+            <xpath expr="//field[@name='number']" position="after">
+                <field name="user_id" string="Responsible"/>
+            </xpath>
+            <xpath expr="//field[@name='amount_total_signed']" position="replace">
+                <field name="amount_total_signed" string="Total" sum="Total" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='number']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="number" string="Bill No"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherited_invoice_supplier_search" model="ir.ui.view">
+        <field name="name">invoice.supplier.search.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="replace">
+                <search string="Search Invoice">
+                    <field name="number" string="Invoice"
+                           filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                    <field name="journal_id"/>
+                    <filter name="draft" string="Draft" domain="[('state','in',('draft', 'proforma'))]"/>
+                    <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]"
+                            groups="account.group_proforma_invoices"/>
+                    <filter name="invoices" string="Open"
+                            domain="[('state','in',['open','paid']),('type','in',('out_invoice','in_invoice')), ('residual', '&gt;', 0)]"/>
+                    <filter name="paid" string="Paid"
+                            domain="[('state','in',['open','paid']),('type','in',('out_invoice','in_invoice')), ('residual', '&lt;=', 0)]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_partner_id" string="Vendor"
+                                context="{'group_by':'commercial_partner_id'}"/>
+                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <separator/>
+                        <filter string="Invoice Date" context="{'group_by':'date_invoice'}"/>
+                        <filter string="Due Date" context="{'group_by':'date_due'}"/>
+                    </group>
+                </search>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account.action_invoice_tree2" model="ir.actions.act_window">
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('vbg_batch_id', '=', False), ('state', 'in', ('draft', 'cancel'))]</field>
+    </record>
+
+    <record id="action_vendor_bill_open" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('vbg_batch_id', '=', False), ('state', 'in', ('open', 'paid')), ('residual', '&gt;', 0)]</field>
+        <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to record a new Assets Vendor Bill.
+            </p>
+            <p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_vendor_bill_paid" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('vbg_batch_id', '=', False), ('state', 'in', ('open', 'paid')), ('residual', '&lt;=', 0)]</field>
+        <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to record a new Assets Vendor Bill.
+            </p>
+            <p>
+                You can control the invoice from your vendor according to
+                what you purchased or received.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="account.menu_action_invoice_tree2" action="account.action_invoice_tree2" name="Vendor Bills (Draft)"
+              parent="account.menu_finance_payables"  sequence="1"/>
+
+    <menuitem action="action_vendor_bill_open" id="menu_vendor_bills_open"
+              parent="account.menu_finance_payables"  name="Vendor Bills (Validated)" sequence="20"/>
+
+    <menuitem action="action_vendor_bill_paid" id="menu_vendor_bills_paid"
+              parent="account.menu_finance_payables"  name="Vendor Bills (Paid)" sequence="30"/>
+
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo noupdate="1">
+    <record id="ir_cron_asset_migration_scheduler" model="ir.cron">
+        <field name="name">Asset Migration Scheduler</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="active">False</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="priority">5</field>
+        <field name="nextcall"
+               eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
+        <field name="model">gbs.fam.data.migration</field>
+        <field name="function">_fam_date_migration</field>
+    </record>
+    <record id="ir_cron_api_update_scheduler" model="ir.cron">
+        <field name="name">API Upgrade Scheduler</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="active">False</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="priority">5</field>
+        <field name="nextcall"
+               eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
+        <field name="model">gbs.fam.data.migration</field>
+        <field name="function">_api_call</field>
+    </record>
+
+</odoo>

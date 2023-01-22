@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="inherit_account_tax_form_view" model="ir.ui.view">
+            <field name="name">view.account.tax.form.view</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="edit">0</attribute>
+                    <attribute name="duplicate">0</attribute>
+                </xpath>
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <field name="pending" invisible="True"/>
+                        <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
+                                groups="account.group_account_manager"/>
+                        <button name="act_reject" string="Reject" type="object" states="draft"
+                                groups="account.group_account_manager"/>
+                        <button name="%(account_maker_checker.action_account_tax_wizard)d" string="Edit"
+                                type="action"
+                                class="oe_highlight"
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"
+                                groups="account.group_account_manager"/>
+                        <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"
+                                groups="account.group_account_manager"/>
+                        <button name="act_reject_pending" string="Reject" type="object"
+                                attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"
+                                groups="account.group_account_manager"/>
+                        <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                                groups="account.group_account_manager"/>
+                        <field name="state" widget="statusbar" invisible="True"/>
+                    </header>
+                </xpath>
+                <xpath expr="//notebook/page[2]" position="after">
+                    <page string="History">
+                        <field name="history_ids" attrs="{'invisible':[('history_ids','=',[])]}">
+                            <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                                  decoration-bf="state in ('pending',)"
+                                  decoration-danger="state=='reject'">
+                                <field name="change_name"/>
+                                <field name="request_date"/>
+                                <field name="change_date"/>
+                                <field name="status"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+                <xpath expr="//sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

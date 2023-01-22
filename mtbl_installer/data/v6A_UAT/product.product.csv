@@ -1,0 +1,8 @@
+Name,Can be Purchased,Product Type,Internal Category,Provisional Expense,TDS Rule,Expense Account,Vendor Taxes,Active,Pending,Status
+Paper & Table Stationary,TRUE,Product,All,FALSE,TDS Flat 5%,Paper & Table Stationary,VAT 2.00%,True,False,approve
+Rent,TRUE,Service,All,FALSE,TDS Flat 5%,Rent,VAT 2.00%,True,False,approve
+Electricity Charge,TRUE,Service,All,TRUE,TDS Flat 5%,Electicity Charges,VAT 2.00%,True,False,approve
+Wasa Bill,TRUE,Service,All,TRUE,TDS Flat 5%,WASA Bill,VAT 2.00%,True,False,approve
+Gas Bill,TRUE,Service,All,TRUE,TDS Flat 5%,Gas Bill,VAT 2.00%,True,False,approve
+Connectivity Charge,TRUE,Service,All,FALSE,TDS Flat 5%,Connectivity Charge,VAT 2.00%,True,False,approve
+Postage/Courier Service,TRUE,Service,All,FALSE,TDS Flat 5%,Postage/Courier Service Charges,VAT 2.00%,True,False,approve

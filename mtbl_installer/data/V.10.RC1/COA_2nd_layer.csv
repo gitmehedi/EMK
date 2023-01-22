@@ -1,0 +1,28 @@
+Layer,Code,Name,Parent Account,Type,Active,Pending,Status
+Layer 2,11,Capital & Reserve,1,View Type,True,False,Approved
+Layer 2,12,Borrowings,1,View Type,True,False,Approved
+Layer 2,13,Deposits,1,View Type,True,False,Approved
+Layer 2,14,Bond,1,View Type,True,False,Approved
+Layer 2,15,Other Liabilities,1,View Type,True,False,Approved
+Layer 2,21,Cash & Bank Balance,2,View Type,True,False,Approved
+Layer 2,22,Money at Call & Short Notice,2,View Type,True,False,Approved
+Layer 2,23,Investments,2,View Type,True,False,Approved
+Layer 2,24,Loans & Advances,2,View Type,True,False,Approved
+Layer 2,25,Fixed Assets,2,View Type,True,False,Approved
+Layer 2,26,Other Assets,2,View Type,True,False,Approved
+Layer 2,31,Interest Income,3,View Type,True,False,Approved
+Layer 2,32,Income fm Investments,3,View Type,True,False,Approved
+Layer 2,33,Comm Exch & Brokerage,3,View Type,True,False,Approved
+Layer 2,34,Other Operating Income,3,View Type,True,False,Approved
+Layer 2,41,Interest Expenses,4,View Type,True,False,Approved
+Layer 2,42,Non-Interest Expenses,4,View Type,True,False,Approved
+Layer 2,43,Provisions,4,View Type,True,False,Approved
+Layer 2,51,Contra,5,View Type,True,False,Approved
+Layer 2,52,Contingent,5,View Type,True,False,Approved
+Layer 2,61,Contra,6,View Type,True,False,Approved
+Layer 2,62,Contingent,6,View Type,True,False,Approved
+Layer 2,70,Contra for Written off Loan accounts,7,View Type,True,False,Approved
+Layer 2,80,Written off Loan accounts,8,View Type,True,False,Approved
+,,,,,,,
+,,,,,,,
+Layer 2,90,System,9,View Type,True,False,Approved

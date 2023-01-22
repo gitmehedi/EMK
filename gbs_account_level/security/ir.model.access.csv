@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_level_adviser,access_account_level_adviser,model_account_account_level,account.group_account_manager,1,1,1,1
+access_account_level_employee,access_account_level_employee,model_account_account_level,base.group_user,1,0,0,0
+

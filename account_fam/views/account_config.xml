@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fixed_asset_journal_account_config" model="ir.ui.view">
+        <field name="name">view.mdmc.bulk.config</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting']" position="after">
+                <group string="Fixed Assets Journal" name="grp_tds_vat_challan">
+                    <label for="id" string="Fixed Asset Journal" groups="account.group_account_user"/>
+                    <div name="fa_journal_id">
+                        <div>
+                            <field name="fa_journal_id" class="oe_inline"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

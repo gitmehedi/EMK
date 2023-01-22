@@ -1,0 +1,4 @@
+Endpoint Name,Host IP,Host Port,WSDL
+GenericTransferAmountInterfaceHttpService,http://124.109.105.40,9680,/GenericTransferAmount/GenericTransferAmountInterfaceHttpService?wsdl
+SingleDebitMultiCreditInterfaceHttpService,http://124.109.105.40,9680,/SingleDebitMultiCredit/SingleDebitMultiCreditInterfaceHttpService?wsdl
+AccountingEntryMDMCInterfaceHttpService,http://124.109.105.40,9680,/AccountingEntryMDMC/AccountingEntryMDMCInterfaceHttpService?wsdl

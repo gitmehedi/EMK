@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="inherited_view_tax_form" model="ir.ui.view">
+            <field name="name">inherit.account.tax.form</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount_type']" position="after">
+                    <field name="is_vat" invisible="1"/>
+                    <field name="is_tds" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='price_include']" position="before">
+                    <field name="is_reverse" attrs="{'invisible': [('amount_type', '=', 'group')]}"/>
+                    <field name="include_in_expense" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('is_tds', '=', True)]}"/>
+                    <field name="effect_base_price"
+                           attrs="{'invisible':['|', ('amount_type','=', 'group'), ('is_vat', '=', True)]}"/>
+                    <field name="price_exclude"
+                           attrs="{'invisible':['|', ('amount_type','=', 'group'), ('is_vat', '=', True)]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='account_id']" position="replace">
+                    <field name="account_id" attrs="{'required': [('amount_type', '!=', 'group')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='refund_account_id']" position="replace">
+                    <field name="refund_account_id" attrs="{'required': [('amount_type', '!=', 'group')]}"/>
+                </xpath>
+
+                <xpath expr="//form/sheet/notebook/page[1]/group" position="inside">
+                    <field name="line_ids" nolabel="1" string="Slab Details"
+                           attrs="{'invisible':['|', ('is_vat', '=', True), ('amount_type', '!=', 'slab')]}"
+                           context="{'default_is_tds':True}">
+                        <tree string="List" editable="bottom">
+                            <field name="range_from" placeholder="Enter Numeric Number"/>
+                            <field name="range_to" placeholder="Enter Numeric Number"/>
+                            <field name="rate" string="Rate(%)"/>
+                        </tree>
+                    </field>
+                </xpath>
+
+                <xpath expr="//sheet/notebook/page[1]/group/group/div" position="after">
+                    <label for="mushok_amount" attrs="{'invisible':['|', ('amount_type','not in', ('fixed', 'percent')), ('is_tds', '=', True)]}"/>
+                    <div attrs="{'invisible':['|', ('amount_type','not in', ('fixed', 'percent')), ('is_tds', '=', True)]}">
+                        <field name="mushok_amount" class="oe_inline"/>
+                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                    </div>
+                    <label for="vds_amount" attrs="{'invisible':['|', ('amount_type','not in', ('fixed', 'percent')), ('is_tds', '=', True)]}"/>
+                    <div attrs="{'invisible':['|', ('amount_type','not in', ('fixed', 'percent')), ('is_tds', '=', True)]}">
+                        <field name="vds_amount" class="oe_inline"/>
+                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}"/>
+                    </div>
+                </xpath>
+
+                <xpath expr="//form/sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherited_view_tax_tree" model="ir.ui.view">
+            <field name="name">account.tax.tree</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="replace">
+                    <tree string="Account Tax">
+                        <field name="sequence" widget="handle"/>
+                        <field name="name"/>
+                        <field name="amount_type"/>
+                        <field name="amount" string="Amount (%)"/>
+                        <field name="price_exclude" />
+                        <field name="price_include" />
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+        <record id="inherited_view_account_tax_search" model="ir.ui.view">
+            <field name="name">account.tax.search</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_account_tax_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="replace">
+                    <search string="Search Taxes">
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]"
+                               string="Tax"/>
+                        <field name="amount_type"/>
+                        <field name="effect_base_price" />
+                        <field name="price_exclude" />
+                        <field name="price_include" />
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <group string="Group By">
+                            <filter string="Company" domain="[]" context="{'group_by':'company_id'}"
+                                    groups="base.group_multi_company"/>
+                            <filter string="Tax Application" domain="[]" context="{'group_by':'type_tax_use'}"/>
+                        </group>
+                    </search>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

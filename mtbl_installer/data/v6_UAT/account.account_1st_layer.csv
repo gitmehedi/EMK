@@ -1,0 +1,8 @@
+Layer,Code,Name,,Type,Active,Pending,Status
+Layer 1,1,Liability,,View Type,True,False,approve
+Layer 1,2,Asset,,View Type,True,False,approve
+Layer 1,9,System,,View Type,True,False,approve
+Layer 1,3,Income,,View Type,True,False,approve
+Layer 1,4,Expenditure,,View Type,True,False,approve
+Layer 1,5,Contra & Contingent <L>,,View Type,True,False,approve
+Layer 1,6,Contra & Contingent <A>,,View Type,True,False,approve

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="gbs_data_migration_form" model="ir.ui.view">
+            <field name="name">gbs.data.migration.form</field>
+            <field name="model">gbs.data.migration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Bulk / Manual Journal" delete="0" duplicate="0">
+                    <header>
+                        <button name="%(gbs_data_migration.action_gbs_data_migration_wizard)d"
+                                groups="mtbl_access.group_mtbl_sys_admin"
+                                type="action" string="Upload" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <div>
+                            <h1>
+                                <field name="code"/>
+                            </h1>
+                        </div>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="gbs_data_migration_tree" model="ir.ui.view">
+            <field name="name">gbs.data.migration.tree</field>
+            <field name="model">gbs.data.migration</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="code"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_generate_cbs_journal_success_search">
+            <field name="name">gbs.data.migration.search</field>
+            <field name="model">gbs.data.migration</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Bulk / Manual Journal">
+                    <field name="date"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_gbs_data_migration" model="ir.actions.act_window">
+            <field name="name">GL Data Migration</field>
+            <field name="res_model">gbs.data.migration</field>
+            <field name="view_mode">tree,form</field>
+       </record>
+
+        <menuitem id="menu_gl_data_migration" name="GL Opening"
+                  parent="menu_data_migration"
+                  sequence="10" groups="mtbl_access.group_mtbl_sys_admin"
+                  action="action_gbs_data_migration"/>
+    </data>
+</odoo>

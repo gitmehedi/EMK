@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+        <!--product-->
+        <report
+                id="product.report_product_label"
+                string="Products Labels"
+                model="product.product"
+                report_type="qweb-pdf"
+                name="product.report_productlabel"
+                file="product.report_productlabel"
+                groups="base.group_system"
+        />
+
+        <report
+                id="product.report_product_template_label"
+                string="Products Labels"
+                model="product.template"
+                report_type="qweb-pdf"
+                name="product.report_producttemplatelabel"
+                file="product.report_producttemplatelabel"
+                groups="base.group_system"
+        />
+        <!--invoice-->
+        <report
+                id="account.account_invoices"
+                model="account.invoice"
+                string="Invoices"
+                report_type="qweb-pdf"
+                name="account.report_invoice"
+                file="account.report_invoice"
+                attachment_use="True"
+                attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+                groups="base.group_system"
+        />
+
+        <report
+                id="account.account_invoice_action_report_duplicate"
+                model="account.invoice"
+                string="Duplicates"
+                report_type="qweb-pdf"
+                name="account.account_invoice_report_duplicate_main"
+                file="account.report_invoice_duplicate"
+                attachment_use="False"
+                groups="base.group_system"
+        />
+        <!--vendor-->
+        <report
+            id="account.action_report_print_overdue"
+            model="res.partner"
+            report_type="qweb-pdf"
+            string="Due Payments"
+            name="account.report_overdue"
+            file="account.report_overdue"
+            groups="base.group_system"
+            />
+
+    </data>
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="inherited_view_tax_form" model="ir.ui.view">
+            <field name="name">inherited.account.tax.view</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type_tax_use']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='type_tax_use']" position="after">
+                    <field name="operating_unit_id" options="{'no_create':True, 'no_open':True}"/>
+                </xpath>
+                <xpath expr="//field[@name='account_id']" position="attributes">
+                    <attribute name="options">{'no_create':True, 'no_open':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='refund_account_id']" position="attributes">
+                    <attribute name="options">{'no_create':True, 'no_open':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='refund_account_id']" position="before">
+                    <field name="sou_id" attrs="{'required': [('amount_type', '!=', 'group')]}"
+                           domain="[('account_id', 'in', [account_id])]"
+                           options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                </xpath>
+
+                <xpath expr="//field[@name='tax_group_id']" position="attributes">
+                    <attribute name="options">{'no_create':True, 'no_open':True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="attributes">
+                    <attribute name="options">{'no_create':True, 'no_open':True}</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><definitions name="GenericTransferAmountInterfaceHttpService" targetNamespace="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1/Binding" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1/Binding" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <import location="GenericTransferAmountInterface.wsdl" namespace="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1"/>
+  <binding name="GenericTransferAmountInterfaceHttpPortBinding" type="ns1:GenericTransferAmountInterface" xmlns:ns1="http://BaNCS.TCS.com/webservice/GenericTransferAmountInterface/v1">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="genericTransferAmount">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="GenericTransferAmountFaultMsg">
+        <soap:fault name="GenericTransferAmountFaultMsg" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="GenericTransferAmountInterfaceHttpService">
+    <port binding="tns:GenericTransferAmountInterfaceHttpPortBinding" name="GenericTransferAmountInterfaceHttpPort">
+      <soap:address location="http://localhost:9084/GenericTransferAmount/GenericTransferAmountInterfaceHttpService"/>
+    </port>
+  </service>
+</definitions>

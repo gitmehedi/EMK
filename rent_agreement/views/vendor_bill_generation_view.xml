@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="vendor_bill_generation_form" model="ir.ui.view">
+            <field name="name">vendor.bill.generation.form</field>
+            <field name="model">vendor.bill.generation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Rent Bill Generation">
+                    <header>
+                        <field name="bill_validate_button_visible" invisible="1"/>
+                        <button string="Confirm" name="action_confirm"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': ['|', ('line_ids', '=', []), ('state', 'in', ('confirm', 'approve', 'bill_generate', 'bill_validate', 'cancel'))]}"/>
+                        <button string="Approve and Generate Bill" name="action_approve" type="object"
+                                class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'confirm')]}"/>
+                        <button string="Cancel" name="action_cancel" states="confirm" type="object"
+                                attrs="{'invisible': [('state', '!=', 'confirm')]}"
+                                confirm="Are you sure you want to Cancel this?"/>
+                        <button string="Validate Bill" name="action_bill_validate" type="object"
+                                class="oe_highlight" states="bill_generate"
+                                attrs="{'invisible': [('bill_validate_button_visible', '=', False)]}"/>
+                        <button name="%(action_vendor_bill_generation_wizard)d"
+                                context="{'billing_period': billing_period, 'period_id': period_id}"
+                                type="action" string="Create Batch" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
+                    </header>
+                    <sheet>
+                        <div class="pull-left">
+                            <h1>
+                                <field name="name" readonly="1" nolabel="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="billing_period"/>
+                                <field name="period_id"
+                                       options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"
+                                       domain="[('id', 'in', period_id_domain_ids and period_id_domain_ids[0] and period_id_domain_ids[0][2] or False)]"/>
+                                <field name="period_id_domain_ids" widget="many2many_tags" invisible="1"/>
+                                <field name="narration" required="1"/>
+                            </group>
+                            <group>
+                                <field name="billing_date" readonly="1"/>
+                                <field name="amount_total" readonly="1"/>
+                                <field name="amount_tds" readonly="1"/>
+                                <field name="amount_vat_payable" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Agreements">
+                                <field name="line_ids">
+                                    <form string="Agreements" create='false' editable="bottom">
+                                        <group>
+                                            <group>
+                                                <field name="agreement_id" readonly="1"/>
+                                                <field name="description" readonly="1"/>
+                                                <field name="period_id" readonly="1" invisible="1"
+                                                       options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
+                                            </group>
+                                            <group>
+                                                <field name="invoice_id" readonly="1"
+                                                       attrs="{'invisible': [('invoice_id', '=', False)]}"/>
+                                                <field name="bill_status"/>
+                                                <field name="move_id" readonly="1"/>
+                                                <field name="state" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                    <tree string="Agreements" create='false' editable="bottom">
+                                        <field name="agreement_id" readonly="1"/>
+                                        <field name="description" readonly="1"/>
+                                        <field name="period_id" readonly="1" invisible="1"
+                                               options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
+                                        <field name="invoice_id" readonly="1"
+                                               attrs="{'invisible': [('invoice_id', '=', False)]}"/>
+                                        <field name="bill_status"/>
+                                        <field name="move_id" readonly="1"/>
+                                        <field name="state" invisible="1" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+
+        </record>
+        <record id="vendor_bill_generation_tree" model="ir.ui.view">
+            <field name="name">vendor.bill.generation.tree</field>
+            <field name="model">vendor.bill.generation</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Rent Bill Generation">
+                    <field name="name"/>
+                    <field name="period_id"/>
+                    <field name="billing_period"/>
+                    <field name="billing_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="vendor_bill_generation_search" model="ir.ui.view">
+            <field name="name">vendor.bill.generation.filter</field>
+            <field name="model">vendor.bill.generation</field>
+            <field name="arch" type="xml">
+                <search string="Search Bill Generation">
+                    <filter name="draft_sd" string="Pending" domain="[('state','=','confirm')]"/>
+                    <seperator/>
+                    <filter name="confirm_sd" string="Confirmed" domain="[('state','=','confirm')]"/>
+                    <seperator/>
+                    <filter name="bill_generated" string="Bill Generated" domain="[('state', '=', 'bill_generate')]"/>
+                    <seperator/>
+                    <filter name="bill_approved" string="Bill Approved" domain="[('state', '=', 'bill_validate')]"/>
+                    <seperator/>
+                    <filter name="cancelled" string="Cancelled" domain="[('state','=','cancel')]"/>
+                    <seperator/>
+                    <group name="groupby">
+                        <filter string="By Billing Period" name="partner_groupby" domain="[]"
+                                context="{'group_by': 'billing_period'}"/>
+                        <filter string="By Status" name="state_groupby" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_vendor_bill_generation_view" model="ir.actions.act_window">
+            <field name="name">Rent Bill Generation</field>
+            <field name="res_model">vendor.bill.generation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="vendor_bill_generation_search"/>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem id="menu_vendor_bill_generation" name="Rent Bill Generation" groups="account.group_account_user"
+                  parent="menu_rent_operations" action="action_vendor_bill_generation_view" sequence="70"
+        />
+
+        <record id="action_rent_bill_view_draft" model="ir.actions.act_window">
+            <field name="name">Vendor Bills</field>
+            <field name="res_model">account.invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase',
+                'create': False}
+            </field>
+            <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('vbg_batch_id', '!=', False), ('state',
+                '=', 'draft')]
+            </field>
+            <!--            <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('vbg_batch_id', '!=', False), ('state', '=', 'draft')]</field>-->
+        </record>
+
+        <record id="action_rent_bill_open" model="ir.actions.act_window">
+            <field name="name">Vendor Bills</field>
+            <field name="res_model">account.invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase',
+                'create': False}
+            </field>
+            <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('vbg_batch_id', '!=', False), ('state',
+                'in', ('open', 'paid')), ('residual', '&gt;', 0)]
+            </field>
+            <!--            <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('vbg_batch_id', '!=', False), ('state', 'in', ('open', 'paid')), ('residual', '&gt;', 0)]</field>-->
+        </record>
+
+        <record id="action_rent_bill_paid" model="ir.actions.act_window">
+            <field name="name">Vendor Bills</field>
+            <field name="res_model">account.invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase',
+                'create': False}
+            </field>
+            <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('vbg_batch_id', '!=', False), ('state',
+                'in', ('open', 'paid')), ('residual', '&lt;=', 0)]
+            </field>
+            <!--            <field name="domain">[('type','in',('in_invoice', 'in_refund')), ('is_asset','=',False), ('vbg_batch_id', '!=', False), ('state', 'in', ('open', 'paid')), ('residual', '&lt;=', 0)]</field>-->
+        </record>
+
+        <menuitem id="menu_vendor_operation_rent" name="Vendor Operations"
+                  sequence="10" parent="menu_rent_operations_main"/>
+
+        <menuitem id="menu_rent_bill_draft" name="Vendor Bills (Draft)" groups="account.group_account_user"
+                  parent="menu_vendor_operation_rent" action="action_rent_bill_view_draft" sequence="10"/>
+
+        <menuitem id="menu_rent_bill_open" name="Vendor Bills (Validated)" groups="account.group_account_user"
+                  parent="menu_vendor_operation_rent" action="action_rent_bill_open" sequence="20"/>
+
+        <menuitem id="menu_rent_bill_paid" name="Vendor Bills (Paid)" groups="account.group_account_user"
+                  parent="menu_vendor_operation_rent" action="action_rent_bill_paid" sequence="30"/>
+    </data>
+</odoo>

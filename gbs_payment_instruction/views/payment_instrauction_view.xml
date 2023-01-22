@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="action_payment_instruction_asset" model="ir.actions.act_window">
+        <field name="name">Payment Instructions</field>
+        <field name="res_model">payment.instruction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="gbs_vendor_bill.payment_instruction_bill_search"/>
+        <field name="domain">[('invoice_id.is_asset','=',True)]</field>
+        <field name="context">{'search_default_draft':1}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Payment instruction is empty.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_payment_instruction_asset_form">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="gbs_vendor_bill.payment_instruction_bill_form"/>
+        <field name="act_window_id" ref="action_payment_instruction_asset"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_payment_instruction_asset_tree">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="gbs_vendor_bill.payment_instruction_bill_tree"/>
+        <field name="act_window_id" ref="action_payment_instruction_asset"/>
+    </record>
+
+    <menuitem name="Payment Instructions" parent="sub_assets_vendor_menu"
+              action="action_payment_instruction_asset"
+              id="menu_payment_instruction_asset" sequence="10"/>
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mdmc_bulk_upload_account_config" model="ir.ui.view">
+        <field name="name">view.mdmc.bulk.config</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting']" position="after">
+                <group string="Transfer Pricing Mechanism (TPM)" name="grp_tds_vat_challan">
+                    <label for="id" string="TPM Journal" groups="account.group_account_user"/>
+                    <div name="journal_id">
+                        <div>
+                            <field name="journal_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                    <label for="id" string="General Account" groups="account.group_account_user"/>
+                    <div name="tpm_general_account_id">
+                        <div>
+                            <field name="tpm_general_account_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                        <div>
+                            <field name="tpm_general_seq_id" class="oe_inline"
+                                   domain="[('account_id', 'in', [tpm_general_account_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                    <label for="id" string="Income Account" groups="account.group_account_user"/>
+                    <div name="tpm_income_account_id">
+                        <div>
+                            <field name="tpm_income_account_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                        <div>
+                            <field name="tpm_income_seq_id" class="oe_inline"
+                                   domain="[('account_id', 'in', [tpm_income_account_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                    <label for="id" string="Expense Account" groups="account.group_account_user"/>
+                    <div name="tpm_expense_account_id">
+                        <div>
+                            <field name="tpm_expense_account_id" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                        <div>
+                            <field name="tpm_expense_seq_id" class="oe_inline"
+                                   domain="[('account_id', 'in', [tpm_expense_account_id])]"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                    <label for="id" string="Income Rate" groups="account.group_account_user"/>
+                    <div name="income_rate">
+                        <div>
+                            <field name="income_rate" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>%
+                        </div>
+                    </div>
+                    <label for="id" string="Expense Rate" groups="account.group_account_user"/>
+                    <div name="expense_rate">
+                        <div>
+                            <field name="expense_rate" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>%
+                        </div>
+                    </div>
+                    <label for="id" string="Days in Year" groups="account.group_account_user"/>
+                    <div name="days_in_fy">
+                        <div>
+                            <field name="days_in_fy" class="oe_inline"
+                                   options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

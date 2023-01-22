@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_app_config_form" model="ir.ui.view">
+            <field name="name">view.account.app.config.form</field>
+            <field name="model">account.app.config</field>
+            <field name="arch" type="xml">
+                <form string="App Config" duplicate="0">
+                    <sheet>
+                        <div class="oe_title pull-left">
+                            <h1>
+                                <field name="config_type"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <label for="id" string="TPM Journal" groups="tpm_management.grp_tpm_system_settings"/>
+                                <div name="journal_id" groups="tpm_management.grp_tpm_system_settings">
+                                    <div>
+                                        <field name="journal_id"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                </div>
+
+                                <label for="id" string="General Account"/>
+                                <div name="tpm_general_account_id">
+                                    <div>
+                                        <field name="tpm_general_account_id" class="oe_inline"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                </div>
+                                <label for="id" string="Income Account"/>
+                                <div name="tpm_income_account_id">
+                                    <div>
+                                        <field name="tpm_income_account_id" class="oe_inline"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                    <div>
+                                        <field name="tpm_income_seq_id" class="oe_inline"
+                                               domain="[('account_id', 'in', [tpm_income_account_id])]"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                </div>
+                                <label for="id" string="Expense Account"/>
+                                <div name="tpm_expense_account_id">
+                                    <div>
+                                        <field name="tpm_expense_account_id" class="oe_inline"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                    <div>
+                                        <field name="tpm_expense_seq_id" class="oe_inline"
+                                               domain="[('account_id', 'in', [tpm_expense_account_id])]"
+                                               options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    </div>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="income_rate"/>
+                                <field name="expense_rate"/>
+                                <field name="days_in_fy"/>
+                                <field name="excl_br_ids" widget="many2many_tags"
+                                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_app_config_tree" model="ir.ui.view">
+            <field name="name">view.account.app.config.tree</field>
+            <field name="model">account.app.config</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="config_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_app_config_search" model="ir.ui.view">
+            <field name="name">account.app.config.search</field>
+            <field name="model">account.app.config</field>
+            <field name="arch" type="xml">
+                <search string="Branch">
+                    <field name="income_rate"/>
+                    <field name="expense_rate"/>
+                    <field name="days_in_fy"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="seq_account_app_config" model="ir.sequence">
+            <field name="name">App Config</field>
+            <field name="code">account.app.config</field>
+            <field name="prefix">App/</field>
+            <field name="padding">4</field>
+            <field name="number_increment" eval="1"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="action_account_app_config" model="ir.actions.act_window">
+            <field name="name">TPM Configuration</field>
+            <field name="res_model">account.app.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to start a new App Config.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_account_app_config" parent="account.account_account_menu" action="action_account_app_config"
+                  sequence="100"/>
+    </data>
+</odoo>

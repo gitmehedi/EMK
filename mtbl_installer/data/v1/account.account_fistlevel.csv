@@ -1,0 +1,7 @@
+Parent Account,Code,Name,Type
+,10000000,Liability,View Type
+,20000000,Assets,View Type
+,30000000,Income,View Type
+,40000000,Expenses,View Type
+,50000000,Contra & Contingent <L>,View Type
+,60000000,Contra & Contingent <A>,View Type

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sub_operating_unit_form" model="ir.ui.view">
+        <field name="name">sub.operating.unit.form</field>
+        <field name="model">sub.operating.unit</field>
+        <field name="arch" type="xml">
+            <form string="Sequence" edit="0" duplicate="0">
+                <header>
+                    <button name="act_approve" string="Approve" type="object" states="draft" class="oe_highlight"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                    <button name="act_reject" string="Reject" type="object" states="draft"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                    <button name="%(action_sub_operating_unit_wizard)d" string="Edit" type="action"
+                            class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                    <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
+                    <button name="act_reject_pending" string="Reject" type="object"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                            attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', False)]}"/>
+                    <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                            groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                    <field name="state" widget="statusbar" invisible="True"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="account_id"
+                                   options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="all_branch"/>
+                        </group>
+                        <group>
+
+                            <field name="pending" invisible="True"/>
+                            <field name="maker_id" invisible="1"/>
+                            <field name="approver_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook attrs="{'invisible':[('all_branch','=',True),('line_ids','=',[])]}">
+                        <page string="Allowed Branch" attrs="{'invisible':[('all_branch','=',True)]}">
+                            <field name="branch_ids"/>
+                        </page>
+                        <page string="Change History" attrs="{'invisible':[('line_ids','=',[])]}">
+                            <field name="line_ids">
+                                <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                                      decoration-bf="state in ('pending',)"
+                                      decoration-danger="state=='reject'">
+                                    <field name="change_name"/>
+                                    <field name="all_branch"/>
+                                    <field name="inc_branch_ids"/>
+                                    <field name="excl_branch_ids"/>
+                                    <field name="request_date"/>
+                                    <field name="change_date"/>
+                                    <field name="status"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sub_operating_unit_tree" model="ir.ui.view">
+        <field name="name">sub.operating.unit.tree</field>
+        <field name="model">sub.operating.unit</field>
+        <field name="arch" type="xml">
+            <tree string="Sequence" decoration-info="state=='draft'" decoration-success="state=='approve'"
+                  decoration-danger="state=='reject'"
+                  decoration-bf="state in ('approve',)">
+                <field name="account_id"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sub_operating_unit_search" model="ir.ui.view">
+        <field name="name">sub.operating.unit.search</field>
+        <field name="model">sub.operating.unit</field>
+        <field name="arch" type="xml">
+            <search string="Search Sequence">
+                <field name="account_id" string="COA"/>
+                <field name="code" string="Code"/>
+                <field name="name" string="Sequence"/>
+                <field name="pending" string="Pending"/>
+
+                <group string="Group By">
+                    <filter name="group_by_account_id" string="COA"
+                            context="{'group_by': 'account_id'}"/>
+                    <filter string="Pending" name="pending" icon="terp-personal"
+                            domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                    <filter string="Rejected" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                    <filter string="In-Active" name="state" icon="terp-personal"
+                            domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_sub_operating_unit_tree" model="ir.actions.act_window">
+        <field name="name">BGL Accounts</field>
+        <field name="res_model">sub.operating.unit</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">
+            {"search_default_active":'False',"search_default_pending":'True',}
+        </field>
+        <field name="search_view_id" ref="view_sub_operating_unit_search"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to start a new Sequence.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="action_sub_operating_unit_tree" id="menu_action_sub_operating_unit_tree"
+              parent="account.account_account_menu" sequence="15"
+              groups="operating_unit.group_multi_operating_unit,mtbl_access.group_mtbl_sys_admin"/>
+</odoo>

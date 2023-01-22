@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="rent_agreement_action_draft" model="ir.actions.act_window">
+        <field name="name">Rent Agreements</field>
+        <field name="res_model">vendor.advance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('type','=','multi'), ('state', 'in', ('draft', 'cancel'))]</field>
+        <field name="context">{'default_type':'multi'}</field>
+        <field name="search_view_id" ref="rent_agreement.rent_agreement_search"/>
+    </record>
+
+    <record id="rent_agreement_action_draft_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_tree"/>
+        <field name="act_window_id" ref="rent_agreement_action_draft"/>
+    </record>
+
+    <record id="rent_agreement_action_draft_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_form"/>
+        <field name="act_window_id" ref="rent_agreement_action_draft"/>
+    </record>
+
+    <record id="rent_agreement_action_wfa" model="ir.actions.act_window">
+        <field name="name">Rent Agreements</field>
+        <field name="res_model">vendor.advance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('type','=','multi'), '|', '|', ('state', '=', 'confirm'), '&amp;', ('is_amendment', '=', True), '|', ('active', '=', True), ('active', '=', False), ('is_rejection', '=', True)]</field>
+        <field name="context">{'default_type':'multi'}</field>
+        <field name="search_view_id" ref="rent_agreement.rent_agreement_search"/>
+    </record>
+
+    <record id="rent_agreement_action_confirm_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_tree"/>
+        <field name="act_window_id" ref="rent_agreement_action_wfa"/>
+    </record>
+
+    <record id="rent_agreement_action_confirm_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_form"/>
+        <field name="act_window_id" ref="rent_agreement_action_wfa"/>
+    </record>
+
+    <record id="rent_agreement_action_approve" model="ir.actions.act_window">
+        <field name="name">Rent Agreements</field>
+        <field name="res_model">vendor.advance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('type','=','multi'), ('state', '=', 'approve'), ('amount_due', '&lt;=', 0), ('is_amendment', '=', False), ('is_rejection', '=', False)]</field>
+        <field name="context">{'default_type':'multi'}</field>
+        <field name="search_view_id" ref="rent_agreement.rent_agreement_search"/>
+    </record>
+
+    <record id="rent_agreement_action_approve_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_tree"/>
+        <field name="act_window_id" ref="rent_agreement_action_approve"/>
+    </record>
+
+    <record id="rent_agreement_action_approve_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_form"/>
+        <field name="act_window_id" ref="rent_agreement_action_approve"/>
+    </record>
+
+    <record id="rent_agreement_action_rejected" model="ir.actions.act_window">
+        <field name="name">Rent Agreements</field>
+        <field name="res_model">vendor.advance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('type','=','multi'), ('state', '=', 'reject')]</field>
+        <field name="context">{'default_type':'multi'}</field>
+        <field name="search_view_id" ref="rent_agreement.rent_agreement_search"/>
+    </record>
+
+    <record id="rent_agreement_action_rejected_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_tree"/>
+        <field name="act_window_id" ref="rent_agreement_action_rejected"/>
+    </record>
+
+    <record id="rent_agreement_action_rejected_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_form"/>
+        <field name="act_window_id" ref="rent_agreement_action_rejected"/>
+    </record>
+
+    <record id="rent_agreement_action_expired" model="ir.actions.act_window">
+        <field name="name">Rent Agreements</field>
+        <field name="res_model">vendor.advance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('type','=','multi'), ('state', '=', 'expired')]</field>
+        <field name="context">{'default_type':'multi'}</field>
+        <field name="search_view_id" ref="rent_agreement.rent_agreement_search"/>
+    </record>
+
+    <record id="rent_agreement_action_expired_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_tree"/>
+        <field name="act_window_id" ref="rent_agreement_action_expired"/>
+    </record>
+
+    <record id="rent_agreement_action_expired_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_form"/>
+        <field name="act_window_id" ref="rent_agreement_action_expired"/>
+    </record>
+
+    <record id="rent_agreement_action_inactive" model="ir.actions.act_window">
+        <field name="name">Rent Agreements</field>
+        <field name="res_model">vendor.advance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('type','=','multi'), ('active', '=', False), ('is_amendment', '=', False)]</field>
+        <field name="context">{'default_type':'multi'}</field>
+        <field name="search_view_id" ref="rent_agreement.rent_agreement_search"/>
+    </record>
+
+    <record id="rent_agreement_action_inactive_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_tree"/>
+        <field name="act_window_id" ref="rent_agreement_action_inactive"/>
+    </record>
+
+    <record id="rent_agreement_action_inactive_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_form"/>
+        <field name="act_window_id" ref="rent_agreement_action_inactive"/>
+    </record>
+
+    <record id="rent_agreement_action_approve_pending_payment" model="ir.actions.act_window">
+        <field name="name">Rent Agreements</field>
+        <field name="res_model">vendor.advance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('type','=','multi'), ('state', '=', 'approve'), ('amount_due', '&gt;', 0), ('is_amendment', '=', False), ('is_rejection', '=', False)]</field>
+        <field name="context">{'default_type':'multi'}</field>
+        <field name="search_view_id" ref="rent_agreement.rent_agreement_search"/>
+    </record>
+
+    <record id="rent_agreement_action_approve_pending_payment_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_tree"/>
+        <field name="act_window_id" ref="rent_agreement_action_approve_pending_payment"/>
+    </record>
+
+    <record id="rent_agreement_action_approve_pending_payment_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="rent_agreement.rent_agreement_form"/>
+        <field name="act_window_id" ref="rent_agreement_action_approve_pending_payment"/>
+    </record>
+
+    <menuitem id="rent_agreement_menu_parent" name="Rental Agreements"
+              groups="base.group_vendor_advance_user" parent="rent_agreement.menu_rent_operations_main" sequence="1"/>
+
+    <menuitem id="rent_agreement.rent_agreement_menu" action="rent_agreement_action_draft"
+                  name="Agreements (Draft)" groups="base.group_vendor_advance_user"
+                  parent="rent_agreement_menu_parent" sequence="1"/>
+
+    <menuitem id="rent_agreement_menu_wfa" action="rent_agreement_action_wfa"
+                  name="Agreements (Approval)" groups="base.group_vendor_advance_user"
+                  parent="rent_agreement_menu_parent" sequence="2"/>
+
+    <menuitem id="rent_agreement_menu_approve_pending_payment" action="rent_agreement_action_approve_pending_payment"
+                  name="Agreements (Payment)" groups="base.group_vendor_advance_user"
+                  parent="rent_agreement_menu_parent" sequence="3"/>
+
+    <menuitem id="rent_agreement_menu_approve" action="rent_agreement_action_approve"
+                  name="Agreements (Active)" groups="base.group_vendor_advance_user"
+                  parent="rent_agreement_menu_parent" sequence="4"/>
+
+    <menuitem id="rent_agreement_menu_rejected" action="rent_agreement_action_rejected"
+                  name="Agreements (Rejected)" groups="base.group_vendor_advance_user"
+                  parent="rent_agreement_menu_parent" sequence="5"/>
+
+    <menuitem id="rent_agreement_menu_expired" action="rent_agreement_action_expired"
+                  name="Agreements (Expired)" groups="base.group_vendor_advance_user"
+                  parent="rent_agreement_menu_parent" sequence="6"/>
+
+    <menuitem id="rent_agreement_menu_inactive" action="rent_agreement_action_inactive"
+                  name="Agreements (Inactive)" groups="base.group_vendor_advance_user"
+                  parent="rent_agreement_menu_parent" sequence="7"/>
+</odoo>

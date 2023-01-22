@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="account.account.level" id="data_account_account_level_zero">
+            <field name="name">Layer 0</field>
+            <field name="size">8</field>
+            <field name="is_visible">False</field>
+            <field name="parent_id" eval="False"/>
+        </record>
+        <record model="account.account.level" id="data_account_account_level_first">
+            <field name="name">Layer 1</field>
+            <field name="size">1</field>
+            <field name="is_visible">True</field>
+            <field name="parent_id" eval="data_account_account_level_zero"/>
+        </record>
+        <record model="account.account.level" id="data_account_account_level_second">
+            <field name="name">Layer 2</field>
+            <field name="size">2</field>
+            <field name="is_visible">True</field>
+            <field name="parent_id" eval="data_account_account_level_first"/>
+        </record>
+        <record model="account.account.level" id="data_account_account_level_third">
+            <field name="name">Layer 3</field>
+            <field name="size">3</field>
+            <field name="is_visible">True</field>
+            <field name="parent_id" eval="data_account_account_level_second"/>
+        </record>
+        <record model="account.account.level" id="data_account_account_level_fourth">
+            <field name="name">Layer 4</field>
+            <field name="size">5</field>
+            <field name="is_visible">True</field>
+            <field name="parent_id" eval="data_account_account_level_third"/>
+        </record>
+        <record model="account.account.level" id="data_account_account_level_fifth">
+            <field name="name">Layer 5</field>
+            <field name="size">8</field>
+            <field name="is_visible">True</field>
+            <field name="parent_id" eval="data_account_account_level_fourth"/>
+        </record>
+    </data>
+</odoo>
+

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="asset_depreciation_change_request_form" model="ir.ui.view">
+        <field name="name">asset.depreciation.change.request.form</field>
+        <field name="model">asset.depreciation.change.request</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Asset Depreciation Change Request">
+                <header>
+                    <button string="Confirm" name="action_confirm" states="draft"
+                            type="object" class="oe_highlight"
+                            groups="account_fam.grp_fixasset_user,account_fam.grp_fixasset_manager"/>
+                    <button string="Approve" name="action_approve" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'confirm')]}"
+                            groups="account_fam.grp_fixasset_user,account_fam.grp_fixasset_manager"/>
+                    <button string="Cancel" name="action_cancel" states="confirm"
+                            groups="account_fam.grp_fixasset_user,account_fam.grp_fixasset_manager" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="open_entries" type="object" icon="fa-pencil"
+                                attrs="{'invisible': [('state', '=', 'draft')]}">
+                            <field string="Assets" name="asset_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="pull-left">
+                        <h1>
+                            <field name="name" readonly="1" nolabel="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="asset_type_id"
+                                   options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
+                            <field name="asset_cat_id"
+                                   domain="[('parent_id', '=', 'asset_type_id')]"
+                                   options="{'no_open': True, 'no_create': 1, 'no_create_edit': 1}"/>
+                            <field name="asset_life"/>
+                            <field name="narration"/>
+                        </group>
+                        <group>
+                            <field name="request_date"/>
+                            <field name="method" widget="radio"/>
+                            <field name="move_id" options="{'no_create': 1, 'no_create_edit': 1}"
+                                   attrs="{'invisible':[('move_id','=',False)]}"
+                                   readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="asset_depreciation_change_request_tree" model="ir.ui.view">
+        <field name="name">asset.depreciation.change.request.tree</field>
+        <field name="model">asset.depreciation.change.request</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Asset Depreciation Change Request" decoration-success="state=='confirm'"
+                  decoration-muted="state=='approve'"
+                  decoration-bf="state in ('draft','confirm')" duplicate="0">
+                <field name="asset_cat_id"/>
+                <field name="name"/>
+                <field name="request_date"/>
+                <field name="asset_life"/>
+                <field name="asset_count"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="asset_depreciation_change_request_search" model="ir.ui.view">
+        <field name="name">asset.depreciation.change.request.filter</field>
+        <field name="model">asset.depreciation.change.request</field>
+        <field name="arch" type="xml">
+            <search string="Search Asset Depreciation Change Request">
+                <filter name="draft_sd" string="Pending" domain="[('state','=','confirm')]"/>
+                <separator/>
+                <filter name="confirm_sd" string="Confirmed" domain="[('state','=','confirm')]"/>
+                <separator/>
+                <filter name="approved_sd" string="Approved" domain="[('state','=','approve')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_asset_depreciation_change_request" model="ir.actions.act_window">
+        <field name="name">Depr. Method Change</field>
+        <field name="res_model">asset.depreciation.change.request</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="asset_depreciation_change_request_search"/>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="menu_asset_depreciation_change_request"
+              parent="account_fam.menu_action_account_asset_operation"
+              groups="account_fam.grp_fixasset_user,account_fam.grp_fixasset_manager"
+              action="action_asset_depreciation_change_request" sequence="60"/>
+
+</odoo>

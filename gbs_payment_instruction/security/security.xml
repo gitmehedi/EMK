@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="module_payment_instruction" model="ir.module.category">
+            <field name="name">Payment Instruction</field>
+            <field name="sequence">95</field>
+        </record>
+
+        <record id="group_payment_approver" model="res.groups">
+            <field name="name">Payment Instruction Approver</field>
+            <field name="category_id" ref="module_payment_instruction"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_payment_admin" model="res.groups">
+            <field name="name">Payment Instruction Admin</field>
+            <field name="category_id" ref="module_payment_instruction"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+    </data>
+</odoo>

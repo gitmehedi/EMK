@@ -1,0 +1,2 @@
+Name,Can be Purchased,Product Type,Internal Category,Cost,TDS Rule,Expense Account,Vendor Taxes,Asset Type,Asset Category,active,pending,state
+Lenevo Thinkpad 3,TRUE,Product,All,50000,TDS Flat 5%,Entertainment Expenses,VAT 2.00%,Computers,Laptop,True,False,approve

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.view</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field eval="17" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="create">0</attribute>
+                    <attribute name="edit">0</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[2]" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//form/header/button[3]" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//button[@name='open_reconcile_view']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//button[@name='open_reconcile_view']" position="after">
+                    <field name="is_cr" invisible="True"/>
+                    <field name="user_id" invisible="True"/>
+                </xpath>
+                <xpath expr="//field[@name='operating_unit_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                    <attribute name="required">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="total_debit" attrs="{'invisible':[('is_cbs','=',False)]}"/>
+                    <field name="total_credit" attrs="{'invisible':[('is_cbs','=',False)]}"/>
+                    <field name="missmatch_value" attrs="{'invisible':[('is_cbs','=',False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='date']" position="attributes">
+                    <attribute name="readonly">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/tree//field[@name='account_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                    <attribute name="domain">[('level_id.name', '=', 'Layer 5')]</attribute>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/tree//field[@name='operating_unit_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                    <attribute name="required">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/tree//field[@name='analytic_account_id']" position="attributes">
+                    <attribute name="options">{'no_create':True,'no_create_edit':True,'no_open':True}</attribute>
+                    <attribute name="string">Cost Centre</attribute>
+                </xpath>
+                <xpath expr="//sheet/notebook/page/field/tree/field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="//sheet/notebook/page/field/tree/field[@name='date_maturity']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//button[@name='%(account.action_view_account_move_reversal)d']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+                <xpath expr="//button[@name='open_reconcile_view']" position="replace">
+                    <button name="not_sync" string="Not Synced" type="action"
+                            groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"
+                            class="btn-danger"
+                            attrs="{'invisible': ['|','|',('is_cr', '=', True),('is_cbs', '=', True),('is_sync', '=', True)]}"/>
+                    <button name="sync" string="Synced" type="action"
+                            groups="account.group_account_manager,mtbl_access.group_mtbl_sys_admin"
+                            class="btn-success"
+                            attrs="{'invisible': ['|','|',('is_cr', '=', True),('is_cbs', '=', True),('is_sync', '=', False)]}"/>
+                    <field name="is_sync" invisible="1"/>
+                    <field name="is_cbs" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="inherit_account_move_line_form_view" model="ir.ui.view">
+            <field name="name">inherit.account.move.line.form.view</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="reconcile_ref"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_account_move_journal_entry_manual_tree" model="ir.ui.view">
+            <field name="name">account.move.tree.journal.manual</field>
+            <field name="model">account.move</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'posted'"
+                      decoration-bf="state in ('posted')">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="ref"/>
+                    <field name="journal_id"/>
+                    <field name="amount" sum="Total Amount"/>
+                    <field name="state"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_account_move_journal_entry_manual_search" model="ir.ui.view">
+            <field name="name">account.move.select</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <search string="Search Move">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]"
+                           string="Move"/>
+                    <field name="date"/>
+                    <filter string="Unposted" name="draft" domain="[('state','=','draft')]"
+                            help="Unposted Journal Entries"/>
+                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
+                    <separator/>
+                    <filter string="Sales" domain="[('journal_id.type','=','sale')]"
+                            context="{'default_journal_type': 'sale'}"/>
+                    <filter string="Purchases" domain="[('journal_id.type','=','purchase')]"
+                            context="{'default_journal_type': 'purchase'}"/>
+                    <filter string="Bank Operations" domain="[('journal_id.type','=','bank')]"
+                            context="{'default_journal_type': 'bank'}"/>
+                    <filter string="Cash Operations" domain="[('journal_id.type','=','cash')]"
+                            context="{'default_journal_type': 'cash'}"/>
+                    <filter string="Miscellaneous Operations" domain="[('journal_id.type','=','general')]"
+                            name="misc_filter" context="{'default_journal_type': 'general'}"/>
+                    <separator/>
+                    <field name="partner_id"/>
+                    <field name="journal_id"/>
+                    <field name="dummy_account_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="CBS Synchronize" context="{'group_by': 'is_sync'}"/>
+                        <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="States" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_account_move_journal_entry_manual" model="ir.actions.act_window">
+            <field name="name">Journal Entries</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account.view_move_tree"/>
+            <field name="search_view_id" ref="view_account_move_journal_entry_manual_search"/>
+            <field name="context">{"default_is_cr":True,'search_default_draft':1,}</field>
+            <field name="domain">[('is_cr','=',True)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a journal entry.
+                </p>
+                <p>
+                    A journal entry consists of several journal items, each of
+                    which is either a debit or a credit transaction.
+                </p>
+                <p>
+                    Odoo automatically creates one journal entry per accounting
+                    document: invoice, refund, vendor payment, bank statements,
+                    etc. So, you should record journal entries manually only/mainly
+                    for miscellaneous operations.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_account_move_journal_entry_manual_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_move_journal_entry_manual_tree"/>
+            <field name="act_window_id" ref="action_account_move_journal_entry_manual"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_bd_division_mng,access_bd_division_mng,gbs_bd_division.model_bd_division,mtbl_access.group_mtbl_sys_admin,1,1,1,0
+
+access_bd_district_mng,access_bd_district_mng,gbs_bd_division.model_bd_district,mtbl_access.group_mtbl_sys_admin,1,1,1,0
+
+access_bd_upazila_mng,access_bd_upazila_mng,gbs_bd_division.model_bd_upazila,mtbl_access.group_mtbl_sys_admin,1,1,1,0
+
+access_bd_postal_code_mng,access_bd_postal_code_mng,gbs_bd_division.model_bd_postal_code,mtbl_access.group_mtbl_sys_admin,1,1,1,0
+
+
+

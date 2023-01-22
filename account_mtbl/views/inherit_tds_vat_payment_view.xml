@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_tds_vat_payment_form_view" model="ir.ui.view">
+        <field name="name">inherit.tds.vat.payment.form</field>
+        <field name="model">tds.vat.payment</field>
+        <field name="inherit_id" ref="account_tax_challan.tds_vat_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit_account_id']" position="after">
+                <field name="credit_sub_operating_unit_id" required="1"
+                       options="{'no_create':True,'no_create_edit':True,'no_open':True}"
+                       domain="[('account_id', 'in', [credit_account_id])]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_tds_vat_payment_tree_view" model="ir.ui.view">
+        <field name="name">inherit.tds.vat.payment.tree</field>
+        <field name="model">tds.vat.payment</field>
+        <field name="inherit_id" ref="account_tax_challan.tds_vat_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit_account_id']" position="after">
+                <field name="credit_sub_operating_unit_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_tds_vat_move_payable_tree_view" model="ir.ui.view">
+        <field name="name">inherit.tds.vat.payable.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account_tax_challan.tds_vat_move_payable_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="partner_type" string="Vendor Type"/>
+                <field name="tin"/>
+                <field name="bin"/>
+                <field name="vat_tax_rate"/>
+            </xpath>
+            <xpath expr="//field[@name='credit']" position="before">
+                <field name="bill_amount"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

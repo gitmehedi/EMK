@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="action_print_tds_vat_challan"
+                model="tds.vat.challan"
+                string="TDS/VAT Challan Print"
+                menu="False"
+                report_type="qweb-pdf"
+                name="tds_vat_challan.report_tds_vat_challan"
+                file="tds_vat_challan.report_tds_vat_challan"
+
+        />
+        <!--paperformat="report_layout.paperformat_backend_portrait"-->
+
+        <template id="report_tds_vat_challan">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <t t-foreach="docs" t-as="doc">
+                        <div class="page" style="page-break-inside:auto">
+                            <div class="row" style="padding-top:2px;">
+                                <div class="col-xs-12">
+                                    <h3 class="text-center">TDS/VAT Chalan</h3>
+                                </div>
+                                <hr></hr>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 text-left">
+                                    <t t-if="doc.name">
+                                        <strong><span t-field="doc.name"/></strong>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 text-left">
+                                    <t t-if="doc.challan_date">
+                                        <strong>Challan Date : </strong>
+                                        <span t-field="doc.challan_date"/>
+                                    </t>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <t t-if="doc.deposited_bank">
+                                        <strong>Deposited Bank : </strong>
+                                        <span t-field="doc.deposited_bank"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 text-left">
+                                    <t t-if="doc.challan_no">
+                                        <strong>Challan Number : </strong>
+                                        <span t-field="doc.challan_no"/>
+                                    </t>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <t t-if="doc.bank_branch">
+                                        <strong>Bank Branch : </strong>
+                                        <span t-field="doc.bank_branch"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-report-xs table-striped" style="margin-bottom: 10px;">
+                                <thead>
+                                    <tr style="background-color: #EFECEB;">
+                                        <th class="text-left">Vendor</th>
+                                        <th class="text-left">Service</th>
+                                        <th class="text-right">Bill Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.line_ids" t-as="l">
+                                        <tr>
+                                            <td class="text-left">
+                                                <span t-field="l.supplier_id"/>
+                                            </td>
+                                            <td class="text-left">
+                                                <span t-field="l.product_id"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="l.total_bill"
+                                                      t-options='{"widget": "monetary", "display_currency": l.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t>
+                                        <tr class="text-right">
+                                            <td colspan="4">
+                                                <strong>Total: </strong>
+                                                <span t-field="doc.total_amount"
+                                                      t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <div class="oe_structure"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+
+
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_type_form_inherit" model="ir.ui.view">
+            <field name="name">account.account.type.form.view</field>
+            <field name="model">account.account.type</field>
+            <field name="inherit_id" ref="account.view_account_type_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="replace">
+                    <form string="Account Type" edit="0" duplicate="0">
+                        <header>
+                            <button name="act_approve" string="Approve" type="object" states="draft"
+                                    class="oe_highlight"
+                                    groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                            <button name="act_reject" string="Reject" type="object" states="draft"
+                                    groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                            <button name="%(action_account_type_wizard)d" string="Edit" type="action"
+                                    class="oe_highlight" groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                                    attrs="{'invisible':['|',('state','in',('draft','reject')),('pending','=', True)]}"/>
+                            <button name="act_approve_pending" string="Approve" type="object" class="oe_highlight"
+                                    groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                                    attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            <button name="act_reject_pending" string="Reject" type="object"
+                                    groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"
+                                    attrs="{'invisible':['|',('state','=','draft'),('pending','=', False)]}"/>
+                            <button name="act_draft" string="Set to Draft" type="object" states="reject"
+                                    groups="mtbl_access.group_mtbl_sys_admin,account.group_account_manager"/>
+                            <field name="state" widget="statusbar" invisible="True"/>
+                        </header>
+                        <sheet>
+                            <group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="type"/>
+                                    <field name="asset_liability_id"/>
+                                    <field name="pending" invisible="True"/>
+                                </group>
+                                <group>
+                                    <field name="include_initial_balance"
+                                           groups="base.group_system"/>
+                                    <field name="maker_id" invisible="1"/>
+                                    <field name="approver_id" invisible="1"/>
+                                </group>
+                            </group>
+                            <separator string="Description"/>
+                            <field name="note"/>
+                            <field name="line_ids" attrs="{'invisible':[('line_ids','=',[])]}">
+                                <tree decoration-info="state=='pending'" decoration-success="state=='approve'"
+                                      decoration-bf="state in ('pending',)"
+                                      decoration-danger="state=='reject'">
+                                    <field name="change_name"/>
+                                    <field name="request_date"/>
+                                    <field name="change_date"/>
+                                    <field name="status"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </sheet>
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                    </form>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_inherited_account_type_tree" model="ir.ui.view">
+            <field name="name">account_type_tree</field>
+            <field name="model">account.account.type</field>
+            <field name="inherit_id" ref="account.view_account_type_tree"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="include_initial_balance"/>
+                    <field name="state"/>
+                </field>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-info">state == 'draft'</attribute>
+                    <attribute name="decoration-success">state=='approve'</attribute>
+                    <attribute name="decoration-danger">state=='reject'</attribute>
+                    <attribute name="decoration-bf">state in ('approve',)</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_type_search" model="ir.ui.view">
+            <field name="name">account.account.type.search</field>
+            <field name="model">account.account.type</field>
+            <field name="arch" type="xml">
+                <search string="Account Type">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]"
+                           string="Account Type"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_account_type_search_inherit" model="ir.ui.view">
+            <field name="name">account.account.type.search</field>
+            <field name="model">account.account.type</field>
+            <field name="inherit_id" ref="account.view_account_type_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="replace">
+                    <search string="Account Type">
+                        <field name="name" filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]"
+                               string="Account Type"/>
+                        <field name="pending" string="Pending"/>
+                        <group string="Group By">
+                            <filter name="type" string="Type"
+                                    context="{'group_by': 'type'}"/>
+                            <filter string="Pending" name="pending" icon="terp-personal"
+                                    domain="[('state','in',('draft','approve')),('pending','=',1),'|',('active','=',0),('active','=',1)]"/>
+                            <filter string="Rejected" name="state" icon="terp-personal"
+                                    domain="[('active','=',0),('pending','=',0),('state','=','reject')]"/>
+                            <filter string="In-Active" name="state" icon="terp-personal"
+                                    domain="[('active','=',0),('pending','=',0),('state','=','approve')]"/>
+                        </group>
+                    </search>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account.action_account_type_form" model="ir.actions.act_window">
+            <field name="name">Account Types</field>
+            <field name="res_model">account.account.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="account.view_account_type_search"/>
+            <field name="context">
+                {"search_default_type":1,"search_default_active":'False',"search_default_pending":'True'}
+            </field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to define a new account type.
+                </p>
+                <p>
+                    An account type is used to determine how an account is used in
+                    each journal. The deferral method of an account type determines
+                    the process for the annual closing. Reports such as the Balance
+                    Sheet and the Profit and Loss report use the category
+                    (profit/loss or balance sheet).
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

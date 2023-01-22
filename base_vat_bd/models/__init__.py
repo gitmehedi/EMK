@@ -1,0 +1,2 @@
+import inherited_res_partner
+import inherit_account_tax

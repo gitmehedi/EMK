@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="asset_filter_wizard_form">
+        <field name="name">asset.filter.wizard</field>
+        <field name="model">asset.filter.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Search Assets">
+                <group>
+                    <group>
+                        <field name="operating_unit_id"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                    </group>
+                    <group>
+                        <field name="category_id"
+                               options="{'no_open':True,'no_create':True,'no_create_edit':True}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="search_branch" string="Search" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_asset_filter_wizard" model="ir.actions.act_window">
+        <field name="name">Search Assets</field>
+        <field name="res_model">asset.filter.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="asset_filter_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="main_fixed_asset_filter_menu" name="Search Assets"
+              parent="sub_assets_menu" sequence="55" action="action_asset_filter_wizard"
+              groups="grp_fixasset_manager"/>
+</odoo>

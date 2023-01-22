@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="gbs_data_migration_wizard_form" model="ir.ui.view">
+        <field name="name">gbs.data.migration.wizard.form</field>
+        <field name="model">gbs.data.migration.wizard</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Import File">
+                <group string="Please Select File for GL Data Migration">
+                    <group>
+                        <field name="aml_data" filename="aml_fname"/>
+                        <field name="dollar_rate"/>
+                        <field name="date"/>
+                    </group>
+                    <group>
+                        <field name="aml_fname" readonly="1"/>
+                        <field name="csv_separator" groups="base.group_system" invisible="1"/>
+                        <field name="decimal_separator" groups="base.group_system" invisible="1"/>
+                        <field name="codepage" groups="base.group_system" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="aml_import" string="Import" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gbs_data_migration_wizard" model="ir.actions.act_window">
+        <field name="name">GBS Data Migration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gbs.data.migration.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

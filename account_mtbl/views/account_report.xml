@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account.action_account_partner_ledger_values" model="ir.values">
+        <field name="key2"></field>
+    </record>
+    <record id="account.action_account_general_ledger_values" model="ir.values">
+        <field name="key2"></field>
+    </record>
+    <record id="account.action_account_balance_report_values1" model="ir.values">
+        <field name="key2"></field>
+    </record>
+</odoo>

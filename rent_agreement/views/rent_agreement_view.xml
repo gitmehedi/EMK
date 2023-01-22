@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="rent_agreement_tree" model="ir.ui.view">
+            <field name="name">rent_agreement_tree_view</field>
+            <field name="model">vendor.advance</field>
+            <field name="arch" type="xml">
+                <tree string="Agreements" duplicate="0"
+                      decoration-primary="state=='draft'" decoration-info="state=='confirm'"
+                      decoration-success="state=='approve'" decoration-danger="state=='expired'"
+                      decoration-bf="state in ('confirm','approve')"
+                      decoration-muted="state in ('cancel', 'inactive', 'reject')">
+                    <field name="name" string="REF#"/>
+                    <field name="description" string="Premises"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="area"/>
+                    <field name="rate"/>
+                    <field name="service_value" sum="service_value"/>
+                    <field name="total_advance_amount" sum="total_advance_amount" string="T. Apprvd. Advance"/>
+                    <field name="adjusted_amount" sum="adjusted_amount" string="Adj. Amount"/>
+                    <field name="outstanding_amount" sum="outstanding_amount" string="Outstnd. Amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="rent_agreement_form" model="ir.ui.view">
+            <field name="name">rent_agreement_form_view</field>
+            <field name="model">vendor.advance</field>
+            <field name="arch" type="xml">
+                <form string="Rent Agreement" duplicate="0">
+                    <header>
+                        <field name="active" invisible="1"/>
+                        <field name="is_rejection" invisible="1"/>
+                        <button name="action_confirm" type="object"
+                                string="Confirm" states="draft"
+                                class="oe_highlight"/>
+                        <button name="action_validate" type="object"
+                                string="Validate" states="confirm"
+                                class="oe_highlight" groups="base.vendor_advance_approver"/>
+                        <button name="action_cancel" type="object"
+                                string="Cancel" states="confirm" groups="base.vendor_advance_approver"/>
+                        <button name="action_draft" type="object"
+                                string="Reset to draft" states="cancel"/>
+                        <button string="Amendment" name="action_amendment"
+                                type="object" class="oe_read_only"
+                                attrs="{'invisible': ['|', '|', ('is_amendment', '=', True), ('is_rejection', '=', True), ('state', 'in', ('draft','confirm','cancel', 'done', 'reject', 'expired'))]}"/>
+                        <button string="Approve Amendment" name="action_approve_amendment"
+                                type="object" class="oe_highlight" groups="base.vendor_advance_approver"
+                                attrs="{'invisible': ['|', ('is_amendment', '=', False), ('state', 'in', ('draft','confirm','cancel', 'done', 'reject', 'expired'))]}"/>
+                        <button string="Reject Amendment" name="action_reject_amendment" type="object"
+                                groups="base.vendor_advance_approver"
+                                attrs="{'invisible': ['|', ('is_amendment', '=', False), ('state', 'in', ('draft','confirm','cancel', 'done', 'reject', 'expired'))]}"/>
+                        <button string="Rejection / Cancellation" name="action_reject_agreement" type="object"
+                                groups="base.vendor_advance_approver"
+                                attrs="{'invisible': ['|', '|', '|', ('is_rejection', '=', True), ('active', '=', False), ('is_amendment', '=', True), ('state', 'in', ('draft','confirm','cancel','reject', 'expired'))]}"/>
+                        <button string="Approve Rejection" name="action_approve_rejection"
+                                type="object" class="oe_highlight" groups="base.vendor_advance_approver"
+                                attrs="{'invisible': ['|', ('is_rejection', '=', False), ('state', 'in', ('draft','confirm','cancel','reject', 'expired'))]}"/>
+                        <button string="Cancel" name="action_cancel_rejection" type="object"
+                                groups="base.vendor_advance_approver"
+                                attrs="{'invisible': ['|', ('is_rejection', '=', False), ('state', 'in', ('draft','confirm','cancel','reject', 'expired'))]}"/>
+                        <button name="action_active" type="object"
+                                string="Set to Active" states="expired" groups="base.vendor_advance_approver"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,approve"/>
+                    </header>
+                    <sheet>
+                        <field name="move_ids" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="open_entries" type="object" icon="fa-pencil"
+                                    attrs="{'invisible': [('move_ids', '=', [])]}">
+                                <field string="Journal Items" name="move_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="pull-left">
+                            <h1>
+                                <field name="name" readonly="1" nolabel="1"/>
+                            </h1>
+                        </div>
+                        <group name="main">
+                            <group name="left" string="General">
+                                <field name="partner_id" string="Vendor" required="True"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <label string="Effective Period"/>
+                                <div>
+                                    <field style="margin-right:8px;" name="start_date" class="oe_inline"
+                                           attrs="{'required': [('type', '=', 'multi')]}"/>
+                                    <label string="To" class="oe_inline"/>
+                                    <field name="end_date" class="oe_inline"/>
+                                </div>
+                                <field name="rent_type" attrs="{'required': [('type', '=', 'multi')]}"/>
+                                <field name="billing_period" attrs="{'required': [('type', '=', 'multi')]}"/>
+                                <field name="account_analytic_id" string="Cost Centre" required="1"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <!--<field name="journal_id" attrs="{'invisible': [('journal_id', '=',False )]}"/>-->
+
+                                <field name="company_id" groups="base.group_multi_company"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="description" string="Premises" required="1"/>
+                                <field name="is_amendment" invisible="1"/>
+                                <field name="maker_id" invisible="1"/>
+                                <field name="approver_id" invisible="1"/>
+                                <field name="type" invisible="1"/>
+                                <field name="security_deposit" invisible="1"/>
+                            </group>
+                            <group name="right" string="Rent Details">
+                                <field name="product_id" string="Service" required="True"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="area"/>
+                                <field name="rate"/>
+                                <field name="service_value" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="vat_id"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="tds_id"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="additional_service"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="additional_service_value" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_service_value" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="adjustment_value" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+
+
+                                <!--<field name="advance_type" widget="radio" invisible="1"/>-->
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <group name="main-2">
+                            <group name="left" string="Advance Details">
+                                <field name="advance_amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="additional_advance_amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}" states="approve" readonly="1"/>
+                                <field name="total_advance_amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}" states="approve"/>
+                                <field name="account_id" domain="[('reconcile', '=', True)]"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                                <field name="operating_unit_id"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'/>
+                            </group>
+                            <group name="right" string="Current Status">
+                                <field name="adjusted_amount" readonly="1" widget="monetary"
+                                       string="T. Adjusted Amount"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="outstanding_amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="History" class="oe_page_title"
+                                  attrs="{'invisible': ['|', ('state', 'in', ('draft','confirm','cancel')), ('history_line_ids', '=', [])]}">
+                                <field name="history_line_ids" string="History" readonly="1">
+                                    <tree string="History lines"
+                                          decoration-info="state=='pending'" decoration-success="state=='confirm'">
+                                        <!--<field name="end_date"/>-->
+                                        <!--<field name="adjustment_value"/>-->
+                                        <!--<field name="service_value"/>-->
+                                        <!--<field name="advance_amount_add"/>-->
+                                        <field name="narration"/>
+                                        <field name="state"/>
+                                    </tree>
+                                    <form string="History">
+                                        <group>
+                                            <group>
+                                                <!--<field name="active_status"/>-->
+                                                <!--<field name="end_date"/>-->
+                                                <field name="narration"/>
+                                            </group>
+                                            <group>
+                                                <!--<field name="adjustment_value"/>-->
+                                                <!--<field name="service_value"/>-->
+                                                <!--<field name="advance_amount_add"/>-->
+                                                <field name="state"/>
+                                            </group>
+                                        </group>
+                                        <!--<group>-->
+                                        <!--<field name="narration"/>-->
+                                        <!--</group>-->
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Vendor Bills" class="oe_page_title"
+                                  attrs="{'invisible': [('in_invoice_ids', '=', [])]}">
+                                <group name="in_invoices">
+                                    <field name="in_invoice_ids" colspan="4" nolabel="1">
+                                        <tree string="Vendor Bills">
+                                            <field name="invoice_id" readonly="1"/>
+                                            <field widget="float" type="char" name="adjusted_amount" readonly="1"/>
+                                            <field name="billing_date" readonly="1"/>
+                                        </tree>
+                                        <form string="Vendor Bills">
+                                            <group>
+                                                <group>
+                                                    <field name="invoice_id" readonly="1"/>
+                                                    <field name="adjusted_amount" readonly="1"/>
+                                                    <field name="billing_date" readonly="1"/>
+                                                </group>
+                                                <group>
+                                                    <field name="advance_id" readonly="1"/>
+                                                </group>
+                                            </group>
+                                        </form>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="rent_agreement_search" model="ir.ui.view">
+            <field name="name">agreement.search.view</field>
+            <field name="model">vendor.advance</field>
+            <field name="arch" type="xml">
+                <search string="Search Agreements">
+                    <field name="name" filter_domain="[('name', 'ilike', self)]"
+                           string="Agreement No"/>
+                    <field name="partner_id" string="Vendor"/>
+                    <field name="product_id" string="Service"/>
+                    <field name="start_date"/>
+                    <field name="state" string="Status"/>
+                    <field name="rent_type" string="Rent Type"/>
+                    <separator/>
+                    <filter name="inactive" string="Inactive" domain="[('active','=', False)]"/>
+                    <separator/>
+                    <filter name="pending_va" string="Draft"
+                            domain="[('state','=', 'draft')]"/>
+                    <separator/>
+                    <filter name="confirm_va" string="Pending"
+                            domain="['|', '|', ('state','=', 'confirm'), ('is_amendment', '=', True), ('is_rejection', '=', True)]"/>
+                    <separator/>
+                    <filter name="approve_va" string="Active" domain="[('state','=', 'approve')]"/>
+                    <separator/>
+                    <filter name="done_va" string="Done" domain="[('state','=', 'done')]"/>
+                    <separator/>
+                    <group name="groupby">
+                        <filter string="By Vendor" name="partner_groupby" domain=""
+                                context="{'group_by': 'partner_id'}"/>
+                        <filter string="By Status" name="state_groupby" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="By Rent Type" name="rent_type" domain="[]"
+                                context="{'group_by':'rent_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="rent_agreement_action" model="ir.actions.act_window">
+            <field name="name">Rent Agreements</field>
+            <field name="res_model">vendor.advance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','multi')]</field>
+            <field name="context">{'default_type':'multi'}</field>
+            <field name="search_view_id" ref="rent_agreement_search"/>
+        </record>
+
+        <record id="rent_agreement_action_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="rent_agreement_tree"/>
+            <field name="act_window_id" ref="rent_agreement_action"/>
+        </record>
+
+        <record id="rent_agreement_action_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="rent_agreement_form"/>
+            <field name="act_window_id" ref="rent_agreement_action"/>
+        </record>
+        <menuitem id="menu_rent_operations_main" name="Rental Operations"
+                  groups="base.group_rental_operation_user" sequence="40"/>
+        <menuitem id="menu_rent_operations" name="Rental Operations" sequence="5"
+                  parent="menu_rent_operations_main" groups="base.group_rental_operation_user"/>
+        <menuitem id="rent_agreement_menu" action="rent_agreement_action"
+                  name="Rental Agreements" groups="base.group_rental_operation_user"
+                  parent="menu_rent_operations" sequence="1"/>
+    </data>
+</odoo>
