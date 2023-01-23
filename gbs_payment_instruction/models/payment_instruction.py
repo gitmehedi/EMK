@@ -70,7 +70,7 @@ class PaymentInstruction(models.Model):
                                 residual_signed=0
                             WHERE id=%s""" % self.invoice_id.id
                 self.env.cr.execute(query)
-                return self.write({'state': 'approved'})
+            return self.write({'state': 'approved', 'is_sync': True})
 
     @api.model
     def _needaction_domain_get(self):
