@@ -5,7 +5,7 @@ from datetime import timedelta
 
 class FiscalYearLockDateLog(models.Model):
     _name = 'fiscal.year.lock.date.log'
-    _order = 'modified_date DESC'
+    _order = 'create_date DESC'
 
 
     period_lock_date = fields.Date(string="Non-Advisers Lock Date", required=True)
@@ -23,7 +23,7 @@ class ResConfigSettings(models.TransientModel):
                 self.env.user.has_group('gbs_application_group.group_account_closing'):
 
             # Update the properties of res.company model
-            current_date_time = datetime.now() + timedelta(hours=6)
+            current_date_time = datetime.now()
             current_date_time = current_date_time.strftime('%Y-%m-%d %H:%M:%S')
             self.env['fiscal.year.lock.date.log'].create({
                 'period_lock_date': self.period_lock_date,
