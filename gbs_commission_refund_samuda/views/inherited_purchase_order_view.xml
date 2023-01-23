@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="purchase.purchase_form_action" model="ir.actions.act_window">
-            <field name="view_ids" eval="[
-                    (5, 0, 0),
-                    (0, 0, {'sequence': 16, 'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_tree')}),
-                    (0, 0, {'sequence': 16, 'view_mode': 'form', 'view_id': ref('purchase.purchase_order_form')}),
-                ]"/>
-        </record>
-
         <!--service_order_form-->
         <record id="claim_customer_commission_view_form" model="ir.ui.view">
             <field name="name">claim.customer.commission.purchase.order.view.form</field>
             <field name="model">purchase.order</field>
+            <field name="priority">500</field>
             <field name="arch" type="xml">
                 <form string="Service Order">
                     <header>
@@ -74,15 +67,15 @@
                             </group>
                             <group>
                                 <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
-                                <field name="sale_order_ids" widget="many2many_tags" required="1"/>
+                                <field name="sale_order_ids" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' widget="many2many_tags" required="1"/>
                                 <field name="picking_type_id" options="{'no_create': True}" invisible="1"/>
                             </group>
                         </group>
 
                         <notebook>
                             <page string="Order Line" name="customer_order_lines">
-                                <field name="order_line" required="1">
-                                    <tree editable="bottom" create="false" delete="false" edit="false" options="{'no_create':True,'no_create_edit':True,'no_open':True}">
+                                <field name="order_line" required="1" style="pointer-events:none;">
+                                    <tree editable="bottom" create="false" delete="false" edit="false" style="pointer-events:none;" options="{'no_create':True,'no_create_edit':True,'no_open':True}">
                                         <field name="invoice_id" readonly="1" force_save="1"/>
                                         <field name="currency_id" invisible="1"/>
                                         <field name="state" invisible="1"/>
@@ -133,6 +126,7 @@
         <record id="claim_customer_commission_view_tree" model="ir.ui.view">
             <field name="name">claim.customer.commission.purchase.order.view.tree</field>
             <field name="model">purchase.order</field>
+            <field name="priority">500</field>
             <field name="arch" type="xml">
                 <!--decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" -->
                 <tree string="Service Order">
@@ -162,8 +156,8 @@
             <field name="view_mode">tree,form</field>
             <field name="view_ids" eval="[
                     (5, 0, 0),
-                    (0, 0, {'sequence': 4, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
-                    (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
                 ]"/>
             <field name="domain">[('is_service_order', '=', True),('is_commission_claim', '=', True)]</field>
             <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True}</field>
@@ -181,8 +175,8 @@
             <field name="view_mode">tree,form</field>
             <field name="view_ids" eval="[
                     (5, 0, 0),
-                    (0, 0, {'sequence': 4, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
-                    (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
                 ]"/>
             <field name="domain">[('is_service_order', '=', True),('is_refund_claim', '=', True)]</field>
             <field name="context">{'default_is_service_order': True, 'default_is_refund_claim': True}</field>
@@ -200,8 +194,8 @@
             <field name="view_mode">tree,form</field>
             <field name="view_ids" eval="[
                     (5, 0, 0),
-                    (0, 0, {'sequence': 4, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
-                    (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
                 ]"/>
             <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hos_approve')]</field>
             <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True, 'no_create_edit_button':True}</field>
@@ -219,8 +213,8 @@
             <field name="view_mode">tree,form</field>
             <field name="view_ids" eval="[
                     (5, 0, 0),
-                    (0, 0, {'sequence': 4, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
-                    (0, 0, {'sequence': 4, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
                 ]"/>
             <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hoa_approve')]</field>
             <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True, 'no_create_edit_button':True}</field>
@@ -235,21 +229,21 @@
                   name="Claiming"
                   parent="sales_team.menu_base_partner"
                   sequence="6"
-                  groups="sales_team.group_sale_salesman,gbs_application_group.group_account_income"
+                  groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_account_income"
         />
         <menuitem
                 id="claim_customer_commission_menu"
                 parent="menu_commission_refund_claim"
                 sequence="4"
                 action="gbs_commission_refund_samuda.claim_customer_commission_tree_view_action"
-                groups="sales_team.group_sale_salesman,gbs_application_group.group_account_income"
+                groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_account_income"
         />
         <menuitem
                 id="claim_customer_refund_menu"
                 parent="menu_commission_refund_claim"
                 sequence="4"
                 action="gbs_commission_refund_samuda.claim_customer_refund_tree_view_action"
-                groups="sales_team.group_sale_salesman,gbs_application_group.group_account_income"
+                groups="sales_team.group_sale_salesman_all_leads,gbs_application_group.group_account_income"
         />
         <menuitem
                 id="pending_commission_claim_hos_menu"
@@ -265,6 +259,15 @@
                 action="gbs_commission_refund_samuda.pending_commission_claim_hoa_approval_tree_view_action"
                 groups="gbs_application_group.group_head_account"
         />
+
+        <record id="purchase.purchase_form_action" model="ir.actions.act_window">
+            <field name="mode">primary</field>
+            <field name="view_ids" eval="[
+                    (5, 0, 0),
+                    (0, 0, {'sequence': 16, 'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_tree')}),
+                    (0, 0, {'sequence': 16, 'view_mode': 'form', 'view_id': ref('purchase.purchase_order_form')}),
+                ]"/>
+        </record>
 
     </data>
 </odoo>

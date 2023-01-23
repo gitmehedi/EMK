@@ -4,6 +4,7 @@ import json
 # imports of odoo
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from datetime import datetime, timedelta
 
 from lxml import etree
 
@@ -20,8 +21,8 @@ class SaleOrder(models.Model):
         help='We will deduct the amount of returned quantity from actual invoiced quantity'
     )
 
-    @api.onchange('pack_type')
-    def _onchange_pack_type(self):
+    @api.onchange('pack_type', 'order_line')
+    def _onchange_pack_type_order_line(self):
         for rec in self:
             for so in rec.order_line:
                 so._onchange_commission_refund_product_id()
@@ -74,9 +75,21 @@ class SaleOrder(models.Model):
         result = super(SaleOrder, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,
                                                         submenu=submenu)
 
-        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_start_date')
-        invisible_commission_fields = self.date_order < commission_start_date if commission_start_date else False
+        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings',
+                                                                         'commission_start_date')
 
+        if self.date_order:
+            sale_order_date = self.date_order.date()
+        else:
+            sale_order_date = datetime.now().date()
+
+        invisible_commission_fields = True
+        if commission_start_date:
+            commission_start_date = datetime.strptime(commission_start_date, "%Y-%m-%d").date()
+            if sale_order_date > commission_start_date:
+                invisible_commission_fields = False
+        else:
+            raise UserError('Commission/Refund feature start date not found in configuration!')
         if view_type == 'form':
             company = self.env.user.company_id
             config = self.env['commission.configuration'].search([
@@ -156,7 +169,8 @@ class SaleOrder(models.Model):
                 returned_list = self.get_customer_credit_limit(partner_pool, order)
 
                 if abs(returned_list[0]) > returned_list[1]:
-                    causes.append("Customer crossed his Credit Limit. Current Credit Limit is " + str(abs(returned_list[1])))
+                    causes.append(
+                        "Customer crossed his Credit Limit. Current Credit Limit is " + str(abs(returned_list[1])))
                     is_double_validation = True
 
             if is_double_validation:
