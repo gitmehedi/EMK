@@ -90,7 +90,8 @@ class ProfitLossRealizationWizard(models.TransientModel):
         elif self.date_filter == 'last_month':
             year, month = divmod(dt.year * 12 + 1, 12)
             if dt.month <= month:
-                year = dt.year - year - 1
+                # year = dt.year - year - 1
+                year = dt.year - 1
                 month = dt.month - month + 12
             else:
                 year = dt.year
@@ -163,7 +164,7 @@ class ProfitLossRealizationWizard(models.TransientModel):
             return dt_to.strftime(_('Quarter #') + str(quarter) + ' %Y')
         if 'year' in self.date_filter:
             if self.env.user.company_id.fiscalyear_last_day == 31 and self.env.user.company_id.fiscalyear_last_month == 12:
-                return dt_to.strftime('%Y')
+                return "Year: " + dt_to.strftime('%Y')
             else:
                 return str(dt_to.year - 1) + ' - ' + str(dt_to.year)
         if not dt_from:

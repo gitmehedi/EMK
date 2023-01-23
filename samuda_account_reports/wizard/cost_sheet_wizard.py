@@ -90,7 +90,7 @@ class CostSheetWizard(models.TransientModel):
         elif self.date_filter == 'last_month':
             year, month = divmod(dt.year * 12 + 1, 12)
             if dt.month <= month:
-                year = dt.year - year - 1
+                year = dt.year - 1
                 month = dt.month - month + 12
             else:
                 year = dt.year
