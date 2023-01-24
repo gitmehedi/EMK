@@ -144,6 +144,18 @@ class InheritResPartner(models.Model):
                     supplier_type = res.supplier_type
                     res.check_account_payable_id(acc_rec_id, supplier_type, res.is_cnf)
 
+        if 'active' in vals:
+            if vals['active']:
+                for res in self:
+                    if res.supplier or res.is_cnf:
+                        acc_rec_id = self.property_account_payable_id.id
+                        supplier_type = res.supplier_type
+                        res.check_account_payable_id(acc_rec_id, supplier_type, res.is_cnf)
+
+                    if res.customer:
+                        acc_rec_id = self.property_account_receivable_id.id
+                        self.check_account_receivable_id(acc_rec_id)
+
         if 'child_ids' in vals:
             child_ids = vals['child_ids']
             vals['child_ids'] = []
