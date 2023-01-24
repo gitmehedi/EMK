@@ -35,7 +35,7 @@ class LandedCostInfoXLSX(ReportXlsx):
                             left join product_product as pp on pp.product_tmpl_id = pt.id
                             where main.id = %s
                             and line.product_id = %s
-                            and(pt.is_duty_tax = False or pt.is_duty_tax is null)) sub
+                            ) sub
                             group by sub.account_id,product_qty,sub.standard_price_old,sub.acc_name
                 ) sub_2 
                 """ % (landed_cost_id, product_id)
@@ -86,26 +86,29 @@ class LandedCostInfoXLSX(ReportXlsx):
         duty_tax_table_data_list = []
 
         duty_tax_tbl_query = """
-                   select 
-                        concat(aa.code,' ',aa.name) as acc_name,aml.id,aml.name,aml.debit
-                        from 
-                        purchase_cost_distribution_line_expense as line_child 
-                        left join purchase_cost_distribution_line as line on line.id = line_child.distribution_line
-                        left join purchase_cost_distribution as main on main.id = line.distribution
-                        left join letter_credit as lc on lc.id = main.lc_id
-                        left join account_analytic_account as aaa on aaa.id = lc.analytic_account_id
-                        full join account_move_line as aml on (aml.account_id = line_child.account_id and aml.analytic_account_id = aaa.id)
-                        left join account_account as aa on aa.id = line_child.account_id
-                        left join ir_property ON (ir_property.value_reference = concat('account.account,', aa.id::text) AND ir_property.name = 'property_account_expense_id')
-                        left join product_template as pt ON (ir_property.res_id = concat('product.template,', pt.id::text)) 
-                        left join product_product as pp on pp.product_tmpl_id = pt.id
-                                
-                    where main.id = %s 
-                    and line.product_id = %s
-                    and pt.is_duty_tax = True 
-                    and aml.debit != 0
-                    group by acc_name,aml.id,aml.name,aml.debit
-                """ % (landed_cost_id, product_id)
+        
+        select po.cnf_quotation as is_cnf_quotation,pt.is_duty_tax as duty_tax,pt.name as service_name,
+            ai.state as invoice_state,ail.name as name, concat(aa.code,' ',aa.name) as acc_name,
+            ail.price_total as debit,pcd.id as landed_cost_id,po.id as cnf_q_id,spl.product_id as product_id
+            from 
+            purchase_order as po 
+            left join purchase_shipment as ps on po.shipment_id = ps.id
+            left join shipment_product_line as spl on spl.shipment_id = ps.id
+            left join purchase_cost_distribution as pcd on pcd.lc_id = ps.lc_id
+            left join purchase_order_line as po_line ON po_line.order_id = po.id
+            left join account_invoice_line as ail on ail.purchase_line_id = po_line.id
+            left join account_invoice as ai on ail.invoice_id = ai.id
+            left join account_account as aa on ail.account_id = aa.id
+            left join ir_property ON (ir_property.value_reference = concat('account.account,', aa.id::text) AND ir_property.name = 'property_account_expense_id')
+            left join product_template as pt ON (ir_property.res_id = concat('product.template,', pt.id::text))         
+            left join product_product as pp on pp.product_tmpl_id = pt.id
+            where 
+            po.cnf_quotation = True
+            and pt.is_duty_tax = 'true' and ai.state = 'paid'
+            and pcd.id = %s
+            and spl.product_id = %s
+        
+            """ % (landed_cost_id, product_id)
         self.env.cr.execute(duty_tax_tbl_query)
         for row in self.env.cr.dictfetchall():
             duty_tax_table_data_list.append(row)
