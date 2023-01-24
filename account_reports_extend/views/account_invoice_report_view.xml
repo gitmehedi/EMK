@@ -40,7 +40,10 @@
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_invoice_open']" position="before">
-                <button name="print_account_invoice_vendor_bill" style="background-color: #39B05F;color:white;" type="object" string="Print"/>
+                <button name="print_account_invoice_vendor_bill"
+                        attrs="{'invisible': ['|',('state', 'in', ('cancel'))]}"
+                        style="background-color: #39B05F;color:white;" type="object"
+                        string="Print"/>
             </xpath>
         </field>
     </record>
