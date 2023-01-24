@@ -144,6 +144,7 @@ class ShipmentCommon(models.Model):
         self.invoice_number_dummy = False
         self.invoice_date_dummy = False
         self.comment = False
+        self.exp_number = False
 
     @api.multi
     def purchase_shipment_m2o_to_m2m(self):
