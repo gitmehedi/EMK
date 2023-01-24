@@ -51,8 +51,8 @@ class HrEmployee(models.Model):
         for name in self:
             payslip_line = name.suspend_security().env['hr.payslip.line'].search([('employee_id','=',name.id)])
             for rec in payslip_line:
-                    if rec.code == 'EPMF':
-                        self.total_pf += abs(rec.total)
+                if rec.code == 'EPMF' and rec.slip_id.state == 'done':
+                    self.total_pf += abs(rec.total)
 
 
 
