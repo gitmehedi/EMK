@@ -766,7 +766,7 @@ class InheritedSaleOrderLine(models.Model):
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
-        res = super(InheritedSaleOrderLine, self).product_uom_change()
+        # res = super(InheritedSaleOrderLine, self).product_uom_change()
         # self.da_qty = self.product_uom_qty
 
         vals = {}
@@ -774,7 +774,7 @@ class InheritedSaleOrderLine(models.Model):
             vals['price_unit'] = self._get_product_sales_price(self.product_id)
             self.update(vals)
 
-        return res
+        # return res
 
     @api.multi
     def _prepare_invoice_line(self, qty):
