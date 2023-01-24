@@ -75,8 +75,7 @@ class SaleOrder(models.Model):
         result = super(SaleOrder, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,
                                                         submenu=submenu)
 
-        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings',
-                                                                         'commission_start_date')
+        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_start_date')
 
         if self.date_order:
             sale_order_date = self.date_order.date()
@@ -90,6 +89,7 @@ class SaleOrder(models.Model):
                 invisible_commission_fields = False
         else:
             raise UserError('Commission/Refund feature start date not found in configuration!')
+
         if view_type == 'form':
             company = self.env.user.company_id
             config = self.env['commission.configuration'].search([
@@ -109,7 +109,7 @@ class SaleOrder(models.Model):
                     modifiers['column_invisible'] = True
                     field.set('modifiers', json.dumps(modifiers))
 
-            if config.process != 'textbox' or invisible_commission_fields:
+            if invisible_commission_fields or config.process != 'textbox':
                 fields_to_be_hidden = ['corporate_commission_per_unit', 'corporate_refund_per_unit']
                 for f in fields_to_be_hidden:
                     for field in order_line_tree.xpath("//field[@name='%s']" % f):
@@ -119,7 +119,7 @@ class SaleOrder(models.Model):
                         modifiers['column_invisible'] = True
                         field.set('modifiers', json.dumps(modifiers))
 
-            if config.process != 'checkbox' or invisible_commission_fields:
+            if invisible_commission_fields or config.process != 'checkbox':
                 fields_to_be_hidden = ['dealer_commission_applicable', 'dealer_refund_applicable']
                 for f in fields_to_be_hidden:
                     for field in order_line_tree.xpath("//field[@name='%s']" % f):
@@ -208,12 +208,45 @@ class SaleOrderLine(models.Model):
 
     so_readonly_field = fields.Boolean(compute="_compute_so_readonly_field")
 
+    @api.one
+    @api.constrains('corporate_commission_per_unit', 'corporate_refund_per_unit')
+    def _textbox_process_validation(self):
+        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_start_date')
+
+        if self.order_id.date_order:
+            sale_order_date = self.order_id.date_order
+        else:
+            sale_order_date = datetime.now().date()
+
+        if commission_start_date:
+            if sale_order_date < commission_start_date and (self.corporate_commission_per_unit > 0 or self.corporate_refund_per_unit > 0):
+                raise UserError('Commission/Refund feature not applicable before dated %s' % commission_start_date)
+        else:
+            raise UserError('Commission/Refund feature start date not found in configuration!')
+
+    @api.one
+    @api.constrains('dealer_commission_applicable', 'dealer_refund_applicable')
+    def _checkbox_process_validation(self):
+        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_start_date')
+
+        if self.order_id.date_order:
+            sale_order_date = self.order_id.date_order
+        else:
+            sale_order_date = datetime.now().date()
+
+        if commission_start_date:
+            if sale_order_date < commission_start_date and (self.dealer_commission_applicable or self.dealer_refund_applicable):
+                raise UserError('Commission/Refund feature not applicable before dated %s' % commission_start_date)
+        else:
+            raise UserError('Commission/Refund feature start date not found in configuration!')
+
     @api.onchange('product_id', 'product_uom')
     def _onchange_commission_refund_product_id(self):
         self._compute_so_readonly_field()
         company_id = self.env.user.company_id
 
         domain = [
+            ('process', '=', 'textbox'),
             ('customer_type', 'in', company_id.customer_types.ids or []),
             ('functional_unit', 'in', company_id.branch_ids.ids or [])
         ]
@@ -252,15 +285,16 @@ class SaleOrderLine(models.Model):
                         rec.corporate_commission_per_unit = pricelist_id.corporate_commission_per_unit
                         rec.corporate_refund_per_unit = pricelist_id.corporate_refund_per_unit
 
-                        # commission & refund applicable or not for dealer only.
-                        rec.dealer_commission_applicable = pricelist_id.dealer_commission_applicable
-                        rec.dealer_refund_applicable = pricelist_id.dealer_refund_applicable
-
                         rec.price_unit_copy = pricelist_id.new_price
                         rec.commission_per_unit_copy = pricelist_id.corporate_commission_per_unit
                         rec.refund_per_unit_copy = pricelist_id.corporate_refund_per_unit
-                        rec.commission_applicable_copy = pricelist_id.dealer_commission_applicable
-                        rec.refund_applicable_copy = pricelist_id.dealer_refund_applicable
+
+                    # commission & refund applicable or not for dealer only.
+                    rec.dealer_commission_applicable = pricelist_id.dealer_commission_applicable
+                    rec.dealer_refund_applicable = pricelist_id.dealer_refund_applicable
+
+                    rec.commission_applicable_copy = pricelist_id.dealer_commission_applicable
+                    rec.refund_applicable_copy = pricelist_id.dealer_refund_applicable
 
                     # commission
                     rec.commission_actual = pricelist_id.corporate_commission_per_unit
