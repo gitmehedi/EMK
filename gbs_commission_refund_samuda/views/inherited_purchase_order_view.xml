@@ -57,7 +57,8 @@
                                 <field name="partner_id" string="Customer" options="{'no_create': True,'no_edit': True}" domain="[('customer','=',True), ('parent_id','=',False),('is_deprecated','=',False)]"/>
                                 <!--<field name="partner_ref" string="Customer Reference"/>-->
                                 <field name="date_order" string="Date" readonly="1" force_save="1"/>
-                                <field name="region_type" string="Region Type" readonly="1" force_save="1"/>
+                                <field name="region_type" string="Region Type" invisible="1" force_save="1"/>
+                                <field name="region_type_copy" string="Region Type" readonly="1"/>
                                 <field name="currency_id" groups="base.group_multi_currency" invisible="1"/>
                                 <field name="is_shipped" invisible="1"/>
                                 <field name="is_service_order" invisible="1"/>
