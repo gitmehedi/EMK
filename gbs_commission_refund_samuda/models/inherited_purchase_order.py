@@ -29,7 +29,9 @@ class InheritedPurchaseOrder(models.Model):
         return [('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)]
 
     def _get_operating_unit(self):
-        domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
+        op_ids = self.env['operating.unit'].search([('active', '=', True), ('company_id', '=', self.env.user.company_id.id)]).ids
+        # domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
+        domain = [("id", "in", op_ids)]
         return domain
 
     is_commission_claim = fields.Boolean(
@@ -71,6 +73,8 @@ class InheritedPurchaseOrder(models.Model):
         domain=_get_operating_unit
     )
 
+    region_type_copy = fields.Selection(related="region_type")
+
     @api.onchange('partner_id', 'operating_unit_id')
     def _onchange_sale_order_domain(self):
         if self.partner_id:
@@ -81,8 +85,8 @@ class InheritedPurchaseOrder(models.Model):
         self.order_line = [(5, 0, 0)]
 
         if self.partner_id and self.operating_unit_id:
-            # sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)])
-            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id)])
+            sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)])
+            # sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id)])
             available_ids = []
             for sale_order in sale_order_ids:
                 if self.is_commission_claim:
