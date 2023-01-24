@@ -29,7 +29,12 @@ class CancelWizard(models.TransientModel):
                         product_received_qty = 0
                     lc_prod_line.write({'product_received_qty': product_received_qty})
                     product_line.unlink()
-        shipment_obj.write(
-            {'comment': self.comments, 'state': 'cancel'})
+        shipment_obj.write({
+            'comment': self.comments,
+            'state': 'cancel',
+            'state': 'cancel',
+            'invoice_ids': [(6, 0, [])],
+            'invoice_value': 0
+        })
         return {'type': 'ir.actions.act_window_close'}
 
