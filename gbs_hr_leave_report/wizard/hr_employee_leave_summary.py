@@ -15,6 +15,8 @@ class HREmpLeaveSummary(models.TransientModel):
                               domain="[('type_id.holiday_year', '=', True)]")
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
+    is_include_archive = fields.Boolean(string='Include Archive Employee', default=False,
+                               help="Include archive employee to genreate leave summary.")
 
     @api.multi
     def process_report(self):

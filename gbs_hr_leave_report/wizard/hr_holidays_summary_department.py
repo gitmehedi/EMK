@@ -9,6 +9,8 @@ class HRLeaveSummary(models.TransientModel):
     department_id = fields.Many2one('hr.department', string='Department')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
+    is_include_archive = fields.Boolean(string='Include Archive Employee', default=False,
+                                        help="Include archive employee to genreate leave summary.")
 
     @api.multi
     def process_report(self):
@@ -17,6 +19,7 @@ class HRLeaveSummary(models.TransientModel):
         data['year_name'] = self.year_id.name
         data['operating_unit_id'] = self.operating_unit_id.id
         data['operating_unit_name'] = self.operating_unit_id.name
+        data['include_archived'] = self.is_include_archive
 
         if self.department_id:
             data['department_id'] = self.department_id.id

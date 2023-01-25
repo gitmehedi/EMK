@@ -31,6 +31,10 @@ class HrLeaveSummaryReport(models.AbstractModel):
         department = '={0} '.format(data['department_id']) if data['department_id'] else 'IS NOT NULL '.format(
             data['department_id'])
 
+        emp_active_condition = ''
+        if not data['include_archived']:
+            emp_active_condition = " and he.active=True"
+
         self._cr.execute('''
             SELECT he.id, 
                    he.name_related AS name, 
@@ -44,8 +48,8 @@ class HrLeaveSummaryReport(models.AbstractModel):
                    LEFT JOIN operating_unit ou 
                               ON ( ou.id = he.operating_unit_id )
             WHERE ou.id=%s 
-                  AND he.department_id %s
-        ''' % (data['operating_unit_id'], department))
+                  AND he.department_id %s %s
+        ''' % (data['operating_unit_id'], department, emp_active_condition))
 
         leaves = {val[0]: {
             'name': val[1],
