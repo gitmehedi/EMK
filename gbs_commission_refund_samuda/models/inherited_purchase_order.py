@@ -28,12 +28,6 @@ class InheritedPurchaseOrder(models.Model):
     def _sale_order_domain(self):
         return [('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)]
 
-    def _get_operating_unit(self):
-        op_ids = self.env['operating.unit'].search([('active', '=', True), ('company_id', '=', self.env.user.company_id.id)]).ids
-        # domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
-        domain = [("id", "in", op_ids)]
-        return domain
-
     is_commission_claim = fields.Boolean(
         string='Commission',
         help="Commission Claim Flag.",
@@ -65,6 +59,16 @@ class InheritedPurchaseOrder(models.Model):
         domain=_sale_order_domain,
     )
     commission_claim_approve_uid = fields.Many2one('res.users', 'Approved By')
+
+    def _get_operating_unit(self):
+        if self.env.context.get('default_is_refund_claim', self.is_refund_claim) or self.env.context.get('default_is_commission_claim', self.is_commission_claim):
+            op_ids = self.env['operating.unit'].search([('active', '=', True), ('company_id', '=', self.env.user.company_id.id)]).ids
+            domain = [("id", "in", op_ids)]
+        else:
+            domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
+
+        return domain
+
     operating_unit_id = fields.Many2one(
         comodel_name='operating.unit',
         string='Operating Unit',
