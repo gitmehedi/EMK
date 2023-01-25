@@ -298,8 +298,6 @@ class SaleOrderLine(models.Model):
         if config.so_readonly_field:
             if 'price_unit_copy' in values:
                 res.price_unit = res.price_unit_copy
-                print("res.price_unit_copy 111", res.price_unit_copy)
-                print("res.price_unit 111", res.price_unit)
             if 'commission_per_unit_copy' in values:
                 res.corporate_commission_per_unit = res.commission_per_unit_copy
             if 'refund_per_unit_copy' in values:
