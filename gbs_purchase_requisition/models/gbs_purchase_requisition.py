@@ -1,5 +1,5 @@
 from datetime import date
-from odoo import api, fields, models,_
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
 from odoo.addons import decimal_precision as dp
@@ -11,11 +11,21 @@ class PurchaseRequisition(models.Model):
 
     _order = "requisition_date desc"
 
-    name = fields.Char(string='Purchase Requisition',default='/')
+    name = fields.Char(string='Purchase Requisition', default='/')
     operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit', required=True,
                                         default=lambda self: self.env.user.default_operating_unit_id)
 
-    region_type = fields.Selection([('local', 'Local'),('foreign', 'Foreign')],
+    def _get_picking_in(self):
+        pick_in = self.env.ref('stock.picking_type_in')
+        if not pick_in:
+            company = self.env['res.company']._company_default_get('purchase.requisition')
+            pick_in = self.env['stock.picking.type'].search(
+                [('warehouse_id.company_id', '=', company.id), ('code', '=', 'incoming'), ('operating_unit_id', '=', self.operating_unit_id.id)],
+                limit=1,
+            )
+        return pick_in
+
+    region_type = fields.Selection([('local', 'Local'), ('foreign', 'Foreign')],
                                    string="Region Type", help="Local: Local LC.\n""Foreign: Foreign LC.")
 
     purchase_by = fields.Selection([('cash', 'Cash'),
@@ -24,18 +34,18 @@ class PurchaseRequisition(models.Model):
                                     ('tt', 'TT')], string="Purchase By")
 
     purchase_from = fields.Selection([('own', 'Own'), ('ho', 'HO')],
-                                   string="Purchase From")
+                                     string="Purchase From")
 
-    requisition_date = fields.Date(string='Requisition Date',required=True, default=lambda self: fields.datetime.now())
+    requisition_date = fields.Date(string='Requisition Date', required=True, default=lambda self: fields.datetime.now())
     required_date = fields.Date(string='Required Date')
     state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
-                              ('approve_head_procurement', 'Waiting For Approval'),('done', 'Approved'),('close','Done'),
-                              ('cancel', 'Cancelled')],'Status', track_visibility='onchange', required=True,
+                              ('approve_head_procurement', 'Waiting For Approval'), ('done', 'Approved'), ('close', 'Done'),
+                              ('cancel', 'Cancelled')], 'Status', track_visibility='onchange', required=True,
                              copy=False, default='draft')
 
-    indent_ids = fields.Many2many('indent.indent','pr_indent_rel','pr_id','indent_id',string='Indent')
+    indent_ids = fields.Many2many('indent.indent', 'pr_indent_rel', 'pr_id', 'indent_id', string='Indent')
     # attachment_ids = fields.Many2many('ir.attachment','attachment_pr_rel','pr_id','attachment_id', string='Attachments')
-    attachment_ids = fields.One2many('ir.attachment','res_id', string='Attachments', domain=[('res_model', '=', 'purchase.requisition')])
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments', domain=[('res_model', '=', 'purchase.requisition')])
 
     dept_location_id = fields.Many2one('stock.location', string='Department', readonly=True,
                                        states={'draft': [('readonly', False)]},
@@ -55,7 +65,6 @@ class PurchaseRequisition(models.Model):
             self.suspend_security().write({'state': 'close'})
         else:
             self.write({'state': 'close'})
-
 
     @api.multi
     def action_draft(self):
@@ -87,7 +96,7 @@ class PurchaseRequisition(models.Model):
         }
         requested_date = self.requisition_date
         operating_unit = self.operating_unit_id
-        new_seq = self.env['ir.sequence'].next_by_code_new('purchase.requisition',requested_date,operating_unit)
+        new_seq = self.env['ir.sequence'].next_by_code_new('purchase.requisition', requested_date, operating_unit)
 
         if new_seq:
             res['name'] = new_seq
@@ -143,7 +152,7 @@ class PurchaseRequisition(models.Model):
                     self.dept_location_id = indent_id.stock_location_id.id
                 elif self.dept_location_id.id != indent_id.stock_location_id.id:
                     raise UserError(_('Indent department and PR department must be same.'))
-                indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id','=',indent_id.id)])
+                indent_product_line_obj = self.env['indent.product.lines'].search([('indent_id', '=', indent_id.id)])
                 for indent_product_line in indent_product_line_obj:
                     if indent_product_line.product_id:
                         req_lines = self.env['purchase.requisition.line'].suspend_security().search(
@@ -156,12 +165,12 @@ class PurchaseRequisition(models.Model):
                             last_requisition_id = req_lines[:1].id
 
                             vals.append((0, 0, {'product_id': indent_product_line.product_id,
-                                            'name': indent_product_line.name,
-                                            'product_uom_id': indent_product_line.product_uom,
-                                            'product_ordered_qty': indent_product_line.product_uom_qty,
-                                            'product_qty': indent_product_line.qty_available,
-                                             'last_requisition_id': last_requisition_id
-                                      }))
+                                                'name': indent_product_line.name,
+                                                'product_uom_id': indent_product_line.product_uom,
+                                                'product_ordered_qty': indent_product_line.product_uom_qty,
+                                                'product_qty': indent_product_line.qty_available,
+                                                'last_requisition_id': last_requisition_id
+                                                }))
 
                         else:
                             vals.append((0, 0, {'product_id': indent_product_line.product_id,
@@ -216,30 +225,27 @@ class PurchaseRequisitionLine(models.Model):
 
     product_ordered_qty = fields.Float('Ordered Qty', digits=dp.get_precision('Product UoS'),
                                        default=1)
-    name = fields.Char(related='product_id.name',string='Description',store=True)
+    name = fields.Char(related='product_id.name', string='Description', store=True)
     # price_unit = fields.Float(related='product_id.standard_price', string='Unit Price', digits=dp.get_precision('Product Price'), store=True)
     price_unit = fields.Float(compute='_compute_price_unit', string='Unit Price', digits=dp.get_precision('Product Price'))
-    product_uom_id = fields.Many2one(related='product_id.uom_id',comodel_name='product.uom', string='Product UOM',store=True)
-    last_purchase_date = fields.Date(string='Last PO Date',compute = '_get_last_purchase',store = True)
-    last_qty = fields.Float(string='Last PO Qty',compute = '_get_last_purchase',store = True)
-    last_product_uom_id = fields.Many2one('product.uom', string='Last PO UOM',compute = '_get_last_purchase',store=True)
-    last_price_unit = fields.Float(string='Last Unit Price',compute = '_get_last_purchase',store = True)
-    last_supplier_id = fields.Many2one(comodel_name='res.partner', string='Last Supplier', compute='_get_last_purchase',store=True)
+    product_uom_id = fields.Many2one(related='product_id.uom_id', comodel_name='product.uom', string='Product UOM', store=True)
+    last_purchase_date = fields.Date(string='Last PO Date', compute='_get_last_purchase', store=True)
+    last_qty = fields.Float(string='Last PO Qty', compute='_get_last_purchase', store=True)
+    last_product_uom_id = fields.Many2one('product.uom', string='Last PO UOM', compute='_get_last_purchase', store=True)
+    last_price_unit = fields.Float(string='Last Unit Price', compute='_get_last_purchase', store=True)
+    last_supplier_id = fields.Many2one(comodel_name='res.partner', string='Last Supplier', compute='_get_last_purchase', store=True)
     remark = fields.Char(string='Remarks')
-    store_code = fields.Char(related='product_id.default_code',readonly=True,string='Store Code',size=20,store = True)
+    store_code = fields.Char(related='product_id.default_code', readonly=True, string='Store Code', size=20, store=True)
 
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
                                compute='_get_product_quantity')
 
     receive_qty = fields.Float(string='PO Qty')
-    due_qty = fields.Float(string='Due Qty',compute='_compute_due_qty')
+    due_qty = fields.Float(string='Due Qty', compute='_compute_due_qty')
     last_requisition_id = fields.Many2one('purchase.requisition.line', compute='_get_last_requisition_id', store=True)
     last_requisition_no = fields.Char('Last PR NO', compute='_get_last_requisition_no', store=False)
     last_requisition_date = fields.Date(string='Last PR Date', compute='_get_last_requisition_date', store=False)
     last_requisition_qty = fields.Float(string='Last PR Qty', compute='_get_last_requisition_qty', store=False)
-
-
-
 
     @api.depends('product_id')
     def _compute_price_unit(self):
@@ -251,13 +257,12 @@ class PurchaseRequisitionLine(models.Model):
         for line in self:
             if line.product_ordered_qty and line.receive_qty:
                 diff = line.product_ordered_qty - line.receive_qty
-                if diff>0:
+                if diff > 0:
                     line.due_qty = diff
                 else:
                     line.due_qty = 0.0
             else:
                 line.due_qty = line.product_ordered_qty
-
 
     @api.depends('product_id')
     @api.multi
@@ -267,7 +272,7 @@ class PurchaseRequisitionLine(models.Model):
                 [('operating_unit_id', '=', product.requisition_id.operating_unit_id.id), ('name', '=', 'Stock')],
                 limit=1).id
             product_quant = self.env['stock.quant'].search([('product_id', '=', product.product_id.id),
-                                                        ('location_id', '=', location)])
+                                                            ('location_id', '=', location)])
             quantity = sum([val.qty for val in product_quant])
             product.product_qty = quantity
 
@@ -277,7 +282,7 @@ class PurchaseRequisitionLine(models.Model):
         """ Get last purchase price, last purchase date and last supplier """
         if self.product_id:
             lines = self.env['purchase.order.line'].search(
-                [('order_id.operating_unit_id','=',self.requisition_id.operating_unit_id.id),('product_id', '=', self.product_id.id),
+                [('order_id.operating_unit_id', '=', self.requisition_id.operating_unit_id.id), ('product_id', '=', self.product_id.id),
                  ('state', 'in', ['done', 'purchase'])]).sorted(
                 key=lambda l: l.order_id.date_order, reverse=True)
             self.last_purchase_date = lines[:1].order_id.date_order
@@ -287,7 +292,6 @@ class PurchaseRequisitionLine(models.Model):
             self.last_product_uom_id = lines[:1].product_uom.id
 
             self._get_product_quantity()
-
 
     @api.depends('product_id')
     @api.one
@@ -321,17 +325,6 @@ class PurchaseRequisitionLine(models.Model):
                     self.last_requisition_id = lines[:1].id
                 else:
                     self.last_requisition_id = False
-
-
-
-
-
-
-
-
-
-
-
 
     @api.depends('last_requisition_id')
     def _get_last_requisition_no(self):
