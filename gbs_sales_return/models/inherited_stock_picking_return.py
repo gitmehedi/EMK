@@ -17,9 +17,6 @@ class InheritedReturnPicking(models.TransientModel):
 
             picking = self.env['stock.picking'].browse(self.env.context['active_id'])
             return_moves = self.product_return_moves.mapped('move_id')
-            print('picking', picking)
-            print('return_moves', return_moves)
-            print('return_date', rec.return_date)
             if not picking.partner_id.property_account_receivable_id:
                 raise UserError(_("Receivable account not found for this customer!"))
 
@@ -45,14 +42,3 @@ class InheritedReturnPicking(models.TransientModel):
                 'account_id': partner_acc_rec
             }
             invoice_obj = self.env['account.invoice'].create(refund_obj)
-
-            # invoice_line = {
-            #     'product_id':'',
-            #     'name':'',
-            #     'account_id':'',
-            #     'quantity':'',
-            #     'uom_id':'',
-            #     'price_unit':'',
-            #     'invoice_id':invoice_obj.id
-            # }
-            print('invoice_obj', invoice_obj)

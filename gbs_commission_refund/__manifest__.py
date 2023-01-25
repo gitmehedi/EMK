@@ -39,16 +39,11 @@
         'wizards/inherited_stock_return_picking.xml',
 
     ],
-    'summary': 'Override base module logic.',
+    'summary': '',
     'description': """
-GBS Product Unit Price Update module
-==============================
-
 Key Features
 ------------
-* Product Unit Price Update for Local Purchase at "Anticipatory Stock".
-* Product Unit Price will not Update for Foreign Purchase.
-* Finish Goods Unit Price Update at Production""",
+* Samuda Commission and Refund Module""",
     'installable': True,
     'application': False,
 }

@@ -50,13 +50,14 @@ class AccountInvoice(models.Model):
                                     analytic_account_id = po_obj.lc_ids[0].analytic_account_id.id
                             elif po_obj.cnf_quotation:
                                 analytic_account_id = po_obj.shipment_id.lc_id.analytic_account_id.id
+                            account_id = move.product_id.property_account_expense_id.id or move.product_id.categ_id.property_account_expense_categ_id.id
                             if po_obj.region_type == 'foreign':
                                 if not self.env.user.company_id.lc_pad_account:
                                     raise UserError(
                                         _("LC Goods In Transit Account not set. Please contact your system administrator for "
                                           "assistance."))
                                 else:
-                                    analytic_account_id = self.env.user.company_id.lc_pad_account.id
+                                    account_id = self.env.user.company_id.lc_pad_account.id
 
                             if float("{:.4f}".format(aval_qty)) != 0:
                                 move_ref = "(" + str(move.id) + ":" + str(aval_qty) + ")"
@@ -69,11 +70,10 @@ class AccountInvoice(models.Model):
                                                     'uom_id': move.product_uom.id,
                                                     'purchase_line_id': order_line.id,
                                                     'purchase_id': order_line.order_id.id,
-                                                    'analytic_account_id': analytic_account_id,
-                                                    'account_id': move.product_id.property_account_expense_id.id or move.product_id.categ_id.property_account_expense_categ_id.id,
+                                                    'account_analytic_id': analytic_account_id,
+                                                    'account_id': account_id,
                                                     'move_ref': move_ref
                                                     }))
-
                 self.invoice_line_ids = vals
             else:
                 self.invoice_line_ids = []

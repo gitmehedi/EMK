@@ -24,16 +24,13 @@
         'views/inherited_purchase_order_view.xml',
 
     ],
-    'summary': 'Override base module logic.',
+    'summary': '',
     'description': """
-GBS Product Unit Price Update module
 ==============================
 
 Key Features
 ------------
-* Product Unit Price Update for Local Purchase at "Anticipatory Stock".
-* Product Unit Price will not Update for Foreign Purchase.
-* Finish Goods Unit Price Update at Production""",
+* Commission and Refund Claiming Process""",
     'installable': True,
     'application': False,
 }
