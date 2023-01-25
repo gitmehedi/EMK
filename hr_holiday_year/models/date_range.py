@@ -3,6 +3,7 @@ from odoo import models, fields, api, _, exceptions
 
 class DateRange(models.Model):
     _inherit = "date.range"
+    _order = 'id desc'
 
     current = fields.Boolean(string='Is Current?', default=False)
 

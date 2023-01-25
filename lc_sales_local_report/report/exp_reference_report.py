@@ -15,13 +15,13 @@ class ExpReferenceXLSX(ReportXlsx):
         sheet.write(row, 0, "SL", header_format_left)
         sheet.write(row, 1, "Bank Name", header_format_left)
         sheet.write(row, 2, "Exp No", header_format_left)
-        sheet.write(row, 3, "HScode", header_format_left)
+        sheet.write(row, 3, "HS Code", header_format_left)
         sheet.write(row, 4, "Currency", header_format_left)
         sheet.write(row, 5, "Amount Inv", header_format_left)
         sheet.write(row, 6, "Realized Date", header_format_left)
         sheet.write(row, 7, "Amount Realized", header_format_left)
         sheet.write(row, 8, "Ship Date", header_format_left)
-        sheet.write(row, 9, "Lc Contact", header_format_left)
+        sheet.write(row, 9, "LC Contact", header_format_left)
         sheet.write(row, 10, "Importer", header_format_left)
         sheet.write(row, 11, "Quantity (MT)", header_format_left)
         sheet.write(row, 12, "Invoice No", header_format_left)
@@ -44,6 +44,7 @@ class ExpReferenceXLSX(ReportXlsx):
         self.env.cr.execute(query)
         result_data = self.env.cr.dictfetchall()
         row = 8
+        ReportUtility = self.env['report.utility']
         for index, rec in enumerate(result_data):
             sheet.write(row, 0, index + 1, th_cell_center)
             sheet.write(row, 1, rec['bank_name'], th_cell_center)
@@ -51,20 +52,20 @@ class ExpReferenceXLSX(ReportXlsx):
             sheet.write(row, 3, rec['hscode'], th_cell_center)
             sheet.write(row, 4, rec['currency'], th_cell_center)
             sheet.write(row, 5, "{:.2f}".format(rec['amount_inv']), th_cell_numeric)
-            sheet.write(row, 6, rec['realized_date'], th_cell_center)
-            a = rec['amount_realized']
+            realized_date = ReportUtility.get_date_from_string(rec['realized_date'])
+            sheet.write(row, 6, realized_date, th_cell_center)
             sheet.write(row, 7, "{:.2f}".format(rec['amount_realized']), th_cell_numeric)
-            sheet.write(row, 8, rec['ship_date'], th_cell_center)
+            sheet.write(row, 8, ReportUtility.get_date_from_string(rec['ship_date']), th_cell_center)
             sheet.write(row, 9, rec['lc_contact'], th_cell_center)
             sheet.write(row, 10, rec['importer'], th_cell_center)
             sheet.write(row, 11, rec['quantity'], th_cell_numeric)
             sheet.write(row, 12, rec['invoice_no'], th_cell_center)
-            sheet.write(row, 13, rec['invoice_date'], th_cell_center)
+            sheet.write(row, 13, ReportUtility.get_date_from_string(rec['invoice_date']), th_cell_center)
             sheet.write(row, 14, rec['incoterm'], th_cell_center)
             sheet.write(row, 15, rec['carrier'], th_cell_center)
             sheet.write(row, 16, rec['dest_port'], th_cell_center)
             sheet.write(row, 17, rec['trans_doc_no'], th_cell_center)
-            sheet.write(row, 18, rec['trans_doc_date'], th_cell_center)
+            sheet.write(row, 18, ReportUtility.get_date_from_string(rec['trans_doc_date']), th_cell_center)
             row += 1
             index += 1
 

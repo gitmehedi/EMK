@@ -26,7 +26,11 @@ class SaleUnderOverApprovedPriceReportXLSX(ReportXlsx):
 
     def _get_sale_products(self, obj):
         where_clause = self._get_query_where_clause(obj)
-        sql_str = """select sol.product_id as product_id,sol.name as product_name, rp.name as cus_name,so.name as so_no,COALESCE(sol.product_uom_qty, 0) as sold_qty,COALESCE(sol.price_unit_actual,0) as approved_price, COALESCE(sol.price_unit_max_discount, 0) as max_discount, COALESCE(sol.price_unit,0) as sale_price,rc.name as currency_name, CASE WHEN COALESCE(sol.price_unit,0) < COALESCE(sol.price_unit_actual,0) THEN 'Under' WHEN COALESCE(sol.price_unit,0) > COALESCE(sol.price_unit_actual,0) THEN 'Over' END as status from sale_order_line as sol 
+        sql_str = """select sol.product_id as product_id,sol.name as product_name, rp.name as cus_name,so.name as so_no,
+                    COALESCE(sol.product_uom_qty, 0) as sold_qty,COALESCE(sol.price_unit_actual,0) as approved_price, COALESCE(sol.price_unit_max_discount, 0) as max_discount, COALESCE(sol.price_unit,0) as sale_price,rc.name as currency_name, 
+                    CASE WHEN COALESCE(sol.price_unit,0) < COALESCE(sol.price_unit_actual,0)-COALESCE(sol.price_unit_max_discount,0) 
+                    THEN 'Under' WHEN COALESCE(sol.price_unit,0) > COALESCE(sol.price_unit_actual,0) + COALESCE(sol.price_unit_max_discount,0) THEN 'Over' END as status 
+                    from sale_order_line as sol 
                     LEFT JOIN sale_order as so ON sol.order_id = so.id
                     LEFT JOIN res_currency as rc ON rc.id = sol.currency_id
                     LEFT JOIN res_partner as rp ON rp.id = sol.order_partner_id
@@ -144,7 +148,7 @@ class SaleUnderOverApprovedPriceReportXLSX(ReportXlsx):
             for rec in value['order_lines']:
                 if rec['sale_price'] < (rec['approved_price'] - rec['max_discount']):
                     under += 1
-                elif rec['sale_price'] > rec['sale_price'] < (rec['approved_price'] + rec['max_discount']):
+                elif rec['sale_price'] > (rec['approved_price'] + rec['max_discount']):
                     over += 1
             sheet.merge_range(row, col, row, 2, value['product_name'], td_cell_left_bold)
             sheet.write(row, 3, " Under:" + str(under) + "/ Over:" + str(over), td_cell_center)

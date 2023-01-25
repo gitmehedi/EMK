@@ -28,10 +28,6 @@ class InheritedPurchaseOrder(models.Model):
     def _sale_order_domain(self):
         return [('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)]
 
-    def _get_operating_unit(self):
-        domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
-        return domain
-
     is_commission_claim = fields.Boolean(
         string='Commission',
         help="Commission Claim Flag.",
@@ -63,6 +59,16 @@ class InheritedPurchaseOrder(models.Model):
         domain=_sale_order_domain,
     )
     commission_claim_approve_uid = fields.Many2one('res.users', 'Approved By')
+
+    def _get_operating_unit(self):
+        if self.env.context.get('default_is_refund_claim', self.is_refund_claim) or self.env.context.get('default_is_commission_claim', self.is_commission_claim):
+            op_ids = self.env['operating.unit'].search([('active', '=', True), ('company_id', '=', self.env.user.company_id.id)]).ids
+            domain = [("id", "in", op_ids)]
+        else:
+            domain = [("id", "in", self.env.user.operating_unit_ids.ids)]
+
+        return domain
+
     operating_unit_id = fields.Many2one(
         comodel_name='operating.unit',
         string='Operating Unit',
@@ -70,6 +76,8 @@ class InheritedPurchaseOrder(models.Model):
         default=lambda self: (self.env['res.users'].operating_unit_default_get(self.env.uid)),
         domain=_get_operating_unit
     )
+
+    region_type_copy = fields.Selection(related="region_type")
 
     @api.onchange('partner_id', 'operating_unit_id')
     def _onchange_sale_order_domain(self):
@@ -82,6 +90,7 @@ class InheritedPurchaseOrder(models.Model):
 
         if self.partner_id and self.operating_unit_id:
             sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id), ('operating_unit_id', '=', self.operating_unit_id.id)])
+            # sale_order_ids = self.env['sale.order'].sudo().search([('partner_id', '=', self.partner_id.id)])
             available_ids = []
             for sale_order in sale_order_ids:
                 if self.is_commission_claim:
@@ -101,12 +110,16 @@ class InheritedPurchaseOrder(models.Model):
             # making purchase order line based on selected SO
             for so in rec.sale_order_ids:
                 for inv in so.invoice_ids:
-                    if inv.type != 'out_invoice' or not (inv.state == 'paid' or inv.state == 'open'):
-                        continue  # skip if not out invoice.
 
-                    if self.is_commission_claim and inv.is_commission_claimed:
+                    if inv.type != 'out_invoice' or not (inv.state == 'paid' or inv.state == 'open'):
+                        continue  # skip if not out invoice or state is not in paid or open state.
+
+                    # if there already added this invoice to purchase order line for current purchase order then keep it.
+                    temp_invoice_ids = self.env['purchase.order.line'].search([('invoice_id', '=', inv.id)])
+
+                    if self.is_commission_claim and inv.is_commission_claimed and not temp_invoice_ids:
                         continue
-                    elif self.is_refund_claim and inv.is_refund_claimed:
+                    elif self.is_refund_claim and inv.is_refund_claimed and not temp_invoice_ids:
                         continue
 
                     for inv_line in inv.invoice_line_ids:

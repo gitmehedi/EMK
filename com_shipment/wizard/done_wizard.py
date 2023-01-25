@@ -29,10 +29,15 @@ class DoneWizard(models.TransientModel):
         form_id = self.env.context.get('active_id')
         shipment_pool = self.env['purchase.shipment']
         shipment_obj = shipment_pool.search([('id', '=', form_id)])
+        is_exp_number_unique = True
         if not self.exp_number and shipment_obj.lc_id.is_required_exp and shipment_obj.lc_id.region_type == 'local' and shipment_obj.lc_id.type == 'export':
             raise UserError("Exp. Number is required")
         elif not self.exp_number and shipment_obj.lc_id.region_type == 'foreign' and shipment_obj.lc_id.type == 'export':
             raise UserError("Exp. Number is required")
+
+        is_exp_number_unique = self._check_exp_ref_unique(self.exp_number.strip())
+        if not is_exp_number_unique:
+            raise UserError("Exp. Number must be unique")
 
         shipment_obj.write(
             {
@@ -55,6 +60,12 @@ class DoneWizard(models.TransientModel):
         if shipment:
             invoice_value = shipment.invoice_value
         return invoice_value
+
+    def _check_exp_ref_unique(self, exp_ref):
+        purchase_shipment = self.env['purchase.shipment'].search([('exp_number', '=', exp_ref)])
+        if purchase_shipment:
+            return False
+        return True
 
     @api.onchange('ait_amount', 'payment_charge', 'discrepancy_amount')
     def _calculate_payment_rec_amount(self):
