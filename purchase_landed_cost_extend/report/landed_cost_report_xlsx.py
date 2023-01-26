@@ -128,6 +128,7 @@ class LandedCostInfoXLSX(ReportXlsx):
             'valign': 'vcenter',
             'fg_color': '#d4fff6'})
         name_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 12})
+
         address_format = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10})
 
         th_cell_center = workbook.add_format(
@@ -155,7 +156,7 @@ class LandedCostInfoXLSX(ReportXlsx):
 
         # WORKSHEET
         sheet = workbook.add_worksheet('LC Landed Cost Report')
-        sheet.set_column('A:H', 12)
+        sheet.set_column('A:H', 14)
         sheet.merge_range(0, 0, 0, 7, self.env.user.company_id.name, name_format)
         sheet.merge_range(1, 0, 1, 7, self.env.user.company_id.street, address_format)
         sheet.merge_range(2, 0, 2, 7, self.env.user.company_id.street2, address_format)
@@ -163,30 +164,38 @@ class LandedCostInfoXLSX(ReportXlsx):
                           address_format)
 
         sheet.merge_range(4, 0, 4, 7, "LC Costing Report", name_format)
-        sheet.merge_range(5, 0, 5, 1, "Currency", td_cell_left)
-        sheet.merge_range(5, 2, 5, 3, obj.landed_cost_id.currency_id.name, td_cell_left)
-        sheet.merge_range(6, 0, 6, 1, "LC Number", td_cell_left)
-        sheet.merge_range(6, 2, 6, 3, obj.landed_cost_id.lc_id.name, td_cell_left)
-        sheet.merge_range(7, 0, 7, 1, "Asset / Inventory GL", td_cell_left)
-        sheet.merge_range(7, 2, 7, 3, obj.landed_cost_id.debit_account.name, td_cell_left)
-        sheet.merge_range(8, 0, 8, 1, "Product Name", td_cell_left)
-        sheet.merge_range(8, 2, 8, 3, obj.product_id.name, td_cell_left)
 
-        sheet.merge_range(5, 4, 5, 5, "Date", td_cell_left)
-        sheet.merge_range(5, 6, 5, 7, ReportUtility.get_date_from_string(obj.landed_cost_id.date), td_cell_left)
-        sheet.merge_range(6, 4, 6, 5, "Operating Unit", td_cell_left)
-        sheet.merge_range(6, 6, 6, 7, obj.landed_cost_id.operating_unit_id.name, td_cell_left)
-        sheet.merge_range(7, 4, 7, 5, "Conversion Rate", td_cell_left)
-        sheet.merge_range(7, 6, 7, 7, obj.landed_cost_id.currency_rate, td_cell_left)
-        sheet.merge_range(8, 4, 8, 5, "Total Qty(kg)", td_cell_left)
+        sheet.merge_range(5, 0, 5, 2, "LC Costing Number", td_cell_left_bold)
+        sheet.merge_range(5, 3, 5, 7, obj.landed_cost_id.name, td_cell_left_bold)
 
-        sheet.merge_range(10, 0, 10, 4, "Account", td_cell_left_bold_color)
-        sheet.write(10, 5, "Amount", td_cell_left_bold_color)
-        sheet.write(10, 6, "%", td_cell_left_bold_color)
-        sheet.write(10, 7, "Unit Cost", td_cell_left_bold_color)
+        sheet.merge_range(6, 0, 6, 1, "Currency", td_cell_left_bold)
+        sheet.merge_range(6, 2, 6, 3, obj.landed_cost_id.currency_id.name, td_cell_left)
+        sheet.merge_range(7, 0, 7, 1, "LC Number", td_cell_left_bold)
+        sheet.merge_range(7, 2, 7, 3, obj.landed_cost_id.lc_id.name, td_cell_left)
+        sheet.merge_range(8, 0, 8, 1, "Asset / Inventory GL", td_cell_left_bold)
+        debit_account_code = str(obj.landed_cost_id.debit_account.code)
+        debit_account_name = str(obj.landed_cost_id.debit_account.name)
+        debit_account_gl = debit_account_code + ' ' + debit_account_name
+        sheet.merge_range(8, 2, 8, 3, debit_account_gl, td_cell_left)
+        sheet.merge_range(9, 0, 9, 1, "Product Name", td_cell_left_bold)
+        sheet.merge_range(9, 2, 9, 3, obj.product_id.name, td_cell_left)
+
+        sheet.merge_range(6, 4, 6, 5, "Date", td_cell_left_bold)
+        sheet.merge_range(6, 6, 6, 7, ReportUtility.get_date_from_string(obj.landed_cost_id.date), td_cell_left)
+        sheet.merge_range(7, 4, 7, 5, "Operating Unit", td_cell_left_bold)
+        sheet.merge_range(7, 6, 7, 7, obj.landed_cost_id.operating_unit_id.name, td_cell_left)
+        sheet.merge_range(8, 4, 8, 5, "Conversion Rate", td_cell_left_bold)
+        sheet.merge_range(8, 6, 8, 7, obj.landed_cost_id.currency_rate, td_cell_left)
+        product_uom = str(obj.product_id.uom_id.name)
+
+        sheet.merge_range(9, 4, 9, 5, "Total Qty" + "(" + product_uom + ")", td_cell_left_bold)
+        sheet.merge_range(11, 0, 11, 4, "Account", td_cell_left_bold_color)
+        sheet.write(11, 5, "Amount", td_cell_left_bold_color)
+        sheet.write(11, 6, "%", td_cell_left_bold_color)
+        sheet.write(11, 7, "Unit Cost", td_cell_left_bold_color)
 
         main_table_data_list = self.get_main_table_data(obj.landed_cost_id.id, obj.product_id.id)
-        row = 11
+        row = 12
         sum_total_expense_amount_per_account = 0
         sum_amt_percentage = 0
         sum_total_cost_ratio_per_account = 0
@@ -213,8 +222,7 @@ class LandedCostInfoXLSX(ReportXlsx):
                 sum_total_cost_without_landed_cost = sum_total_cost_without_landed_cost + rec[
                     'total_cost_without_landed_cost']
             bucket.append(rec['total_cost_without_landed_cost'])
-
-        sheet.merge_range(8, 6, 8, 7, sum_product_qty, td_cell_left)
+        sheet.merge_range(9, 6, 9, 7, sum_product_qty, td_cell_left)
         sheet.merge_range(row, 0, row, 4, "Total Landed Cost", td_cell_left_bold)
         sheet.write(row, 5, sum_total_expense_amount_per_account, td_cell_left_bold)
         sheet.write(row, 6, str('%.2f' % sum_amt_percentage) + " %", total_format)
