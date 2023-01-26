@@ -12,7 +12,6 @@
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
                             <field name="emp_id"
                                    options="{'no_open':1,'no_create_edit':1,'no_create':1}"/>
-                            <field name="is_include_archive"/>
                         </group>
                         <group>
 

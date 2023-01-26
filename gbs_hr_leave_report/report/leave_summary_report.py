@@ -11,8 +11,9 @@ class HrLeaveSummaryReport(models.AbstractModel):
             header = {}
             header[0] = 'SI'
             header[1] = 'Name'
-            header[2] = 'Designation'
-            header[3] = 'Department'
+            header[2] = 'Employee ID'
+            header[3] = 'Designation'
+            header[4] = 'Department'
             header_data = self.env['hr.holidays.status'].search([], order='id ASC')
             for val in header_data:
                 header[len(header)] = {val.name: {'Avail': 0, 'Balance': 0}}
@@ -38,6 +39,7 @@ class HrLeaveSummaryReport(models.AbstractModel):
         self._cr.execute('''
             SELECT he.id, 
             he.name_related AS name, 
+            he.device_employee_acc as employee_id,
             hj.name         AS designation, 
             hd.name         AS department
             FROM   hr_employee he 
@@ -55,8 +57,9 @@ class HrLeaveSummaryReport(models.AbstractModel):
 
         leaves = {val[0]: {
             'name': val[1],
-            'designation': val[2],
-            'department': val[3],
+            'employee_id': val[2],
+            'designation': val[3],
+            'department': val[4],
             'leave': {v.id: {
                 'avail': 0,
                 'balance': 0
