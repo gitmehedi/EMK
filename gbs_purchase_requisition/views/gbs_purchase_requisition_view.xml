@@ -56,7 +56,7 @@
                     <xpath expr="//button[@name='action_cancel']" position="replace">
                         <button name="action_cancel"
                                 groups="commercial.group_commercial_user,gbs_purchase_requisition.group_purchase_requisition_validator,gbs_purchase_requisition.group_purchase_requisition_approver"
-                                confirm="Are you sure you want to cancel?" states="approve_head_procurement,done"
+                                confirm="Are you sure to continue?" states="approve_head_procurement,done"
                                 string="Cancel" type="object"/>
                     </xpath>
                     <xpath expr="//button[@name='action_draft']" position="replace">
