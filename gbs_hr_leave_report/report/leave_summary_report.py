@@ -33,20 +33,22 @@ class HrLeaveSummaryReport(models.AbstractModel):
 
         emp_active_condition = ''
         if not data['include_archived']:
-            emp_active_condition = " and he.active=True"
+            emp_active_condition = " and rr.active=True"
 
         self._cr.execute('''
             SELECT he.id, 
-                   he.name_related AS name, 
-                   hj.name         AS designation, 
-                   hd.name         AS department 
+            he.name_related AS name, 
+            hj.name         AS designation, 
+            hd.name         AS department
             FROM   hr_employee he 
-                   LEFT JOIN hr_job hj 
-                          ON ( hj.id = he.job_id ) 
-                   LEFT JOIN hr_department hd 
-                          ON ( hd.id = he.department_id )
-                   LEFT JOIN operating_unit ou 
-                              ON ( ou.id = he.operating_unit_id )
+            LEFT JOIN hr_job hj 
+            ON ( hj.id = he.job_id ) 
+            LEFT JOIN hr_department hd 
+            ON ( hd.id = he.department_id )
+            LEFT JOIN operating_unit ou 
+            ON ( ou.id = he.operating_unit_id )
+            LEFT JOIN resource_resource rr 
+            ON (rr.id = he.resource_id)
             WHERE ou.id=%s 
                   AND he.department_id %s %s
         ''' % (data['operating_unit_id'], department, emp_active_condition))
@@ -73,15 +75,17 @@ class HrLeaveSummaryReport(models.AbstractModel):
                               ON ( he.id = hhl.employee_id )
                        LEFT JOIN operating_unit ou 
                               ON ( ou.id = he.operating_unit_id )
+                      LEFT JOIN resource_resource rr 
+                            ON (rr.id = he.resource_id)
                 WHERE  ou.id=%s  
                        AND he.department_id   %s
                        AND hhl.leave_year_id=%s
-                       AND hhl.state='validate'
+                       AND hhl.state='validate' %s
                 GROUP  BY he.name_related, 
                           he.id, 
                           hhls.id,
                           hhl.type
-                ''' % (data['operating_unit_id'], department, data['year_id'])
+                ''' % (data['operating_unit_id'], department, data['year_id'], emp_active_condition)
 
         self._cr.execute(sql)
         for record in self._cr.fetchall():
