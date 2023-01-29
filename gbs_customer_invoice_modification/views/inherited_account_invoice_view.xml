@@ -36,6 +36,11 @@
                        position="attributes">
                     <attribute name="attrs">{'readonly': [('can_edit_invoice_line', '=', False)]}</attribute>
                 </xpath>
+
+                <xpath expr="//button[@name='invoice_print']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
             </field>
         </record>
 
@@ -48,6 +53,17 @@
             </field>
         </record>
 
+        <report
+            id="account.account_invoices"
+            model="account.invoice"
+            string="Invoices"
+            report_type="qweb-pdf"
+            name="account.report_invoice"
+            file="account.report_invoice"
+            attachment_use="True"
+            menu="False"
+            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+        />
 
     </data>
 </odoo>
