@@ -14,6 +14,7 @@
     ],
     'data': [
         # data
+        'security/security.xml',
         'data/sequence.xml',
         'data/service_data.xml',
         'security/ir.model.access.csv',

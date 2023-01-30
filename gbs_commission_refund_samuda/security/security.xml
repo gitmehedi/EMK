@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="rule_for_commission_claim" model="ir.rule">
+            <field name="name">Commission Claim Rule for Head of Account and Income User</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="domain_force">[('operating_unit_id','in',[g.id for g in user.operating_unit_ids]),('is_service_order', '=', True), ('is_commission_claim', '=', True)]
+            </field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups"
+                   eval="[(4,ref('gbs_application_group.group_head_account')),(4,ref('gbs_application_group.group_account_income'))]"/>
+        </record>
+
+
+    </data>
+</odoo>
