@@ -212,7 +212,7 @@ class LandedCostInfoXLSX(ReportXlsx):
 
             sheet.merge_range(row, 0, row, 4, rec['acc_name'], td_cell_left)
             sheet.write(row, 5, rec['total_expense_amount_per_account'], td_cell_left)
-            sheet.write(row, 6, (rec['total_expense_amount_per_account']/product_cost)*100, td_cell_left_no)
+            sheet.write(row, 6, (rec['total_expense_amount_per_account']/(sum_total_expense_amount_per_account + product_cost))*100, td_cell_left_no)
             sheet.write(row, 7, rec['total_expense_amount_per_account']/product_qty, td_cell_left_no)
 
             row += 1
