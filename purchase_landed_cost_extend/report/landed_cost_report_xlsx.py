@@ -206,9 +206,12 @@ class LandedCostInfoXLSX(ReportXlsx):
         sum_total_cost_ratio_per_account = 0
 
         for rec in main_table_data_list:
+            sum_total_expense_amount_per_account = sum_total_expense_amount_per_account + rec[
+                'total_expense_amount_per_account']
+
+        for rec in main_table_data_list:
             product_cost = rec['total_cost_without_landed_cost']
             product_qty = rec['product_qty']
-
 
             sheet.merge_range(row, 0, row, 4, rec['acc_name'], td_cell_left)
             sheet.write(row, 5, rec['total_expense_amount_per_account'], td_cell_left)
@@ -216,8 +219,6 @@ class LandedCostInfoXLSX(ReportXlsx):
             sheet.write(row, 7, rec['total_expense_amount_per_account']/product_qty, td_cell_left_no)
 
             row += 1
-            sum_total_expense_amount_per_account = sum_total_expense_amount_per_account + rec[
-                'total_expense_amount_per_account']
             sum_total_cost_ratio_per_account = sum_total_cost_ratio_per_account + (rec['total_expense_amount_per_account']/product_qty)
         sheet.merge_range(9, 6, 9, 7, product_qty, td_cell_left)
         sheet.merge_range(row, 0, row, 4, "Total Landed Cost", td_cell_left_bold)
