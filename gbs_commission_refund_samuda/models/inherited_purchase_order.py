@@ -158,6 +158,20 @@ class InheritedPurchaseOrder(models.Model):
             rec.order_line = purchase_lines
 
     @api.model
+    def _needaction_domain_get(self):
+        users_obj = self.env['res.users']
+        domain = [('state', 'in', ['draft'])]
+        if users_obj.has_group('gbs_application_group.group_head_account'):
+            domain = [('state', 'in', ['claim_hoa_approve'])]
+            return domain
+        elif users_obj.has_group('gbs_application_group.group_head_sale'):
+            domain = [('state', 'in', ['claim_hos_approve'])]
+            return domain
+        if len(domain) == 0:
+            return False
+        return domain
+
+    @api.model
     def create(self, vals):
         # if 'partner_id' in vals:
         #     partner = self.env['res.partner'].browse(vals['partner_id'])
