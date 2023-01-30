@@ -153,11 +153,15 @@ class InheritedPurchaseOrder(models.Model):
                                 "state": 'draft',
                             }
                             purchase_lines.append((0, 0, vals))
-
+            print('self.partner_id.property_purchase_currency_id.id', self.partner_id.property_purchase_currency_id.id)
+            rec.currency_id = self.partner_id.property_purchase_currency_id.id
             rec.order_line = purchase_lines
 
     @api.model
     def create(self, vals):
+        # if 'partner_id' in vals:
+        #     partner = self.env['res.partner'].browse(vals['partner_id'])
+        #     vals['currency_id'] =  partner.property_purchase_currency_id.id
         res = super(InheritedPurchaseOrder, self).create(vals)
         if res.id and (vals.get('is_commission_claim') or vals.get('is_refund_claim')):
             operating_unit_id = self.env['operating.unit'].browse(vals['operating_unit_id'])

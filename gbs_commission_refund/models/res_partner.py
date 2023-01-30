@@ -17,10 +17,23 @@ class ResPartner(models.Model):
                   ('internal_type', '=', 'payable')]
         return domain
 
+    def _get_default_commission_refund_account_payable_id(self):
+        # TODO : this will be default for only customers
+        commission_refund_ap_parent_id = self.env['commission.refund.acc.config'].search(
+            [('company_id', '=', self.env.user.company_id.id)], limit=1).commission_refund_ap_parent_id
+        if not commission_refund_ap_parent_id:
+            raise UserError(_("Commission/Refund default AP not set on GL Configuration Settings"))
+        else:
+            account_id = self.env['account.account'].search([('parent_id', '=', commission_refund_ap_parent_id.id)],
+                                                            limit=1,
+                                                            order="id asc")
+            return account_id.id
+
     commission_refund_account_payable_id = fields.Many2one(
         comodel_name='account.account',
         string='Account Payable for Commission and Refund',
         domain=_commission_refund_account_payable_domain,
+        default=lambda self: self._get_default_commission_refund_account_payable_id(),
         track_visibility='onchange',
     )
 
@@ -53,10 +66,12 @@ class ResPartner(models.Model):
                     _('Selected Account Payable for Commission and Refund already used for another customer.'))
 
     def create_commission_refund_ap_account_id(self):
-        config_ap_id = self.env['ir.values'].sudo().get_default('sale.config.settings',
-                                                                'commission_refund_default_ap_parent_id')
+        # config_ap_id = self.env['ir.values'].sudo().get_default('sale.config.settings',
+        #                                                         'commission_refund_default_ap_parent_id')
+        config_ap_id = self.env['commission.refund.acc.config'].search([('company_id', '=', self.company_id.id)],
+                                                                       limit=1).commission_refund_ap_parent_id.id
         if not config_ap_id:
-            raise UserError(_("Commission/Refund default AP not set on Sales/Configuration/Settings"))
+            raise UserError(_("Commission/Refund default AP not set on GL Configuration Settings"))
 
         parent_acc_id = self.env['account.account'].browse(int(config_ap_id))
         account_id = self.env['account.account'].search([('parent_id', '=', parent_acc_id.id)], limit=1,

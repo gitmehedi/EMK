@@ -20,7 +20,7 @@ class PfReport(models.AbstractModel):
                     pf_obj['date'] = ReportUtility.get_date_from_string(rec.date_from)
 
 
-                    pf_obj['pf'] = formatLang(self.env,math.ceil(abs(line.total)))
+                    pf_obj['pf'] = formatLang(self.env,abs(line.total))
                     pf_list.append(pf_obj)
 
         docargs = {

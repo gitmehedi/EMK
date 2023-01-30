@@ -63,6 +63,20 @@ class CommissionAndRefundAccountConfig(models.Model):
         'Refund Accounts'
     )
 
+    commission_refund_ap_parent_id = fields.Many2one(
+        'account.account',
+        string='Commission/Refund AP Parent',
+        domain="[('user_type_id.type', '=', 'view')]")
+
+    commission_journal_id = fields.Many2one(
+        'account.journal',
+        'Commission Journal'
+    )
+    refund_journal_id = fields.Many2one(
+        'account.journal',
+        'Refund Journal'
+    )
+
     _sql_constraints = [
         ('company_id_uniq', 'unique(company_id)', 'A settings is already exist for selected company.')
     ]
