@@ -10,7 +10,7 @@
                 <xpath expr="//group[@name='accounting_entries']" position="after">
                     <group></group>
                     <group string="Commission/Refund" name="commission">
-                        <field name="commission_refund_account_payable_id"/>
+                        <field name="commission_refund_account_payable_id" attrs="{'required':[('customer','=',True)]}"/>
                     </group>
                 </xpath>
 

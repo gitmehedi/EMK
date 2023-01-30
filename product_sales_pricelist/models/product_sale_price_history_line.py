@@ -35,13 +35,11 @@ class ProductSalePriceHistiryLine(models.Model):
     @api.model
     def pull_automation(self):
         current_date = datetime.now().date()
-        print('current_date', current_date)
         vals = {}
 
         price_list_pool = self.env['product.sales.pricelist'].search(
             [('state', '=', 'validate'), ('effective_date', '<=', current_date), ('is_process', '=', 0)],
             order='effective_date ASC')
-        print('price_list_pool', price_list_pool)
 
         for price_pool in price_list_pool:
             price_history_pool = self.env['product.sale.history.line'].search(

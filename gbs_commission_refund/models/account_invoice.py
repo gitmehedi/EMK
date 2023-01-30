@@ -18,10 +18,13 @@ class AccountInvoice(models.Model):
     reverse_refund_move_id = fields.Many2one('account.move', 'Reverse Refund Journal Entry')
 
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        result = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,
+                                                             submenu=submenu)
         if view_type == 'form':
             company = self.env.user.company_id
-            config = self.env['commission.configuration'].search([('customer_type', 'in', company.customer_types.ids or []), ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
+            config = self.env['commission.configuration'].search(
+                [('customer_type', 'in', company.customer_types.ids or []),
+                 ('functional_unit', 'in', company.branch_ids.ids or [])], limit=1)
 
             if not config.show_packing_mode:
                 doc = etree.XML(result['arch'])
@@ -84,20 +87,23 @@ class AccountInvoice(models.Model):
         if move_type == 'commission':
             total_amount = 0
             for line in self.invoice_line_ids:
-                commission_amount = line.sale_line_ids.filtered(lambda r: r.product_id.id == line.product_id.id).corporate_commission_per_unit
+                commission_amount = line.sale_line_ids.filtered(
+                    lambda r: r.product_id.id == line.product_id.id).corporate_commission_per_unit
                 total_amount += (line.quantity * commission_amount)
 
                 label = "{}: ({} x {})".format(line.product_id.name, line.quantity, commission_amount)
 
             name_seq = self.env['ir.sequence'].next_by_code('commission.account.move.seq')
-            # journal_id = self.env['account.journal'].sudo().search([('code', '=', 'COMJNL')], limit=1)
+            journal_id = self.env['commission.refund.acc.config'].sudo().search(
+                [('company_id', '=', self.company_id.id)], limit=1).commission_journal_id.id
 
-            journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_journal_id')
+            # journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_journal_id')
             if not journal_id:
                 raise UserError(_("Commission journal not set in sales configuration"))
             # if we don't have extra account configurations we will take default account else the configured account matched with cost center and zone type.
             if len(cr_journal_config.commission_account_ids) > 0:
-                temp_acc = cr_journal_config.commission_account_ids.filtered(lambda a: a.cost_center_id == cost_center_id and a.zone_type == self.partner_id.supplier_type)
+                temp_acc = cr_journal_config.commission_account_ids.filtered(
+                    lambda a: a.cost_center_id == cost_center_id and a.zone_type == self.partner_id.supplier_type)
 
             account_id = temp_acc.account_id if temp_acc else cr_journal_config.commission_account_id
             control_account_id = cr_journal_config.commission_control_account_id
@@ -105,19 +111,22 @@ class AccountInvoice(models.Model):
             # ==== refund ====
             total_amount = 0
             for line in self.invoice_line_ids:
-                refund_amount = line.sale_line_ids.filtered(lambda r: r.product_id.id == line.product_id.id).corporate_refund_per_unit
+                refund_amount = line.sale_line_ids.filtered(
+                    lambda r: r.product_id.id == line.product_id.id).corporate_refund_per_unit
                 total_amount += (line.quantity * refund_amount)
                 label = "{}: ({} x {})".format(line.product_id.name, line.quantity, refund_amount)
 
             name_seq = self.env['ir.sequence'].next_by_code('refund.account.move.seq')
-            # journal_id = self.env['account.journal'].sudo().search([('code', '=', 'REFJNL')], limit=1)
-            journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'refund_journal_id')
+            journal_id = self.env['commission.refund.acc.config'].sudo().search(
+                [('company_id', '=', self.company_id.id)], limit=1).refund_journal_id.id
+            # journal_id = self.env['ir.values'].sudo().get_default('sale.config.settings', 'refund_journal_id')
             if not journal_id:
                 raise UserError(_("Refund journal not set in sales configuration"))
 
             # if we don't have extra account configurations we will take default account else the configured account matched with cost center and zone type.
             if len(cr_journal_config.refund_account_ids) > 0:
-                temp_acc = cr_journal_config.refund_account_ids.filtered(lambda a: a.cost_center_id == cost_center_id and a.zone_type == self.partner_id.supplier_type)
+                temp_acc = cr_journal_config.refund_account_ids.filtered(
+                    lambda a: a.cost_center_id == cost_center_id and a.zone_type == self.partner_id.supplier_type)
 
             account_id = temp_acc.account_id if temp_acc else cr_journal_config.refund_account_id
             control_account_id = cr_journal_config.refund_control_account_id
@@ -185,14 +194,16 @@ class AccountInvoice(models.Model):
 
             if config.process != 'not_applicable' and config.commission_provision == 'invoice_validation':
                 # commission and refund journal config
-                cr_journal_config = self.env['commission.refund.acc.config'].sudo().search([['company_id', '=', self.company_id.id]], limit=1)
+                cr_journal_config = self.env['commission.refund.acc.config'].sudo().search(
+                    [['company_id', '=', self.company_id.id]], limit=1)
 
                 if not cr_journal_config:
                     raise UserError(_("Commission and Refund configuration is not found for this company."))
 
                 # commission
                 commission_move_vals = self.get_move_vals('commission', cr_journal_config)
-                commission_move = self.env['account.move'].sudo().create(commission_move_vals) if commission_move_vals else None
+                commission_move = self.env['account.move'].sudo().create(
+                    commission_move_vals) if commission_move_vals else None
                 if commission_move:
                     self.commission_move_id = commission_move.id
                     commission_move.post()
