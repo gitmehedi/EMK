@@ -20,7 +20,7 @@
                                 type="object"
                                 class="btn-primary"
                                 states="claim_hos_approve"
-                                groups="gbs_application_group.group_head_sale,sales_team.group_sale_salesman_all_leads"
+                                groups="gbs_application_group.group_head_sale"
                                 string="Validate"/>
 
                         <button name="button_claim_approve"
@@ -30,18 +30,20 @@
                                 groups="gbs_application_group.group_head_account"
                                 string="Approve"/>
 
-                        <button name="button_draft" states="cancel" string="Set to Draft" type="object" groups="gbs_application_group.group_head_sale"/>
-                        <button name="button_cancel" class="btn-danger" states="claim_draft,claim_hos_approve,claim_hoa_approve" string="Cancel" type="object"/>
+                        <button name="button_draft" states="cancel" string="Set to Draft" type="object"
+                                groups="gbs_application_group.group_head_sale"/>
+                        <button name="button_cancel" class="btn-danger"
+                                states="claim_draft,claim_hos_approve,claim_hoa_approve" string="Cancel" type="object"/>
 
-                        <field name="state" widget="statusbar" statusbar_visible="claim_draft,claim_hos_approve,claim_hoa_approve,done" readonly="1"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="claim_draft,claim_hos_approve,claim_hoa_approve,done" readonly="1"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="action_view_invoice"
                                     class="oe_stat_button"
                                     icon="fa-pencil-square-o"
-                                    attrs="{'invisible':[('state', 'not in', ('done')),('invoice_ids','=',[])]}"
-                            >
+                                    attrs="{'invisible':[('state', 'not in', ('done')),('invoice_ids','=',[])]}">
                                 <field name="invoice_count" widget="statinfo" string="Claim Bills"/>
                                 <field name='invoice_ids' invisible="1"/>
                             </button>
@@ -52,14 +54,15 @@
                                 <field name="name" readonly="1"/>
                             </h1>
                         </div>
-                        <group>
+                        <group>32`1
                             <group>
-                                <field name="partner_id" string="Customer" options="{'no_create': True,'no_edit': True}" domain="[('customer','=',True), ('parent_id','=',False),('is_deprecated','=',False)]"/>
+                                <field name="partner_id" string="Customer" options="{'no_create': True,'no_edit': True}"
+                                       domain="[('customer','=',True), ('parent_id','=',False),('is_deprecated','=',False)]"/>
                                 <!--<field name="partner_ref" string="Customer Reference"/>-->
                                 <field name="date_order" string="Date" readonly="1" force_save="1"/>
                                 <field name="region_type" string="Region Type" invisible="1" force_save="1"/>
                                 <field name="region_type_copy" string="Region Type" readonly="1"/>
-                                <field name="currency_id" groups="base.group_multi_currency" invisible="1"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
                                 <field name="is_shipped" invisible="1"/>
                                 <field name="is_service_order" invisible="1"/>
                                 <field name="is_commission_claim" invisible="1"/>
@@ -68,7 +71,9 @@
                             </group>
                             <group>
                                 <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit"/>
-                                <field name="sale_order_ids" options='{"no_open": True,"no_create": 1, "no_create_edit":1}' widget="many2many_tags" required="1"/>
+                                <field name="sale_order_ids"
+                                       options='{"no_open": True,"no_create": 1, "no_create_edit":1}'
+                                       widget="many2many_tags" required="1"/>
                                 <field name="picking_type_id" options="{'no_create': True}" invisible="1"/>
                             </group>
                         </group>
@@ -76,7 +81,9 @@
                         <notebook>
                             <page string="Order Line" name="customer_order_lines">
                                 <field name="order_line" required="1" style="pointer-events:none;">
-                                    <tree editable="bottom" create="false" delete="false" edit="false" style="pointer-events:none;" options="{'no_create':True,'no_create_edit':True,'no_open':True}">
+                                    <tree editable="bottom" create="false" delete="false" edit="false"
+                                          style="pointer-events:none;"
+                                          options="{'no_create':True,'no_create_edit':True,'no_open':True}">
                                         <field name="invoice_id" readonly="1" force_save="1"/>
                                         <field name="currency_id" invisible="1"/>
                                         <field name="state" invisible="1"/>
@@ -90,11 +97,16 @@
                                         <field name="name" invisible="1"/>
                                         <field name="date_planned" invisible="1"/>
                                         <field name="qty_invoiced"/>
-                                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" invisible="1"/>
-                                        <field name="account_analytic_id" invisible="1" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting"/>
-                                        <field name="analytic_tag_ids" invisible="1" groups="purchase.group_analytic_accounting" widget="many2many_tags"/>
+                                        <field name="company_id" groups="base.group_multi_company"
+                                               options="{'no_create': True}" invisible="1"/>
+                                        <field name="account_analytic_id" invisible="1"
+                                               context="{'default_partner_id':parent.partner_id}"
+                                               groups="purchase.group_analytic_accounting"/>
+                                        <field name="analytic_tag_ids" invisible="1"
+                                               groups="purchase.group_analytic_accounting" widget="many2many_tags"/>
                                         <field name="product_qty" invisible="1"/>
-                                        <field name="product_uom" invisible="1" groups="product.group_uom" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
+                                        <field name="product_uom" invisible="1" groups="product.group_uom"
+                                               attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
                                         <field name="price_unit" invisible="1"/>
                                         <!-- <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>-->
                                         <field name="price_subtotal" widget="monetary"/>
@@ -188,43 +200,59 @@
             </field>
         </record>
 
-        <record id="pending_commission_claim_hos_approval_tree_view_action" model="ir.actions.act_window">
-            <field name="name">Pending Commission Claim</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.order</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_ids" eval="[
-                    (5, 0, 0),
-                    (0, 0, {'sequence': 1004, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
-                    (0, 0, {'sequence': 1004, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
-                ]"/>
-            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hos_approve')]</field>
-            <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True, 'no_create_edit_button':True}</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to create a commission order for customer.
-                </p>
+
+
+
+
+        <record id="search_com_claim_pending" model="ir.ui.view">
+            <field name="name">commission.claim.search</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <search string="Claims">
+                    <filter name="approvehos_" string="To Approve"
+                            domain="[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hos_approve')]"/>
+                    <filter name="approvehoa_" string="To Approve"
+                            domain="[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hoa_approve')]"/>
+                </search>
             </field>
         </record>
 
-        <record id="pending_commission_claim_hoa_approval_tree_view_action" model="ir.actions.act_window">
-            <field name="name">Pending Commission Claim</field>
-            <field name="type">ir.actions.act_window</field>
+        <record id="action_com_claim_hos_pending" model="ir.actions.act_window">
+            <field name="name">Pending Claims</field>
             <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True)]</field>
             <field name="view_ids" eval="[
                     (5, 0, 0),
                     (0, 0, {'sequence': 1004, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
                     (0, 0, {'sequence': 1004, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
                 ]"/>
-            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hoa_approve')]</field>
-            <field name="context">{'default_is_service_order': True, 'default_is_commission_claim': True, 'no_create_edit_button':True}</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to create a commission order for customer.
-                </p>
+            <field name="search_view_id" ref="search_com_claim_pending"/>
+            <field name="context">{
+                'search_default_approvehos_':1,
+                }
             </field>
         </record>
+
+        <record id="action_com_claim_hoa_pending" model="ir.actions.act_window">
+            <field name="name">Pending Claims</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True)]</field>
+            <field name="view_ids" eval="[
+                    (5, 0, 0),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
+                    (0, 0, {'sequence': 1004, 'view_mode': 'form', 'view_id': ref('claim_customer_commission_view_form')}),
+                ]"/>
+            <field name="search_view_id" ref="search_com_claim_pending"/>
+            <field name="context">{
+                'search_default_approvehoa_':1,
+                }
+            </field>
+        </record>
+
 
         <menuitem id="menu_commission_refund_claim"
                   name="Claiming"
@@ -250,14 +278,14 @@
                 id="pending_commission_claim_hos_menu"
                 parent="gbs_samuda_sales_approval_menu.menu_hos_approval"
                 sequence="4"
-                action="gbs_commission_refund_samuda.pending_commission_claim_hos_approval_tree_view_action"
+                action="gbs_commission_refund_samuda.action_com_claim_hos_pending"
                 groups="gbs_application_group.group_head_sale"
         />
         <menuitem
                 id="pending_commission_claim_hoa_menu"
                 parent="gbs_samuda_sales_approval_menu.menu_hoa_approval"
                 sequence="4"
-                action="gbs_commission_refund_samuda.pending_commission_claim_hoa_approval_tree_view_action"
+                action="gbs_commission_refund_samuda.action_com_claim_hoa_pending"
                 groups="gbs_application_group.group_head_account"
         />
 

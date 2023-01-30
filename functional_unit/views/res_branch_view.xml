@@ -55,7 +55,7 @@
         </record>
 
         <!-- This Menu Item Must have a parent -->
-        <menuitem id="branch_menu_res_branch" name="Functional Units"  parent="base.menu_users" action="branch_action_res_branch" />
+        <menuitem id="branch_menu_res_branch" name="Functional Units" groups="base.group_system" parent="base.menu_users" action="branch_action_res_branch" />
 
     </data>
 </odoo>

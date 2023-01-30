@@ -15,7 +15,8 @@
                         </div>
                         <group>
                             <group>
-                                <field name="customer_type" widget="radio"/>
+                                <field name="is_retail" attrs="{'invisible':[('is_corporate','=',True)]}"/>
+                                <field name="is_corporate" attrs="{'invisible':[('is_retail','=',True)]}"/>
                             </group>
                         </group>
                     </sheet>
@@ -34,7 +35,8 @@
             <field name="arch" type="xml">
                 <tree string="Customer Types">
                     <field name="name"/>
-                    <field name="customer_type"/>
+                    <field name="is_retail"/>
+                    <field name="is_corporate"/>
                 </tree>
             </field>
         </record>
@@ -53,7 +55,7 @@
         </record>
 
         <!-- This Menu Item Must have a parent -->
-        <menuitem id="customer_type_menu" name="Customer Types" parent="base.menu_users"
+        <menuitem id="customer_type_menu" name="Customer Types" groups="base.group_system" parent="base.menu_users"
                   action="action_res_customer_type"/>
 
     </data>

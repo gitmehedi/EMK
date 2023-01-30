@@ -9,7 +9,7 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='parent_id']" position="after">
-                    <field name="customer_types" widget="many2many_tags"/>
+                    <field name="customer_types" widget="many2many_tags" groups="base.group_system"/>
                 </xpath>
 
             </field>
