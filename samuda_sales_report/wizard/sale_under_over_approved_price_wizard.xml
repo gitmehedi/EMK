@@ -28,7 +28,7 @@
 		</record>
 
 		<record id="action_sale_under_over_approved_price_report_wizard" model="ir.actions.act_window">
-            <field name="name">Products Sold under/over Approved Price</field>
+            <field name="name">Sales Volume Report (under/over Price)</field>
             <field name="res_model">sale.under.over.approved.price.report.wizard</field>
             <field name="view_type">form</field>
 			<field name="view_mode">form</field>
