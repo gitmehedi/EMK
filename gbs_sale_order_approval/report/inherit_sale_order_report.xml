@@ -193,7 +193,7 @@
 
             <xpath expr="//td[@class='text-right'][2]" position="after">
                 <td class="text-center">
-                    <span t-field="l.commission_rate"/>
+<!--                    <span t-field="l.commission_rate"/>-->
                 </td>
             </xpath>
 
