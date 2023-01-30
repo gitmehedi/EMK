@@ -12,6 +12,6 @@ access_account_partial_reconcile_payroll_accounting,access.account.partial.recon
 
 access_account_account_type_payroll_accounting,access.account.account.type.payroll_accounting,account.model_account_account_type,gbs_hr_payroll_accounting_automation.group_payroll_accounting,1,0,0,0
 
-
+access_department_account_map_payroll_manager,access.department.account.map.payroll.manager,model_department_account_map,hr_payroll.group_hr_payroll_manager,1,1,1,0
 
 access_account_journal_payroll_accounting,access.account.journal.payroll_accounting,account.model_account_journal,gbs_hr_payroll_accounting_automation.group_payroll_accounting,1,0,0,0

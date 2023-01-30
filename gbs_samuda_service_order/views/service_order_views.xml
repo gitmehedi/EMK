@@ -42,7 +42,7 @@
                         <button name="button_done" type="object" string="Lock" groups="gbs_samuda_service_order.group_service_order_manager_ho,gbs_samuda_service_order.group_service_order_manager_unit" states="purchase"/>
 <!--                        <button name="button_unlock" type="object" string="Unlock" groups="gbs_samuda_service_order.group_service_order_manager_ho,gbs_samuda_service_order.group_service_order_manager_unit" states="done"/>-->
 
-                        <button name="print_service_order" style="background-color: #39B05F;color:white;" type="object" attrs="{'invisible':[('partner_id','=',False)]}" string="Print"/>
+                        <button name="print_service_order"  style="background-color: #39B05F;color:white;" type="object" attrs="{'invisible':['|',('partner_id','=',False), ('state', '=', 'cancel')]}" string="Print"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,done" readonly="1"/>
                         <button string="Cancel" name="action_cancel_service_order" class="btn-primary btn-danger mr24 pull-right oe_read_only" type="object" states="draft,to approve,sent,purchase,done" confirm="Are you sure to cancel this service order?" groups="gbs_samuda_service_order.group_service_order_manager_unit,gbs_samuda_service_order.group_service_order_manager_ho"/>

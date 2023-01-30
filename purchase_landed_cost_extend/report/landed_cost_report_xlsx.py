@@ -10,34 +10,36 @@ class LandedCostInfoXLSX(ReportXlsx):
         main_table_data_list = []
 
         main_tbl_query = """
-            select *, 
-                100*(total_expense_amount_per_account/(total_cost_without_landed_cost + 
-                (SUM(total_expense_amount_per_account) OVER()))) as amt_percentage
-                from (
-                        select 
-                            account_id,
-                            acc_name,
-                            product_qty,
-                            sum(expense_amount) as total_expense_amount_per_account,
-                            (sum(expense_amount)/sub.product_qty) as total_cost_ratio_per_account,
-                             sub.product_qty*sub.standard_price_old as total_cost_without_landed_cost
-                            from 
-                            (select 
-                            *,concat(aa.code,' ',aa.name) as acc_name
-                            from 
-                            purchase_cost_distribution_line_expense as line_child 
-                            left join purchase_cost_distribution_line as line on line.id = line_child.distribution_line
-                            left join purchase_cost_distribution as main on main.id = line.distribution
-                            left join account_account as aa on aa.id = line_child.account_id
-                            left join ir_property ON (ir_property.value_reference = concat('account.account,', aa.id::text) AND ir_property.name = 'property_account_expense_id')
-                            left join product_template as pt ON (ir_property.res_id = concat('product.template,', pt.id::text)) 
-        
-                            left join product_product as pp on pp.product_tmpl_id = pt.id
-                            where main.id = %s
-                            and line.product_id = %s
-                            ) sub
-                            group by sub.account_id,product_qty,sub.standard_price_old,sub.acc_name
-                ) sub_2 
+                    select account_id,acc_name,
+                        sum(product_qty) as product_qty, 
+                        sum(total_expense_amount_per_account) as total_expense_amount_per_account, 
+                        sum(total_cost_without_landed_cost) as total_cost_without_landed_cost          
+                        from (
+                                select 
+                                    account_id,
+                                    acc_name,
+                                    product_qty,
+                                    sum(expense_amount) as total_expense_amount_per_account,
+                                    (sum(expense_amount)/sub.product_qty) as total_cost_ratio_per_account,
+                                     sub.product_qty*sub.standard_price_old as total_cost_without_landed_cost
+                                    from 
+                                    (select 
+                                    *,concat(aa.code,' ',aa.name) as acc_name
+                                    from 
+                                    purchase_cost_distribution_line_expense as line_child 
+                                    left join purchase_cost_distribution_line as line on line.id = line_child.distribution_line
+                                    left join purchase_cost_distribution as main on main.id = line.distribution
+                                    left join account_account as aa on aa.id = line_child.account_id
+                                    left join ir_property ON (ir_property.value_reference = concat('account.account,', aa.id::text) AND ir_property.name = 'property_account_expense_id')
+                                    left join product_template as pt ON (ir_property.res_id = concat('product.template,', pt.id::text)) 
+                    
+                                    left join product_product as pp on pp.product_tmpl_id = pt.id
+                                    where main.id = %s
+                                    and line.product_id = %s
+                                    ) sub
+                                    group by sub.account_id,product_qty,sub.standard_price_old,sub.acc_name
+                    ) sub_2 group by account_id, acc_name
+
                 """ % (landed_cost_id, product_id)
 
         self.env.cr.execute(main_tbl_query)
@@ -121,6 +123,9 @@ class LandedCostInfoXLSX(ReportXlsx):
         bold = workbook.add_format({'bold': True, 'size': 10})
         total_format = workbook.add_format({'num_format': '#,###0.00', 'bold': True, 'size': 10, 'border': 1})
         no_format = workbook.add_format({'num_format': '#,###0.00', 'size': 10, 'border': 1})
+        td_cell_left_no = workbook.add_format({'num_format': '#,###0.00','align': 'left', 'valign': 'vcenter', 'size': 10, 'border': 1})
+        td_cell_left_no_bold = workbook.add_format({'num_format': '#,###0.00','align': 'left', 'valign': 'vcenter', 'size': 10, 'border': 1})
+
         merge_format = workbook.add_format({
             'bold': 1,
             'border': 1,
@@ -140,7 +145,8 @@ class LandedCostInfoXLSX(ReportXlsx):
         td_cell_center = workbook.add_format({'align': 'center', 'valign': 'vcenter', 'size': 10, 'border': 1})
         td_cell_center_bold = workbook.add_format(
             {'align': 'center', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
-
+        td_cell_left_bold_no = workbook.add_format(
+            {'num_format': '#,###0.00','align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
         td_cell_left_bold = workbook.add_format(
             {'align': 'left', 'valign': 'vcenter', 'bold': True, 'size': 10, 'border': 1})
         td_cell_left_bold_color = workbook.add_format(
@@ -197,59 +203,51 @@ class LandedCostInfoXLSX(ReportXlsx):
         main_table_data_list = self.get_main_table_data(obj.landed_cost_id.id, obj.product_id.id)
         row = 12
         sum_total_expense_amount_per_account = 0
-        sum_amt_percentage = 0
         sum_total_cost_ratio_per_account = 0
-        sum_total_cost_without_landed_cost = 0
-        bucket = []
-        product_qty_bucket = []
-        sum_product_qty = 0
 
         for rec in main_table_data_list:
+            product_cost = rec['total_cost_without_landed_cost']
+            product_qty = rec['product_qty']
+
+
             sheet.merge_range(row, 0, row, 4, rec['acc_name'], td_cell_left)
             sheet.write(row, 5, rec['total_expense_amount_per_account'], td_cell_left)
-            sheet.write(row, 6, rec['amt_percentage'], no_format)
-            sheet.write(row, 7, rec['total_cost_ratio_per_account'], no_format)
-            product_qty = rec['product_qty']
-            if not rec['product_qty'] in product_qty_bucket:
-                sum_product_qty = sum_product_qty + rec['product_qty']
-            product_qty_bucket.append(product_qty)
+            sheet.write(row, 6, (rec['total_expense_amount_per_account']/product_cost)*100, td_cell_left_no)
+            sheet.write(row, 7, rec['total_expense_amount_per_account']/product_qty, td_cell_left_no)
+
             row += 1
             sum_total_expense_amount_per_account = sum_total_expense_amount_per_account + rec[
                 'total_expense_amount_per_account']
-            sum_amt_percentage = sum_amt_percentage + rec['amt_percentage']
-            sum_total_cost_ratio_per_account = sum_total_cost_ratio_per_account + rec['total_cost_ratio_per_account']
-            if not rec['total_cost_without_landed_cost'] in bucket:
-                sum_total_cost_without_landed_cost = sum_total_cost_without_landed_cost + rec[
-                    'total_cost_without_landed_cost']
-            bucket.append(rec['total_cost_without_landed_cost'])
-        sheet.merge_range(9, 6, 9, 7, sum_product_qty, td_cell_left)
+            sum_total_cost_ratio_per_account = sum_total_cost_ratio_per_account + (rec['total_expense_amount_per_account']/product_qty)
+        sheet.merge_range(9, 6, 9, 7, product_qty, td_cell_left)
         sheet.merge_range(row, 0, row, 4, "Total Landed Cost", td_cell_left_bold)
         sheet.write(row, 5, sum_total_expense_amount_per_account, td_cell_left_bold)
-        sheet.write(row, 6, str('%.2f' % sum_amt_percentage) + " %", total_format)
-        sheet.write(row, 7, sum_total_cost_ratio_per_account, total_format)
+        sheet.write(row, 6, str('%.2f' % (sum_total_expense_amount_per_account/(sum_total_expense_amount_per_account + product_cost)*100)) + " %", total_format)
+        sheet.write(row, 7, sum_total_cost_ratio_per_account, td_cell_left_bold_no)
         row = row + 1
         sheet.merge_range(row, 0, row, 4, "Product Cost (BDT)", td_cell_left_bold)
-        sheet.write(row, 5, sum_total_cost_without_landed_cost, td_cell_left_bold)
-        sheet.write(row, 6, '%.2f' % (100 - sum_amt_percentage) + " %", total_format)
+        sheet.write(row, 5, product_cost, td_cell_left_bold)
+
+        sheet.write(row, 6, '%.2f' % (product_cost/(sum_total_expense_amount_per_account + product_cost)*100) + " %", total_format)
         total_unit_cost_ = 0
         if product_qty > 0:
-            total_unit_cost_ = sum_total_cost_without_landed_cost / product_qty
-        sheet.write(row, 7, total_unit_cost_, total_format)
+            total_unit_cost_ = product_cost / product_qty
+        sheet.write(row, 7, total_unit_cost_, td_cell_left_bold_no)
 
         row = row + 1
         sheet.merge_range(row, 0, row, 4, "Total Product Cost (BDT)", td_cell_left_bold)
-        sheet.write(row, 5, sum_total_expense_amount_per_account + sum_total_cost_without_landed_cost,
+        sheet.write(row, 5, sum_total_expense_amount_per_account + product_cost,
                     td_cell_left_bold)
         sheet.write(row, 6, str(100) + " %", total_format)
-        sheet.write(row, 7, sum_total_cost_ratio_per_account + total_unit_cost_, total_format)
+        sheet.write(row, 7, sum_total_cost_ratio_per_account + total_unit_cost_, td_cell_left_bold_no)
         row = row + 2
         sheet.merge_range(row, 0, row, 4, "Total Product Cost (USD)", td_cell_left_bold)
         sheet.write(row, 5, (
-                    sum_total_expense_amount_per_account + sum_total_cost_without_landed_cost) / obj.landed_cost_id.currency_rate,
-                    td_cell_left_bold)
+                    sum_total_expense_amount_per_account + product_cost) / obj.landed_cost_id.currency_rate,
+                    td_cell_left_bold_no)
         sheet.write(row, 6, " ", total_format)
         sheet.write(row, 7, (sum_total_cost_ratio_per_account + total_unit_cost_) / obj.landed_cost_id.currency_rate,
-                    total_format)
+                    td_cell_left_bold_no)
 
         row = row + 2
 
@@ -276,7 +274,6 @@ class LandedCostInfoXLSX(ReportXlsx):
             row = row + 1
 
         duty_tax_table_data_list = self.get_duty_tax_table_data(obj.landed_cost_id.id, obj.product_id.id)
-        # merge_range(row_from, col_from, row_to, col_to, value = "", format = nil)
         for rec in duty_tax_table_data_list:
             sheet.write(cost_price_history_start_row, 5, rec['acc_name'], td_cell_left)
             sheet.write(cost_price_history_start_row, 6, rec['name'], td_cell_left)
