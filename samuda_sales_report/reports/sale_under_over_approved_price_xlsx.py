@@ -29,7 +29,7 @@ class SaleUnderOverApprovedPriceReportXLSX(ReportXlsx):
         sql_str = """select sol.product_id as product_id,sol.name as product_name, rp.name as cus_name,so.name as so_no,
                     COALESCE(sol.product_uom_qty, 0) as sold_qty,COALESCE(sol.price_unit_actual,0) as approved_price, COALESCE(sol.price_unit_max_discount, 0) as max_discount, COALESCE(sol.price_unit,0) as sale_price,rc.name as currency_name, 
                     CASE WHEN COALESCE(sol.price_unit,0) < COALESCE(sol.price_unit_actual,0)-COALESCE(sol.price_unit_max_discount,0) 
-                    THEN 'Under' WHEN COALESCE(sol.price_unit,0) > COALESCE(sol.price_unit_actual,0) + COALESCE(sol.price_unit_max_discount,0) THEN 'Over' END as status 
+                    THEN 'Under' WHEN COALESCE(sol.price_unit,0) > COALESCE(sol.price_unit_actual,0) THEN 'Over' ELSE 'Approved' END as status 
                     from sale_order_line as sol 
                     LEFT JOIN sale_order as so ON sol.order_id = so.id
                     LEFT JOIN res_currency as rc ON rc.id = sol.currency_id
@@ -134,7 +134,7 @@ class SaleUnderOverApprovedPriceReportXLSX(ReportXlsx):
         sheet.write(row, col + 1, 'SO No.', th_cell_center)
         sheet.write(row, col + 2, 'Sold Qty (MT)', th_cell_center)
         sheet.write(row, col + 3, 'Current Approved Price (during this period)', th_cell_center)
-        sheet.write(row, col + 4, 'Tolerable(+/-)', th_cell_center)
+        sheet.write(row, col + 4, 'Discount', th_cell_center)
         sheet.write(row, col + 5, 'Selling Price', th_cell_center)
         sheet.write(row, col + 6, 'Currency', th_cell_center)
         sheet.write(row, col + 7, 'Status', th_cell_center)
@@ -148,7 +148,7 @@ class SaleUnderOverApprovedPriceReportXLSX(ReportXlsx):
             for rec in value['order_lines']:
                 if rec['sale_price'] < (rec['approved_price'] - rec['max_discount']):
                     under += 1
-                elif rec['sale_price'] > (rec['approved_price'] + rec['max_discount']):
+                elif rec['sale_price'] > (rec['approved_price']):
                     over += 1
             sheet.merge_range(row, col, row, 2, value['product_name'], td_cell_left_bold)
             sheet.write(row, 3, " Under:" + str(under) + "/ Over:" + str(over), td_cell_center)
@@ -163,9 +163,11 @@ class SaleUnderOverApprovedPriceReportXLSX(ReportXlsx):
                 sheet.write(row, col + 4, rec['max_discount'], td_cell_right)
                 sheet.write(row, col + 5, rec['sale_price'], td_cell_right)
                 sheet.write(row, col + 6, rec['currency_name'], td_cell_center)
-                td_cell_center_conditional = td_cell_center_under
+                td_cell_center_conditional = td_cell_center
                 if rec['status'] == 'Over':
                     td_cell_center_conditional = td_cell_center_over
+                elif rec['status'] == 'Under':
+                    td_cell_center_conditional = td_cell_center_under
                 sheet.write(row, col + 7, rec['status'], td_cell_center_conditional)
                 sub_total_sold_qty += rec['sold_qty']
                 row += 1
