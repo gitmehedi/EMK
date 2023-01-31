@@ -12,6 +12,12 @@ from lxml import etree
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    # sale order line made null on changing date order
+    @api.onchange('date_order')
+    def _onchange_date_order(self):
+        if self._origin.id:
+            self.order_line = False
+
     deduct_commission = fields.Boolean(
         string='Deduct Commission on Return',
         help='We will deduct the amount of returned quantity from actual invoiced quantity'
@@ -75,7 +81,8 @@ class SaleOrder(models.Model):
         result = super(SaleOrder, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar,
                                                         submenu=submenu)
 
-        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_start_date')
+        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings',
+                                                                         'commission_start_date')
 
         if self.date_order:
             sale_order_date = self.date_order.date()
@@ -211,7 +218,8 @@ class SaleOrderLine(models.Model):
     @api.one
     @api.constrains('corporate_commission_per_unit', 'corporate_refund_per_unit')
     def _textbox_process_validation(self):
-        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_start_date')
+        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings',
+                                                                         'commission_start_date')
 
         if self.order_id.date_order:
             sale_order_date = self.order_id.date_order
@@ -219,7 +227,8 @@ class SaleOrderLine(models.Model):
             sale_order_date = datetime.now().date()
 
         if commission_start_date:
-            if sale_order_date < commission_start_date and (self.corporate_commission_per_unit > 0 or self.corporate_refund_per_unit > 0):
+            if sale_order_date < commission_start_date and (
+                    self.corporate_commission_per_unit > 0 or self.corporate_refund_per_unit > 0):
                 raise UserError('Commission/Refund feature not applicable before dated %s' % commission_start_date)
         else:
             raise UserError('Commission/Refund feature start date not found in configuration!')
@@ -227,7 +236,8 @@ class SaleOrderLine(models.Model):
     @api.one
     @api.constrains('dealer_commission_applicable', 'dealer_refund_applicable')
     def _checkbox_process_validation(self):
-        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings', 'commission_start_date')
+        commission_start_date = self.env['ir.values'].sudo().get_default('sale.config.settings',
+                                                                         'commission_start_date')
 
         if self.order_id.date_order:
             sale_order_date = self.order_id.date_order
@@ -235,7 +245,8 @@ class SaleOrderLine(models.Model):
             sale_order_date = datetime.now().date()
 
         if commission_start_date:
-            if sale_order_date < commission_start_date and (self.dealer_commission_applicable or self.dealer_refund_applicable):
+            if sale_order_date < commission_start_date and (
+                    self.dealer_commission_applicable or self.dealer_refund_applicable):
                 raise UserError('Commission/Refund feature not applicable before dated %s' % commission_start_date)
         else:
             raise UserError('Commission/Refund feature start date not found in configuration!')

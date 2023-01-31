@@ -66,15 +66,18 @@ class CommissionAndRefundAccountConfig(models.Model):
     commission_refund_ap_parent_id = fields.Many2one(
         'account.account',
         string='Commission/Refund AP Parent',
+        track_visibility="onchange",
         domain="[('user_type_id.type', '=', 'view')]")
 
     commission_journal_id = fields.Many2one(
         'account.journal',
-        'Commission Journal'
+        track_visibility="onchange",
+        string='Commission Journal'
     )
     refund_journal_id = fields.Many2one(
         'account.journal',
-        'Refund Journal'
+        track_visibility="onchange",
+        string='Refund Journal'
     )
 
     _sql_constraints = [

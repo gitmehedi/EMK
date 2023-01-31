@@ -41,9 +41,10 @@ class InheritedAccountInvoice(models.Model):
                         if line1.product_id.id == product_id:
                             main_invoice_current_pro_qty = line1.quantity
                     total_refunded_qty = 0
-                    for line2 in all_refunded_invoices.invoice_line_ids:
-                        if line2.product_id.id == product_id:
-                            total_refunded_qty = total_refunded_qty + line2.quantity
+                    for refund_invoice in all_refunded_invoices:
+                        for line2 in refund_invoice.invoice_line_ids:
+                            if line2.product_id.id == product_id:
+                                total_refunded_qty = total_refunded_qty + line2.quantity
                     if main_invoice_current_pro_qty > total_refunded_qty:
                         updated_qty = main_invoice_current_pro_qty - total_refunded_qty
                     else:

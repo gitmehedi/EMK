@@ -210,9 +210,9 @@
             <field name="arch" type="xml">
                 <search string="Claims">
                     <filter name="approvehos_" string="To Approve"
-                            domain="[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hos_approve')]"/>
+                            domain="[('is_service_order', '=', True),'|', ('is_commission_claim', '=', True), ('is_refund_claim', '=', True), ('state','=','claim_hos_approve')]"/>
                     <filter name="approvehoa_" string="To Approve"
-                            domain="[('is_service_order', '=', True), ('is_commission_claim', '=', True), ('state','=','claim_hoa_approve')]"/>
+                            domain="[('is_service_order', '=', True),'|', ('is_commission_claim', '=', True), ('is_refund_claim', '=', True), ('state','=','claim_hoa_approve')]"/>
                 </search>
             </field>
         </record>
@@ -222,7 +222,7 @@
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True)]</field>
+            <field name="domain">[('is_service_order', '=', True),'|',('is_refund_claim', '=', True),  ('is_commission_claim', '=', True)]</field>
             <field name="view_ids" eval="[
                     (5, 0, 0),
                     (0, 0, {'sequence': 1004, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),
@@ -240,7 +240,7 @@
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('is_service_order', '=', True), ('is_commission_claim', '=', True)]</field>
+            <field name="domain">[('is_service_order', '=', True),'|',('is_refund_claim', '=', True),  ('is_commission_claim', '=', True)]</field>
             <field name="view_ids" eval="[
                     (5, 0, 0),
                     (0, 0, {'sequence': 1004, 'view_mode': 'tree', 'view_id': ref('claim_customer_commission_view_tree')}),

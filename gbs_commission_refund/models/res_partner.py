@@ -18,16 +18,19 @@ class ResPartner(models.Model):
         return domain
 
     def _get_default_commission_refund_account_payable_id(self):
-        # TODO : this will be default for only customers
-        commission_refund_ap_parent_id = self.env['commission.refund.acc.config'].search(
-            [('company_id', '=', self.env.user.company_id.id)], limit=1).commission_refund_ap_parent_id
-        if not commission_refund_ap_parent_id:
-            raise UserError(_("Commission/Refund default AP not set on GL Configuration Settings"))
+        default_customer = self.env.context.get('default_customer')
+        if default_customer:
+            commission_refund_ap_parent_id = self.env['commission.refund.acc.config'].search(
+                [('company_id', '=', self.env.user.company_id.id)], limit=1).commission_refund_ap_parent_id
+            if not commission_refund_ap_parent_id:
+                raise UserError(_("Commission/Refund default AP not set on GL Configuration Settings"))
+            else:
+                account_id = self.env['account.account'].search([('parent_id', '=', commission_refund_ap_parent_id.id)],
+                                                                limit=1,
+                                                                order="id asc")
+                return account_id.id
         else:
-            account_id = self.env['account.account'].search([('parent_id', '=', commission_refund_ap_parent_id.id)],
-                                                            limit=1,
-                                                            order="id asc")
-            return account_id.id
+            return False
 
     commission_refund_account_payable_id = fields.Many2one(
         comodel_name='account.account',
@@ -98,9 +101,8 @@ class ResPartner(models.Model):
         self._check_acc_constraint(values)
         res = super(ResPartner, self).create(values)
 
-        if res.customer and not res.commission_refund_account_payable_id:
+        if res.customer:
             res.create_commission_refund_ap_account_id()
-
         return res
 
     @api.multi
