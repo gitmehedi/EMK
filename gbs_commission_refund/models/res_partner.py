@@ -12,9 +12,12 @@ class ResPartner(models.Model):
             ('customer', '=', True),
             ('commission_refund_account_payable_id', '!=', False)
         ])
-
+        commission_refund_ap_parent_id = self.env['commission.refund.acc.config'].search(
+            [('company_id', '=', self.env.user.company_id.id)], limit=1).commission_refund_ap_parent_id
+        if not commission_refund_ap_parent_id:
+            raise UserError(_("Commission/Refund default AP not set on GL Configuration Settings"))
         domain = [("id", "!=", [c.commission_refund_account_payable_id.id for c in customer_ids]),
-                  ('internal_type', '=', 'payable')]
+                  ('parent_id', '=', commission_refund_ap_parent_id.id)]
         return domain
 
     def _get_default_commission_refund_account_payable_id(self):

@@ -9,8 +9,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='accounting_entries']" position="after">
                     <group></group>
-                    <group string="Commission/Refund" name="commission">
-                        <field name="commission_refund_account_payable_id" attrs="{'required':[('customer','=',True)]}"/>
+                    <group string="Commission/Refund" name="commission" attrs="{'invisible':[('customer','!=',True)]}">
+                        <field name="commission_refund_account_payable_id"/>
                     </group>
                 </xpath>
 
